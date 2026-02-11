@@ -4,6 +4,10 @@
 #include "framework.h"
 #include "Resource.h"
 
+#include "../Engine/Application.h"
+
+gm::Application application;
+
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
@@ -56,7 +60,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
         else
         {
-
+            application.Run();
         }
     }
 
@@ -98,6 +102,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
+
+   application.Initialize(hWnd);
 
    return TRUE;
 }
