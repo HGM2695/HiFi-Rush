@@ -26,6 +26,5 @@ namespace gm
 
     void Application::Render()
     {
-        Rectangle(_hDC, 500, 500, 600, 600);
     }
 }

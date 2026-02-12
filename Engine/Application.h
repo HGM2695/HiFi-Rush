@@ -12,6 +12,7 @@ namespace gm
 	public:
 		void	Initialize(HWND hWnd);
 		void	Run();
+
 		void	Update();
 		void	LateUpdate();
 		void	Render();
