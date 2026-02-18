@@ -93,7 +93,7 @@ namespace gm
 		bool						IsKeyUp(KeyCode code) const { return _keyList[static_cast<int>(code)]._keyState == KeyState::Up; }
 
 	private:
-		void						UpdateKeyListState();
+		void						updateKeyListState();
 
 	private:
 		std::vector<Key>			_keyList;

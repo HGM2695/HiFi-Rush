@@ -77,10 +77,10 @@ namespace gm
 
 	void Input::Update()
 	{
-		UpdateKeyListState();
+		updateKeyListState();
 	}
 
-	void Input::UpdateKeyListState()
+	void Input::updateKeyListState()
 	{
 		int Size = static_cast<int>(_keyList.size());
 		for (int i = 0; i < Size; i++)
