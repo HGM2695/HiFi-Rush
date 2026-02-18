@@ -19,9 +19,9 @@ namespace gm
 	{
 	}
 
-	void GameObject::Render(HDC hdc)
+	void GameObject::Render(HDC hDC)
 	{
-		Rectangle(hdc, _x, _y, _x + 100, _y + 100);
+		Rectangle(hDC, _x, _y, _x + 100, _y + 100);
 	}
 }
 

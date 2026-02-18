@@ -13,7 +13,7 @@ namespace gm
 
 		void	Update();
 		void	LateUpdate();
-		void	Render(HDC hdc);
+		void	Render(HDC hDC);
 
 		void SetPosition(float x, float y)
 		{
