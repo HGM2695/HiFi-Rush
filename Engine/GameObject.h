@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 struct HDC__;
 typedef struct HDC__* HDC;

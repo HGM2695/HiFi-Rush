@@ -1,13 +1,13 @@
-#pragma once
+ï»¿#pragma once
 #include <vector>
 
 namespace gm
 {
 	enum class KeyState
 	{
-		Down,		// Ã³À½ ´­¸²
-		Pressed,	// À¯Áö
-		Up,			// ¶À
+		Down,		// ì²˜ìŒ ëˆŒë¦¼
+		Pressed,	// ìœ ì§€
+		Up,			// ë—Œ
 		None,
 		Count
 	};
