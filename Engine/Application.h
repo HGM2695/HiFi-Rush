@@ -10,6 +10,7 @@ typedef struct HDC__* HDC;
 namespace gm
 {
 	class Input;
+	class Time;
 
 	class Application
 	{
@@ -32,6 +33,7 @@ namespace gm
 		HWND					_hWnd = nullptr;
 		HDC						_hDC = nullptr;
 		std::unique_ptr<Input>	_input;
+		std::unique_ptr<Time>	_time;
 	};
 }
 

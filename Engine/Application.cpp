@@ -1,6 +1,7 @@
 ﻿#include "Application.h"
 #include "windows.h"
 #include "Input.h"
+#include "Time.h"
 
 namespace gm
 {
@@ -13,6 +14,8 @@ namespace gm
         _hDC = GetDC(_hWnd);
         _input = std::make_unique<Input>();
         _input->Initialize();
+        _time = std::make_unique<Time>();
+        _time->Initialize();
     }
 
     void Application::Run()
@@ -25,6 +28,7 @@ namespace gm
     void Application::Update()
     {
         _input->Update();
+        _time->Update();
     }
 
     void Application::LateUpdate()
@@ -33,5 +37,6 @@ namespace gm
 
     void Application::Render()
     {
+        _time->Render(_hDC);
     }
 }
