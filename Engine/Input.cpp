@@ -1,9 +1,9 @@
-#include "Input.h"
+﻿#include "Input.h"
 #include <Windows.h>
 
 namespace gm
 {
-    int ASCII[static_cast<int>(KeyCode::Count)] =
+    constexpr int ASCII[static_cast<int>(KeyCode::Count)] =
     {
         // --- Control / System ---
         0x1B,
@@ -66,8 +66,8 @@ namespace gm
 	void Input::Initialize()
 	{
         static_assert(
-            static_cast<int>(KeyCode::Count) == sizeof(ASCII) / sizeof(int),
-            "KeyCode count and ASCII size mismatch!"
+            ASCII[static_cast<int>(KeyCode::Count) - 1],
+            "KeyCode에 추가했다면 ASCII에도 추가해주세요."
             );
 
 		_keyList.resize(static_cast<int>(KeyCode::Count));
