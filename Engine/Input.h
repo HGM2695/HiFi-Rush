@@ -88,9 +88,9 @@ namespace gm
 		void						Initialize();
 		void						Update();
 
-		bool						IsKeyDown(KeyCode code) { return _keyList[static_cast<int>(code)]._keyState == KeyState::Down; }
-		bool						IsKeyPressed(KeyCode code) { return _keyList[static_cast<int>(code)]._keyState == KeyState::Pressed; }
-		bool						IsKeyUp(KeyCode code) { return _keyList[static_cast<int>(code)]._keyState == KeyState::Up; }
+		bool						IsKeyDown(KeyCode code) const { return _keyList[static_cast<int>(code)]._keyState == KeyState::Down; }
+		bool						IsKeyPressed(KeyCode code) const { return _keyList[static_cast<int>(code)]._keyState == KeyState::Pressed; }
+		bool						IsKeyUp(KeyCode code) const { return _keyList[static_cast<int>(code)]._keyState == KeyState::Up; }
 
 	private:
 		void						UpdateKeyListState();
