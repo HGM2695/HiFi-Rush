@@ -19,7 +19,7 @@ namespace gm
 		~Application();
 
 	public:
-		void			Initialize(HWND hWnd);
+		void			Initialize(HWND hWnd, uint32_t width, uint32_t height);
 		void			Run();
 
 		void			Update();
@@ -32,6 +32,10 @@ namespace gm
 	private:
 		HWND					_hWnd = nullptr;
 		HDC						_hDC = nullptr;
+
+		uint32_t 				_width = 0;
+		uint32_t 				_height = 0;
+
 		std::unique_ptr<Input>	_input;
 		std::unique_ptr<Time>	_time;
 	};

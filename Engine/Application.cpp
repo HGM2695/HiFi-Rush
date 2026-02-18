@@ -8,10 +8,14 @@ namespace gm
     Application::Application() = default;
     Application::~Application() = default;
 
-    void Application::Initialize(HWND hWnd)
+    void Application::Initialize(HWND hWnd, uint32_t width, uint32_t height)
     {
         _hWnd = hWnd;
         _hDC = GetDC(_hWnd);
+
+        _width = width;
+        _height = height;
+
         _input = std::make_unique<Input>();
         _input->Initialize();
         _time = std::make_unique<Time>();

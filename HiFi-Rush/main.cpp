@@ -90,22 +90,32 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-   hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
+    hInst = hInstance;
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+    const int clientW = 1600;
+    const int clientH = 900;
 
-   if (!hWnd)
-   {
-      return FALSE;
-   }
+    RECT rc{ 0, 0, clientW, clientH };
+    AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
-   ShowWindow(hWnd, nCmdShow);
-   UpdateWindow(hWnd);
+    const int winW = rc.right - rc.left;
+    const int winH = rc.bottom - rc.top;
 
-   application.Initialize(hWnd);
+    HWND hWnd = CreateWindowW(
+        szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT, 0, winW, winH,
+        nullptr, nullptr, hInstance, nullptr
+    );
 
-   return TRUE;
+    if (!hWnd) 
+        return FALSE;
+
+    application.Initialize(hWnd, clientW, clientH);
+
+    ShowWindow(hWnd, nCmdShow);
+    UpdateWindow(hWnd);
+
+    return TRUE;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
