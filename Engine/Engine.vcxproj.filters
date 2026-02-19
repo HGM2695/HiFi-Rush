@@ -5,11 +5,17 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Time.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Time.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
   </ItemGroup>
 </Project>

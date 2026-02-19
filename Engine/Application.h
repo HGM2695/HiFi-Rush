@@ -13,6 +13,7 @@ namespace gm
 {
 	class Input;
 	class Time;
+	class SceneManager;
 
 	class Application
 	{
@@ -37,17 +38,18 @@ namespace gm
 		void			initializeSubSystem();
 
 	private:
-		HWND					_hWnd = nullptr;
-		HDC						_hDC = nullptr;
+		HWND							_hWnd = nullptr;
+		HDC								_hDC = nullptr;
 
-		HDC						_backHDC = nullptr;
-		HBITMAP					_backBuffer = nullptr;
+		HDC								_backHDC = nullptr;
+		HBITMAP							_backBuffer = nullptr;
+				
+		uint32_t 						_width = 0;
+		uint32_t 						_height = 0;
 
-		uint32_t 				_width = 0;
-		uint32_t 				_height = 0;
-
-		std::unique_ptr<Input>	_input;
-		std::unique_ptr<Time>	_time;
+		std::unique_ptr<Input>			_input;
+		std::unique_ptr<Time>			_time;
+		std::unique_ptr<SceneManager>	_sceneManager;
 	};
 }
 

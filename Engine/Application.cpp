@@ -2,6 +2,7 @@
 #include "windows.h"
 #include "Input.h"
 #include "Time.h"
+#include "SceneManager.h"
 
 namespace gm
 {
@@ -37,8 +38,12 @@ namespace gm
     {
         _input = std::make_unique<Input>();
         _input->Initialize();
+
         _time = std::make_unique<Time>();
         _time->Initialize();
+
+        _sceneManager = std::make_unique<SceneManager>();
+        _sceneManager->Initialize();
     }
 
     void Application::Run()
@@ -52,10 +57,12 @@ namespace gm
     {
         _input->Update();
         _time->Update();
+        _sceneManager->Update();
     }
 
     void Application::LateUpdate()
     {
+        _sceneManager->LateUpdate();
     }
 
     void Application::Render()
@@ -64,6 +71,7 @@ namespace gm
         Rectangle(_backHDC, -1, -1, _width + 1, _height + 1);
 
         _time->Render(_backHDC);
+        _sceneManager->Render(_hDC);
 
         // Copy BackBuffer to Front Buffer
         BitBlt(_hDC, 0, 0, _width, _height, _backHDC, 0, 0, SRCCOPY);
