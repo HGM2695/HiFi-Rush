@@ -24,8 +24,8 @@ namespace gm
 		float GetPositionY() { return _y; }
 		
 	private:
-		float _x;
-		float _y;
+		float _x{};
+		float _y{};
 	};
 }
 

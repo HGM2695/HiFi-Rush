@@ -20,10 +20,10 @@ namespace gm
 		void calcDeltaTime();
 
 	private:
-		LARGE_INTEGER	_cpuFrequency;
-		LARGE_INTEGER	_prevFrequency;
-		LARGE_INTEGER	_curFrequency;
-		float			_deltaTime;
+		LARGE_INTEGER	_cpuFrequency{};
+		LARGE_INTEGER	_prevFrequency{};
+		LARGE_INTEGER	_curFrequency{};
+		float			_deltaTime{};
 	};
 }
 
