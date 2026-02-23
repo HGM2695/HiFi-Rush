@@ -5,8 +5,7 @@
 #include "Resource.h"
 
 #include "../Engine/Application.h"
-
-gm::Application application;
+#include "LoadScenes.h"
 
 #define MAX_LOADSTRING 100
 
@@ -60,7 +59,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
         else
         {
-            application.Run();
+            APPLICATION.Run();
         }
     }
 
@@ -110,7 +109,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     if (!hWnd) 
         return FALSE;
 
-    application.Initialize(hWnd, clientW, clientH);
+    APPLICATION.Initialize(hWnd, clientW, clientH);
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);

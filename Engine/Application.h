@@ -11,31 +11,46 @@ typedef struct HBITMAP__* HBITMAP;
 
 namespace gm
 {
+	#define APPLICATION gm::Application::GetInstance()
+
 	class Input;
 	class Time;
 	class SceneManager;
 
 	class Application
 	{
-	public:
+	private:
 		Application();
 		~Application();
 
 	public:
-		void			Initialize(HWND hWnd, uint32_t width, uint32_t height);
-		void			Run();
-
-		void			Update();
-		void			LateUpdate();
-		void			Render();
+		static Application& GetInstance()
+		{
+			static Application instance;
+			return instance;
+		}
 
 	public:
-		const Input*	GetInput() const { return _input.get(); }
+		void				Initialize(HWND hWnd, uint32_t width, uint32_t height);
+		void				Run();
+
+		void				Update();
+		void				LateUpdate();
+		void				Render();
+
+	public:
+		Input&				GetInput() { return *_input; }
+		Time&				GetTime() { return *_time; }
+		SceneManager&		GetSceneManager() { return *_sceneManager; }
+
+		const Input&		GetInput()        const { return *_input; }
+		const Time&			GetTime()         const { return *_time; }
+		const SceneManager& GetSceneManager() const { return *_sceneManager; }
 
 	private:
-		void			initializeWindow(HWND hWnd, uint32_t width, uint32_t height);
-		void			createBackDC();
-		void			initializeSubSystem();
+		void				initializeWindow(HWND hWnd, uint32_t width, uint32_t height);
+		void				createBackDC();
+		void				initializeSubSystem();
 
 	private:
 		HWND							_hWnd = nullptr;
