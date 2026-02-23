@@ -17,13 +17,15 @@ namespace gm
 		~SceneManager();
 
 		template <typename T>
-		Scene*			CreateScene(std::wstring& sceneName)
+		Scene*			CreateScene(const std::wstring& sceneName)
 		{
 			std::unique_ptr<T> newScene = std::make_unique<T>();
 			newScene->SetName(sceneName);
 			newScene->Initialize();
+
+			Scene* scenePtr = newScene.get();
 			_sceneList.insert({ sceneName, std::move(newScene) });
-			return newScene.get();
+			return scenePtr;
 		}
 
 		void			Initialize();
