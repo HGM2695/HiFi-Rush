@@ -71,7 +71,7 @@ namespace gm
         Rectangle(_backHDC, -1, -1, _width + 1, _height + 1);
 
         _time->Render(_backHDC);
-        _sceneManager->Render(_hDC);
+        _sceneManager->Render(_backHDC);
 
         // Copy BackBuffer to Front Buffer
         BitBlt(_hDC, 0, 0, _width, _height, _backHDC, 0, 0, SRCCOPY);
