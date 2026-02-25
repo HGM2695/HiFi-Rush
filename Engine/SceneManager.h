@@ -28,6 +28,9 @@ namespace gm
 			return scenePtr;
 		}
 
+		void			PlayScene(const std::wstring& sceneName);
+
+	public:
 		void			Initialize();
 		void			Update();
 		void			LateUpdate();

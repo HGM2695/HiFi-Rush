@@ -6,6 +6,13 @@ namespace gm
     SceneManager::SceneManager() = default;
     SceneManager::~SceneManager() = default;
 
+	void SceneManager::PlayScene(const std::wstring& sceneName)
+	{
+		auto sceneIter = _sceneList.find(sceneName);
+		if (sceneIter != _sceneList.end())
+			_activeScene = sceneIter->second.get();
+	}
+
 	void SceneManager::Initialize()
 	{
 		

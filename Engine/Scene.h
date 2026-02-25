@@ -22,6 +22,8 @@ namespace gm
 		void			LateUpdate();
 		void			Render(HDC hDC);
 
+		void			AddGameObject(std::unique_ptr<GameObject> gameObject);
+
 	protected:
 		virtual void	OnInitialize() {}
 		virtual void	OnUpdate() {}

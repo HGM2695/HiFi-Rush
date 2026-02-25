@@ -4,7 +4,6 @@
 #include "framework.h"
 #include "Resource.h"
 
-#include "../Engine/Application.h"
 #include "LoadScenes.h"
 
 #define MAX_LOADSTRING 100
@@ -113,6 +112,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
+    gm::SetupScenes();
 
     return TRUE;
 }

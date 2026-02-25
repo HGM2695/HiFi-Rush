@@ -34,4 +34,10 @@ namespace gm
 		for (auto& gameObject : _gameObjectList)
 			gameObject->Render(hDC);
 	}
+
+	void Scene::AddGameObject(std::unique_ptr<GameObject> gameObject) 
+	{
+		if (gameObject)
+			_gameObjectList.push_back(std::move(gameObject));
+	}
 }
