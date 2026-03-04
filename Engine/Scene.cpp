@@ -9,6 +9,9 @@ namespace gm
 	void Scene::Initialize()
 	{
 		OnInitialize();
+
+		for (auto& gameObject : _gameObjectList)
+			gameObject->Initialize();
 	}
 
 	void Scene::Update()
