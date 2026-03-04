@@ -17,6 +17,7 @@
       <Filter>Scenes</Filter>
     </ClInclude>
     <ClInclude Include="MainScene.h" />
+    <ClInclude Include="Player.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="HiFi-Rush.rc">
@@ -34,5 +35,6 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainScene.cpp" />
+    <ClCompile Include="Player.cpp" />
   </ItemGroup>
 </Project>
