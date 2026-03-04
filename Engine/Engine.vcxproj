@@ -130,6 +130,7 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GMAssert.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Scene.h" />
@@ -143,6 +144,7 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GMAssert.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />

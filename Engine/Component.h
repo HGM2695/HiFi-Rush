@@ -21,18 +21,9 @@ namespace gm
 		void			LateUpdate();
 		void			Render(HDC hDC); 
 
-		void			SetOwner(GameObject* owner) { _Owner = owner; }
-		GameObject& GetOwner()
-		{
-			assert(_Owner && "컴포넌트는 항상 소유자가 있어야 합니다.");
-			return *_Owner;
-		}
-
-		const GameObject& GetOwner() const
-		{
-			assert(_Owner && "컴포넌트는 항상 소유자가 있어야 합니다.");
-			return *_Owner;
-		}
+		void				SetOwner(GameObject* owner) { _Owner = owner; }
+		GameObject&			GetOwner();
+		const GameObject&	GetOwner() const;
 
 	protected:
 		virtual void	OnInitialize() {};

@@ -3,6 +3,7 @@
 #include "Transform.h"
 #include <Windows.h>
 #include <gdiplus.h>
+#include "../Engine/GMAssert.h"
 
 namespace gm
 {
@@ -11,10 +12,9 @@ namespace gm
 
 	void SpriteRenderer::OnInitialize()
 	{
-		_Transform = GetOwner().GetComponent<Transform>();
-		assert(_Transform && "SpriteRenderer 클래스는 Transform 컴포넌트를 필요로합니다.");
-
 		SetName(L"Sprite Renderer");
+		_Transform = GetOwner().GetComponent<Transform>();
+		GM_ASSERT(_Transform, "SpriteRenderer 클래스는 Transform 컴포넌트를 필요로 합니다.");
 	}
 
 	void SpriteRenderer::OnUpdate()
@@ -36,7 +36,7 @@ namespace gm
 	void SpriteRenderer::ImageLoad(const std::wstring& path)
 	{
 		_Image = std::make_unique<Gdiplus::Image>(path.c_str());
-		assert(_Image && "Image 생성에 실패했습니다.");
+		GM_ASSERT_RETURN(_Image, "Image 생성에 실패했습니다.");
 
 		_Width = _Image->GetWidth();
 		_Height = _Image->GetHeight();

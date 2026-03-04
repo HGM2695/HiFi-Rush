@@ -32,6 +32,9 @@
     <ClInclude Include="Vector2.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="GMAssert.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -61,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="Component.cpp">
       <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="GMAssert.cpp">
+      <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
