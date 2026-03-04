@@ -3,8 +3,16 @@
 
 #include "framework.h"
 #include "Resource.h"
-
 #include "LoadScenes.h"
+
+#include <mmsystem.h>
+#include <dinput.h>
+
+#include <gdiplus.h>
+#pragma comment(lib, "gdiplus.lib")
+
+ULONG_PTR gpToken;
+Gdiplus::GdiplusStartupInput gpsi;
 
 #define MAX_LOADSTRING 100
 
@@ -62,6 +70,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
     }
 
+    Gdiplus::GdiplusShutdown(gpToken);
+
     return (int) msg.wParam;
 }
 
@@ -112,6 +122,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
+
+    Gdiplus::GdiplusStartup(&gpToken, &gpsi, nullptr);
+
     gm::SetupScenes();
 
     return TRUE;
