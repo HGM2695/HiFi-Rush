@@ -8,6 +8,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="Component.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -17,5 +18,6 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="Component.cpp" />
   </ItemGroup>
 </Project>

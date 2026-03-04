@@ -13,15 +13,26 @@ namespace gm
 
 	void GameObject::Update()
 	{
+		OnUpdate();
+
+		for (auto& component : _ComponentList)
+			component->Update();
 	}
 
 	void GameObject::LateUpdate()
 	{
+		OnLateUpdate();
+
+		for (auto& component : _ComponentList)
+			component->LateUpdate();
 	}
 
 	void GameObject::Render(HDC hDC)
 	{
-		Rectangle(hDC, _x, _y, _x + 100, _y + 100);
+		OnRender(hDC);
+
+		for (auto& component : _ComponentList)
+			component->Render(hDC);
 	}
 }
 
