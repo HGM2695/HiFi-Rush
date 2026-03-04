@@ -22,9 +22,6 @@
     <ClInclude Include="MainScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="HiFi-Rush.rc">
@@ -43,9 +40,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainScene.cpp">
       <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>GameObject</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
