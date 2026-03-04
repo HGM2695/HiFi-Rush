@@ -76,4 +76,10 @@ namespace gm
         // Copy BackBuffer to Front Buffer
         BitBlt(_hDC, 0, 0, _width, _height, _backHDC, 0, 0, SRCCOPY);
     }
+
+    void Application::ShutDownRuntime()
+    {
+        if (_sceneManager)
+            _sceneManager.reset();
+    }
 }

@@ -70,6 +70,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
     }
 
+    APPLICATION.ShutDownRuntime();
     Gdiplus::GdiplusShutdown(gpToken);
 
     return (int) msg.wParam;

@@ -38,6 +38,8 @@ namespace gm
 		void				LateUpdate();
 		void				Render();
 
+		void				ShutDownRuntime();
+
 	public:
 		Input&				GetInput() { return *_input; }
 		Time&				GetTime() { return *_time; }
