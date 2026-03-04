@@ -5,7 +5,10 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Scenes">
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{a37b12d7-f04d-401a-b1f7-e49791646611}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
       <UniqueIdentifier>{f0d27950-bd51-4ac4-bdc4-e9ad0944f534}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -14,10 +17,14 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="LoadScenes.h">
-      <Filter>Scenes</Filter>
+      <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="MainScene.h" />
-    <ClInclude Include="Player.h" />
+    <ClInclude Include="MainScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="HiFi-Rush.rc">
@@ -34,7 +41,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MainScene.cpp" />
-    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="MainScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

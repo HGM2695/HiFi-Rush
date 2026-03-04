@@ -2,26 +2,76 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="Application.h" />
-    <ClInclude Include="GameObject.h" />
-    <ClInclude Include="Input.h" />
-    <ClInclude Include="Time.h" />
-    <ClInclude Include="Scene.h" />
-    <ClInclude Include="Entity.h" />
-    <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="Component.h" />
-    <ClInclude Include="Transform.h" />
-    <ClInclude Include="SpriteRenderer.h" />
+    <ClInclude Include="SpriteRenderer.h">
+      <Filter>Engine Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Engine Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Time.h">
+      <Filter>SubSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>SubSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>SubSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="Input.cpp" />
-    <ClCompile Include="Time.cpp" />
-    <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="Entity.cpp" />
-    <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="Component.cpp" />
-    <ClCompile Include="Transform.cpp" />
-    <ClCompile Include="SpriteRenderer.cpp" />
+    <ClCompile Include="SpriteRenderer.cpp">
+      <Filter>Engine Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Engine Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>SubSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>SubSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.cpp">
+      <Filter>SubSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Util">
+      <UniqueIdentifier>{6c5e1ef7-4946-4f2b-8527-e61816d0455d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SubSystem">
+      <UniqueIdentifier>{c05a0ef3-a255-4456-86d9-7ca4267cf1c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{434aedff-6f0e-403c-b024-687feef0c1b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Component">
+      <UniqueIdentifier>{ec99db76-1296-4889-9f1d-bdebfc9b0aea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
