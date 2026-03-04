@@ -9,6 +9,8 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="Transform.h" />
+    <ClInclude Include="SpriteRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -19,5 +21,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="SpriteRenderer.cpp" />
   </ItemGroup>
 </Project>
