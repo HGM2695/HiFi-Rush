@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Component.h"
+#include "Vector2.h"
 
 namespace gm
 {
@@ -14,12 +15,12 @@ namespace gm
 		virtual void	OnLateUpdate() override;
 		virtual void	OnRender(HDC hDC) override;
 
-		void			SetPos(int x, int y) { _X = x; _Y = y; }
-		int				GetX() { return _X; }
-		int				GetY() { return _Y; }
+		void					SetPosition(const math::Vector2& position) { _Position = position; }
+		const math::Vector2&	GetPosition() { return _Position; }
+		float					GetX() { return _Position._X; }
+		float					GetY() { return _Position._Y; }
 
 	private:
-		int _X{};
-		int _Y{};
+		math::Vector2 _Position;
 	};
 }
