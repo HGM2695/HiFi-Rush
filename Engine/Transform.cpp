@@ -7,6 +7,7 @@ namespace gm
 
 	void Transform::OnInitialize()
 	{
+		SetName(L"Transform");
 	}
 
 	void Transform::OnUpdate()
