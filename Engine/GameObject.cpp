@@ -11,6 +11,14 @@ namespace gm
 	{
 	}
 
+	void GameObject::Initialize()
+	{
+		OnInitialize();
+
+		for (auto& component : _ComponentList)
+			component->Initialize();
+	}
+
 	void GameObject::Update()
 	{
 		OnUpdate();

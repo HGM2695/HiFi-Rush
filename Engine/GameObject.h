@@ -20,8 +20,8 @@ namespace gm
 		{
 			static_assert(std::is_base_of_v<Component, T>, "T는 반드시 Component의 자식 클래스이어야 합니다.");
 
-			std::unique_ptr<Component> comp = std::make_unique<T>();
-			Component* raw = comp.get();
+			std::unique_ptr<T> comp = std::make_unique<T>();
+			T* raw = comp.get();
 			raw->SetOwner(this);
 
 			_ComponentList.push_back(std::move(comp));
