@@ -1,5 +1,6 @@
 ﻿#include "SceneManager.h"
 #include "Scene.h"
+#include "GMAssert.h"
 
 namespace gm
 {
@@ -9,8 +10,13 @@ namespace gm
 	void SceneManager::PlayScene(const std::wstring& sceneName)
 	{
 		auto sceneIter = _sceneList.find(sceneName);
-		if (sceneIter != _sceneList.end())
-			_activeScene = sceneIter->second.get();
+		GM_ASSERT_RETURN(sceneIter != _sceneList.end(), "입력한 Scene은 존재하지 않습니다.");
+
+		if (_activeScene)
+			_activeScene->OnExit();
+
+		_activeScene = sceneIter->second.get();
+		_activeScene->OnEnter();
 	}
 
 	void SceneManager::Initialize()
