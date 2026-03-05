@@ -1,6 +1,5 @@
 ﻿#include "MainScene.h"
 #include "../Engine/GameObject.h"
-#include "../Engine/Transform.h"
 #include "../Engine/SpriteRenderer.h"
 
 namespace gm
@@ -8,7 +7,6 @@ namespace gm
 	void MainScene::OnInitialize()
 	{
 		auto player = std::make_unique<GameObject>();
-		player->AddComponent<Transform>();
 
 		// 임시 이미지
 		SpriteRenderer* spriteRenderer = player->AddComponent<SpriteRenderer>();

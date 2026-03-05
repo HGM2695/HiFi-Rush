@@ -1,10 +1,12 @@
 ﻿#include "GameObject.h"
 #include "Windows.h"
+#include "Transform.h"
 
 namespace gm
 {
 	GameObject::GameObject()
 	{
+		AddComponent<Transform>();
 	}
 
 	GameObject::~GameObject()
