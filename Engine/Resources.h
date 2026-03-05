@@ -1,0 +1,61 @@
+﻿#pragma once
+
+#include <unordered_map>
+#include <string>
+#include <memory>
+
+#include "Resource.h"
+#include "GMAssert.h"
+
+namespace gm
+{
+    class Resources
+    {
+    public:
+        Resources() = default;
+        ~Resources() = default;
+
+        // 없으면 nullptr / 타입 다르면 nullptr
+        template<typename T>
+        std::shared_ptr<T> Find(const std::wstring& key, ResourceType expectedType) const
+        {
+            auto base = FindBase(key);
+            if (base == nullptr || base->GetType() != expectedType)
+                return nullptr;
+
+            return std::static_pointer_cast<T>(base);
+        }
+
+        // 있으면 기존 반환, 없으면 생성 + Load + 캐싱
+        template<typename T>
+        std::shared_ptr<T> Load(const std::wstring& key, const std::wstring& path, ResourceType type)
+        {
+            auto base = FindBase(key);
+
+            if (base)
+            {
+                GM_ASSERT_RETURN_VAL(base->GetType() == type, nullptr, "존재하지만 타입이 일치하지 않습니다.");
+                return std::static_pointer_cast<T>(base);
+            }
+
+            auto resource = std::make_shared<T>();
+            GM_ASSERT_RETURN_VAL(resource->Load(path), nullptr, "Load 실패");
+
+            resource->SetName(key);
+            resource->SetPath(path);
+
+            _resourceList.emplace(key, resource);
+            return resource;
+        }
+
+        bool    Unload(const std::wstring& key);
+        void    Clear();
+        size_t  Count() const { return _resourceList.size(); }
+
+    private:
+        std::shared_ptr<Resource> FindBase(const std::wstring& key) const;
+
+    private:
+        std::unordered_map<std::wstring, std::shared_ptr<Resource>> _resourceList;
+    };
+}

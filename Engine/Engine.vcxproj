@@ -131,6 +131,9 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GMAssert.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="Resources.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Scene.h" />
@@ -146,9 +149,12 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GMAssert.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Resource.cpp" />
+    <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SpriteRenderer.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>

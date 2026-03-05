@@ -3,33 +3,28 @@
 #include "Component.h"
 #include <memory>
 
-namespace Gdiplus
-{
-	class Image;
-}
-
 namespace gm
 {
-	class Transform;
+    class Transform;
+    class Texture;
 
-	class SpriteRenderer : public Component
-	{
-	public:
-		SpriteRenderer();
-		virtual ~SpriteRenderer();
+    class SpriteRenderer : public Component
+    {
+    public:
+        SpriteRenderer();
+        virtual ~SpriteRenderer();
 
-		virtual void	OnInitialize() override;
-		virtual void	OnUpdate() override;
-		virtual void	OnLateUpdate() override;
-		virtual void	OnRender(HDC hDC) override;
+        virtual void    OnInitialize() override;
+        virtual void    OnUpdate() override;
+        virtual void    OnLateUpdate() override;
+        virtual void    OnRender(HDC hDC) override;
 
-		void			ImageLoad(const std::wstring& path);
+        void                        SetTexture(const std::shared_ptr<Texture>& texture) { _texture = texture; }
+        std::shared_ptr<Texture>    GetTexture() const { return _texture; }
 
-	private:
-		Transform* _Transform{};
+    private:
+        std::shared_ptr<Texture> _texture{};
 
-		std::unique_ptr<Gdiplus::Image>	 _image{};
-		uint32_t						 _width{};
-		uint32_t						 _height{};
-	}; 
+        Transform* _transform{};
+    };
 }

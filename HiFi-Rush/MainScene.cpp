@@ -1,6 +1,9 @@
 ﻿#include "MainScene.h"
+#include "../Engine/Application.h"
+#include "../Engine/Resources.h"
 #include "../Engine/GameObject.h"
 #include "../Engine/SpriteRenderer.h"
+#include "../Engine/Texture.h"
 
 namespace gm
 {
@@ -8,9 +11,8 @@ namespace gm
 	{
 		auto player = std::make_unique<GameObject>();
 
-		// 임시 이미지
 		SpriteRenderer* spriteRenderer = player->AddComponent<SpriteRenderer>();
-		spriteRenderer->ImageLoad(L"Resources/GameObject/orange_mushroom.png");
+		spriteRenderer->SetTexture(APPLICATION.GetResources().Find<Texture>(L"OrangeMushroom", ResourceType::Texture));
 		AddGameObject(std::move(player));
 	}
 }

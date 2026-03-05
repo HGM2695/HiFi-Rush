@@ -11,6 +11,9 @@
     <Filter Include="Scene">
       <UniqueIdentifier>{f0d27950-bd51-4ac4-bdc4-e9ad0944f534}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{e5c6772b-27ce-4b61-bb93-b81bdd469848}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
@@ -24,6 +27,9 @@
     </ClInclude>
     <ClInclude Include="TitleScene.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadResources.h">
+      <Filter>Resource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

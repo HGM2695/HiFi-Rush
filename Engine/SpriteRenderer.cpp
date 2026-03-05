@@ -1,9 +1,10 @@
 ﻿#include "SpriteRenderer.h"
 #include "GameObject.h"
 #include "Transform.h"
+#include "GMAssert.h"
+#include "Texture.h"
 #include <Windows.h>
 #include <gdiplus.h>
-#include "../Engine/GMAssert.h"
 
 namespace gm
 {
@@ -13,8 +14,9 @@ namespace gm
 	void SpriteRenderer::OnInitialize()
 	{
 		SetName(L"Sprite Renderer");
-		_Transform = GetOwner().GetComponent<Transform>();
-		GM_ASSERT(_Transform, "SpriteRenderer 클래스는 Transform 컴포넌트를 필요로 합니다.");
+
+		_transform = GetOwner().GetComponent<Transform>();
+		GM_ASSERT(_transform, "SpriteRenderer 클래스는 Transform 컴포넌트를 필요로 합니다.");
 	}
 
 	void SpriteRenderer::OnUpdate()
@@ -27,18 +29,11 @@ namespace gm
 
 	void SpriteRenderer::OnRender(HDC hDC)
 	{
-		const math::Vector2 pos = _Transform->GetPosition();
+		GM_ASSERT(_texture, "SpriteRenderer 클래스는 Texture 컴포넌트를 필요로 합니다.");
+
+		const math::Vector2 pos = _transform->GetPosition();
 
 		Gdiplus::Graphics graphics(hDC);
-		graphics.DrawImage(_image.get(), Gdiplus::Rect(static_cast<int>(pos._X), static_cast<int>(pos._Y), _width, _height));
-	}
-
-	void SpriteRenderer::ImageLoad(const std::wstring& path)
-	{
-		_image = std::make_unique<Gdiplus::Image>(path.c_str());
-		GM_ASSERT_RETURN(_image, "Image 생성에 실패했습니다.");
-
-		_width = _image->GetWidth();
-		_height = _image->GetHeight();
+		graphics.DrawImage(_texture->GetImage(), Gdiplus::Rect(static_cast<int>(pos._X), static_cast<int>(pos._Y), _texture->GetWidth(), _texture->GetHeight()));
 	}
 }

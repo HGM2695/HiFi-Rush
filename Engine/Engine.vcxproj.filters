@@ -35,6 +35,13 @@
     <ClInclude Include="GMAssert.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="Resources.h">
+      <Filter>SubSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -68,6 +75,13 @@
     <ClCompile Include="GMAssert.cpp">
       <Filter>Util</Filter>
     </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="Resources.cpp">
+      <Filter>SubSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
@@ -81,6 +95,9 @@
     </Filter>
     <Filter Include="Engine Component">
       <UniqueIdentifier>{ec99db76-1296-4889-9f1d-bdebfc9b0aea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{41d7a4d9-43b8-4be9-9baa-16650015719b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

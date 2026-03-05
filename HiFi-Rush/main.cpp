@@ -4,6 +4,7 @@
 #include "framework.h"
 #include "Resource.h"
 #include "LoadScenes.h"
+#include "LoadResources.h"
 
 #include <mmsystem.h>
 #include <dinput.h>
@@ -126,6 +127,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
     Gdiplus::GdiplusStartup(&gpToken, &gpsi, nullptr);
 
+    gm::LoadResources();
     gm::SetupScenes();
 
     return TRUE;

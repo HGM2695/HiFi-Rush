@@ -3,6 +3,7 @@
 #include "Input.h"
 #include "Time.h"
 #include "SceneManager.h"
+#include "Resources.h"
 
 namespace gm
 {
@@ -44,6 +45,8 @@ namespace gm
 
         _sceneManager = std::make_unique<SceneManager>();
         _sceneManager->Initialize();
+
+        _resources = std::make_unique<Resources>();
     }
 
     void Application::Run()
@@ -81,5 +84,7 @@ namespace gm
     {
         if (_sceneManager)
             _sceneManager.reset();
+        if (_resources)
+            _resources.reset();
     }
 }

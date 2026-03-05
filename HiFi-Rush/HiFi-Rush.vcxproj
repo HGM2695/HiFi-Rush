@@ -133,6 +133,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
+    <ClInclude Include="LoadResources.h" />
     <ClInclude Include="LoadScenes.h" />
     <ClInclude Include="MainScene.h" />
     <ClInclude Include="Resource.h" />
