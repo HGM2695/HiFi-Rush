@@ -15,7 +15,7 @@ namespace gm
 	{
 		OnInitialize();
 
-		for (auto& component : _ComponentList)
+		for (auto& component : _componentList)
 			component->Initialize();
 	}
 
@@ -23,7 +23,7 @@ namespace gm
 	{
 		OnUpdate();
 
-		for (auto& component : _ComponentList)
+		for (auto& component : _componentList)
 			component->Update();
 	}
 
@@ -31,7 +31,7 @@ namespace gm
 	{
 		OnLateUpdate();
 
-		for (auto& component : _ComponentList)
+		for (auto& component : _componentList)
 			component->LateUpdate();
 	}
 
@@ -39,7 +39,7 @@ namespace gm
 	{
 		OnRender(hDC);
 
-		for (auto& component : _ComponentList)
+		for (auto& component : _componentList)
 			component->Render(hDC);
 	}
 }

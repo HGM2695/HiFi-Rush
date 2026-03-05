@@ -28,8 +28,8 @@ namespace gm
 	private:
 		Transform* _Transform{};
 
-		std::unique_ptr<Gdiplus::Image>	 _Image{};
-		uint32_t						 _Width{};
-		uint32_t						 _Height{};
+		std::unique_ptr<Gdiplus::Image>	 _image{};
+		uint32_t						 _width{};
+		uint32_t						 _height{};
 	}; 
 }

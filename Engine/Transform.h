@@ -15,12 +15,12 @@ namespace gm
 		virtual void	OnLateUpdate() override;
 		virtual void	OnRender(HDC hDC) override;
 
-		void					SetPosition(const math::Vector2& position) { _Position = position; }
-		const math::Vector2&	GetPosition() { return _Position; }
-		float					GetX() { return _Position._X; }
-		float					GetY() { return _Position._Y; }
+		void					SetPosition(const math::Vector2& position) { _position = position; }
+		const math::Vector2&	GetPosition() { return _position; }
+		float					GetX() { return _position._X; }
+		float					GetY() { return _position._Y; }
 
 	private:
-		math::Vector2 _Position;
+		math::Vector2 _position;
 	};
 }

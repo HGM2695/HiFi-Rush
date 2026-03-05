@@ -24,7 +24,7 @@ namespace gm
 			T* raw = comp.get();
 			raw->SetOwner(this);
 
-			_ComponentList.push_back(std::move(comp));
+			_componentList.push_back(std::move(comp));
 			return raw;
 		}
 
@@ -33,7 +33,7 @@ namespace gm
 		{
 			static_assert(std::is_base_of_v<Component, T>, "T는 반드시 Component의 자식 클래스이어야 합니다.");
 
-			for (auto& c : _ComponentList)
+			for (auto& c : _componentList)
 			{
 				if (auto casted = dynamic_cast<T*>(c.get()))
 					return casted;
@@ -47,7 +47,7 @@ namespace gm
 		{
 			static_assert(std::is_base_of_v<Component, T>, "T는 반드시 Component의 자식 클래스이어야 합니다.");
 
-			for (const auto& c : _ComponentList)
+			for (const auto& c : _componentList)
 			{
 				if (auto casted = dynamic_cast<const T*>(c.get()))
 					return casted;
@@ -68,7 +68,7 @@ namespace gm
 		virtual void	OnRender(HDC hDC) {}
 
 	private:
-		std::vector<std::unique_ptr<Component>> _ComponentList{};
+		std::vector<std::unique_ptr<Component>> _componentList{};
 	};
 }
 

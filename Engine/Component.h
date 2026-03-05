@@ -21,7 +21,7 @@ namespace gm
 		void			LateUpdate();
 		void			Render(HDC hDC); 
 
-		void				SetOwner(GameObject* owner) { _Owner = owner; }
+		void				SetOwner(GameObject* owner) { _owner = owner; }
 		GameObject&			GetOwner();
 		const GameObject&	GetOwner() const;
 
@@ -32,7 +32,7 @@ namespace gm
 		virtual void	OnRender(HDC hDC) {};
 
 	private:
-		GameObject* _Owner{};
+		GameObject* _owner{};
 	};
 }
 

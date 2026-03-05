@@ -28,14 +28,14 @@ namespace gm
 
 	GameObject& Component::GetOwner()
 	{
-		GM_ASSERT_TERMINATE(_Owner, "컴포넌트는 항상 소유자가 있어야 합니다.");
-		return *_Owner;
+		GM_ASSERT_TERMINATE(_owner, "컴포넌트는 항상 소유자가 있어야 합니다.");
+		return *_owner;
 	}
 
 	const GameObject& Component::GetOwner() const
 	{
-		GM_ASSERT_TERMINATE(_Owner, "컴포넌트는 항상 소유자가 있어야 합니다.");
-		return *_Owner;
+		GM_ASSERT_TERMINATE(_owner, "컴포넌트는 항상 소유자가 있어야 합니다.");
+		return *_owner;
 	}
 }
 

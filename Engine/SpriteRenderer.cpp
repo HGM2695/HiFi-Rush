@@ -30,15 +30,15 @@ namespace gm
 		const math::Vector2 pos = _Transform->GetPosition();
 
 		Gdiplus::Graphics graphics(hDC);
-		graphics.DrawImage(_Image.get(), Gdiplus::Rect(static_cast<int>(pos._X), static_cast<int>(pos._Y), _Width, _Height));
+		graphics.DrawImage(_image.get(), Gdiplus::Rect(static_cast<int>(pos._X), static_cast<int>(pos._Y), _width, _height));
 	}
 
 	void SpriteRenderer::ImageLoad(const std::wstring& path)
 	{
-		_Image = std::make_unique<Gdiplus::Image>(path.c_str());
-		GM_ASSERT_RETURN(_Image, "Image 생성에 실패했습니다.");
+		_image = std::make_unique<Gdiplus::Image>(path.c_str());
+		GM_ASSERT_RETURN(_image, "Image 생성에 실패했습니다.");
 
-		_Width = _Image->GetWidth();
-		_Height = _Image->GetHeight();
+		_width = _image->GetWidth();
+		_height = _image->GetHeight();
 	}
 }
