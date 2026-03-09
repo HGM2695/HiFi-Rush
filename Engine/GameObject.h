@@ -9,6 +9,8 @@ typedef struct HDC__* HDC;
 
 namespace gm
 {
+	class Transform;
+
 	class GameObject
 	{
 	public:
@@ -56,10 +58,13 @@ namespace gm
 			return nullptr;
 		}
 
-		void	Initialize();
-		void	Update();
-		void	LateUpdate();
-		void	Render(HDC hDC);
+		const Transform*	GetTransform() const;
+		Transform*			GetTransform();
+
+		void				Initialize();
+		void				Update();
+		void				LateUpdate();
+		void				Render(HDC hDC);
 
 	protected:
 		virtual void	OnInitialize() {}

@@ -14,12 +14,11 @@ namespace gm
 	void SpriteRenderer::OnInitialize()
 	{
 		_transform = GetOwner().GetComponent<Transform>();
-		GM_ASSERT(_transform, "SpriteRenderer 클래스는 Transform 컴포넌트를 필요로 합니다.");
 	}
 
 	void SpriteRenderer::OnRender(HDC hDC)
 	{
-		GM_ASSERT(_texture, "SpriteRenderer 클래스는 Texture 컴포넌트를 필요로 합니다.");
+		GM_ASSERT(_texture, "SpriteRenderer 클래스는 Texture Resource를 필요로 합니다.");
 
 		const math::Vector2 pos = _transform->GetPosition();
 

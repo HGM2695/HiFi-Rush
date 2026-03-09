@@ -1,6 +1,7 @@
 ﻿#include "GameObject.h"
 #include "Windows.h"
 #include "Transform.h"
+#include "GMAssert.h"
 
 namespace gm
 {
@@ -11,6 +12,20 @@ namespace gm
 
 	GameObject::~GameObject()
 	{
+	}
+
+	Transform* GameObject::GetTransform()
+	{
+		Transform* transform = GetComponent<Transform>();
+		GM_ASSERT(transform, "GameObject는 반드시 Transform 컴포넌트를 가져야 합니다.");
+		return transform;
+	}
+
+	const Transform* GameObject::GetTransform() const
+	{
+		const Transform* transform = GetComponent<Transform>();
+		GM_ASSERT(transform, "GameObject는 반드시 Transform 컴포넌트를 가져야 합니다.");
+		return transform;
 	}
 
 	void GameObject::Initialize()
