@@ -1,14 +1,15 @@
 ﻿#pragma once
 #include <vector>
+#include "Vector2.h"
 
 namespace gm
 {
 	enum class KeyState
 	{
+        None,
 		Down,		// 처음 눌림
 		Pressed,	// 유지
 		Up,			// 뗌
-		None,
 		Count
 	};
 
@@ -74,26 +75,33 @@ namespace gm
         Count
     };
 
+    class Input
+    {
+    public:
+        struct Key
+        {
+            KeyCode					_keyCode{};
+            KeyState				_keyState{ KeyState::None };
+            bool					_pressed{};
+        };
 
-	class Input
-	{
-	public:
-		struct Key
-		{
-			KeyCode					_keyCode;
-			KeyState				_keyState;
-			bool					_pressed;
-		};
+        void			Initialize();
+        void			Update();
 
-		void						Initialize();
-		void						Update();
+        bool            IsKeyUp(KeyCode code) const { return getKey(code)._keyState == KeyState::Up; }
+        bool            IsKeyDown(KeyCode code) const { return getKey(code)._keyState == KeyState::Down; }
+        bool            IsKeyRepeat(KeyCode code) const { return getKey(code)._pressed == true; }
 
-		bool						IsKeyDown(KeyCode code) const { return _keyList[static_cast<int>(code)]._keyState == KeyState::Down; }
-		bool						IsKeyPressed(KeyCode code) const { return _keyList[static_cast<int>(code)]._keyState == KeyState::Pressed; }
-		bool						IsKeyUp(KeyCode code) const { return _keyList[static_cast<int>(code)]._keyState == KeyState::Up; }
+        float           GetAxis(KeyCode positive, KeyCode negative) const { return (IsKeyRepeat(positive) ? 1.f : 0.f) - (IsKeyRepeat(negative) ? 1.f : 0.f); }
+        math::Vector2   GetAxis2D(KeyCode right, KeyCode left, KeyCode down, KeyCode up) const;
 
-	private:
-		void						updateKeyListState();
+        float           GetMoveAxisX() const { return GetAxis(KeyCode::Right, KeyCode::Left); }
+        float           GetMoveAxisY() const { return GetAxis(KeyCode::Down, KeyCode::Up); }
+        math::Vector2   GetMoveAxisXY() const { return GetAxis2D(KeyCode::Right, KeyCode::Left, KeyCode::Down, KeyCode::Up); }
+
+    private:
+        const Key&      getKey(KeyCode code) const { return _keyList[static_cast<size_t>(code)]; }
+		void			updateKeyListState();
 
 	private:
 		std::vector<Key>			_keyList;

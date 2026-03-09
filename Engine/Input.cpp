@@ -80,6 +80,20 @@ namespace gm
 		updateKeyListState();
 	}
 
+    math::Vector2 Input::GetAxis2D(KeyCode right, KeyCode left, KeyCode down, KeyCode up) const
+    {
+        math::Vector2 v
+        {
+            GetAxis(right, left),
+            GetAxis(down, up)
+        };
+
+        if (v.LengthSquared() > 0.f)
+            v.Normalize();
+
+        return v;
+    }
+
 	void Input::updateKeyListState()
 	{
 		int Size = static_cast<int>(_keyList.size());
@@ -105,5 +119,4 @@ namespace gm
 			}
 		}
 	}
-
 }
