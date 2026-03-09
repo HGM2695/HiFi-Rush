@@ -6,6 +6,7 @@ namespace gm
 {
 	class TitleScene : public Scene
 	{
+	protected:
 		void OnUpdate() override;
 	};
 }

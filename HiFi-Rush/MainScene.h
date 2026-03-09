@@ -6,6 +6,7 @@ namespace gm
 {
 	class MainScene : public Scene
 	{
+	protected:
 		virtual void	OnInitialize() override;
 	};
 }
