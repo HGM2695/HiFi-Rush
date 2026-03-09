@@ -4,18 +4,26 @@
 
 namespace gm
 {
-	class Transform : public Component
-	{
-	public:
-		Transform();
-		virtual ~Transform();
+    class Transform : public Component
+    {
+    public:
+        Transform();
+        virtual ~Transform();
 
-		void					SetPosition(const math::Vector2& position) { _position = position; }
-		const math::Vector2&	GetPosition() { return _position; }
-		float					GetX() { return _position._X; }
-		float					GetY() { return _position._Y; }
+        void            SetPosition(const math::Vector2& position) { _position = position; }
+        void            SetX(float x) { _position._x = x; }
+        void            SetY(float y) { _position._y = y; }
 
-	private:
-		math::Vector2 _position;
-	};
+        void            Translate(const math::Vector2& delta) { _position += delta; }
+        void            Translate(float dx, float dy) { _position._x += dx; _position._y += dy; }
+        void            TranslateX(float dx) { _position._x += dx; }
+        void            TranslateY(float dy) { _position._y += dy; }
+
+        math::Vector2   GetPosition() const { return _position; }
+        float           GetX() const { return _position._x; }
+        float           GetY() const { return _position._y; }
+
+    private:
+        math::Vector2 _position{};
+    };
 }

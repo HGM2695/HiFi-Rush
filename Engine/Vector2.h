@@ -1,30 +1,50 @@
 ﻿#pragma once
+#include <cmath>
 
 namespace gm::math
 {
 	struct Vector2
 	{
-		float _X{};
-		float _Y{};
+		float _x{};
+		float _y{};
 
-		constexpr Vector2() = default;
-		constexpr Vector2(float x, float y) : _X(x), _Y(y) {}
+		Vector2() = default;
+		Vector2(float x, float y) : _x(x), _y(y) {}
 
-		Vector2 operator+(const Vector2& rhs) const
+		Vector2 operator+(const Vector2& rhs) const { return { _x + rhs._x, _y + rhs._y }; }
+		Vector2 operator-(const Vector2& rhs) const { return { _x - rhs._x, _y - rhs._y }; }
+		Vector2 operator*(float s) const { return { _x * s, _y * s }; }
+
+		Vector2& operator+=(const Vector2& rhs) { _x += rhs._x; _y += rhs._y; return *this; }
+		Vector2& operator-=(const Vector2& rhs) { _x -= rhs._x; _y -= rhs._y; return *this; }
+		Vector2& operator*=(float s) { _x *= s; _y *= s; return *this; }
+
+		float Length() const { return std::sqrt(_x * _x + _y * _y); }
+		float LengthSquared() const { return _x * _x + _y * _y; }
+
+		void Normalize()
 		{
-			return { _X + rhs._X, _Y + rhs._Y };
+			float len = Length();
+			if (len > 0.f)
+			{
+				_x /= len;
+				_y /= len;
+			}
 		}
 
-		Vector2 operator-(const Vector2& rhs) const
+		Vector2 Normalized() const
 		{
-			return { _X - rhs._X, _Y - rhs._Y };
+			float len = Length();
+			if (len > 0.f)
+				return { _x / len, _y / len };
+
+			return { 0.f, 0.f };
 		}
 
-		Vector2 operator*(float s) const
-		{
-			return { _X * s, _Y * s };
-		}
-
-
+		float			Dot(const Vector2& rhs) const { return _x * rhs._x + _y * rhs._y; }
+		static float	Distance(const Vector2& a, const Vector2& b) { return (a - b).Length(); }
+		static Vector2	Zero() { return { 0.f, 0.f }; }
 	};
+
+	inline Vector2 operator*(float s, const Vector2& v) { return { v._x * s, v._y * s };}
 }

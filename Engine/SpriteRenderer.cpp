@@ -23,6 +23,6 @@ namespace gm
 		const math::Vector2 pos = _transform->GetPosition();
 
 		Gdiplus::Graphics graphics(hDC);
-		graphics.DrawImage(_texture->GetImage(), Gdiplus::Rect(static_cast<int>(pos._X), static_cast<int>(pos._Y), _texture->GetWidth(), _texture->GetHeight()));
+		graphics.DrawImage(_texture->GetImage(), Gdiplus::Rect(static_cast<int>(pos._x), static_cast<int>(pos._y), _texture->GetWidth(), _texture->GetHeight()));
 	}
 }
