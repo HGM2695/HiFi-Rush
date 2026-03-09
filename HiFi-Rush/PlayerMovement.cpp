@@ -3,6 +3,7 @@
 #include "../Engine/Input.h"
 #include "../Engine/Transform.h"
 #include "../Engine/Time.h"
+#include "../Engine/GameObject.h"
 
 namespace gm
 {
