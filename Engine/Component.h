@@ -10,7 +10,7 @@ namespace gm
 {
 	class GameObject;
 
-	class Component : public Entity
+	class Component
 	{
 	public:
 		Component();

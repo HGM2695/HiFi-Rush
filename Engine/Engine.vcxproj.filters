@@ -42,6 +42,7 @@
     <ClInclude Include="Resources.h">
       <Filter>SubSystem</Filter>
     </ClInclude>
+    <ClInclude Include="Script.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -82,6 +83,7 @@
     <ClCompile Include="Resources.cpp">
       <Filter>SubSystem</Filter>
     </ClCompile>
+    <ClCompile Include="Script.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">

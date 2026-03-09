@@ -15,8 +15,6 @@ namespace gm
         virtual ~SpriteRenderer();
 
         virtual void    OnInitialize() override;
-        virtual void    OnUpdate() override;
-        virtual void    OnLateUpdate() override;
         virtual void    OnRender(HDC hDC) override;
 
         void                        SetTexture(const std::shared_ptr<Texture>& texture) { _texture = texture; }

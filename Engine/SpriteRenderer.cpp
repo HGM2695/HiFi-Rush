@@ -13,18 +13,8 @@ namespace gm
 
 	void SpriteRenderer::OnInitialize()
 	{
-		SetName(L"Sprite Renderer");
-
 		_transform = GetOwner().GetComponent<Transform>();
 		GM_ASSERT(_transform, "SpriteRenderer 클래스는 Transform 컴포넌트를 필요로 합니다.");
-	}
-
-	void SpriteRenderer::OnUpdate()
-	{
-	}
-
-	void SpriteRenderer::OnLateUpdate()
-	{
 	}
 
 	void SpriteRenderer::OnRender(HDC hDC)

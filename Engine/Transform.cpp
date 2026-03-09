@@ -4,21 +4,4 @@ namespace gm
 {
 	Transform::Transform() = default;
 	Transform::~Transform() = default;
-
-	void Transform::OnInitialize()
-	{
-		SetName(L"Transform");
-	}
-
-	void Transform::OnUpdate()
-	{
-	}
-
-	void Transform::OnLateUpdate()
-	{
-	}
-
-	void Transform::OnRender(HDC hDC)
-	{
-	}
 }
