@@ -14,6 +14,12 @@
     <Filter Include="Resource">
       <UniqueIdentifier>{e5c6772b-27ce-4b61-bb93-b81bdd469848}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{295c181e-3641-4f60-ae0d-61cc8b187a41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\01. Behavior">
+      <UniqueIdentifier>{1a87d7a0-b72a-4ce3-8b37-954eff0d60cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
@@ -30,6 +36,9 @@
     </ClInclude>
     <ClInclude Include="LoadResources.h">
       <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerMovement.h">
+      <Filter>Component\01. Behavior</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -52,6 +61,9 @@
     </ClCompile>
     <ClCompile Include="TitleScene.cpp">
       <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerMovement.cpp">
+      <Filter>Component\01. Behavior</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
