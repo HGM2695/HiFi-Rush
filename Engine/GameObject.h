@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 #include "Component.h"
+#include "Vector2.h"
 
 struct HDC__;
 typedef struct HDC__* HDC;
@@ -15,6 +16,7 @@ namespace gm
 	{
 	public:
 		GameObject();
+		GameObject(const math::Vector2& position);
 		virtual ~GameObject();
 
 		template <typename T>

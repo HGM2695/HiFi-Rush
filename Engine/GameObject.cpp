@@ -10,6 +10,11 @@ namespace gm
 		AddComponent<Transform>();
 	}
 
+	GameObject::GameObject(const math::Vector2& position) : GameObject()
+	{
+		GetTransform()->SetPosition(position);
+	}
+
 	GameObject::~GameObject()
 	{
 	}
