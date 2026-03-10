@@ -14,7 +14,7 @@ namespace gm
         SpriteRenderer();
         virtual ~SpriteRenderer();
 
-        void                        SetTexture(const std::shared_ptr<Texture>& texture) { _texture = texture; }
+        void                        SetTexture(const std::shared_ptr<Texture>& texture);
         std::shared_ptr<Texture>    GetTexture() const { return _texture; }
 
     protected:

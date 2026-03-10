@@ -10,6 +10,7 @@ namespace gm
 	{
 		Resources& resources = APPLICATION.GetResources();
 		resources.Load<Texture>(L"OrangeMushroom", L"Resources/GameObject/orange_mushroom.png", ResourceType::Texture);
+		resources.Load<Texture>(L"Xanadu", L"Resources/GameObject/Xanadu.png", ResourceType::Texture);
 	}
 }
 

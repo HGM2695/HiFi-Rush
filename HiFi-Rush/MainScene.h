@@ -8,6 +8,10 @@ namespace gm
 	{
 	protected:
 		virtual void	OnInitialize() override;
+
+	private:
+		void			InitializePlayer();
+		void			InitializeSubObject();
 	};
 }
 
