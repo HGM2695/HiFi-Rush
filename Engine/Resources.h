@@ -17,10 +17,12 @@ namespace gm
 
         // 없으면 nullptr / 타입 다르면 nullptr
         template<typename T>
-        std::shared_ptr<T> Find(const std::wstring& key, ResourceType expectedType) const
+        std::shared_ptr<T> Find(const std::wstring& key) const
         {
+            static_assert(std::is_base_of_v<Resource, T>, "T는 반드시 Resource를 상속해야 합니다.");
+
             auto base = FindBase(key);
-            if (base == nullptr || base->GetType() != expectedType)
+            if (base == nullptr || base->GetType() != T::Type)
                 return nullptr;
 
             return std::static_pointer_cast<T>(base);
@@ -28,13 +30,14 @@ namespace gm
 
         // 있으면 기존 반환, 없으면 생성 + Load + 캐싱
         template<typename T>
-        std::shared_ptr<T> Load(const std::wstring& key, const std::wstring& path, ResourceType type)
+        std::shared_ptr<T> Load(const std::wstring& key, const std::wstring& path)
         {
-            auto base = FindBase(key);
+            static_assert(std::is_base_of_v<Resource, T>, "T는 반드시 Resource를 상속해야 합니다.");
 
+            auto base = FindBase(key);
             if (base)
             {
-                GM_ASSERT_RETURN_VAL(base->GetType() == type, nullptr, "존재하지만 타입이 일치하지 않습니다.");
+                GM_ASSERT_RETURN_VAL(base->GetType() == T::Type, nullptr, "존재하지만 타입이 일치하지 않습니다.");
                 return std::static_pointer_cast<T>(base);
             }
 

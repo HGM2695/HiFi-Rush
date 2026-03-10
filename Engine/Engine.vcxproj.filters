@@ -45,7 +45,9 @@
       <Filter>Resource</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="DebugRenderer.h" />
+    <ClInclude Include="DebugRenderer.h">
+      <Filter>Debugger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -88,8 +90,10 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Resource</Filter>
     </ClCompile>
-    <ClCompile Include="DebugRenderer.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="DebugRenderer.cpp">
+      <Filter>Debugger</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">

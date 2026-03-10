@@ -13,14 +13,16 @@ namespace gm
 	class Texture : public Resource
 	{
 	public:
-		Texture();
-		virtual ~Texture();
+		static constexpr ResourceType Type = ResourceType::Texture;
 
-		virtual bool			Load(const std::wstring& path) override;
+		virtual	ResourceType	GetType() const override { return Type; }
 			
-		uint32_t				GetWidth() { return _width; }
-		uint32_t				GetHeight() { return _height; }
-		Gdiplus::Image*			GetImage() { return _image.get(); }
+		uint32_t				GetWidth() const { return _width; }
+		uint32_t				GetHeight() const { return _height; }
+		Gdiplus::Image*			GetImage() const { return _image.get(); }
+
+	protected:
+		virtual bool			LoadInternal(const std::wstring& path) override;
 
 	private:
 		std::unique_ptr<Gdiplus::Image>	 _image{};

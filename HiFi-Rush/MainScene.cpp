@@ -20,7 +20,7 @@ namespace gm
 		auto player = Instantiate<GameObject>({0, 0});
 
 		auto spriteRenderer = player->AddComponent<SpriteRenderer>();
-		spriteRenderer->SetTexture(APPLICATION.GetResources().Find<Texture>(L"OrangeMushroom", ResourceType::Texture));
+		spriteRenderer->SetTexture(APPLICATION.GetResources().Find<Texture>(L"OrangeMushroom"));
 
 		player->AddComponent<PlayerMovement>();
 
@@ -33,11 +33,11 @@ namespace gm
 		// BackGround
 		auto BackGround = Instantiate<GameObject>({ 0, 0 });
 		auto spriteRenderer = BackGround->AddComponent<SpriteRenderer>();
-		spriteRenderer->SetTexture(APPLICATION.GetResources().Find<Texture>(L"Xanadu", ResourceType::Texture));
+		spriteRenderer->SetTexture(APPLICATION.GetResources().Find<Texture>(L"Xanadu"));
 
 		// Monster
 		auto monster = Instantiate<GameObject>({ 200, 300 });
 		spriteRenderer = monster->AddComponent<SpriteRenderer>();
-		spriteRenderer->SetTexture(APPLICATION.GetResources().Find<Texture>(L"OrangeMushroom", ResourceType::Texture));
+		spriteRenderer->SetTexture(APPLICATION.GetResources().Find<Texture>(L"OrangeMushroom"));
 	}
 }

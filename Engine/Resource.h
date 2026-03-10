@@ -6,28 +6,38 @@ namespace gm
 {
 	enum class ResourceType
 	{
-		AudioClip,
-		Prefab,
 		Texture,
+		Material,
+		Mesh,
+		Skeleton,
+		AnimationClip,
+		AudioClip,
 
 		Count
 	};
 
+	class Resources;
+
 	class Resource : public Entity
 	{
-	public:
-		Resource(ResourceType type);
-		virtual ~Resource();
+		friend class Resources;
 
-		virtual bool			Load(const std::wstring& path) = 0;
-		ResourceType			GetType() { return _type; }
-		const std::wstring&		GetPath() { return _path; }
+	public:
+		Resource() = default;
+		virtual ~Resource() = default;
+
+		virtual	ResourceType	GetType() const = 0;
+
+		const std::wstring&		GetPath() const { return _path; }
+
+	protected:
+		virtual bool			LoadInternal(const std::wstring& path) = 0;
+
+	private:
+		bool					Load(const std::wstring& path) { return LoadInternal(path); }
 		void					SetPath(const std::wstring& path) { _path = path; }
 
 	private:
-		ResourceType _type;
 		std::wstring _path;
 	};
 }
-
-
