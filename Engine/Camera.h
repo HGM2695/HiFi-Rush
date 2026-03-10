@@ -15,14 +15,30 @@ namespace gm
 		static math::Vector2	MainWorldToScreen(const math::Vector2& worldPos);
 
 		math::Vector2			WorldToScreen(const math::Vector2& worldPos) const;
+		math::Vector2			GetCameraPosition() const { return _cameraPosition; }
+		float					GetFollowSpeed() const { return _followSpeed; }
+		
+		void					SetDeadZoneWidth(float width) { _deadZoneWidth = width; }
+		void					SetDeadZoneHeight(float height) { _deadZoneHeight = height; }
+		void					SetDeadZone(float width, float height) { SetDeadZoneWidth(width); SetDeadZoneHeight(height); }
+		void					SetFollowSpeed(float followSpeed) { _followSpeed = followSpeed; }
 
 	protected:
 		virtual void			OnInitialize() override;
 		virtual void			OnLateUpdate() override;
 
 	private:
-		inline static Camera* _mainCamera = nullptr;
+		void					FollowOwner();
 
-		Transform* _transform = nullptr;
+	private:
+		inline static Camera*	_mainCamera = nullptr;
+
+		Transform*				_ownerTransform = nullptr;
+		math::Vector2			_cameraPosition{};
+
+		// 카메라가 움직이지 않는 Dead Zone 영역 크기
+		float					_deadZoneWidth{};
+		float					_deadZoneHeight{};
+		float					_followSpeed{ 5.f };
 	};
 }

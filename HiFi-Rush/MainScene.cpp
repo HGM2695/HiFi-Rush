@@ -25,6 +25,7 @@ namespace gm
 		player->AddComponent<PlayerMovement>();
 
 		auto camera = player->AddComponent<Camera>();
+		camera->SetDeadZone(400, 300);
 	}
 
 	void MainScene::InitializeSubObject()

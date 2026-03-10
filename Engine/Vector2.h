@@ -42,6 +42,8 @@ namespace gm::math
 		}
 
 		float			Dot(const Vector2& rhs) const { return _x * rhs._x + _y * rhs._y; }
+
+		static Vector2	Lerp(const Vector2& lhs, const Vector2& rhs, float t) { return lhs + (rhs - lhs) * t; }
 		static float	Distance(const Vector2& a, const Vector2& b) { return (a - b).Length(); }
 		static Vector2	Zero() { return { 0.f, 0.f }; }
 	};

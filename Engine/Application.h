@@ -40,8 +40,10 @@ namespace gm
 		void				Render();
 
 		void				ShutDownRuntime();
+		uint32_t			GetWidth() { return _width; }
+		uint32_t			GetHeight() { return _height; }
 
-	public:
+	public: // subsystem
 		Input&				GetInput() { return *_input; }
 		Time&				GetTime() { return *_time; }
 		SceneManager&		GetSceneManager() { return *_sceneManager; }
