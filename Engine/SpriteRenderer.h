@@ -24,6 +24,6 @@ namespace gm
     private:
         std::shared_ptr<Texture> _texture{};
 
-        Transform* _transform{};
+        Transform* _ownerTransform{};
     };
 }

@@ -20,17 +20,19 @@ namespace gm
 
 	void SpriteRenderer::OnInitialize()
 	{
-		_transform = GetOwner().GetComponent<Transform>();
+		_ownerTransform = GetOwner().GetComponent<Transform>();
 	}
 
 	void SpriteRenderer::OnRender(HDC hDC)
 	{
 		GM_ASSERT(_texture, "SpriteRenderer 클래스는 Texture Resource를 필요로 합니다.");
 
-		math::Vector2 pos = _transform->GetPosition();
+		math::Vector2 pos = _ownerTransform->GetPosition();
 		pos = Camera::MainWorldToScreen(pos);
 
 		Gdiplus::Graphics graphics(hDC);
-		graphics.DrawImage(_texture->GetImage(), Gdiplus::Rect(static_cast<int>(pos._x), static_cast<int>(pos._y), _texture->GetWidth(), _texture->GetHeight()));
+		UINT width = _texture->GetWidth();
+		UINT height = _texture->GetHeight();
+		graphics.DrawImage(_texture->GetImage(), Gdiplus::Rect(static_cast<int>(pos._x - width * 0.5), static_cast<int>(pos._y - height * 0.5), _texture->GetWidth(), _texture->GetHeight()));
 	}
 }

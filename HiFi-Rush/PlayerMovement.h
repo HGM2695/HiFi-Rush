@@ -14,7 +14,7 @@ namespace gm
 		virtual void OnUpdate() override;
 
 	private:
-		Transform*		_transform;
-		float			_moveSpeed = 100.f;
+		Transform*		_ownerTransform;
+		float			_moveSpeed = 600.f;
 	};
 }

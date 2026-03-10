@@ -9,7 +9,7 @@ namespace gm
 {
 	void PlayerMovement::OnInitialize()
 	{
-		_transform = GetOwner().GetTransform();
+		_ownerTransform = GetOwner().GetTransform();
 	}
 
     void PlayerMovement::OnUpdate()
@@ -18,6 +18,6 @@ namespace gm
         float dt = APPLICATION.GetTime().GetDeltaTime();
 
         math::Vector2 dir = input.GetMoveAxisXY();
-        _transform->Translate(dir * _moveSpeed * dt);
+        _ownerTransform->Translate(dir * _moveSpeed * dt);
     }
 }

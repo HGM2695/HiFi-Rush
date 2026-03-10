@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include <cassert>
-
 struct HDC__;
 typedef struct HDC__* HDC;
 
