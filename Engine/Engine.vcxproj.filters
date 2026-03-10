@@ -45,6 +45,7 @@
       <Filter>Resource</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="DebugRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -87,6 +88,7 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Resource</Filter>
     </ClCompile>
+    <ClCompile Include="DebugRenderer.cpp" />
     <ClCompile Include="Camera.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -104,6 +106,9 @@
     </Filter>
     <Filter Include="Resource">
       <UniqueIdentifier>{41d7a4d9-43b8-4be9-9baa-16650015719b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debugger">
+      <UniqueIdentifier>{6cafcfdf-c330-498d-b8dd-a773b82a2e4a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
