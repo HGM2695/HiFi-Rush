@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include "Entity.h"
 #include <cassert>
 
 struct HDC__;
