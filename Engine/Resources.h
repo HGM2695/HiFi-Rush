@@ -51,6 +51,7 @@ namespace gm
             return resource;
         }
 
+        bool    Add(const std::wstring& key, const std::shared_ptr<Resource>& resource);
         bool    Unload(const std::wstring& key);
         void    Clear();
         size_t  Count() const { return _resourceList.size(); }
