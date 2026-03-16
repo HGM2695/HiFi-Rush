@@ -13,6 +13,6 @@ namespace gm
 		sceneManager.CreateScene<TitleScene>(L"TitleScene");
 		sceneManager.CreateScene<MainScene>(L"MainScene");
 
-		sceneManager.PlayScene(L"TitleScene");
+		sceneManager.PlayScene(L"MainScene");
 	}
 }

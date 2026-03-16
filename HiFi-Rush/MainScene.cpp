@@ -6,6 +6,8 @@
 #include "../Engine/SpriteRenderer.h"
 #include "../Engine/Texture.h"
 #include "../Engine/Camera.h"
+#include "../Engine/SpriteAnimator.h"
+#include "../Engine/SpriteAnimationClip.h"
 
 namespace gm
 {
@@ -20,12 +22,16 @@ namespace gm
 		auto player = Instantiate<GameObject>({0, 0});
 
 		auto spriteRenderer = player->AddComponent<SpriteRenderer>();
-		spriteRenderer->SetTexture(APPLICATION.GetResources().Find<Texture>(L"OrangeMushroom"));
+		spriteRenderer->SetTexture(APPLICATION.GetResources().Find<Texture>(L"Player"));
 
 		player->AddComponent<PlayerMovement>();
 
 		auto camera = player->AddComponent<Camera>();
 		camera->SetDeadZone(400, 300);
+
+		auto spriteAnimator = player->AddComponent<SpriteAnimator>();
+		spriteAnimator->AddClip(L"Move", APPLICATION.GetResources().Find<SpriteAnimationClip>(L"Player_Move"));
+		spriteAnimator->Play(L"Move", { 0.f, std::nullopt});
 	}
 
 	void MainScene::InitializeSubObject()

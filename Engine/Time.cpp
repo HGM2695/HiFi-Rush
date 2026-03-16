@@ -36,7 +36,7 @@ namespace gm
 			timeElapsed = 0.0f;
 		}
 
-		TextOut(hDC, 0, 0, szFPS, wcsnlen_s(szFPS, 50));
+		TextOut(hDC, 0, 0, szFPS, wcsnlen_s(szFPS, static_cast<size_t>(50)));
 	}
 
 	void Time::calcDeltaTime()
