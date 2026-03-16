@@ -10,6 +10,10 @@
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 
+#ifdef _DEBUG
+#include <crtdbg.h>
+#endif
+
 #include <gdiplus.h>
 #pragma comment(lib, "gdiplus.lib")
 
@@ -34,6 +38,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ LPWSTR    lpCmdLine,
                      _In_ int       nCmdShow)
 {
+#ifdef _DEBUG
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    //_CrtSetBreakAlloc();
+#endif
+
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
