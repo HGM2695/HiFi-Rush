@@ -38,7 +38,7 @@ namespace gm
     void Application::initializeSubSystem()
     {
         _input = std::make_unique<Input>();
-        _input->Initialize();
+        _input->Initialize(_hWnd);
 
         _time = std::make_unique<Time>();
         _time->Initialize();
