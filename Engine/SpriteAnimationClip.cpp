@@ -44,9 +44,9 @@ namespace gm
 		_frameList.clear();
 
 		// 추후 Animation Data 파일로 부터 파싱하는 구조로 변경 예정
-		if (path == L"TestSpriteAnimation")
+		if (path == L"TestSpriteIdleLeft")
 		{
-			_texture = APPLICATION.GetResources().Find<Texture>(L"Player");
+			_texture = APPLICATION.GetResources().Find<Texture>(L"PlayerLeft");
 			GM_ASSERT_RETURN_VAL(_texture, false, "SpriteAnimationClip이 사용하는 Texture가 존재하지 않습니다.");
 
 			const int frameWidth = static_cast<int>(_texture->GetWidth() / 4);
@@ -55,6 +55,42 @@ namespace gm
 			for (int i = 0; i < 3; ++i)
 				AddFrame({frameWidth * i, 0, frameWidth, frameHeight, 0.5f });
 			AddFrame({ frameWidth, 0, frameWidth, frameHeight, 0.5f });
+		}
+		else if (path == L"TestSpriteMoveLeft")
+		{
+			_texture = APPLICATION.GetResources().Find<Texture>(L"PlayerLeft");
+			GM_ASSERT_RETURN_VAL(_texture, false, "SpriteAnimationClip이 사용하는 Texture가 존재하지 않습니다.");
+
+			const int frameWidth = static_cast<int>(_texture->GetWidth() / 4);
+			const int frameHeight = static_cast<int>(_texture->GetHeight() / 9);
+
+			for (int i = 0; i < 3; ++i)
+				AddFrame({ frameWidth * i, frameHeight, frameWidth, frameHeight, 0.3f });
+			AddFrame({ frameWidth, frameHeight, frameWidth, frameHeight, 0.3f });
+		}
+		if (path == L"TestSpriteIdleRight")
+		{
+			_texture = APPLICATION.GetResources().Find<Texture>(L"PlayerRight");
+			GM_ASSERT_RETURN_VAL(_texture, false, "SpriteAnimationClip이 사용하는 Texture가 존재하지 않습니다.");
+
+			const int frameWidth = static_cast<int>(_texture->GetWidth() / 4);
+			const int frameHeight = static_cast<int>(_texture->GetHeight() / 9);
+
+			for (int i = 0; i < 3; ++i)
+				AddFrame({ frameWidth * i, 0, frameWidth, frameHeight, 0.5f });
+			AddFrame({ frameWidth, 0, frameWidth, frameHeight, 0.5f });
+		}
+		else if (path == L"TestSpriteMoveRight")
+		{
+			_texture = APPLICATION.GetResources().Find<Texture>(L"PlayerRight");
+			GM_ASSERT_RETURN_VAL(_texture, false, "SpriteAnimationClip이 사용하는 Texture가 존재하지 않습니다.");
+
+			const int frameWidth = static_cast<int>(_texture->GetWidth() / 4);
+			const int frameHeight = static_cast<int>(_texture->GetHeight() / 9);
+
+			for (int i = 0; i < 3; ++i)
+				AddFrame({ frameWidth * i, frameHeight, frameWidth, frameHeight, 0.3f });
+			AddFrame({ frameWidth, frameHeight, frameWidth, frameHeight, 0.3f });
 		}
 
 		return _frameCount > 0 && _length > 0;

@@ -37,6 +37,9 @@
     <ClInclude Include="LoadResources.h">
       <Filter>Resource</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerAnimationFSM.h">
+      <Filter>Component\01. Behavior</Filter>
+    </ClInclude>
     <ClInclude Include="PlayerMovement.h">
       <Filter>Component\01. Behavior</Filter>
     </ClInclude>
@@ -61,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="TitleScene.cpp">
       <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerAnimationFSM.cpp">
+      <Filter>Component\01. Behavior</Filter>
     </ClCompile>
     <ClCompile Include="PlayerMovement.cpp">
       <Filter>Component\01. Behavior</Filter>

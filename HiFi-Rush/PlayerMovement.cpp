@@ -18,6 +18,13 @@ namespace gm
         float dt = APPLICATION.GetTime().GetDeltaTime();
 
         math::Vector2 dir = input.GetMoveAxisXY();
+        _isMoving = (dir._x != 0.f || dir._y != 0.f);
+
+        if (dir._x < 0.f)
+            _ownerTransform->SetForward({ -1.f, 0.f });
+        else if (dir._x > 0.f)
+            _ownerTransform->SetForward({ 1.f, 0.f });
+
         _ownerTransform->Translate(dir * _moveSpeed * dt);
     }
 }

@@ -138,6 +138,7 @@
     <ClInclude Include="LoadResources.h" />
     <ClInclude Include="LoadScenes.h" />
     <ClInclude Include="MainScene.h" />
+    <ClInclude Include="PlayerAnimationFSM.h" />
     <ClInclude Include="PlayerMovement.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
@@ -146,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainScene.cpp" />
+    <ClCompile Include="PlayerAnimationFSM.cpp" />
     <ClCompile Include="PlayerMovement.cpp" />
     <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>

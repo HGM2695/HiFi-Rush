@@ -11,6 +11,17 @@ namespace gm::math
 		Vector2() = default;
 		Vector2(float x, float y) : _x(x), _y(y) {}
 
+		bool operator==(const Vector2& rhs) const
+		{
+			constexpr float epsilon = 0.0001f;
+			return std::fabs(_x - rhs._x) < epsilon && std::fabs(_y - rhs._y) < epsilon;
+		}
+
+		bool operator!=(const Vector2& rhs) const
+		{
+			return (*this == rhs) == false;
+		}
+
 		Vector2 operator+(const Vector2& rhs) const { return { _x + rhs._x, _y + rhs._y }; }
 		Vector2 operator-(const Vector2& rhs) const { return { _x - rhs._x, _y - rhs._y }; }
 		Vector2 operator*(float s) const { return { _x * s, _y * s }; }

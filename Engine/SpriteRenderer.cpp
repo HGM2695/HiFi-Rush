@@ -36,7 +36,8 @@ namespace gm
 
 	void SpriteRenderer::OnRender(HDC hDC)
 	{
-		GM_ASSERT(_texture, "SpriteRenderer 클래스는 Texture Resource를 필요로 합니다.");
+		if (_texture == nullptr)
+			return;
 
 		math::Vector2 pos = _ownerTransform->GetPosition();
 		pos = Camera::MainWorldToScreen(pos);
