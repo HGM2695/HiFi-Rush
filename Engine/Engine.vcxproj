@@ -128,6 +128,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AnimationClip.h" />
+    <ClInclude Include="AnimationClipSet.h" />
+    <ClInclude Include="AnimationTypes.h" />
+    <ClInclude Include="AnimationController.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
@@ -135,18 +139,25 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GMAssert.h" />
+    <ClInclude Include="IAnimator.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Resources.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="Vector2.h" />
-    <ClInclude Include="Input.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="SpriteAnimationClip.h" />
+    <ClInclude Include="SpriteAnimator.h" />
+    <ClInclude Include="SpriteFrame.h" />
     <ClInclude Include="SpriteRenderer.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="Vector2.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimationClip.cpp" />
+    <ClCompile Include="AnimationController.cpp" />
+    <ClCompile Include="AnimationClipSet.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
@@ -159,6 +170,8 @@
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="SpriteAnimationClip.cpp" />
+    <ClCompile Include="SpriteAnimator.cpp" />
     <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Time.cpp" />

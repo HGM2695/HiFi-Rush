@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -35,18 +35,44 @@
     <ClInclude Include="GMAssert.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="IAnimator.h">
+      <Filter>Engine Component\Animator</Filter>
+    </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>Resource</Filter>
     </ClInclude>
     <ClInclude Include="Resources.h">
       <Filter>SubSystem</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h" />
     <ClInclude Include="DebugRenderer.h">
       <Filter>Debugger</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Engine Component</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationClip.h">
+      <Filter>Resource\AnimationClip</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Resource\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationTypes.h">
+      <Filter>Engine Component\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationController.h">
+      <Filter>Engine Component\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteAnimator.h">
+      <Filter>Engine Component\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteFrame.h">
+      <Filter>Resource\AnimationClip\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteAnimationClip.h">
+      <Filter>Resource\AnimationClip\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationClipSet.h">
+      <Filter>Engine Component\Animator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -87,12 +113,29 @@
     <ClCompile Include="Resources.cpp">
       <Filter>SubSystem</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DebugRenderer.cpp">
       <Filter>Debugger</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Engine Component</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationClip.cpp">
+      <Filter>Resource\AnimationClip</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Resource\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationController.cpp">
+      <Filter>Engine Component\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteAnimator.cpp">
+      <Filter>Engine Component\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteAnimationClip.cpp">
+      <Filter>Resource\AnimationClip\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationClipSet.cpp">
+      <Filter>Engine Component\Animator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -113,6 +156,18 @@
     </Filter>
     <Filter Include="Debugger">
       <UniqueIdentifier>{6cafcfdf-c330-498d-b8dd-a773b82a2e4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\AnimationClip">
+      <UniqueIdentifier>{b1e51c32-3921-4947-b739-32ff8e03c820}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Texture">
+      <UniqueIdentifier>{b0fb520d-bc46-471d-8b48-475823bb3314}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Component\Animator">
+      <UniqueIdentifier>{40eb6569-d2d1-40ac-9cf1-2e5dd1547278}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\AnimationClip\Sprite">
+      <UniqueIdentifier>{b8e56446-bc85-4a57-b1ab-d6750796bde6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

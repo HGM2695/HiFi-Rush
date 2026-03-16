@@ -14,7 +14,6 @@ namespace gm
 	{
 	public:
 		static constexpr ResourceType Type = ResourceType::Texture;
-
 		virtual	ResourceType	GetType() const override { return Type; }
 			
 		uint32_t				GetWidth() const { return _width; }
@@ -30,5 +29,3 @@ namespace gm
 		uint32_t						 _height{};
 	};
 }
-
-

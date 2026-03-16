@@ -10,7 +10,7 @@ namespace gm
 		Material,
 		Mesh,
 		Skeleton,
-		AnimationClip,
+		SpriteAnimationClip,
 		AudioClip,
 
 		Count
