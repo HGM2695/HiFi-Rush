@@ -94,6 +94,8 @@ namespace gm
 		if (_currentClip == nullptr)
 			return;
 
+		GM_ASSERT_RETURN(_spriteRenderer, "OnInitialize()가 먼저 호출되어야 합니다.");
+
 		_spriteRenderer->SetTexture(_currentClip->GetTexture());
 		_spriteRenderer->SetSourceRect(_currentClip->GetFrameByTime(GetPlayTime()));
 	}
