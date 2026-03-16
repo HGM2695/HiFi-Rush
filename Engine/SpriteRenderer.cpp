@@ -18,6 +18,17 @@ namespace gm
 		_texture = texture;
 	}
 
+	void SpriteRenderer::ResetSourceRect()
+	{
+		_useSourceRect = false;
+	}
+
+	void SpriteRenderer::SetSourceRect(const SpriteFrame& frame)
+	{
+		_sourceFrame = frame;
+		_useSourceRect = true;
+	}
+
 	void SpriteRenderer::OnInitialize()
 	{
 		_ownerTransform = GetOwner().GetComponent<Transform>();
@@ -31,8 +42,21 @@ namespace gm
 		pos = Camera::MainWorldToScreen(pos);
 
 		Gdiplus::Graphics graphics(hDC);
-		UINT width = _texture->GetWidth();
-		UINT height = _texture->GetHeight();
-		graphics.DrawImage(_texture->GetImage(), Gdiplus::Rect(static_cast<int>(pos._x - width * 0.5), static_cast<int>(pos._y - height * 0.5), _texture->GetWidth(), _texture->GetHeight()));
+		int drawWidth = static_cast<int>(_texture->GetWidth());
+		int drawHeight = static_cast<int>(_texture->GetHeight());
+
+		if (_useSourceRect)
+		{
+			drawWidth = _sourceFrame.width;
+			drawHeight = _sourceFrame.height;
+			graphics.DrawImage(
+				_texture->GetImage(), Gdiplus::Rect(static_cast<int>(pos._x - drawWidth * 0.5f), static_cast<int>(pos._y - drawHeight * 0.5f), drawWidth, drawHeight),
+				_sourceFrame.left, _sourceFrame.top, _sourceFrame.width, _sourceFrame.height, Gdiplus::UnitPixel
+			);
+			return;
+		}
+
+		graphics.DrawImage(_texture->GetImage(),
+			Gdiplus::Rect(static_cast<int>(pos._x - drawWidth * 0.5f), static_cast<int>(pos._y - drawHeight * 0.5f), drawWidth, drawHeight));
 	}
 }

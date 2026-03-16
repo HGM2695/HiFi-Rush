@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Component.h"
+#include "SpriteFrame.h"
 #include <memory>
 
 namespace gm
@@ -16,14 +17,18 @@ namespace gm
 
         void                        SetTexture(const std::shared_ptr<Texture>& texture);
         std::shared_ptr<Texture>    GetTexture() const { return _texture; }
+        void                        ResetSourceRect();
+        void                        SetSourceRect(const SpriteFrame& frame);
 
     protected:
         virtual void    OnInitialize() override;
         virtual void    OnRender(HDC hDC) override;
 
     private:
-        std::shared_ptr<Texture> _texture{};
+        std::shared_ptr<Texture> _texture;
 
-        Transform* _ownerTransform{};
+        Transform*      _ownerTransform{};
+        bool            _useSourceRect = false;
+        SpriteFrame     _sourceFrame{};
     };
 }
