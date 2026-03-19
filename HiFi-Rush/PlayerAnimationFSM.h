@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "../Engine/AnimationNotify.h"
 #include "../Engine/Component.h"
 #include "../Engine/AnimationTypes.h"
 #include "../Engine/Transform.h"
@@ -23,6 +24,7 @@ namespace gm
 		virtual void OnLateUpdate() override;
 
 	private:
+		void OnAnimationNotify(const std::wstring& notifyName);
 		bool IsLookingLeft(const math::Vector2& forward) const { return forward._x < 0.f; }
 		void SyncDirection();
 		void UpdateState();
@@ -33,6 +35,7 @@ namespace gm
 		PlayerAnimState	_currentState = PlayerAnimState::None;
 		math::Vector2	_lastForward{ 1.f, 0.f };
 
+		NotifyConnection _notifyConnection{};
 		SpriteAnimator*	_spriteAnimator = nullptr;
 		PlayerMovement*	_playerMovement = nullptr;
 		Transform*		_ownerTransform = nullptr;

@@ -51,6 +51,9 @@ namespace gm
 		spriteAnimatinoClip->AddFrame({ frameWidth, frameHeight, frameWidth, frameHeight, 0.3f });
 		APPLICATION.GetResources().Add(L"Player_MoveLeft", spriteAnimatinoClip);
 
+		spriteAnimatinoClip->AddNotify(0.3f, L"MoveLeftStep");
+		spriteAnimatinoClip->AddNotify(0.9f, L"MoveLeftStep");
+
 		// IdleRight
 		spriteAnimatinoClip = std::make_shared< SpriteAnimationClip>();
 		texture = APPLICATION.GetResources().Find<Texture>(L"PlayerRight");
@@ -78,5 +81,8 @@ namespace gm
 			spriteAnimatinoClip->AddFrame({ frameWidth * i, frameHeight, frameWidth, frameHeight, 0.3f });
 		spriteAnimatinoClip->AddFrame({ frameWidth, frameHeight, frameWidth, frameHeight, 0.3f });
 		APPLICATION.GetResources().Add(L"Player_MoveRight", spriteAnimatinoClip);
+
+		spriteAnimatinoClip->AddNotify(0.3f, L"MoveRightStep");
+		spriteAnimatinoClip->AddNotify(0.9f, L"MoveRightStep");
 	}
 }

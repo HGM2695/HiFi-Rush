@@ -1,5 +1,6 @@
 ﻿#include "PlayerAnimationFSM.h"
 #include "PlayerMovement.h"
+#include <windows.h>
 #include "../Engine/GameObject.h"
 #include "../Engine/GMAssert.h"
 #include "../Engine/SpriteAnimator.h"
@@ -10,6 +11,11 @@ namespace gm
 	{
 		_spriteAnimator = GetOwner().GetComponent<SpriteAnimator>();
 		GM_ASSERT(_spriteAnimator, "PlayerAnimationFSM은 SpriteAnimator가 필요합니다.");
+		_notifyConnection = _spriteAnimator->BindNotifyCallback(
+			[this](const std::wstring& notifyName)
+			{
+				OnAnimationNotify(notifyName);
+			});
 
 		_playerMovement = GetOwner().GetComponent<PlayerMovement>();
 		GM_ASSERT(_playerMovement, "PlayerAnimationFSM은 PlayerMovement가 필요합니다.");
@@ -72,5 +78,15 @@ namespace gm
 				_spriteAnimator->Play(L"MoveRight", playOption);
 			break;
 		}
+	}
+
+	void PlayerAnimationFSM::OnAnimationNotify(const std::wstring& notifyName)
+	{
+#ifdef _DEBUG
+		if (notifyName == L"MoveLeftStep")
+			OutputDebugStringW(L"[PlayerAnimationFSM] 문자열 기반 AnimationNotify: MoveLeftStep\n");
+		else if (notifyName == L"MoveRightStep")
+			OutputDebugStringW(L"[PlayerAnimationFSM] 문자열 기반 AnimationNotify: MoveRightStep\n");
+#endif
 	}
 }
