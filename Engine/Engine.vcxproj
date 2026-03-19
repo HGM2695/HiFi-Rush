@@ -130,6 +130,7 @@
   <ItemGroup>
     <ClInclude Include="AnimationClip.h" />
     <ClInclude Include="AnimationClipSet.h" />
+    <ClInclude Include="AnimationNotify.h" />
     <ClInclude Include="AnimationTypes.h" />
     <ClInclude Include="AnimationController.h" />
     <ClInclude Include="Application.h" />
@@ -158,6 +159,7 @@
     <ClCompile Include="AnimationClip.cpp" />
     <ClCompile Include="AnimationController.cpp" />
     <ClCompile Include="AnimationClipSet.cpp" />
+    <ClCompile Include="AnimationNotify.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />

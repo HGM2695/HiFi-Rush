@@ -1,13 +1,16 @@
 ﻿#pragma once
 
 #include "AnimationTypes.h"
-#include "string"
+#include <string>
+#include <functional>
 
 namespace gm
 {
     class IAnimator
     {
     public:
+        using AnimationNotifyCallback = std::function<void(const std::wstring&)>;
+
         virtual ~IAnimator() = default;
 
         virtual bool			HasClip(const std::wstring& name) const = 0;

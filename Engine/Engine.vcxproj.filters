@@ -74,6 +74,9 @@
     <ClInclude Include="AnimationClipSet.h">
       <Filter>Engine Component\Animator</Filter>
     </ClInclude>
+    <ClInclude Include="AnimationNotify.h">
+      <Filter>Engine Component\Animator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -135,6 +138,9 @@
       <Filter>Resource\AnimationClip\Sprite</Filter>
     </ClCompile>
     <ClCompile Include="AnimationClipSet.cpp">
+      <Filter>Engine Component\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationNotify.cpp">
       <Filter>Engine Component\Animator</Filter>
     </ClCompile>
   </ItemGroup>

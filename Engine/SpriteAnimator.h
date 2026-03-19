@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "AnimationNotify.h"
 #include "Component.h"
 #include "IAnimator.h"
 #include <memory>
@@ -9,6 +10,7 @@ namespace gm
 {
 	class AnimationController;
 	class AnimationClipSet;
+	class AnimationNotifyDispatcher;
 	class SpriteAnimationClip;
 	class SpriteRenderer;
 
@@ -21,6 +23,10 @@ namespace gm
 		bool									AddClip(const std::wstring& name, const std::shared_ptr<SpriteAnimationClip>& clip);
 		std::shared_ptr<SpriteAnimationClip>	FindClip(const std::wstring& name) const;
 		std::shared_ptr<SpriteAnimationClip>	GetCurrentClip() const { return _currentClip; }
+
+		[[nodiscard]] 
+		NotifyConnection						BindNotifyCallback(const AnimationNotifyCallback& notifyCallback);
+		void									ClearNotifyCallbacks();
 
 		// IAnimator
 		bool									HasClip(const std::wstring& name) const override;
@@ -40,10 +46,10 @@ namespace gm
 		void									ApplyRenderInfo();
 
 	private:		
-		std::unique_ptr<AnimationClipSet>		_animationClipSet;
-		std::shared_ptr<SpriteAnimationClip>	_currentClip{};
-
-		std::unique_ptr<AnimationController>	_animationController;
-		SpriteRenderer*							_spriteRenderer = nullptr;
+		std::unique_ptr<AnimationClipSet>			_animationClipSet;
+		std::shared_ptr<SpriteAnimationClip>		_currentClip{};
+		std::unique_ptr<AnimationController>		_animationController;
+		std::unique_ptr<AnimationNotifyDispatcher>	_animationNotifyDispatcher;
+		SpriteRenderer*								_spriteRenderer = nullptr;
 	};
 }

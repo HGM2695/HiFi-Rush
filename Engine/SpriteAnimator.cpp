@@ -1,6 +1,7 @@
 ﻿#include "SpriteAnimator.h"
 #include "AnimationController.h"
 #include "AnimationClipSet.h"
+#include "AnimationNotify.h"
 #include "Application.h"
 #include "GMAssert.h"
 #include "GameObject.h"
@@ -13,10 +14,21 @@ namespace gm
 	SpriteAnimator::SpriteAnimator()
 		: _animationController(std::make_unique<AnimationController>())
 		, _animationClipSet(std::make_unique<AnimationClipSet>())
+		, _animationNotifyDispatcher(std::make_unique<AnimationNotifyDispatcher>())
 	{
 	}
 
 	SpriteAnimator::~SpriteAnimator() = default;
+
+	NotifyConnection SpriteAnimator::BindNotifyCallback(const AnimationNotifyCallback& notifyCallback)
+	{
+		return _animationNotifyDispatcher->BindNotifyCallback(notifyCallback);
+	}
+
+	void SpriteAnimator::ClearNotifyCallbacks()
+	{
+		_animationNotifyDispatcher->ClearNotifyCallbacks();
+	}
 
 	bool SpriteAnimator::AddClip(const std::wstring& name, const std::shared_ptr<SpriteAnimationClip>& clip)
 	{
@@ -41,12 +53,14 @@ namespace gm
 
 		_currentClip = clip;
 		const bool played = _animationController->Play(*_currentClip, option);
+		_animationNotifyDispatcher->Reset(_animationController->GetPlayTime());
 		return played;
 	}
 
 	void SpriteAnimator::Reset()
 	{
 		_animationController->Reset();
+		_animationNotifyDispatcher->Reset();
 		ApplyRenderInfo();
 	}
 
@@ -85,7 +99,15 @@ namespace gm
 
 	void SpriteAnimator::OnUpdate()
 	{
-		_animationController->Update(APPLICATION.GetTime().GetDeltaTime());
+		if (_currentClip == nullptr)
+			return;
+
+		if (_animationController->IsPlaying())
+		{
+			_animationController->Update(APPLICATION.GetTime().GetDeltaTime());
+			_animationNotifyDispatcher->Dispatch(_currentClip->GetNotifyEvents(), _animationController->GetPlayTime(), _currentClip->GetLength());
+		}
+
 		ApplyRenderInfo();
 	}
 
