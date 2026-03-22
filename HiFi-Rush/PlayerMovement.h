@@ -16,7 +16,7 @@ namespace gm
 		bool			IsMoving() const { return _isMoving; }
 
 	private:
-		Transform*		_ownerTransform;
+		Transform*		_ownerTransform = nullptr;
 		float			_moveSpeed = 600.f;
 		bool			_isMoving = false;
 	};
