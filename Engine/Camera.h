@@ -10,6 +10,9 @@ namespace gm
 	class Camera : public Component
 	{
 	public:
+		Camera() = default;
+		virtual ~Camera() override;
+
 		static Camera*			GetMainCamera();
 		static void				SetMainCamera(Camera* camera);
 		static math::Vector2	MainWorldToScreen(const math::Vector2& worldPos);

@@ -7,6 +7,12 @@
 
 namespace gm
 {
+    Camera::~Camera()
+    {
+        if (_mainCamera == this)
+            _mainCamera = nullptr;
+    }
+
     Camera* Camera::GetMainCamera()
     {
         return _mainCamera;
