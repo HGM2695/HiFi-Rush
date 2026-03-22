@@ -38,4 +38,9 @@ namespace gm
 	{
 		_activeScene->Render(hDC);
 	}
+
+	void SceneManager::EndFrame()
+	{
+		_activeScene->EndFrame();
+	}
 }

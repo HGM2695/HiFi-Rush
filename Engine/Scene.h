@@ -34,6 +34,7 @@ namespace gm
 		void			Update();
 		void			LateUpdate();
 		void			Render(HDC hDC);
+		void			EndFrame();
 
 		virtual void	OnEnter() {};
 		virtual void	OnExit() {};
@@ -59,6 +60,8 @@ namespace gm
 
 			return ptr;
 		}
+
+		void			RemovePendingDestroyGameObjects();
 		
 	private:
 		std::vector<std::unique_ptr<GameObject>> _gameObjectList{};

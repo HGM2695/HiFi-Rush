@@ -38,6 +38,7 @@ namespace gm
 		void				Update();
 		void				LateUpdate();
 		void				Render();
+		void				EndFrame();
 
 		void				ShutDownRuntime();
 		uint32_t			GetWidth() { return _width; }

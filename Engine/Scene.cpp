@@ -1,5 +1,6 @@
 ﻿#include "Scene.h"
 #include "GameObject.h"
+#include <algorithm>
 
 namespace gm
 {
@@ -38,9 +39,25 @@ namespace gm
 			gameObject->Render(hDC);
 	}
 
-	void Scene::AddGameObject(std::unique_ptr<GameObject> gameObject) 
+	void Scene::EndFrame()
+	{
+		RemovePendingDestroyGameObjects();
+	}
+
+	void Scene::AddGameObject(std::unique_ptr<GameObject> gameObject)
 	{
 		if (gameObject)
 			_gameObjectList.push_back(std::move(gameObject));
+	}
+
+	void Scene::RemovePendingDestroyGameObjects()
+	{
+		_gameObjectList.erase(
+			std::remove_if(_gameObjectList.begin(), _gameObjectList.end(),
+				[](const std::unique_ptr<GameObject>& gameObject)
+				{
+					return gameObject->IsPendingDestroy();
+				}),
+			_gameObjectList.end());
 	}
 }

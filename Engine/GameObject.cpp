@@ -19,6 +19,14 @@ namespace gm
 	{
 	}
 
+	void GameObject::Destroy()
+	{
+		if (_lifeState == GameObjectLifeState::PendingDestroy)
+			return;
+
+		_lifeState = GameObjectLifeState::PendingDestroy;
+	}
+
 	Transform* GameObject::GetTransform()
 	{
 		Transform* transform = GetComponent<Transform>();
@@ -43,6 +51,9 @@ namespace gm
 
 	void GameObject::Update()
 	{
+		if (IsPendingDestroy())
+			return;
+
 		OnUpdate();
 
 		for (auto& component : _componentList)
@@ -51,6 +62,9 @@ namespace gm
 
 	void GameObject::LateUpdate()
 	{
+		if (IsPendingDestroy())
+			return;
+
 		OnLateUpdate();
 
 		for (auto& component : _componentList)
@@ -59,6 +73,9 @@ namespace gm
 
 	void GameObject::Render(HDC hDC)
 	{
+		if (IsPendingDestroy() || _isRender == false)
+			return;
+
 		OnRender(hDC);
 
 		for (auto& component : _componentList)

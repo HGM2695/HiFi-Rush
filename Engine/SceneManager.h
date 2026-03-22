@@ -35,6 +35,7 @@ namespace gm
 		void			Update();
 		void			LateUpdate();
 		void			Render(HDC hDC);
+		void			EndFrame();
 
 	private:
 		std::map<const std::wstring, std::unique_ptr<Scene>> _sceneList;

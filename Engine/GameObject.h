@@ -12,6 +12,12 @@ namespace gm
 {
 	class Transform;
 
+	enum class GameObjectLifeState
+	{
+		Active,
+		PendingDestroy,
+	};
+
 	class GameObject
 	{
 	public:
@@ -68,6 +74,12 @@ namespace gm
 		void				LateUpdate();
 		void				Render(HDC hDC);
 
+		void				Destroy();
+		bool				IsPendingDestroy() const { return _lifeState == GameObjectLifeState::PendingDestroy; }
+
+		void				SetRender(bool isRender) { _isRender = isRender; }
+		bool				IsRenderEnabled() const { return _isRender; }
+
 	protected:
 		virtual void	OnInitialize() {}
 		virtual void	OnUpdate() {}
@@ -76,6 +88,8 @@ namespace gm
 
 	private:
 		std::vector<std::unique_ptr<Component>> _componentList{};
+		GameObjectLifeState						_lifeState = GameObjectLifeState::Active;
+		bool									_isRender = true;
 	};
 }
 
