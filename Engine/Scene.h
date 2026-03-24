@@ -14,6 +14,8 @@ namespace gm
 
 	class Scene : public Entity
 	{
+	friend class SceneManager;
+
 	public:
 		Scene();
 		virtual ~Scene();
@@ -36,8 +38,43 @@ namespace gm
 		void			Render(HDC hDC);
 		void			EndFrame();
 
-		virtual void	OnEnter() {};
-		virtual void	OnExit() {};
+		template <typename TFunc>
+		void ForEachGameObject(TFunc&& func)
+		{
+			for (auto& gameObject : _gameObjectList)
+				func(*gameObject);
+		}
+
+		template <typename TFunc>
+		void ForEachGameObject(TFunc&& func) const
+		{
+			for (const auto& gameObject : _gameObjectList)
+				func(static_cast<const GameObject&>(*gameObject));
+		}
+
+		template <typename TFunc>
+		void ForEachAliveGameObject(TFunc&& func)
+		{
+			for (auto& gameObject : _gameObjectList)
+			{
+				if (gameObject->IsPendingDestroy())
+					continue;
+
+				func(*gameObject);
+			}
+		}
+
+		template <typename TFunc>
+		void ForEachAliveGameObject(TFunc&& func) const
+		{
+			for (const auto& gameObject : _gameObjectList)
+			{
+				if (gameObject->IsPendingDestroy())
+					continue;
+
+				func(*gameObject);
+			}
+		}
 
 		void			AddGameObject(std::unique_ptr<GameObject> gameObject);
 
@@ -46,6 +83,9 @@ namespace gm
 		virtual void	OnUpdate() {}
 		virtual void	OnLateUpdate() {}
 		virtual void	OnRender(HDC hDC) {}
+
+		virtual void	OnEnter() {};
+		virtual void	OnExit() {};
 
 	private:
 		template<typename T, typename... Args>
@@ -64,7 +104,7 @@ namespace gm
 		void			RemovePendingDestroyGameObjects();
 		
 	private:
-		std::vector<std::unique_ptr<GameObject>> _gameObjectList{};
+		std::vector<std::unique_ptr<GameObject>>	_gameObjectList{};
 	};
 }
 

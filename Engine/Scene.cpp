@@ -1,10 +1,11 @@
-﻿#include "Scene.h"
+#include "Scene.h"
 #include "GameObject.h"
 #include <algorithm>
 
 namespace gm
 {
 	Scene::Scene() = default;
+
 	Scene::~Scene() = default;
 
 	void Scene::Initialize()
