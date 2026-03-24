@@ -71,6 +71,6 @@ namespace gm
         float deltaTime = APPLICATION.GetTime().GetDeltaTime();
         float t = 1.f - std::exp(-_followSpeed * deltaTime);
 
-        _cameraPosition = math::Vector2::Lerp(_cameraPosition, targetPosition, t);
+        _cameraPosition = math::Vector2::LerpClamped(_cameraPosition, targetPosition, t);
     }
 }
