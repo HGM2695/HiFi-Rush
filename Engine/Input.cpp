@@ -1,4 +1,4 @@
-#include "Input.h"
+﻿#include "Input.h"
 #include "GMAssert.h"
 #include <Windows.h>
 
@@ -94,12 +94,12 @@ namespace gm
 		updateMousePosition();
 	}
 
-	math::Vector2 Input::GetAxis2D(KeyCode right, KeyCode left, KeyCode down, KeyCode up) const
+	math::Vector2 Input::GetAxis2D(KeyCode right, KeyCode left, KeyCode up, KeyCode down) const
 	{
 		math::Vector2 v
 		{
 			GetAxis(right, left),
-			GetAxis(down, up)
+			GetAxis(up, down)
 		};
 
 		if (v.LengthSquared() > 0.f)

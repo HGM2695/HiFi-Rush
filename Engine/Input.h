@@ -107,11 +107,11 @@ namespace gm
 		bool			IsKeyRepeat(KeyCode code) const { return getKey(code)._pressed == true; }
 
 		float			GetAxis(KeyCode positive, KeyCode negative) const { return (IsKeyRepeat(positive) ? 1.f : 0.f) - (IsKeyRepeat(negative) ? 1.f : 0.f); }
-		math::Vector2	GetAxis2D(KeyCode right, KeyCode left, KeyCode down, KeyCode up) const;
+		math::Vector2	GetAxis2D(KeyCode right, KeyCode left, KeyCode up, KeyCode down) const;
 
 		float			GetMoveAxisX() const { return GetAxis(KeyCode::Right, KeyCode::Left); }
 		float			GetMoveAxisY() const { return GetAxis(KeyCode::Down, KeyCode::Up); }
-		math::Vector2	GetMoveAxisXY() const { return GetAxis2D(KeyCode::Right, KeyCode::Left, KeyCode::Down, KeyCode::Up); }
+		math::Vector2	GetMoveAxisXY() const { return GetAxis2D(KeyCode::Right, KeyCode::Left, KeyCode::Up, KeyCode::Down); }
 
 		// Mouse
 		bool			IsMouseUp(MouseButton button) const { return getMouse(button)._keyState == KeyState::Up; }

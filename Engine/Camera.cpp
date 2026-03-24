@@ -32,7 +32,9 @@ namespace gm
 
     math::Vector2 Camera::WorldToScreen(const math::Vector2& worldPos) const
     {
-        return worldPos - _cameraPosition + math::Vector2(APPLICATION.GetWidth() * 0.5f, APPLICATION.GetHeight() * 0.5f);
+        const math::Vector2 cameraSpacePos = worldPos - _cameraPosition;
+        // 카메라의 위치를 화면 중앙에 고정한다는 의미.
+        return math::Vector2(APPLICATION.GetWidth() * 0.5f + cameraSpacePos._x, APPLICATION.GetHeight() * 0.5f - cameraSpacePos._y);
     }
 
     void Camera::OnInitialize()

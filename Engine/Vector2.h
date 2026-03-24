@@ -25,6 +25,7 @@ namespace gm::math
 		Vector2 operator+(const Vector2& rhs) const { return { _x + rhs._x, _y + rhs._y }; }
 		Vector2 operator-(const Vector2& rhs) const { return { _x - rhs._x, _y - rhs._y }; }
 		Vector2 operator*(float s) const { return { _x * s, _y * s }; }
+		Vector2 operator/(float s) const { return { _x / s, _y / s }; }
 
 		Vector2& operator+=(const Vector2& rhs) { _x += rhs._x; _y += rhs._y; return *this; }
 		Vector2& operator-=(const Vector2& rhs) { _x -= rhs._x; _y -= rhs._y; return *this; }
