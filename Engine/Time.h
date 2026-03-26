@@ -15,7 +15,10 @@ namespace gm
 		void	Update();
 		void	Render(HDC hDC);
 
-		float	GetDeltaTime() { return _deltaTime; }
+		float	GetDeltaTime() const { return _deltaTime; }
+		float	GetUnscaledDeltaTime() const { return _unscaledDeltaTime; }
+		float	GetTimeScale() const { return _timeScale; }
+		void	SetTimeScale(float timeScale);
 
 	private:
 		void calcDeltaTime();
@@ -25,6 +28,8 @@ namespace gm
 		LARGE_INTEGER	_prevFrequency{};
 		LARGE_INTEGER	_curFrequency{};
 		float			_deltaTime{};
+		float			_unscaledDeltaTime{};
+		float			_timeScale = 1.f;
 	};
 }
 
