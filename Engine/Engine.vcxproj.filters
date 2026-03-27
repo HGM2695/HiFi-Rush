@@ -38,6 +38,9 @@
     <ClInclude Include="Color.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="GMLog.h">
+      <Filter>Util</Filter>
+    </ClInclude>
     <ClInclude Include="IAnimator.h">
       <Filter>Engine Component\Animator</Filter>
     </ClInclude>
@@ -129,6 +132,9 @@
       <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="GMAssert.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="GMLog.cpp">
       <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="Resource.cpp">

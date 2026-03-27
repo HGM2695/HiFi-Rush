@@ -1,62 +1,54 @@
-﻿#pragma once
+#pragma once
 
 #include <exception>
 
 namespace gm
 {
-    void AssertPopupAndOptionalBreak(
-        const char* tag,
-        const char* exprText,
-        const char* msg,
-        const char* file,
-        const char* func,
-        int line);
+	void AssertPopupAndOptionalBreak(const char* tag, const char* exprText, const char* file, const char* func, int line, const char* format, ...);
 }
 
-// Debug, Release에서 ASSERT 매크로는 동일하게 사용하고, IMPL을 분리 함.
 #ifdef _DEBUG
-#define GM_ASSERT_IMPL(tag, exprText, msg, file, func, line) \
-    ::gm::AssertPopupAndOptionalBreak((tag), (exprText), (msg), (file), (func), (line))
+#define GM_ASSERT_IMPL(tag, exprText, file, func, line, ...) \
+	::gm::AssertPopupAndOptionalBreak((tag), (exprText), (file), (func), (line), __VA_ARGS__)
 #else
-#define GM_ASSERT_IMPL(tag, exprText, msg, file, func, line) ((void)0)
-#endif // _DEBUG
+#define GM_ASSERT_IMPL(tag, exprText, file, func, line, ...) ((void)0)
+#endif
 
-
-#define GM_ASSERT(expr, msg)                                                        \
+#define GM_ASSERT(expr, ...)                                                        \
 do                                                                                  \
 {                                                                                   \
-    if (!(expr))                                                                    \
-    {                                                                               \
-        GM_ASSERT_IMPL("GM_ASSERT", #expr, (msg), __FILE__, __FUNCTION__, __LINE__);\
-    }                                                                               \
+	if (!(expr))                                                                    \
+	{                                                                               \
+		GM_ASSERT_IMPL("GM_ASSERT", #expr, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__); \
+	}                                                                               \
 } while (0)
 
-#define GM_ASSERT_RETURN(expr, msg)                                                 \
+#define GM_ASSERT_RETURN(expr, ...)                                                 \
 do                                                                                  \
 {                                                                                   \
-    if (!(expr))                                                                    \
-    {                                                                               \
-        GM_ASSERT_IMPL("GM_ASSERT_RETURN", #expr, (msg), __FILE__, __FUNCTION__, __LINE__); \
-        return;                                                                     \
-    }                                                                               \
+	if (!(expr))                                                                    \
+	{                                                                               \
+		GM_ASSERT_IMPL("GM_ASSERT_RETURN", #expr, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__); \
+		return;                                                                     \
+	}                                                                               \
 } while (0)
 
-#define GM_ASSERT_RETURN_VAL(expr, val, msg)                                        \
+#define GM_ASSERT_RETURN_VAL(expr, val, ...)                                        \
 do                                                                                  \
 {                                                                                   \
-    if (!(expr))                                                                    \
-    {                                                                               \
-        GM_ASSERT_IMPL("GM_ASSERT_RETURN_VAL", #expr, (msg), __FILE__, __FUNCTION__, __LINE__); \
-        return (val);                                                               \
-    }                                                                               \
+	if (!(expr))                                                                    \
+	{                                                                               \
+		GM_ASSERT_IMPL("GM_ASSERT_RETURN_VAL", #expr, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__); \
+		return (val);                                                               \
+	}                                                                               \
 } while (0)
 
-#define GM_ASSERT_TERMINATE(expr, msg)                                              \
+#define GM_ASSERT_TERMINATE(expr, ...)                                              \
 do                                                                                  \
 {                                                                                   \
-    if (!(expr))                                                                    \
-    {                                                                               \
-        GM_ASSERT_IMPL("GM_ASSERT_TERMINATE", #expr, (msg), __FILE__, __FUNCTION__, __LINE__); \
-        std::terminate();                                                           \
-    }                                                                               \
+	if (!(expr))                                                                    \
+	{                                                                               \
+		GM_ASSERT_IMPL("GM_ASSERT_TERMINATE", #expr, __FILE__, __FUNCTION__, __LINE__, __VA_ARGS__); \
+		std::terminate();                                                           \
+	}                                                                               \
 } while (0)
