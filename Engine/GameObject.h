@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include <vector>
 #include <memory>
+#include <vector>
 #include "Component.h"
 #include "Vector2.h"
 
@@ -10,6 +10,8 @@ typedef struct HDC__* HDC;
 
 namespace gm
 {
+	class Collider2D;
+	class Rigidbody2D;
 	class Transform;
 
 	enum class GameObjectLifeState
@@ -33,6 +35,9 @@ namespace gm
 			std::unique_ptr<T> comp = std::make_unique<T>();
 			T* raw = comp.get();
 			raw->SetOwner(this);
+
+			if (RegisterComponent(raw) == false)
+				return nullptr;
 
 			_componentList.push_back(std::move(comp));
 			return raw;
@@ -66,31 +71,56 @@ namespace gm
 			return nullptr;
 		}
 
-		const Transform*	GetTransform() const;
-		Transform*			GetTransform();
+		const Transform*				GetTransform() const;
+		Transform*						GetTransform();
+		const Rigidbody2D*				GetRigidbody2D() const { return _rigidbody2D; }
+		Rigidbody2D*					GetRigidbody2D() { return _rigidbody2D; }
+		const std::vector<Collider2D*>& GetColliders2D() const { return _colliders2D; }
 
-		void				Initialize();
-		void				Update();
-		void				LateUpdate();
-		void				Render(HDC hDC);
+		void Initialize();
+		void Update();
+		void LateUpdate();
+		void Render(HDC hDC);
 
-		void				Destroy();
-		bool				IsPendingDestroy() const { return _lifeState == GameObjectLifeState::PendingDestroy; }
+		void Destroy();
+		bool IsPendingDestroy() const { return _lifeState == GameObjectLifeState::PendingDestroy; }
 
-		void				SetRender(bool isRender) { _isRender = isRender; }
-		bool				IsRenderEnabled() const { return _isRender; }
+		void SetRender(bool isRender) { _isRender = isRender; }
+		bool IsRenderEnabled() const { return _isRender; }
 
 	protected:
-		virtual void	OnInitialize() {}
-		virtual void	OnUpdate() {}
-		virtual void	OnLateUpdate() {}
-		virtual void	OnRender(HDC hDC) {}
+		virtual void OnInitialize() {}
+		virtual void OnUpdate() {}
+		virtual void OnLateUpdate() {}
+		virtual void OnRender(HDC hDC) {}
+
+	private:
+		bool RegisterComponent(Component* component);
 
 	private:
 		std::vector<std::unique_ptr<Component>> _componentList{};
+
+		Transform*								_transform = nullptr;
+
+		Rigidbody2D*							_rigidbody2D = nullptr;
+		std::vector<Collider2D*>				_colliders2D{};
+
 		GameObjectLifeState						_lifeState = GameObjectLifeState::Active;
 		bool									_isRender = true;
 	};
 }
 
+namespace gm
+{
+	template <>
+	inline Transform* GameObject::GetComponent<Transform>() { return _transform; }
 
+	template <>
+	inline const Transform* GameObject::GetComponent<Transform>() const { return _transform; }
+
+	template <>
+	inline Rigidbody2D* GameObject::GetComponent<Rigidbody2D>() { return _rigidbody2D; }
+
+	template <>
+	inline const Rigidbody2D* GameObject::GetComponent<Rigidbody2D>() const { return _rigidbody2D; }
+}

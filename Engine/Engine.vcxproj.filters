@@ -50,8 +50,17 @@
     <ClInclude Include="Camera.h">
       <Filter>Engine Component</Filter>
     </ClInclude>
+    <ClInclude Include="Collider2D.h">
+      <Filter>Engine Component\Physics</Filter>
+    </ClInclude>
     <ClInclude Include="AnimationClip.h">
       <Filter>Resource\AnimationClip</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxCollider2D.h">
+      <Filter>Engine Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="CircleCollider2D.h">
+      <Filter>Engine Component\Physics</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Resource\Texture</Filter>
@@ -76,6 +85,12 @@
     </ClInclude>
     <ClInclude Include="AnimationNotify.h">
       <Filter>Engine Component\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsSystem2D.h">
+      <Filter>Engine Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Rigidbody2D.h">
+      <Filter>Engine Component\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +136,9 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Engine Component</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsSystem2D.cpp">
+      <Filter>Engine Component\Physics</Filter>
     </ClCompile>
     <ClCompile Include="AnimationClip.cpp">
       <Filter>Resource\AnimationClip</Filter>
@@ -174,6 +192,9 @@
     </Filter>
     <Filter Include="Resource\AnimationClip\Sprite">
       <UniqueIdentifier>{b8e56446-bc85-4a57-b1ab-d6750796bde6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Component\Physics">
+      <UniqueIdentifier>{99a58ece-17e2-4b4f-b0f9-ece6522650e0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
