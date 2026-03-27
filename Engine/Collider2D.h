@@ -29,6 +29,8 @@ namespace gm
 		{
 		}
 
+		void OnLateUpdate() override;
+
 	private:
 		Collider2DType	_colliderType;
 		math::Vector2	_offset{};

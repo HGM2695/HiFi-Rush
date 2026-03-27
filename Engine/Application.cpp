@@ -4,6 +4,7 @@
 #include "Time.h"
 #include "SceneManager.h"
 #include "Resources.h"
+#include "DebugRenderer.h"
 
 namespace gm
 {
@@ -76,6 +77,7 @@ namespace gm
 
         _time->Render(_backHDC);
         _sceneManager->Render(_backHDC);
+        debug::DebugRenderer::Render(_backHDC);
 
         // Copy BackBuffer to Front Buffer
         BitBlt(_hDC, 0, 0, _width, _height, _backHDC, 0, 0, SRCCOPY);

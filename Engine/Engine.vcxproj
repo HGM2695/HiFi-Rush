@@ -167,7 +167,10 @@
     <ClCompile Include="AnimationClipSet.cpp" />
     <ClCompile Include="AnimationNotify.cpp" />
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="BoxCollider2D.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CircleCollider2D.cpp" />
+    <ClCompile Include="Collider2D.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="DebugRenderer.cpp" />
     <ClCompile Include="Entity.cpp" />

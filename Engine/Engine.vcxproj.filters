@@ -98,6 +98,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="BoxCollider2D.cpp">
+      <Filter>Engine Component\Physics</Filter>
+    </ClCompile>
     <ClCompile Include="SpriteRenderer.cpp">
       <Filter>Engine Component</Filter>
     </ClCompile>
@@ -139,6 +142,12 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Engine Component</Filter>
+    </ClCompile>
+    <ClCompile Include="CircleCollider2D.cpp">
+      <Filter>Engine Component\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider2D.cpp">
+      <Filter>Engine Component\Physics</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsSystem2D.cpp">
       <Filter>Engine Component\Physics</Filter>

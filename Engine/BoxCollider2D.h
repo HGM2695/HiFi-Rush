@@ -15,6 +15,9 @@ namespace gm
 		void					SetSize(const math::Vector2& size) { _size = size; }
 		const math::Vector2&	GetSize() const { return _size; }
 
+	protected:
+		void OnLateUpdate() override;
+
 	private:
 		math::Vector2 _size{ 100.f, 100.f };
 	};
