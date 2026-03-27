@@ -5,6 +5,7 @@
 namespace gm
 {
 	class Transform;
+	class Rigidbody2D;
 	class Input;
 
 	class PlayerMovement : public Component
@@ -17,7 +18,10 @@ namespace gm
 
 	private:
 		Transform*		_ownerTransform = nullptr;
-		float			_moveSpeed = 600.f;
+		Rigidbody2D*	_ownerRigidbody = nullptr;
+		float			_groundMoveSpeed = 400.f;
+		float			_airMoveSpeed = 250.f;
+		float			_jumpImpulse = 700.f;
 		bool			_isMoving = false;
 	};
 }

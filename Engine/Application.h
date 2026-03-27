@@ -36,6 +36,7 @@ namespace gm
 		void				Run();
 
 		void				Update();
+		void				PhysicsUpdate();
 		void				LateUpdate();
 		void				Render();
 		void				EndFrame();

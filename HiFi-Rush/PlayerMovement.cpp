@@ -1,30 +1,41 @@
 ﻿#include "PlayerMovement.h"
 #include "../Engine/Application.h"
-#include "../Engine/Input.h"
-#include "../Engine/Transform.h"
-#include "../Engine/Time.h"
 #include "../Engine/GameObject.h"
+#include "../Engine/GMAssert.h"
+#include "../Engine/Input.h"
+#include "../Engine/Rigidbody2D.h"
+#include "../Engine/Transform.h"
 
 namespace gm
 {
 	void PlayerMovement::OnInitialize()
 	{
 		_ownerTransform = GetOwner().GetTransform();
+		GM_ASSERT(_ownerTransform, "PlayerMovement는 Transform이 필요합니다.");
+
+		_ownerRigidbody = GetOwner().GetRigidbody2D();
+		GM_ASSERT(_ownerRigidbody, "PlayerMovement는 Rigidbody2D가 필요합니다.");
 	}
 
-    void PlayerMovement::OnUpdate()
-    {
-        auto& input = APPLICATION.GetInput();
-        float dt = APPLICATION.GetTime().GetDeltaTime();
+	void PlayerMovement::OnUpdate()
+	{
+		auto& input = APPLICATION.GetInput();
+		const float moveAxisX = input.GetMoveAxisX();
+		const bool isGrounded = _ownerRigidbody->IsGrounded();
+		const float moveSpeed = isGrounded ? _groundMoveSpeed : _airMoveSpeed;
+		math::Vector2 velocity = _ownerRigidbody->GetVelocity();
 
-        math::Vector2 dir = input.GetMoveAxisXY();
-        _isMoving = (dir._x != 0.f || dir._y != 0.f);
+		_isMoving = moveAxisX != 0.f;
 
-        if (dir._x < 0.f)
-            _ownerTransform->SetForward({ -1.f, 0.f });
-        else if (dir._x > 0.f)
-            _ownerTransform->SetForward({ 1.f, 0.f });
+		if (moveAxisX < 0.f)
+			_ownerTransform->SetForward({ -1.f, 0.f });
+		else if (moveAxisX > 0.f)
+			_ownerTransform->SetForward({ 1.f, 0.f });
 
-        _ownerTransform->Translate(dir * _moveSpeed * dt);
-    }
+		velocity._x = moveAxisX * moveSpeed;
+		_ownerRigidbody->SetVelocity(velocity);
+
+		if (isGrounded && input.IsKeyRepeat(KeyCode::T))
+			_ownerRigidbody->AddImpulse({ 0.f, _jumpImpulse });
+	}
 }

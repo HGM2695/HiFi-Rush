@@ -7,6 +7,7 @@ namespace gm
 	class MainScene : public Scene
 	{
 	protected:
+		virtual void	OnEnter() override;
 		virtual void	OnInitialize() override;
 
 	private:

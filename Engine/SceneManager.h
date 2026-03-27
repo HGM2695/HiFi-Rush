@@ -3,13 +3,22 @@
 #include <map>
 #include <memory>
 #include <string>
-#include "Scene.h"
 
 struct HDC__;
 typedef struct HDC__* HDC;
 
 namespace gm
 {
+	class PhysicsSystem2D;
+	class Scene;
+
+	enum class PhysicsMode
+	{
+		None,
+		Physics2D,
+		Physics3D,
+	};
+
 	class SceneManager
 	{
 	public:
@@ -29,17 +38,22 @@ namespace gm
 		}
 
 		void			PlayScene(const std::wstring& sceneName);
+		void			SetPhysicsMode(PhysicsMode physicsMode) { _physicsMode = physicsMode; }
+		PhysicsMode		GetPhysicsMode() const { return _physicsMode; }
 
 	public:
 		void			Initialize();
 		void			Update();
+		void			PhysicsUpdate();
 		void			LateUpdate();
 		void			Render(HDC hDC);
 		void			EndFrame();
 
 	private:
-		std::map<const std::wstring, std::unique_ptr<Scene>> _sceneList;
-		Scene* _activeScene;
+		std::map<const std::wstring, std::unique_ptr<Scene>>	_sceneList;
+		Scene*													_activeScene;
+		std::unique_ptr<PhysicsSystem2D>						_physicsSystem2D;
+		PhysicsMode												_physicsMode = PhysicsMode::None;
 	};
 }
 

@@ -53,6 +53,7 @@ namespace gm
     void Application::Run()
     {
         Update();
+        PhysicsUpdate();
         LateUpdate();
         Render();
         EndFrame();
@@ -69,6 +70,11 @@ namespace gm
     {
         _sceneManager->LateUpdate();
     }
+
+	void Application::PhysicsUpdate()
+	{
+		_sceneManager->PhysicsUpdate();
+	}
 
     void Application::Render()
     {

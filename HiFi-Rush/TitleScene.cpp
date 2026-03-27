@@ -5,6 +5,11 @@
 
 namespace gm
 {
+	void TitleScene::OnEnter()
+	{
+		APPLICATION.GetSceneManager().SetPhysicsMode(PhysicsMode::None);
+	}
+
 	void TitleScene::OnUpdate()
 	{
 		if (APPLICATION.GetInput().IsKeyDown(KeyCode::M))
