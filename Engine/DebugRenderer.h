@@ -1,4 +1,7 @@
-﻿#pragma once
+#pragma once
+
+#include "Color.h"
+#include "Vector2.h"
 
 struct HDC__;
 typedef struct HDC__* HDC;
@@ -8,15 +11,10 @@ namespace gm::debug
 	class DebugRenderer
 	{
 	public:
-		explicit DebugRenderer(HDC hDC);
-		~DebugRenderer();
-
-	public:
-		void DrawLine(int x1, int y1, int x2, int y2);
-		void DrawRect(int left, int top, int right, int bottom);
-		void DrawCircle(int centerX, int centerY, int radius);
-
-	private:
-		HDC		_hDC = nullptr;
+		static void RequestDrawLine(const gm::math::Vector2& worldStart, const gm::math::Vector2& worldEnd, gm::Color color = gm::Color::Green());
+		static void RequestDrawRect(const gm::math::Vector2& worldCenter, const gm::math::Vector2& size, gm::Color color = gm::Color::Green());
+		static void RequestDrawCircle(const gm::math::Vector2& worldCenter, float radius, gm::Color color = gm::Color::Green());
+		static void Render(HDC hDC);
+		static void Clear();
 	};
 }

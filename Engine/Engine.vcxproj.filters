@@ -35,6 +35,9 @@
     <ClInclude Include="GMAssert.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>Util</Filter>
+    </ClInclude>
     <ClInclude Include="IAnimator.h">
       <Filter>Engine Component\Animator</Filter>
     </ClInclude>
