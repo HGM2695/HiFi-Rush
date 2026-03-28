@@ -168,6 +168,7 @@
     <ClInclude Include="CanvasPanel.h" />
     <ClInclude Include="Border.h" />
     <ClInclude Include="TextBlock.h" />
+    <ClInclude Include="WidgetComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimationClip.cpp" />
@@ -203,6 +204,7 @@
     <ClCompile Include="Widget.cpp" />
     <ClCompile Include="Border.cpp" />
     <ClCompile Include="TextBlock.cpp" />
+    <ClCompile Include="WidgetComponent.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

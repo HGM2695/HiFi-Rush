@@ -116,6 +116,9 @@
     <ClInclude Include="TextBlock.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="WidgetComponent.h">
+      <Filter>UI</Filter>
+    </ClInclude>
     <ClInclude Include="Image.h" />
   </ItemGroup>
   <ItemGroup>
@@ -211,6 +214,9 @@
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="TextBlock.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="WidgetComponent.cpp">
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="Image.cpp" />
