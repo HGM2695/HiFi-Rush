@@ -146,6 +146,7 @@
     <ClInclude Include="GMAssert.h" />
     <ClInclude Include="GMLog.h" />
     <ClInclude Include="IAnimator.h" />
+    <ClInclude Include="Image.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="PhysicsSystem2D.h" />
     <ClInclude Include="Resource.h" />
@@ -164,6 +165,9 @@
     <ClInclude Include="UserWidget.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Widget.h" />
+    <ClInclude Include="CanvasPanel.h" />
+    <ClInclude Include="Border.h" />
+    <ClInclude Include="TextBlock.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimationClip.cpp" />
@@ -181,6 +185,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GMAssert.cpp" />
     <ClCompile Include="GMLog.cpp" />
+    <ClCompile Include="Image.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="PhysicsSystem2D.cpp" />
     <ClCompile Include="Resource.cpp" />
@@ -196,6 +201,8 @@
     <ClCompile Include="UIManager.cpp" />
     <ClCompile Include="UserWidget.cpp" />
     <ClCompile Include="Widget.cpp" />
+    <ClCompile Include="Border.cpp" />
+    <ClCompile Include="TextBlock.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -107,6 +107,16 @@
     <ClInclude Include="Widget.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="CanvasPanel.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Border.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="TextBlock.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -197,6 +207,13 @@
     <ClCompile Include="Widget.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="Border.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="TextBlock.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
