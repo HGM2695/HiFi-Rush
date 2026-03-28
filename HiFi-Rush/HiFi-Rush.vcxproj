@@ -137,6 +137,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="LoadResources.h" />
     <ClInclude Include="LoadScenes.h" />
+    <ClInclude Include="MainHUDWidget.h" />
     <ClInclude Include="MainScene.h" />
     <ClInclude Include="PlayerAnimationFSM.h" />
     <ClInclude Include="PlayerMovement.h" />
@@ -146,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainHUDWidget.cpp" />
     <ClCompile Include="MainScene.cpp" />
     <ClCompile Include="PlayerAnimationFSM.cpp" />
     <ClCompile Include="PlayerMovement.cpp" />

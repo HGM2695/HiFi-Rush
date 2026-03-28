@@ -1,4 +1,5 @@
 ﻿#include "MainScene.h"
+#include "MainHUDWidget.h"
 #include "PlayerMovement.h"
 #include "PlayerAnimationFSM.h"
 #include "../Engine/Application.h"
@@ -10,14 +11,18 @@
 #include "../Engine/SceneManager.h"
 #include "../Engine/SpriteAnimator.h"
 #include "../Engine/SpriteAnimationClip.h"
+#include "../Engine/UIManager.h"
 #include "../Engine//Rigidbody2D.h"
 #include "../Engine/BoxCollider2D.h"
+#include "../Engine/WidgetComponent.h"
 
 namespace gm
 {
 	void MainScene::OnEnter()
 	{
 		APPLICATION.GetSceneManager().SetPhysicsMode(PhysicsMode::Physics2D);
+		APPLICATION.GetUIManager().ClearViewportWidgets();
+		APPLICATION.GetUIManager().AddWidget<MainHUDWidget>();
 	}
 
 	void MainScene::OnInitialize()
@@ -50,6 +55,10 @@ namespace gm
 
 		BoxCollider2D* collider = player->AddComponent<BoxCollider2D>();
 		collider->SetSize({ 100.f, 100.f });
+
+		WidgetComponent* userWidget = player->AddComponent<WidgetComponent>();
+		userWidget->SetWorldOffset({ -175.f, 200.f });
+		userWidget->CreateUserWidget<MainHUDWidget>();
 	}
 
 	void MainScene::InitializeSubObject()

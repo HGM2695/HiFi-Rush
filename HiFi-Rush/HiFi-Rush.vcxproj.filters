@@ -20,6 +20,9 @@
     <Filter Include="Component\01. Behavior">
       <UniqueIdentifier>{1a87d7a0-b72a-4ce3-8b37-954eff0d60cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\02. Widget">
+      <UniqueIdentifier>{48b8e4ef-7ccd-43e7-9779-4e927165d517}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
@@ -42,6 +45,9 @@
     </ClInclude>
     <ClInclude Include="PlayerMovement.h">
       <Filter>Component\01. Behavior</Filter>
+    </ClInclude>
+    <ClInclude Include="MainHUDWidget.h">
+      <Filter>Component\02. Widget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -70,6 +76,9 @@
     </ClCompile>
     <ClCompile Include="PlayerMovement.cpp">
       <Filter>Component\01. Behavior</Filter>
+    </ClCompile>
+    <ClCompile Include="MainHUDWidget.cpp">
+      <Filter>Component\02. Widget</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
