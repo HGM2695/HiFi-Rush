@@ -160,7 +160,10 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="UIManager.h" />
+    <ClInclude Include="UserWidget.h" />
     <ClInclude Include="Vector2.h" />
+    <ClInclude Include="Widget.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimationClip.cpp" />
@@ -190,6 +193,9 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="UIManager.cpp" />
+    <ClCompile Include="UserWidget.cpp" />
+    <ClCompile Include="Widget.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

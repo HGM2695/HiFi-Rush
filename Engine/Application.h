@@ -17,6 +17,7 @@ namespace gm
 	class Time;
 	class SceneManager;
 	class Resources;
+	class UIManager;
 
 	class Application
 	{
@@ -50,11 +51,13 @@ namespace gm
 		Time&				GetTime() { return *_time; }
 		SceneManager&		GetSceneManager() { return *_sceneManager; }
 		Resources&			GetResources() { return *_resources; }
+		UIManager&			GetUIManager() { return *_uiManager; }
 			
 		const Input&		GetInput() const { return *_input; }
 		const Time&			GetTime() const { return *_time; }
 		const SceneManager& GetSceneManager() const { return *_sceneManager; }
 		const Resources&	GetResources() const { return *_resources; }
+		const UIManager&	GetUIManager() const { return *_uiManager; }
 
 	private:
 		void				initializeWindow(HWND hWnd, uint32_t width, uint32_t height);
@@ -75,6 +78,7 @@ namespace gm
 		std::unique_ptr<Time>			_time;
 		std::unique_ptr<SceneManager>	_sceneManager;
 		std::unique_ptr<Resources>		_resources;
+		std::unique_ptr<UIManager>		_uiManager;
 	};
 }
 

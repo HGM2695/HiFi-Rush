@@ -98,6 +98,15 @@
     <ClInclude Include="Rigidbody2D.h">
       <Filter>Engine Component\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="UIManager.h">
+      <Filter>SubSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="UserWidget.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Widget.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -179,6 +188,15 @@
     <ClCompile Include="AnimationNotify.cpp">
       <Filter>Engine Component\Animator</Filter>
     </ClCompile>
+    <ClCompile Include="UIManager.cpp">
+      <Filter>SubSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="UserWidget.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Widget.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
@@ -213,6 +231,9 @@
     </Filter>
     <Filter Include="Engine Component\Physics">
       <UniqueIdentifier>{99a58ece-17e2-4b4f-b0f9-ece6522650e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{3b42907e-2a58-43f2-a774-873fb65b0a9e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

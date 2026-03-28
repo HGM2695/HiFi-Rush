@@ -5,6 +5,7 @@
 #include "SceneManager.h"
 #include "Resources.h"
 #include "DebugRenderer.h"
+#include "UIManager.h"
 
 namespace gm
 {
@@ -48,6 +49,9 @@ namespace gm
         _sceneManager->Initialize();
 
         _resources = std::make_unique<Resources>();
+
+		_uiManager = std::make_unique<UIManager>();
+		_uiManager->Initialize();
     }
 
     void Application::Run()
@@ -64,6 +68,7 @@ namespace gm
         _input->Update();
         _time->Update();
         _sceneManager->Update();
+		_uiManager->Update();
     }
 
     void Application::LateUpdate()
@@ -84,6 +89,7 @@ namespace gm
         _time->Render(_backHDC);
         _sceneManager->Render(_backHDC);
         debug::DebugRenderer::Render(_backHDC);
+		_uiManager->Render(_backHDC);
 
         // Copy BackBuffer to Front Buffer
         BitBlt(_hDC, 0, 0, _width, _height, _backHDC, 0, 0, SRCCOPY);
@@ -100,5 +106,7 @@ namespace gm
             _sceneManager.reset();
         if (_resources)
             _resources.reset();
+		if (_uiManager)
+			_uiManager.reset();
     }
 }
