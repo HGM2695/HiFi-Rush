@@ -8,6 +8,7 @@
 #include "../Engine/SpriteRenderer.h"
 #include "../Engine/Texture.h"
 #include "../Engine/Camera.h"
+#include "../Engine/PhysicsSystem.h"
 #include "../Engine/SceneManager.h"
 #include "../Engine/SpriteAnimator.h"
 #include "../Engine/SpriteAnimationClip.h"
@@ -20,7 +21,7 @@ namespace gm
 {
 	void MainScene::OnEnter()
 	{
-		APPLICATION.GetSceneManager().SetPhysicsMode(PhysicsMode::Physics2D);
+		APPLICATION.GetPhysicsSystem().SetPhysicsMode(PhysicsMode::Physics2D);
 		APPLICATION.GetUIManager().ClearViewportWidgets();
 		APPLICATION.GetUIManager().AddWidget<MainHUDWidget>();
 	}

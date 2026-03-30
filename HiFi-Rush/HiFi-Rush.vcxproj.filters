@@ -55,7 +55,9 @@
     <ClInclude Include="Paths.h">
       <Filter>Resource</Filter>
     </ClInclude>
-    <ClInclude Include="DebugInputHandler.h" />
+    <ClInclude Include="DebugInputHandler.h">
+      <Filter>Debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="HiFi-Rush.rc">
@@ -87,6 +89,8 @@
     <ClCompile Include="MainHUDWidget.cpp">
       <Filter>Component\02. Widget</Filter>
     </ClCompile>
-    <ClCompile Include="DebugInputHandler.cpp" />
+    <ClCompile Include="DebugInputHandler.cpp">
+      <Filter>Debug</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

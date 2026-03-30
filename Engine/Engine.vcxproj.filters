@@ -110,6 +110,12 @@
     <ClInclude Include="PhysicsSystem2D.h">
       <Filter>Engine Component\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="PhysicsSystem3D.h">
+      <Filter>Engine Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsSystem.h">
+      <Filter>Engine Component\Physics</Filter>
+    </ClInclude>
     <ClInclude Include="Rigidbody2D.h">
       <Filter>Engine Component\Physics</Filter>
     </ClInclude>
@@ -207,6 +213,12 @@
       <Filter>Engine Component\Physics</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsSystem2D.cpp">
+      <Filter>Engine Component\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsSystem3D.cpp">
+      <Filter>Engine Component\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsSystem.cpp">
       <Filter>Engine Component\Physics</Filter>
     </ClCompile>
     <ClCompile Include="AnimationClip.cpp">

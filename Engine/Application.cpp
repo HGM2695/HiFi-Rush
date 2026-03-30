@@ -1,9 +1,11 @@
-#include "Application.h"
+﻿#include "Application.h"
 #include "windows.h"
 #include "Input.h"
+#include "PhysicsSystem.h"
 #include "Time.h"
 #include "SceneManager.h"
 #include "Resources.h"
+#include "Scene.h"
 #include "AudioSystem.h"
 #include "DebugRenderer.h"
 #include "GMAssert.h"
@@ -43,6 +45,8 @@ namespace gm
     {
         _input = std::make_unique<Input>();
         _input->Initialize(_hWnd);
+
+		_physicsSystem = std::make_unique<PhysicsSystem>();
 
         _time = std::make_unique<Time>();
         _time->Initialize();
@@ -84,7 +88,10 @@ namespace gm
 
 	void Application::PhysicsUpdate()
 	{
-		_sceneManager->PhysicsUpdate();
+		Scene* activeScene = _sceneManager->GetActiveScene();
+		GM_ASSERT_RETURN(activeScene, "활성 Scene이 없습니다.");
+
+		_physicsSystem->Simulate(*activeScene, _time->GetDeltaTime());
 	}
 
     void Application::Render()
@@ -110,6 +117,8 @@ namespace gm
             _sceneManager.reset();
         if (_resources)
             _resources.reset();
+		if (_physicsSystem)
+			_physicsSystem.reset();
 		if (_audioSystem)
 			_audioSystem.reset();
 		if (_uiManager)

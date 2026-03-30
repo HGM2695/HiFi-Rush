@@ -14,6 +14,7 @@ namespace gm
 	#define APPLICATION gm::Application::GetInstance()
 
 	class Input;
+	class PhysicsSystem;
 	class Time;
 	class SceneManager;
 	class Resources;
@@ -49,6 +50,7 @@ namespace gm
 
 	public: // subsystem
 		Input&				GetInput() { return *_input; }
+		PhysicsSystem&		GetPhysicsSystem() { return *_physicsSystem; }
 		Time&				GetTime() { return *_time; }
 		SceneManager&		GetSceneManager() { return *_sceneManager; }
 		Resources&			GetResources() { return *_resources; }
@@ -56,6 +58,7 @@ namespace gm
 		UIManager&			GetUIManager() { return *_uiManager; }
 
 		const Input&		GetInput() const { return *_input; }
+		const PhysicsSystem& GetPhysicsSystem() const { return *_physicsSystem; }
 		const Time&			GetTime() const { return *_time; }
 		const SceneManager& GetSceneManager() const { return *_sceneManager; }
 		const Resources&	GetResources() const { return *_resources; }
@@ -78,6 +81,7 @@ namespace gm
 		uint32_t 						_height = 0;
 
 		std::unique_ptr<Input>			_input;
+		std::unique_ptr<PhysicsSystem>	_physicsSystem;
 		std::unique_ptr<Time>			_time;
 		std::unique_ptr<SceneManager>	_sceneManager;
 		std::unique_ptr<Resources>		_resources;
