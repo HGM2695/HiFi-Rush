@@ -1,10 +1,12 @@
-﻿#include "Application.h"
+#include "Application.h"
 #include "windows.h"
 #include "Input.h"
 #include "Time.h"
 #include "SceneManager.h"
 #include "Resources.h"
+#include "AudioSystem.h"
 #include "DebugRenderer.h"
+#include "GMAssert.h"
 #include "UIManager.h"
 
 namespace gm
@@ -50,6 +52,9 @@ namespace gm
 
         _resources = std::make_unique<Resources>();
 
+		_audioSystem = std::make_unique<AudioSystem>();
+		GM_ASSERT(_audioSystem->Initialize(), "AudioSystem 초기화에 실패했습니다.");
+
 		_uiManager = std::make_unique<UIManager>();
 		_uiManager->Initialize();
     }
@@ -68,6 +73,7 @@ namespace gm
         _input->Update();
         _time->Update();
         _sceneManager->Update();
+		_audioSystem->Update();
 		_uiManager->Update();
     }
 
@@ -83,7 +89,6 @@ namespace gm
 
     void Application::Render()
     {
-        // Clear Back Buffer
         Rectangle(_backHDC, -1, -1, _width + 1, _height + 1);
 
         _time->Render(_backHDC);
@@ -91,7 +96,6 @@ namespace gm
         debug::DebugRenderer::Render(_backHDC);
 		_uiManager->Render(_backHDC);
 
-        // Copy BackBuffer to Front Buffer
         BitBlt(_hDC, 0, 0, _width, _height, _backHDC, 0, 0, SRCCOPY);
     }
 
@@ -106,6 +110,8 @@ namespace gm
             _sceneManager.reset();
         if (_resources)
             _resources.reset();
+		if (_audioSystem)
+			_audioSystem.reset();
 		if (_uiManager)
 			_uiManager.reset();
     }

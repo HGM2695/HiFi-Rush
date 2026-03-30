@@ -2,6 +2,12 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="AudioComponent.h">
+      <Filter>Engine Component\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioStatics.h">
+      <Filter>Util</Filter>
+    </ClInclude>
     <ClInclude Include="SpriteRenderer.h">
       <Filter>Engine Component</Filter>
     </ClInclude>
@@ -17,6 +23,12 @@
     <ClInclude Include="SceneManager.h">
       <Filter>SubSystem</Filter>
     </ClInclude>
+    <ClInclude Include="AudioSystem.h">
+      <Filter>SubSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundWave.h">
+      <Filter>Resource\Audio</Filter>
+    </ClInclude>
     <ClInclude Include="Entity.h">
       <Filter>Base</Filter>
     </ClInclude>
@@ -30,6 +42,9 @@
       <Filter>Base</Filter>
     </ClInclude>
     <ClInclude Include="Vector2.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="StringUtil.h">
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="GMAssert.h">
@@ -105,24 +120,32 @@
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="Widget.h">
-      <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="CanvasPanel.h">
-      <Filter>UI</Filter>
+      <Filter>UI\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="Border.h">
-      <Filter>UI</Filter>
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="CanvasPanel.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>UI\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="TextBlock.h">
-      <Filter>UI</Filter>
+      <Filter>UI\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="WidgetComponent.h">
-      <Filter>UI</Filter>
+      <Filter>Engine Component</Filter>
     </ClInclude>
-    <ClInclude Include="Image.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="AudioComponent.cpp">
+      <Filter>Engine Component\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioStatics.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
     <ClCompile Include="BoxCollider2D.cpp">
       <Filter>Engine Component\Physics</Filter>
     </ClCompile>
@@ -137,6 +160,12 @@
     </ClCompile>
     <ClCompile Include="SceneManager.cpp">
       <Filter>SubSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSystem.cpp">
+      <Filter>SubSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundWave.cpp">
+      <Filter>Resource\Audio</Filter>
     </ClCompile>
     <ClCompile Include="Time.cpp">
       <Filter>SubSystem</Filter>
@@ -208,18 +237,20 @@
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="Widget.cpp">
-      <Filter>UI</Filter>
+      <Filter>UI\Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="Border.cpp">
-      <Filter>UI</Filter>
+    <ClCompile Include="Image.cpp">
+      <Filter>UI\Widgets</Filter>
     </ClCompile>
     <ClCompile Include="TextBlock.cpp">
-      <Filter>UI</Filter>
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="Border.cpp">
+      <Filter>UI\Widgets</Filter>
     </ClCompile>
     <ClCompile Include="WidgetComponent.cpp">
-      <Filter>UI</Filter>
+      <Filter>Engine Component</Filter>
     </ClCompile>
-    <ClCompile Include="Image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
@@ -257,6 +288,15 @@
     </Filter>
     <Filter Include="UI">
       <UniqueIdentifier>{3b42907e-2a58-43f2-a774-873fb65b0a9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Component\Audio">
+      <UniqueIdentifier>{17e1465b-c6b4-4d26-a609-28487e7bb6e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Audio">
+      <UniqueIdentifier>{5c9774d5-1c88-4d2f-aa00-8ae2d23eb7d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Widgets">
+      <UniqueIdentifier>{a9251714-1459-4bde-a5e5-bea2186e4e24}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

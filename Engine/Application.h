@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <memory>
 
@@ -17,6 +17,7 @@ namespace gm
 	class Time;
 	class SceneManager;
 	class Resources;
+	class AudioSystem;
 	class UIManager;
 
 	class Application
@@ -51,12 +52,14 @@ namespace gm
 		Time&				GetTime() { return *_time; }
 		SceneManager&		GetSceneManager() { return *_sceneManager; }
 		Resources&			GetResources() { return *_resources; }
+		AudioSystem&		GetAudioSystem() { return *_audioSystem; }
 		UIManager&			GetUIManager() { return *_uiManager; }
-			
+
 		const Input&		GetInput() const { return *_input; }
 		const Time&			GetTime() const { return *_time; }
 		const SceneManager& GetSceneManager() const { return *_sceneManager; }
 		const Resources&	GetResources() const { return *_resources; }
+		const AudioSystem&	GetAudioSystem() const { return *_audioSystem; }
 		const UIManager&	GetUIManager() const { return *_uiManager; }
 
 	private:
@@ -70,7 +73,7 @@ namespace gm
 
 		HDC								_backHDC = nullptr;
 		HBITMAP							_backBuffer = nullptr;
-				
+
 		uint32_t 						_width = 0;
 		uint32_t 						_height = 0;
 
@@ -78,8 +81,7 @@ namespace gm
 		std::unique_ptr<Time>			_time;
 		std::unique_ptr<SceneManager>	_sceneManager;
 		std::unique_ptr<Resources>		_resources;
+		std::unique_ptr<AudioSystem>	_audioSystem;
 		std::unique_ptr<UIManager>		_uiManager;
 	};
 }
-
-
