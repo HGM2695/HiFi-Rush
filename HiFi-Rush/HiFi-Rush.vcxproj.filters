@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="리소스 파일">
@@ -22,6 +22,9 @@
     </Filter>
     <Filter Include="Component\02. Widget">
       <UniqueIdentifier>{48b8e4ef-7ccd-43e7-9779-4e927165d517}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debug">
+      <UniqueIdentifier>{4a8e0696-15d0-455f-b9c1-5e7aee8f1d59}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -49,6 +52,7 @@
     <ClInclude Include="MainHUDWidget.h">
       <Filter>Component\02. Widget</Filter>
     </ClInclude>
+    <ClInclude Include="DebugInputHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="HiFi-Rush.rc">
@@ -80,5 +84,6 @@
     <ClCompile Include="MainHUDWidget.cpp">
       <Filter>Component\02. Widget</Filter>
     </ClCompile>
-  </ItemGroup>
+
+    <ClCompile Include="DebugInputHandler.cpp" />  </ItemGroup>
 </Project>

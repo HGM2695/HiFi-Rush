@@ -134,6 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DebugInputHandler.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="LoadResources.h" />
     <ClInclude Include="LoadScenes.h" />
@@ -146,6 +147,7 @@
     <ClInclude Include="TitleScene.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DebugInputHandler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainHUDWidget.cpp" />
     <ClCompile Include="MainScene.cpp" />
