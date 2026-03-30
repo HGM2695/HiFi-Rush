@@ -27,12 +27,12 @@ namespace gm
 		GameObject(const math::Vector2& position);
 		virtual ~GameObject();
 
-		template <typename T>
-		T* AddComponent()
+		template <typename T, typename... Args>
+		T* AddComponent(Args&&... args)
 		{
 			static_assert(std::is_base_of_v<Component, T>, "T는 반드시 Component의 자식 클래스이어야 합니다.");
 
-			std::unique_ptr<T> comp = std::make_unique<T>();
+			std::unique_ptr<T> comp = std::make_unique<T>(std::forward<Args>(args)...);
 			T* raw = comp.get();
 			raw->SetOwner(this);
 
