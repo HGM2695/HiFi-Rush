@@ -36,19 +36,35 @@ namespace gm
 
 	void PhysicsSystem2D::Simulate(Scene& scene, float deltaTime)
 	{
-		scene.ForEachAliveGameObject([this, &scene, deltaTime](GameObject& gameObject)
-		{
-			Rigidbody2D* rigidbody = gameObject.GetRigidbody2D();
-			if (rigidbody == nullptr || rigidbody->IsKinematic())
-				return;
+		float accumulatedTime = deltaTime;
 
-			ApplyForces(*rigidbody, deltaTime);
-			ApplyGravity(*rigidbody, deltaTime);
-			ApplyLinearDamping(*rigidbody, deltaTime);
-			ClampVelocity(*rigidbody);
-			SimulateRigidbody(scene, gameObject, *rigidbody, deltaTime);
-			rigidbody->ClearForces();
-		});
+		while (accumulatedTime > 0.f)
+		{
+			const float curTime = accumulatedTime > 0.016f ? 0.016f : accumulatedTime;
+			accumulatedTime -= curTime;
+
+			scene.ForEachAliveGameObject([this, &scene, curTime](GameObject& gameObject)
+				{
+					Rigidbody2D* rigidbody = gameObject.GetRigidbody2D();
+					if (rigidbody == nullptr || rigidbody->IsKinematic())
+						return;
+
+					ApplyForces(*rigidbody, curTime);
+					ApplyGravity(*rigidbody, curTime);
+					ApplyLinearDamping(*rigidbody, curTime);
+					ClampVelocity(*rigidbody);
+					SimulateRigidbody(scene, gameObject, *rigidbody, curTime);
+				});
+		}
+
+		scene.ForEachAliveGameObject([](GameObject& gameObject)
+			{
+				Rigidbody2D* rigidbody = gameObject.GetRigidbody2D();
+				if (rigidbody == nullptr || rigidbody->IsKinematic())
+					return;
+
+				rigidbody->ClearForces();
+			});
 	}
 
 	void PhysicsSystem2D::ApplyForces(Rigidbody2D& rigidbody, float deltaTime) const
@@ -116,7 +132,7 @@ namespace gm
 					const CollisionHit hit = CheckCollision(*selfCollider, gameObject, *otherCollider, otherObject);
 
 					if (hit.isHit == false || std::fabs(hit.normal._x) < 0.5f)
-						return;
+						continue;
 
 					transform->TranslateX(hit.normal._x * hit.penetrationDepth);
 					rigidbody._velocity._x = 0.f;
@@ -146,7 +162,7 @@ namespace gm
 					const CollisionHit hit = CheckCollision(*selfCollider, gameObject, *otherCollider, otherObject);
 
 					if (hit.isHit == false || std::fabs(hit.normal._y) < 0.5f)
-						return;
+						continue;
 
 					transform->TranslateY(hit.normal._y * hit.penetrationDepth);
 
