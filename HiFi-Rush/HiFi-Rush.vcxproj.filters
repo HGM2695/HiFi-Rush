@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="리소스 파일">
@@ -52,6 +52,9 @@
     <ClInclude Include="MainHUDWidget.h">
       <Filter>Component\02. Widget</Filter>
     </ClInclude>
+    <ClInclude Include="Paths.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
     <ClInclude Include="DebugInputHandler.h" />
   </ItemGroup>
   <ItemGroup>
@@ -84,6 +87,6 @@
     <ClCompile Include="MainHUDWidget.cpp">
       <Filter>Component\02. Widget</Filter>
     </ClCompile>
-
-    <ClCompile Include="DebugInputHandler.cpp" />  </ItemGroup>
+    <ClCompile Include="DebugInputHandler.cpp" />
+  </ItemGroup>
 </Project>

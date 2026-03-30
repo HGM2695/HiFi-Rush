@@ -4,23 +4,33 @@
 #include "../Engine/Resources.h"
 #include "../Engine/Texture.h"
 #include "../Engine/SpriteAnimationClip.h"
+#include "../Engine/SoundWave.h"
+#include "Paths.h"
 
 namespace gm
 {
-	void TempAnimationClipRoad();
+	void LoadTexture(Resources& resources);
+	void LoadTempAnimationClip(Resources& resources);
+	void LoadAudio(Resources& resources);
 
 	void LoadResources()
 	{
 		Resources& resources = APPLICATION.GetResources();
-		resources.Load<Texture>(L"OrangeMushroom", L"Resources/GameObject/orange_mushroom.png");
-		resources.Load<Texture>(L"Xanadu", L"Resources/GameObject/Xanadu.png");
-		resources.Load<Texture>(L"PlayerLeft", L"Resources/GameObject/NewPlayer_Left.bmp");
-		resources.Load<Texture>(L"PlayerRight", L"Resources/GameObject/NewPlayer_Right.bmp");
 
-		TempAnimationClipRoad();
+		LoadTexture(resources);
+		LoadTempAnimationClip(resources);
+		LoadAudio(resources);
 	}
 
-	void TempAnimationClipRoad()
+	void LoadTexture(Resources& resources)
+	{
+		resources.Load<Texture>(L"OrangeMushroom", GetTexturePath(L"Test/orange_mushroom.png"));
+		resources.Load<Texture>(L"Xanadu", GetTexturePath(L"Test/Xanadu.png"));
+		resources.Load<Texture>(L"PlayerLeft", GetTexturePath(L"Test/NewPlayer_Left.bmp"));
+		resources.Load<Texture>(L"PlayerRight", GetTexturePath(L"Test/NewPlayer_Right.bmp"));
+	}
+
+	void LoadTempAnimationClip(Resources& resources)
 	{
 		// 추후 Animation Data 파일로 부터 파싱하는 구조로 변경 예정
 		// IdleLeft
@@ -44,7 +54,7 @@ namespace gm
 		spriteAnimatinoClip->SetTexture(texture);
 
 		frameWidth = static_cast<int>(texture->GetWidth() / 4);
-		frameHeight = static_cast<int>(texture->GetHeight() / 9);		
+		frameHeight = static_cast<int>(texture->GetHeight() / 9);
 
 		for (int i = 0; i < 3; ++i)
 			spriteAnimatinoClip->AddFrame({ frameWidth * i, frameHeight, frameWidth, frameHeight, 0.3f });
@@ -84,5 +94,11 @@ namespace gm
 
 		spriteAnimatinoClip->AddNotify(0.3f, L"MoveRightStep");
 		spriteAnimatinoClip->AddNotify(0.9f, L"MoveRightStep");
+	}
+
+	void LoadAudio(Resources& resources)
+	{
+		resources.Load<SoundWave>(L"TestBGM", GetAudioPath(L"Lake Of Oblivion.mp3"));
+		resources.Load<SoundWave>(L"Two", GetAudioPath(L"Two.wav"));
 	}
 }
