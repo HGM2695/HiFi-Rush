@@ -1,4 +1,5 @@
 #include "GMAssert.h"
+#include "StringUtil.h"
 
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -44,21 +45,6 @@ namespace gm
 		std::unordered_set<AssertSiteKey, AssertSiteKeyHasher> g_ignoredAssertSites{};
 	}
 
-	static void Utf8ToWide(const char* src, wchar_t* dst, int dstCount)
-	{
-		if (!dst || dstCount <= 0)
-			return;
-
-		dst[0] = L'\0';
-
-		if (!src || src[0] == '\0')
-			return;
-
-		const int written = MultiByteToWideChar(CP_UTF8, 0, src, -1, dst, dstCount);
-		if (written == 0)
-			dst[0] = L'\0';
-	}
-
 	void AssertPopupAndOptionalBreak(const char* tag, const char* exprText, const char* file, const char* func, int line, const char* format, ...)
 	{
 		const AssertSiteKey key{ file, exprText, line };
@@ -71,23 +57,18 @@ namespace gm
 		std::vsnprintf(messageBuffer, sizeof(messageBuffer), format ? format : "", args);
 		va_end(args);
 
-		wchar_t wTag[128]{};
-		wchar_t wExpr[256]{};
-		wchar_t wMsg[512]{};
-		wchar_t wFile[512]{};
-		wchar_t wFunc[256]{};
-		Utf8ToWide(tag, wTag, _countof(wTag));
-		Utf8ToWide(exprText, wExpr, _countof(wExpr));
-		Utf8ToWide(messageBuffer, wMsg, _countof(wMsg));
-		Utf8ToWide(file, wFile, _countof(wFile));
-		Utf8ToWide(func, wFunc, _countof(wFunc));
+		const std::wstring wTag = Utf8ToWide(tag);
+		const std::wstring wExpr = Utf8ToWide(exprText);
+		const std::wstring wMsg = Utf8ToWide(messageBuffer);
+		const std::wstring wFile = Utf8ToWide(file);
+		const std::wstring wFunc = Utf8ToWide(func);
 
 		wchar_t buffer[1024]{};
 		_snwprintf_s(
 			buffer, _countof(buffer), _TRUNCATE,
 			L"[%s]\n\nExpression: %s\nMessage: %s\n\nFILE: %s\nFunc: %s\nLINE: %d\n\n"
 			L"예: 중단점 이동\n아니오: 무시(1회)\n취소: 무시(계속)",
-			wTag, wExpr, wMsg, wFile, wFunc, line);
+			wTag.c_str(), wExpr.c_str(), wMsg.c_str(), wFile.c_str(), wFunc.c_str(), line);
 
 		const int result = MessageBoxW(nullptr, buffer, L"GM_ASSERT", MB_YESNOCANCEL | MB_ICONERROR);
 
