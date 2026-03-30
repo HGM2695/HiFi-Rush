@@ -45,7 +45,6 @@ namespace gm
             GM_ASSERT_RETURN_VAL(resource->Load(path), nullptr, "Load 실패");
 
             resource->SetName(key);
-            resource->SetPath(path);
 
             _resourceList.emplace(key, resource);
             return resource;

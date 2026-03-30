@@ -7,11 +7,11 @@ namespace gm
 	enum class ResourceType
 	{
 		Texture,
+		Audio,
 		Material,
 		Mesh,
 		Skeleton,
 		SpriteAnimationClip,
-		AudioClip,
 
 		Count
 	};
@@ -28,16 +28,10 @@ namespace gm
 
 		virtual	ResourceType	GetType() const = 0;
 
-		const std::wstring&		GetPath() const { return _path; }
-
 	protected:
 		virtual bool			LoadInternal(const std::wstring& path) = 0;
 
 	private:
-		bool					Load(const std::wstring& path) { return LoadInternal(path); }
-		void					SetPath(const std::wstring& path) { _path = path; }
-
-	private:
-		std::wstring _path;
+		bool					Load(const std::wstring& path, bool isPersistent = false) { return LoadInternal(path); }
 	};
 }
