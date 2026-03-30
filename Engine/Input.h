@@ -12,7 +12,7 @@ namespace gm
 	{
 		None,
 		Down,
-		Pressed,
+		Repeat,
 		Up,
 		Count
 	};

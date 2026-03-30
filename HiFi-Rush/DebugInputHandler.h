@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <string>
+#include "../Engine/Input.h"
 
 namespace gm
 {
@@ -12,8 +13,6 @@ namespace gm
 		None = 0u,
 		AudioTest = 1u << 0,
 		PhysicsTest = 1u << 1,
-
-		Count
 	};
 
 	class DebugInputHandler
@@ -53,11 +52,7 @@ namespace gm
 #endif
 		}
 
-		static bool isTriggered(const std::wstring& eventName);
-
-	private:
-		static bool DispatchAudioTest(const std::wstring& eventName, const Input& input);
-		static bool DispatchPhysicsTest(const std::wstring& eventName, const Input& input);
+		static bool IsTriggered(DebugType debugType, KeyCode keycode, KeyState keyState = KeyState::Down);
 
 	private:
 #ifdef _DEBUG

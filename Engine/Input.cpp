@@ -116,7 +116,7 @@ namespace gm
 			if (GetAsyncKeyState(ASCII[i]) & 0x8000)
 			{
 				if (_keyList[i]._pressed)
-					_keyList[i]._keyState = KeyState::Pressed;
+					_keyList[i]._keyState = KeyState::Repeat;
 				else
 					_keyList[i]._keyState = KeyState::Down;
 
@@ -142,7 +142,7 @@ namespace gm
 			if (GetAsyncKeyState(MOUSE_BUTTONS[i]) & 0x8000)
 			{
 				if (_mouseList[i]._pressed)
-					_mouseList[i]._keyState = KeyState::Pressed;
+					_mouseList[i]._keyState = KeyState::Repeat;
 				else
 					_mouseList[i]._keyState = KeyState::Down;
 

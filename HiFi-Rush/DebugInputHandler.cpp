@@ -1,54 +1,28 @@
 ﻿#include "DebugInputHandler.h"
 #include "../Engine/Application.h"
-#include "../Engine/Input.h"
 
 namespace gm
 {
-	bool DebugInputHandler::isTriggered(const std::wstring& eventName)
+	bool DebugInputHandler::IsTriggered(DebugType debugType, KeyCode keycode, KeyState keyState)
 	{
 #ifdef _DEBUG
+		if ((_types & debugType) == DebugType::None)
+			return false;
+
 		const Input& input = APPLICATION.GetInput();
+		switch (keyState)
+		{
+		case KeyState::Down:
+			return input.IsKeyDown(keycode);
 
-		bool result = false;
-		if (_types & AudioTest)
-			result = DispatchAudioTest(eventName, input);
-		if (_types & PhysicsTest)
-			result |= DispatchPhysicsTest(eventName, input);
+		case KeyState::Repeat:
+			return input.IsKeyRepeat(keycode);
 
-		return result;
-#else
-		return false;
+		case KeyState::Up:
+			return input.IsKeyUp(keycode);
+		}
 #endif
-	}
-
-	bool DebugInputHandler::DispatchAudioTest(const std::wstring& eventName, const Input& input)
-	{
-#ifdef _DEBUG
-		if (eventName == L"Play" && input.IsKeyDown(KeyCode::P))
-			return true;
-		if (eventName == L"Stop" && input.IsKeyDown(KeyCode::S))
-			return true;
-		if (eventName == L"Pause" && input.IsKeyDown(KeyCode::D0))
-			return true;
-		if (eventName == L"Resume" && input.IsKeyDown(KeyCode::D1))
-			return true;
-		if (eventName == L"StopAll" && input.IsKeyDown(KeyCode::D2))
-			return true;
-
 
 		return false;
-#else
-		return false;
-#endif
-	}
-
-	bool DebugInputHandler::DispatchPhysicsTest(const std::wstring& eventName, const Input& input)
-	{
-#ifdef _DEBUG
-
-		return false;
-#else
-		return false;
-#endif
 	}
 }
