@@ -4,6 +4,7 @@
 #include "../Engine/Application.h"
 #include "MainScene.h"
 #include "TitleScene.h"
+#include "CommonLoadingScene.h"
 
 namespace gm
 {
@@ -12,7 +13,8 @@ namespace gm
 		SceneManager& sceneManager = APPLICATION.GetSceneManager();
 		sceneManager.CreateScene<TitleScene>(L"TitleScene");
 		sceneManager.CreateScene<MainScene>(L"MainScene");
+		sceneManager.CreateScene<CommonLoadingScene>(L"CommonLoadingScene");
 
-		sceneManager.RequestSceneChange(L"TitleScene");
+		sceneManager.RequestSceneChange(L"TitleScene", L"CommonLoadingScene");
 	}
 }

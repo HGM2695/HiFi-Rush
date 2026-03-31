@@ -20,11 +20,14 @@
     <Filter Include="Component\01. Behavior">
       <UniqueIdentifier>{1a87d7a0-b72a-4ce3-8b37-954eff0d60cb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Component\02. Widget">
-      <UniqueIdentifier>{48b8e4ef-7ccd-43e7-9779-4e927165d517}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Debug">
       <UniqueIdentifier>{4a8e0696-15d0-455f-b9c1-5e7aee8f1d59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{342b193f-f0ec-46c0-b857-0c2461dbbbe3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget">
+      <UniqueIdentifier>{48b8e4ef-7ccd-43e7-9779-4e927165d517}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -50,13 +53,16 @@
       <Filter>Component\01. Behavior</Filter>
     </ClInclude>
     <ClInclude Include="MainHUDWidget.h">
-      <Filter>Component\02. Widget</Filter>
-    </ClInclude>
-    <ClInclude Include="Paths.h">
-      <Filter>Resource</Filter>
+      <Filter>Widget</Filter>
     </ClInclude>
     <ClInclude Include="DebugInputHandler.h">
       <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonLoadingScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Paths.h">
+      <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -87,10 +93,13 @@
       <Filter>Component\01. Behavior</Filter>
     </ClCompile>
     <ClCompile Include="MainHUDWidget.cpp">
-      <Filter>Component\02. Widget</Filter>
+      <Filter>Widget</Filter>
     </ClCompile>
     <ClCompile Include="DebugInputHandler.cpp">
       <Filter>Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonLoadingScene.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
