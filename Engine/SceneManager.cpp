@@ -1,5 +1,4 @@
 ﻿#include "SceneManager.h"
-#include "Scene.h"
 #include "GMAssert.h"
 
 namespace gm
@@ -7,24 +6,14 @@ namespace gm
 	SceneManager::SceneManager() = default;
 	SceneManager::~SceneManager() = default;
 
-	void SceneManager::PlayScene(const std::wstring& sceneName)
-	{
-		auto sceneIter = _sceneList.find(sceneName);
-		GM_ASSERT_RETURN(sceneIter != _sceneList.end(), "입력한 Scene은 존재하지 않습니다.");
-
-		if (_activeScene)
-			_activeScene->OnExit();
-
-		_activeScene = sceneIter->second.get();
-		_activeScene->OnEnter();
-	}
-
 	void SceneManager::Initialize()
 	{
 	}
 
 	void SceneManager::Update()
 	{
+		CheckSceneChange();
+
 		GM_ASSERT_RETURN(_activeScene, "활성 Scene이 없습니다.");
 
 		_activeScene->Update();
@@ -49,5 +38,38 @@ namespace gm
 		GM_ASSERT_RETURN(_activeScene, "활성 Scene이 없습니다.");
 
 		_activeScene->EndFrame();
+	}
+
+	void SceneManager::RequestSceneChange(const std::wstring& pendingSceneName, const std::wstring& loadingSceneName)
+	{
+		auto sceneIter = _sceneList.find(pendingSceneName);
+		GM_ASSERT_RETURN(sceneIter != _sceneList.end(), "%ls 은 존재하지 않습니다.", pendingSceneName);
+
+		if (loadingSceneName.empty() == false)
+		{
+			auto loadingSceneIter = _sceneList.find(loadingSceneName);
+			GM_ASSERT_RETURN(loadingSceneIter != _sceneList.end(), "%ls 은 존재하지 않습니다.", loadingSceneName);
+
+			_pendingSceneName = pendingSceneName;
+			_nextSceneName = loadingSceneName;
+			return;
+		}
+
+		_pendingSceneName.clear();
+		_nextSceneName = pendingSceneName;
+	}
+
+	void SceneManager::CheckSceneChange()
+	{
+		if (_nextSceneName.empty())
+			return;
+
+		if (_activeScene)
+			_activeScene->OnExit();
+
+		_activeScene = _sceneList[_nextSceneName].get();
+		_activeScene->OnEnter();
+
+		_nextSceneName.clear();
 	}
 }

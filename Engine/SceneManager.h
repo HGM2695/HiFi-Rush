@@ -1,8 +1,9 @@
 ﻿#pragma once
 
-#include <map>
+#include <unordered_map>
 #include <memory>
 #include <string>
+#include "Scene.h"
 
 struct HDC__;
 typedef struct HDC__* HDC;
@@ -20,6 +21,12 @@ namespace gm
 		template <typename T>
 		Scene*			CreateScene(const std::wstring& sceneName)
 		{
+			static_assert(std::is_base_of_v<Scene, T>, "T는 반드시 Scene의 자식 클래스이어야 합니다.");
+			
+			auto iter = _sceneList.find(sceneName);
+			if (iter != _sceneList.end())
+				return nullptr;
+
 			std::unique_ptr<T> newScene = std::make_unique<T>();
 			newScene->SetName(sceneName);
 			newScene->Initialize();
@@ -29,20 +36,25 @@ namespace gm
 			return scenePtr;
 		}
 
-		void			PlayScene(const std::wstring& sceneName);
-		Scene*			GetActiveScene() { return _activeScene; }
-		const Scene*	GetActiveScene() const { return _activeScene; }
-
-	public:
 		void			Initialize();
 		void			Update();
 		void			LateUpdate();
 		void			Render(HDC hDC);
 		void			EndFrame();
 
+		void				RequestSceneChange(const std::wstring& pendingSceneName, const std::wstring& loadingSceneName = L"");
+		Scene*				GetActiveScene() { return _activeScene; }
+		const Scene*		GetActiveScene() const { return _activeScene; }
+		const std::wstring& GetPendingSceneName() { return _pendingSceneName; }
+
 	private:
-		std::map<const std::wstring, std::unique_ptr<Scene>>	_sceneList;
-		Scene*													_activeScene = nullptr;
+		void				CheckSceneChange();
+
+	private:
+		std::unordered_map<std::wstring, std::unique_ptr<Scene>>	_sceneList;
+		Scene*														_activeScene = nullptr;
+		std::wstring												_pendingSceneName{};
+		std::wstring												_nextSceneName{};
 	};
 }
 
