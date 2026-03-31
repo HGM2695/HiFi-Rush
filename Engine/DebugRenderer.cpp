@@ -29,9 +29,18 @@ namespace gm::debug
 			Color color;
 		};
 
+		struct DebugText
+		{
+			std::wstring content;
+			math::Vector2 viewPosition;
+			Color color;
+		};
+
 		std::vector<DebugLine> g_lines;
 		std::vector<DebugRect> g_rects;
 		std::vector<DebugCircle> g_circles;
+		std::vector<DebugText> g_Texts;
+
 
 		COLORREF ToColorRef(Color color)
 		{
@@ -42,21 +51,28 @@ namespace gm::debug
 	void DebugRenderer::RequestDrawLine(const math::Vector2& worldStart, const math::Vector2& worldEnd, Color color)
 	{
 #ifdef _DEBUG
-		g_lines.push_back({ worldStart, worldEnd, color });
+		g_lines.emplace_back(worldStart, worldEnd, color);
 #endif
 	}
 
 	void DebugRenderer::RequestDrawRect(const math::Vector2& worldCenter, const math::Vector2& size, Color color)
 	{
 #ifdef _DEBUG
-		g_rects.push_back({ worldCenter, size, color });
+		g_rects.emplace_back(worldCenter, size, color);
 #endif
 	}
 
 	void DebugRenderer::RequestDrawCircle(const math::Vector2& worldCenter, float radius, Color color)
 	{
 #ifdef _DEBUG
-		g_circles.push_back({ worldCenter, radius, color });
+		g_circles.emplace_back(worldCenter, radius, color);
+#endif
+	}
+
+	void DebugRenderer::RequestDrawText(const std::wstring& content, const gm::math::Vector2& viewPosition, gm::Color color)
+	{
+#ifdef _DEBUG
+		g_Texts.emplace_back(content, viewPosition, color);
 #endif
 	}
 
@@ -119,6 +135,23 @@ namespace gm::debug
 			DeleteObject(pen);
 		}
 
+		const int oldBkMode = SetBkMode(hDC, TRANSPARENT);
+		for (const DebugText& text : g_Texts)
+		{
+			const COLORREF oldTextColor = SetTextColor(hDC, ToColorRef(text.color));
+
+			TextOutW(
+				hDC,
+				static_cast<int>(text.viewPosition._x),
+				static_cast<int>(text.viewPosition._y),
+				text.content.c_str(),
+				static_cast<int>(text.content.size())
+			);
+
+			SetTextColor(hDC, oldTextColor);
+		}
+		SetBkMode(hDC, oldBkMode);
+
 		SelectObject(hDC, oldBrush);
 		Clear();
 #endif
@@ -130,6 +163,7 @@ namespace gm::debug
 		g_lines.clear();
 		g_rects.clear();
 		g_circles.clear();
+		g_Texts.clear();
 #endif
 	}
 }
