@@ -64,14 +64,12 @@ namespace gm
 		VK_MBUTTON
 	};
 
-	void Input::Initialize(HWND hWnd)
+	Input::Input(HWND hWnd)
 	{
-		GM_ASSERT_RETURN(hWnd, "Input 초기화에 필요한 HWND가 nullptr입니다.");
-
 		static_assert(
 			ASCII[static_cast<int>(KeyCode::Count) - 1],
 			"KeyCode에 추가했다면 ASCII에도 추가해주세요."
-		);
+			);
 
 		_hWnd = hWnd;
 
@@ -162,8 +160,6 @@ namespace gm
 
 	void Input::updateMousePosition()
 	{
-		GM_ASSERT_RETURN(_hWnd, "Input::Initialize()가 먼저 호출되어야 합니다.");
-
 		POINT pt{};
 		GetCursorPos(&pt);
 		ScreenToClient(_hWnd, &pt);

@@ -27,7 +27,6 @@ namespace gm
 			return raw;
 		}
 
-		void Initialize() {}
 		void Update();
 		void Render(HDC hDC);
 		void ClearViewportWidgets();

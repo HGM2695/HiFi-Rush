@@ -36,7 +36,6 @@ namespace gm
 			return scenePtr;
 		}
 
-		void			Initialize();
 		void			Update();
 		void			LateUpdate();
 		void			Render(HDC hDC);

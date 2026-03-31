@@ -98,8 +98,9 @@ namespace gm
 			bool		_pressed{};
 		};
 
+		Input(HWND hWnd);
+
 		// Keyboard
-		void			Initialize(HWND hWnd);
 		void			Update();
 
 		bool			IsKeyUp(KeyCode code) const { return getKey(code)._keyState == KeyState::Up; }

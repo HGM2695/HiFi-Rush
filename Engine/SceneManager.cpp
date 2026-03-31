@@ -6,10 +6,6 @@ namespace gm
 	SceneManager::SceneManager() = default;
 	SceneManager::~SceneManager() = default;
 
-	void SceneManager::Initialize()
-	{
-	}
-
 	void SceneManager::Update()
 	{
 		CheckSceneChange();

@@ -43,16 +43,13 @@ namespace gm
 
     void Application::initializeSubSystem()
     {
-        _input = std::make_unique<Input>();
-        _input->Initialize(_hWnd);
+        _input = std::make_unique<Input>(_hWnd);
 
 		_physicsSystem = std::make_unique<PhysicsSystem>();
 
         _time = std::make_unique<Time>();
-        _time->Initialize();
 
         _sceneManager = std::make_unique<SceneManager>();
-        _sceneManager->Initialize();
 
         _resources = std::make_unique<Resources>();
 
@@ -60,7 +57,6 @@ namespace gm
 		GM_ASSERT(_audioSystem->Initialize(), "AudioSystem 초기화에 실패했습니다.");
 
 		_uiManager = std::make_unique<UIManager>();
-		_uiManager->Initialize();
     }
 
     void Application::Run()

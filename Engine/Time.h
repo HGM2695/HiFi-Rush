@@ -11,7 +11,8 @@ namespace gm
 	class Time
 	{
 	public:
-		void	Initialize();
+		Time();
+
 		void	Update();
 		void	Render(HDC hDC);
 

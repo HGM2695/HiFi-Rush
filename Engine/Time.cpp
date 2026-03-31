@@ -1,10 +1,10 @@
-#include "Time.h"
+﻿#include "Time.h"
 #include "GMAssert.h"
 #include <wchar.h>
 
 namespace gm
 {
-	void Time::Initialize()
+	Time::Time()
 	{
 		QueryPerformanceFrequency(&_cpuFrequency);
 		QueryPerformanceCounter(&_prevFrequency);
