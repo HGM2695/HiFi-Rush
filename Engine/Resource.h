@@ -16,8 +16,6 @@ namespace gm
 		Count
 	};
 
-	class Resources;
-
 	class Resource : public Entity
 	{
 		friend class Resources;
