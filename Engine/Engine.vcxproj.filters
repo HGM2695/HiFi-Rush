@@ -143,9 +143,15 @@
     <ClInclude Include="WidgetComponent.h">
       <Filter>Engine Component</Filter>
     </ClInclude>
-    <ClInclude Include="EngineCore.h" />
-    <ClInclude Include="Types.h" />
-    <ClInclude Include="WindowsCore.h" />
+    <ClInclude Include="WindowsCore.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Types.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineCore.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -312,6 +318,9 @@
     </Filter>
     <Filter Include="UI\Widgets">
       <UniqueIdentifier>{a9251714-1459-4bde-a5e5-bea2186e4e24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{134d4855-c312-4be8-8fc2-f7540de04a0c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
