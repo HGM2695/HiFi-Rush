@@ -1,5 +1,4 @@
 ﻿#include "Texture.h"
-#include "GMAssert.h"
 #include <Windows.h>
 #include <gdiplus.h>
 

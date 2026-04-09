@@ -1,5 +1,4 @@
 #include "AnimationClip.h"
-#include "GMAssert.h"
 #include <algorithm>
 
 namespace gm

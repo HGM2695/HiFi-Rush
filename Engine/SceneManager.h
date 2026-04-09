@@ -1,12 +1,10 @@
 ﻿#pragma once
 
+#include "EngineCore.h"
 #include <unordered_map>
 #include <memory>
 #include <string>
 #include "Scene.h"
-
-struct HDC__;
-typedef struct HDC__* HDC;
 
 namespace gm
 {
@@ -36,10 +34,10 @@ namespace gm
 			return scenePtr;
 		}
 
-		void			Update();
-		void			LateUpdate();
-		void			Render(HDC hDC);
-		void			EndFrame();
+		void				Update();
+		void				LateUpdate();
+		void				Render(HDC hDC);
+		void				EndFrame();
 
 		void				RequestSceneChange(const std::wstring& pendingSceneName, const std::wstring& loadingSceneName = L"");
 		Scene*				GetActiveScene() { return _activeScene; }

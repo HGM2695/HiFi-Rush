@@ -143,6 +143,9 @@
     <ClInclude Include="WidgetComponent.h">
       <Filter>Engine Component</Filter>
     </ClInclude>
+    <ClInclude Include="EngineCore.h" />
+    <ClInclude Include="Types.h" />
+    <ClInclude Include="WindowsCore.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />

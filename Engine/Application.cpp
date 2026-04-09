@@ -8,7 +8,6 @@
 #include "Scene.h"
 #include "AudioSystem.h"
 #include "DebugRenderer.h"
-#include "GMAssert.h"
 #include "UIManager.h"
 
 namespace gm
@@ -16,14 +15,14 @@ namespace gm
     Application::Application() = default;
     Application::~Application() = default;
 
-    void Application::Initialize(HWND hWnd, uint32_t width, uint32_t height)
+    void Application::Initialize(HWND hWnd, uint32 width, uint32 height)
     {
         initializeWindow(hWnd, width, height);
         createBackDC();
         initializeSubSystem();
     }
 
-    void Application::initializeWindow(HWND hWnd, uint32_t width, uint32_t height)
+    void Application::initializeWindow(HWND hWnd, uint32 width, uint32 height)
     {
         _hWnd = hWnd;
         _hDC = GetDC(_hWnd);

@@ -1,7 +1,6 @@
 ﻿#include "GameObject.h"
 #include "Windows.h"
 #include "Collider2D.h"
-#include "GMAssert.h"
 #include "Rigidbody2D.h"
 #include "Transform.h"
 

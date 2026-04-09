@@ -1,11 +1,9 @@
 ﻿#pragma once
 
+#include "EngineCore.h"
 #include "Color.h"
 #include "Vector2.h"
 #include <string>
-
-struct HDC__;
-typedef struct HDC__* HDC;
 
 namespace gm::debug
 {

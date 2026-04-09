@@ -1,12 +1,10 @@
 ﻿#pragma once
 
+#include "EngineCore.h"
 #include <vector>
 #include <memory>
 #include "Entity.h"
 #include "Vector2.h"
-
-struct HDC__;
-typedef struct HDC__* HDC;
 
 namespace gm
 {

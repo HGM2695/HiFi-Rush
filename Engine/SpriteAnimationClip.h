@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "EngineCore.h"
 #include "AnimationClip.h"
 #include "SpriteFrame.h"
 #include <memory>
@@ -17,11 +18,11 @@ namespace gm
 
         static constexpr ResourceType Type = ResourceType::SpriteAnimationClip;
         virtual	ResourceType	    GetType() const override { return Type; }
-        virtual uint32_t            GetFrameIndexByTime(float time) const override;
+        virtual uint32              GetFrameIndexByTime(float time) const override;
 
         void                        SetTexture(const std::shared_ptr<Texture>& texture) { _texture = texture; }
         std::shared_ptr<Texture>    GetTexture() const { return _texture; }
-        uint32_t                    GetFrameCount() const { return static_cast<uint32_t>(_frameList.size()); }
+        uint32                      GetFrameCount() const { return static_cast<uint32>(_frameList.size()); }
         void                        AddFrame(const SpriteFrame& frame);
         const SpriteFrame&          GetFrame(size_t index) const { return _frameList[index]; }
         const SpriteFrame&          GetFrameByTime(float time) { return GetFrame(GetFrameIndexByTime(time)); }

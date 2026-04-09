@@ -1,5 +1,4 @@
 ﻿#include "SceneManager.h"
-#include "GMAssert.h"
 
 namespace gm
 {

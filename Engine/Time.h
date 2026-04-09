@@ -1,10 +1,7 @@
 ﻿#pragma once
 
-#define NOMINMAX
-#include "Windows.h"
-
-struct HDC__;
-typedef struct HDC__* HDC;
+#include "EngineCore.h"
+#include "WindowsCore.h"
 
 namespace gm
 {

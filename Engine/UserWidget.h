@@ -1,11 +1,8 @@
 ﻿#pragma once
 
+#include "EngineCore.h"
 #include <memory>
 #include "Vector2.h"
-
-struct HDC__;
-typedef struct HDC__* HDC;
-
 namespace gm
 {
 	class Widget;

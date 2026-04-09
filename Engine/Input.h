@@ -1,10 +1,8 @@
 ﻿#pragma once
 
+#include "EngineCore.h"
 #include <vector>
 #include "Vector2.h"
-
-struct HWND__;
-typedef struct HWND__* HWND;
 
 namespace gm
 {
@@ -17,7 +15,7 @@ namespace gm
 		Count
 	};
 
-	enum class KeyCode : uint16_t
+	enum class KeyCode : uint16
 	{
 		Escape,
 		Enter,
@@ -72,7 +70,7 @@ namespace gm
 		Count
 	};
 
-	enum class MouseButton : uint8_t
+	enum class MouseButton : uint8
 	{
 		Left,
 		Right,

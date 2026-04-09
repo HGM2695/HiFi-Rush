@@ -1,13 +1,6 @@
-#pragma once
+﻿#pragma once
 
-#include <memory>
-
-struct HWND__;
-typedef struct HWND__* HWND;
-struct HDC__;
-typedef struct HDC__* HDC;
-struct HBITMAP__;
-typedef struct HBITMAP__* HBITMAP;
+#include "EngineCore.h"
 
 namespace gm
 {
@@ -35,7 +28,7 @@ namespace gm
 		}
 
 	public:
-		void				Initialize(HWND hWnd, uint32_t width, uint32_t height);
+		void				Initialize(HWND hWnd, uint32 width, uint32 height);
 		void				Run();
 
 		void				Update();
@@ -45,8 +38,8 @@ namespace gm
 		void				EndFrame();
 
 		void				ShutDownRuntime();
-		uint32_t			GetWidth() { return _width; }
-		uint32_t			GetHeight() { return _height; }
+		uint32				GetWidth() { return _width; }
+		uint32				GetHeight() { return _height; }
 
 	public: // subsystem
 		Input&				GetInput() { return *_input; }
@@ -66,7 +59,7 @@ namespace gm
 		const UIManager&	GetUIManager() const { return *_uiManager; }
 
 	private:
-		void				initializeWindow(HWND hWnd, uint32_t width, uint32_t height);
+		void				initializeWindow(HWND hWnd, uint32 width, uint32 height);
 		void				createBackDC();
 		void				initializeSubSystem();
 
@@ -77,8 +70,8 @@ namespace gm
 		HDC								_backHDC = nullptr;
 		HBITMAP							_backBuffer = nullptr;
 
-		uint32_t 						_width = 0;
-		uint32_t 						_height = 0;
+		uint32 						_width = 0;
+		uint32 						_height = 0;
 
 		std::unique_ptr<Input>			_input;
 		std::unique_ptr<PhysicsSystem>	_physicsSystem;

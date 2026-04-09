@@ -1,5 +1,4 @@
 ﻿#include "Time.h"
-#include "GMAssert.h"
 #include <wchar.h>
 
 namespace gm

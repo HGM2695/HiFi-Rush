@@ -1,5 +1,4 @@
 ﻿#include "Component.h"
-#include "GMAssert.h"
 
 namespace gm
 {

@@ -1,7 +1,6 @@
 ﻿#pragma once
 
-struct HDC__;
-typedef struct HDC__* HDC;
+#include "EngineCore.h"
 
 namespace gm
 {

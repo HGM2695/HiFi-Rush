@@ -2,7 +2,6 @@
 #include "Resources.h"
 #include "Texture.h"
 #include "Application.h"
-#include "GMAssert.h"
 #include <Windows.h>
 #include <gdiplus.h>
 

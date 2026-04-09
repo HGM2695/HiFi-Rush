@@ -1,6 +1,5 @@
 ﻿#include "SpriteAnimationClip.h"
 #include "Application.h"
-#include "GMAssert.h"
 #include "Resources.h"
 #include "Texture.h"
 #include <algorithm>
@@ -14,11 +13,11 @@ namespace gm
 	void SpriteAnimationClip::AddFrame(const SpriteFrame& frame)
 	{
 		_frameList.push_back(frame);
-		_frameCount = static_cast<uint32_t>(_frameList.size());
+		_frameCount = static_cast<uint32>(_frameList.size());
 		_length += frame.duration;
 	}
 
-	uint32_t SpriteAnimationClip::GetFrameIndexByTime(float time) const
+	uint32 SpriteAnimationClip::GetFrameIndexByTime(float time) const
 	{
 		GM_ASSERT_RETURN_VAL(_frameList.empty() == false, 0, "SpriteAnimationClip이 비어있습니다.");
 		GM_ASSERT_RETURN_VAL(_length > 0.f, 0, "Animation _length가 0입니다.");
@@ -27,7 +26,7 @@ namespace gm
 		const float normalizedTime = std::fmod(time, _length);
 		float accumulatedTime = 0.f;
 
-		for (uint32_t i = 0; i < _frameCount; ++i)
+		for (uint32 i = 0; i < _frameCount; ++i)
 		{
 			accumulatedTime += _frameList[i].duration;
 			if (normalizedTime < accumulatedTime)

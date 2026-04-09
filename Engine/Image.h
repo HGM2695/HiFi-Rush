@@ -1,11 +1,9 @@
 ﻿#pragma once
 
+#include "EngineCore.h"
 #include "Widget.h"
 #include <memory>
 #include <string>
-
-struct HDC__;
-typedef struct HDC__* HDC;
 
 namespace gm
 {

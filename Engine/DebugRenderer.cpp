@@ -1,6 +1,5 @@
 ﻿#include "DebugRenderer.h"
 #include "Camera.h"
-#include "GMAssert.h"
 #include <vector>
 #include <windows.h>
 

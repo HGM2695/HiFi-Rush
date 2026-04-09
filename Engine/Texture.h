@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "EngineCore.h"
 #include "Resource.h"
 #include <memory>
 
@@ -16,8 +17,8 @@ namespace gm
 		static constexpr ResourceType Type = ResourceType::Texture;
 		virtual	ResourceType	GetType() const override { return Type; }
 			
-		uint32_t				GetWidth() const { return _width; }
-		uint32_t				GetHeight() const { return _height; }
+		uint32					GetWidth() const { return _width; }
+		uint32					GetHeight() const { return _height; }
 		Gdiplus::Image*			GetImage() const { return _image.get(); }
 
 	protected:
@@ -25,7 +26,7 @@ namespace gm
 
 	private:
 		std::unique_ptr<Gdiplus::Image>	 _image{};
-		uint32_t						 _width{};
-		uint32_t						 _height{};
+		uint32							 _width{};
+		uint32							 _height{};
 	};
 }

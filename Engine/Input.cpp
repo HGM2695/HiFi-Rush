@@ -1,5 +1,4 @@
 ﻿#include "Input.h"
-#include "GMAssert.h"
 #include <Windows.h>
 
 namespace gm
