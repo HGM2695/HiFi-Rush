@@ -1,10 +1,10 @@
 ﻿#pragma once
 
-#include "../Engine/Application.h"
-#include "../Engine/Resources.h"
-#include "../Engine/Texture.h"
-#include "../Engine/SpriteAnimationClip.h"
-#include "../Engine/SoundWave.h"
+#include "Application.h"
+#include "Resources.h"
+#include "Texture.h"
+#include "SpriteAnimationClip.h"
+#include "SoundWave.h"
 #include "Paths.h"
 
 namespace gm

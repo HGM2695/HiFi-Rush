@@ -8,7 +8,7 @@ namespace gm
 
 	class Input;
 	class PhysicsSystem;
-	class Time;
+	class TimeSystem;
 	class SceneManager;
 	class Resources;
 	class AudioSystem;
@@ -44,7 +44,7 @@ namespace gm
 	public: // subsystem
 		Input&				GetInput() { return *_input; }
 		PhysicsSystem&		GetPhysicsSystem() { return *_physicsSystem; }
-		Time&				GetTime() { return *_time; }
+		TimeSystem&			GetTimeSystem() { return *_time; }
 		SceneManager&		GetSceneManager() { return *_sceneManager; }
 		Resources&			GetResources() { return *_resources; }
 		AudioSystem&		GetAudioSystem() { return *_audioSystem; }
@@ -52,7 +52,7 @@ namespace gm
 
 		const Input&		GetInput() const { return *_input; }
 		const PhysicsSystem& GetPhysicsSystem() const { return *_physicsSystem; }
-		const Time&			GetTime() const { return *_time; }
+		const TimeSystem&	GetTimeSystem() const { return *_time; }
 		const SceneManager& GetSceneManager() const { return *_sceneManager; }
 		const Resources&	GetResources() const { return *_resources; }
 		const AudioSystem&	GetAudioSystem() const { return *_audioSystem; }
@@ -64,18 +64,18 @@ namespace gm
 		void				initializeSubSystem();
 
 	private:
-		HWND							_hWnd = nullptr;
-		HDC								_hDC = nullptr;
+		HWND						_hWnd = nullptr;
+		HDC							_hDC = nullptr;
 
-		HDC								_backHDC = nullptr;
-		HBITMAP							_backBuffer = nullptr;
+		HDC							_backHDC = nullptr;
+		HBITMAP						_backBuffer = nullptr;
 
 		uint32 						_width = 0;
 		uint32 						_height = 0;
 
 		std::unique_ptr<Input>			_input;
 		std::unique_ptr<PhysicsSystem>	_physicsSystem;
-		std::unique_ptr<Time>			_time;
+		std::unique_ptr<TimeSystem>			_time;
 		std::unique_ptr<SceneManager>	_sceneManager;
 		std::unique_ptr<Resources>		_resources;
 		std::unique_ptr<AudioSystem>	_audioSystem;

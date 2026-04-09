@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "GMAssert.h"
 #include "Application.h"
-#include "Time.h"
+#include "TimeSystem.h"
 
 namespace gm
 {
@@ -70,7 +70,7 @@ namespace gm
         else if (gapY < -halfHeight)
             targetPosition._y = ownerPosition._y + halfHeight;
 
-        float deltaTime = APPLICATION.GetTime().GetDeltaTime();
+        float deltaTime = APPLICATION.GetTimeSystem().GetDeltaTime();
         float t = 1.f - std::exp(-_followSpeed * deltaTime);
 
         _cameraPosition = math::Vector2::LerpClamped(_cameraPosition, targetPosition, t);

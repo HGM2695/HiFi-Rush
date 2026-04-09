@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "../Engine/SceneManager.h"
-#include "../Engine/Application.h"
+#include "SceneManager.h"
+#include "Application.h"
 #include "MainScene.h"
 #include "TitleScene.h"
 #include "CommonLoadingScene.h"
@@ -15,6 +15,6 @@ namespace gm
 		sceneManager.CreateScene<MainScene>(L"MainScene");
 		sceneManager.CreateScene<CommonLoadingScene>(L"CommonLoadingScene");
 
-		sceneManager.RequestSceneChange(L"TitleScene", L"CommonLoadingScene");
+		sceneManager.RequestSceneChange(L"MainScene");
 	}
 }

@@ -1,5 +1,5 @@
 ﻿#include "DebugInputHandler.h"
-#include "../Engine/Application.h"
+#include "Application.h"
 
 namespace gm
 {

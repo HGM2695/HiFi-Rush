@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "../Engine/Scene.h"
+#include "Scene.h"
 
 namespace gm
 {

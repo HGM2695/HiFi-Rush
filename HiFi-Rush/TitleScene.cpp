@@ -1,9 +1,9 @@
 ﻿#include "TitleScene.h"
-#include "../Engine/Input.h"
-#include "../Engine/Application.h"
-#include "../Engine/PhysicsSystem.h"
-#include "../Engine/SceneManager.h"
-#include "../Engine/DebugRenderer.h"
+#include "Input.h"
+#include "Application.h"
+#include "PhysicsSystem.h"
+#include "SceneManager.h"
+#include "DebugRenderer.h"
 
 namespace gm
 {

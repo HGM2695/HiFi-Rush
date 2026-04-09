@@ -2,7 +2,7 @@
 #include "windows.h"
 #include "Input.h"
 #include "PhysicsSystem.h"
-#include "Time.h"
+#include "TimeSystem.h"
 #include "SceneManager.h"
 #include "Resources.h"
 #include "Scene.h"
@@ -46,7 +46,7 @@ namespace gm
 
 		_physicsSystem = std::make_unique<PhysicsSystem>();
 
-        _time = std::make_unique<Time>();
+        _time = std::make_unique<TimeSystem>();
 
         _sceneManager = std::make_unique<SceneManager>();
 

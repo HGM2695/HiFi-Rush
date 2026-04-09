@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "../Engine/Component.h"
+#include "Component.h"
 
 namespace gm
 {

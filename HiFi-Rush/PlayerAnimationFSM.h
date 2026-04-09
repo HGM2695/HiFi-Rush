@@ -1,9 +1,9 @@
 ﻿#pragma once
 
-#include "../Engine/AnimationNotify.h"
-#include "../Engine/Component.h"
-#include "../Engine/AnimationTypes.h"
-#include "../Engine/Transform.h"
+#include "AnimationNotify.h"
+#include "Component.h"
+#include "AnimationTypes.h"
+#include "Transform.h"
 
 namespace gm
 {

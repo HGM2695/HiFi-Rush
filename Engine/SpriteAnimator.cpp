@@ -7,7 +7,7 @@
 #include "GameObject.h"
 #include "SpriteAnimationClip.h"
 #include "SpriteRenderer.h"
-#include "Time.h"
+#include "TimeSystem.h"
 
 namespace gm
 {
@@ -104,7 +104,7 @@ namespace gm
 
 		if (_animationController->IsPlaying())
 		{
-			_animationController->Update(APPLICATION.GetTime().GetDeltaTime());
+			_animationController->Update(APPLICATION.GetTimeSystem().GetDeltaTime());
 			_animationNotifyDispatcher->Dispatch(_currentClip->GetNotifyEvents(), _animationController->GetPlayTime(), _currentClip->GetLength());
 		}
 

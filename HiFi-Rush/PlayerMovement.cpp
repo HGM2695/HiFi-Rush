@@ -1,10 +1,10 @@
 ﻿#include "PlayerMovement.h"
-#include "../Engine/Application.h"
-#include "../Engine/GameObject.h"
-#include "../Engine/GMAssert.h"
-#include "../Engine/Input.h"
-#include "../Engine/Rigidbody2D.h"
-#include "../Engine/Transform.h"
+#include "Application.h"
+#include "GameObject.h"
+#include "GMAssert.h"
+#include "Input.h"
+#include "Rigidbody2D.h"
+#include "Transform.h"
 
 namespace gm
 {

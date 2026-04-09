@@ -1,9 +1,9 @@
 ﻿#include "PlayerAnimationFSM.h"
 #include "PlayerMovement.h"
 #include <windows.h>
-#include "../Engine/GameObject.h"
-#include "../Engine/GMAssert.h"
-#include "../Engine/SpriteAnimator.h"
+#include "GameObject.h"
+#include "GMAssert.h"
+#include "SpriteAnimator.h"
 
 namespace gm
 {

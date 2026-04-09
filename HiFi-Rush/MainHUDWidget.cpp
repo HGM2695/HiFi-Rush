@@ -1,7 +1,7 @@
 ﻿#include "MainHUDWidget.h"
-#include "../Engine/Border.h"
-#include "../Engine/CanvasPanel.h"
-#include "../Engine/TextBlock.h"
+#include "Border.h"
+#include "CanvasPanel.h"
+#include "TextBlock.h"
 
 namespace gm
 {

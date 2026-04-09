@@ -14,7 +14,7 @@
     <ClInclude Include="Transform.h">
       <Filter>Engine Component</Filter>
     </ClInclude>
-    <ClInclude Include="Time.h">
+    <ClInclude Include="TimeSystem.h">
       <Filter>SubSystem</Filter>
     </ClInclude>
     <ClInclude Include="Input.h">
@@ -176,7 +176,7 @@
     <ClCompile Include="SoundWave.cpp">
       <Filter>Resource\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="Time.cpp">
+    <ClCompile Include="TimeSystem.cpp">
       <Filter>SubSystem</Filter>
     </ClCompile>
     <ClCompile Include="Entity.cpp">

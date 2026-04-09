@@ -5,10 +5,10 @@
 
 namespace gm
 {
-	class Time
+	class TimeSystem
 	{
 	public:
-		Time();
+		TimeSystem();
 
 		void	Update();
 		void	Render(HDC hDC);

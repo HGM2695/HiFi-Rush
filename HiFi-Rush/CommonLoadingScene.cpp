@@ -1,9 +1,9 @@
 ﻿#include "CommonLoadingScene.h"
-#include "../Engine/GMAssert.h"
-#include "../Engine/Application.h"
-#include "../Engine/SceneManager.h"
-#include "../Engine/Input.h"
-#include "../Engine/DebugRenderer.h"
+#include "GMAssert.h"
+#include "Application.h"
+#include "SceneManager.h"
+#include "Input.h"
+#include "DebugRenderer.h"
 
 namespace gm
 {

@@ -1,14 +1,13 @@
 ﻿#pragma once
 
-#include <cstdint>
-#include <string>
-#include "../Engine/Input.h"
+#include "EngineCore.h"
+#include "Input.h"
 
 namespace gm
 {
 	class Input;
 
-	enum DebugType : uint32_t
+	enum DebugType : uint32
 	{
 		None = 0u,
 		AudioTest = 1u << 0,
@@ -56,7 +55,7 @@ namespace gm
 
 	private:
 #ifdef _DEBUG
-		static inline uint32_t _types = AudioTest | PhysicsTest;
+		static inline uint32 _types = AudioTest | PhysicsTest;
 #endif
 	};
 }

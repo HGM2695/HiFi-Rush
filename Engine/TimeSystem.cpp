@@ -1,20 +1,20 @@
-﻿#include "Time.h"
+﻿#include "TimeSystem.h"
 #include <wchar.h>
 
 namespace gm
 {
-	Time::Time()
+	TimeSystem::TimeSystem()
 	{
 		QueryPerformanceFrequency(&_cpuFrequency);
 		QueryPerformanceCounter(&_prevFrequency);
 	}
 
-	void Time::Update()
+	void TimeSystem::Update()
 	{
 		calcDeltaTime();
 	}
 
-	void Time::Render(HDC hDC)
+	void TimeSystem::Render(HDC hDC)
 	{
 		static float timeElapsed = 0.0f;
 		static int frameCount = 0;
@@ -36,13 +36,13 @@ namespace gm
 		TextOut(hDC, 0, 0, szFPS, wcsnlen_s(szFPS, static_cast<size_t>(50)));
 	}
 
-	void Time::SetTimeScale(float timeScale)
+	void TimeSystem::SetTimeScale(float timeScale)
 	{
 		GM_ASSERT_RETURN(timeScale >= 0.f, "TimeScale은 0 이상이어야 합니다.");
 		_timeScale = timeScale;
 	}
 
-	void Time::calcDeltaTime()
+	void TimeSystem::calcDeltaTime()
 	{
 		QueryPerformanceCounter(&_curFrequency);
 
