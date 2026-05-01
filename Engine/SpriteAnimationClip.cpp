@@ -38,10 +38,10 @@ namespace gm
 
 	bool SpriteAnimationClip::Load(const std::wstring& path)
 	{
-		_length = 0.f;
-		_frameCount = 0;
-		_frameList.clear();
+		// TODO: 추후 Animation Data 파일 파싱 구조로 변경.
+		// 현재 SpriteAnimationClip은 코드에서 직접 구성한 뒤 Resources::Add로 등록한다.
+		GM_ASSERT_RETURN_VAL(false, false, "SpriteAnimationClip::Load는 아직 지원하지 않습니다.");
 
-		return _frameCount > 0 && _length > 0;
+		return false;
 	}
 }
