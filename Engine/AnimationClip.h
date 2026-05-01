@@ -10,8 +10,6 @@ namespace gm
 	class AnimationClip : public Resource
 	{
 	public:
-		virtual uint32 GetFrameIndexByTime(float time) const = 0;
-
 		float										GetLength() const { return _length; }
 		uint32										GetFrameCount() const { return _frameCount; }
 		bool										IsLoop() const { return _isLoop; }
