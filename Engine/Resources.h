@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <unordered_map>
 #include <string>
@@ -41,13 +41,13 @@ namespace gm
                 return std::static_pointer_cast<T>(base);
             }
 
-            auto resource = std::make_shared<T>();
+            std::shared_ptr<Resource> resource = std::make_shared<T>();
             GM_ASSERT_RETURN_VAL(resource->Load(path), nullptr, "Load 실패");
 
             resource->SetName(key);
 
             _resourceList.emplace(key, resource);
-            return resource;
+            return std::static_pointer_cast<T>(resource);
         }
 
         bool    Add(const std::wstring& key, const std::shared_ptr<Resource>& resource);

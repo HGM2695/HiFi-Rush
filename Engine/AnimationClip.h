@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "EngineCore.h"
 #include "AnimationNotify.h"
@@ -17,11 +17,11 @@ namespace gm
 		bool										IsLoop() const { return _isLoop; }
 		const std::vector<AnimationNotifyEvent>&	GetNotifyEvents() const { return _notifyEvents; }
 
-		void	AddNotify(float time, const std::wstring& name);
-		void	SetLoop(bool isLoop) { _isLoop = isLoop; }
+		void										AddNotify(float time, const std::wstring& name);
+		void										SetLoop(bool isLoop) { _isLoop = isLoop; }
 
 	protected:
-		virtual bool	LoadInternal(const std::wstring& path) = 0;
+		virtual bool								Load(const std::wstring& path) override = 0;
 
 	protected:
 		float								_length = 0.f;

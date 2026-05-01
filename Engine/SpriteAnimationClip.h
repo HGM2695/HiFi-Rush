@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "EngineCore.h"
 #include "AnimationClip.h"
@@ -28,7 +28,7 @@ namespace gm
         const SpriteFrame&          GetFrameByTime(float time) { return GetFrame(GetFrameIndexByTime(time)); }
 
     protected:
-        virtual bool        LoadInternal(const std::wstring& path) override;
+        bool			            Load(const std::wstring& path) override;
 
     private:
         std::shared_ptr<Texture>     _texture;

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "EngineCore.h"
 #include "Resource.h"
@@ -22,7 +22,7 @@ namespace gm
 		Gdiplus::Image*			GetImage() const { return _image.get(); }
 
 	protected:
-		virtual bool			LoadInternal(const std::wstring& path) override;
+		bool			        Load(const std::wstring& path) override;
 
 	private:
 		std::unique_ptr<Gdiplus::Image>	 _image{};

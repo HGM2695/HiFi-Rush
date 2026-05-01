@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Resource.h"
 
@@ -25,7 +25,7 @@ namespace gm
 		bool			IsLooping() const { return _isLooping; }
 
 	protected:
-		bool			LoadInternal(const std::wstring& path) override;
+		bool			Load(const std::wstring& path) override;
 
 	private:
 		// FMOD 의존성이 클라이언트 코드로 새지 않도록 내부 핸들은 오디오 시스템에만 접근 허용

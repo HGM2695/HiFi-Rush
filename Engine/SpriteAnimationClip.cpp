@@ -1,4 +1,4 @@
-﻿#include "SpriteAnimationClip.h"
+#include "SpriteAnimationClip.h"
 #include "Application.h"
 #include "Resources.h"
 #include "Texture.h"
@@ -36,7 +36,7 @@ namespace gm
 		return _frameCount - 1;
 	}
 
-	bool SpriteAnimationClip::LoadInternal(const std::wstring& path)
+	bool SpriteAnimationClip::Load(const std::wstring& path)
 	{
 		_length = 0.f;
 		_frameCount = 0;

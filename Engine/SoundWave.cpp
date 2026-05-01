@@ -26,7 +26,7 @@ namespace gm
 		}
 	}
 
-	bool SoundWave::LoadInternal(const std::wstring& path)
+	bool SoundWave::Load(const std::wstring& path)
 	{
 		FMOD::Sound* sound = nullptr;
 		if (APPLICATION.GetAudioSystem().CreateSound(path, &sound, _isLooping) == false)

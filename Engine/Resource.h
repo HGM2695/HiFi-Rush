@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Entity.h"
 
@@ -27,9 +27,6 @@ namespace gm
 		virtual	ResourceType	GetType() const = 0;
 
 	protected:
-		virtual bool			LoadInternal(const std::wstring& path) = 0;
-
-	private:
-		bool					Load(const std::wstring& path, bool isPersistent = false) { return LoadInternal(path); }
+		virtual bool			Load(const std::wstring& path) = 0;
 	};
 }
