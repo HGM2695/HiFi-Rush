@@ -1,4 +1,4 @@
-﻿#include "AnimationController.h"
+#include "AnimationController.h"
 #include "SpriteAnimationClip.h"
 #include "GMAssert.h"
 #include <algorithm>
@@ -41,16 +41,16 @@ namespace gm
 
         _currentTime += deltaTime;
 
+        if (_currentTime < _clipLength)
+            return;
+
         if (_isLoop)
         {
             _currentTime = std::fmod(_currentTime, _clipLength);
             return;
         }
 
-        if (_currentTime >= _clipLength)
-        {
-            _currentTime = std::nextafter(_clipLength, 0.0f);
-            _state = AnimationState::Completed;
-        }
+        _currentTime = std::nextafter(_clipLength, 0.0f);
+        _state = AnimationState::Completed;
     }
 }
