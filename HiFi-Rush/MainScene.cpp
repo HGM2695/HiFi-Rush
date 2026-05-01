@@ -1,4 +1,4 @@
-﻿#include "MainScene.h"
+#include "MainScene.h"
 #include "MainHUDWidget.h"
 #include "PlayerMovement.h"
 #include "PlayerAnimationFSM.h"
@@ -45,10 +45,10 @@ namespace gm
 		camera->SetDeadZone(400, 300);
 
 		auto spriteAnimator = player->AddComponent<SpriteAnimator>();
-		spriteAnimator->AddClip(L"IdleLeft", APPLICATION.GetResources().Find<SpriteAnimationClip>(L"Player_IdleLeft"));
-		spriteAnimator->AddClip(L"MoveLeft", APPLICATION.GetResources().Find<SpriteAnimationClip>(L"Player_MoveLeft"));
-		spriteAnimator->AddClip(L"IdleRight", APPLICATION.GetResources().Find<SpriteAnimationClip>(L"Player_IdleRight"));
-		spriteAnimator->AddClip(L"MoveRight", APPLICATION.GetResources().Find<SpriteAnimationClip>(L"Player_MoveRight"));
+		spriteAnimator->AddClip(L"IdleLeft", L"Player_IdleLeft");
+		spriteAnimator->AddClip(L"MoveLeft", L"Player_MoveLeft");
+		spriteAnimator->AddClip(L"IdleRight", L"Player_IdleRight");
+		spriteAnimator->AddClip(L"MoveRight", L"Player_MoveRight");
 
 		player->AddComponent<PlayerAnimationFSM>();
 		Rigidbody2D* rigidbody = player->AddComponent<Rigidbody2D>();

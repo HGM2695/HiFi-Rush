@@ -1,4 +1,4 @@
-﻿#include "SpriteAnimator.h"
+#include "SpriteAnimator.h"
 #include "AnimationController.h"
 #include "AnimationClipSet.h"
 #include "AnimationNotify.h"
@@ -8,6 +8,7 @@
 #include "SpriteAnimationClip.h"
 #include "SpriteRenderer.h"
 #include "TimeSystem.h"
+#include "Resources.h"
 
 namespace gm
 {
@@ -28,6 +29,11 @@ namespace gm
 	void SpriteAnimator::ClearNotifyCallbacks()
 	{
 		_animationNotifyDispatcher->ClearNotifyCallbacks();
+	}
+
+	bool SpriteAnimator::AddClip(const std::wstring& name, const std::wstring& clipKey)
+	{
+		return _animationClipSet->AddClip(name, APPLICATION.GetResources().Find<SpriteAnimationClip>(clipKey));
 	}
 
 	bool SpriteAnimator::AddClip(const std::wstring& name, const std::shared_ptr<SpriteAnimationClip>& clip)

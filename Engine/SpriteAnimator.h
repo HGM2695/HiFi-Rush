@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "AnimationNotify.h"
 #include "Component.h"
@@ -20,6 +20,7 @@ namespace gm
 		SpriteAnimator();
 		virtual ~SpriteAnimator();
 
+		bool									AddClip(const std::wstring& name, const std::wstring& clipKey);
 		bool									AddClip(const std::wstring& name, const std::shared_ptr<SpriteAnimationClip>& clip);
 		std::shared_ptr<SpriteAnimationClip>	FindClip(const std::wstring& name) const;
 		std::shared_ptr<SpriteAnimationClip>	GetCurrentClip() const { return _currentClip; }
