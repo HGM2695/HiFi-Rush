@@ -1,4 +1,4 @@
-﻿#include "AnimationNotify.h"
+#include "AnimationNotify.h"
 #include "GMAssert.h"
 #include <algorithm>
 
@@ -67,13 +67,12 @@ namespace gm
 		_id = other._id;
 
 		other._dispatcher = nullptr;
-		other._id = -1;
 		return *this;
 	}
 
 	void NotifyConnection::Disconnect()
 	{
-		if (_dispatcher == nullptr || _id < 0)
+		if (_dispatcher == nullptr)
 			return;
 
 		if (_lifetimeToken.lock())
@@ -81,6 +80,5 @@ namespace gm
 
 		_lifetimeToken.reset();
 		_dispatcher = nullptr;
-		_id = -1;
 	}
 }
