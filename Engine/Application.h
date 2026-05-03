@@ -1,6 +1,7 @@
-﻿#pragma once
+#pragma once
 
 #include "EngineCore.h"
+#include <string>
 
 namespace gm
 {
@@ -13,6 +14,17 @@ namespace gm
 	class Resources;
 	class AudioSystem;
 	class UIManager;
+	class Window;
+
+	struct ApplicationDesc
+	{
+		HINSTANCE		instance = nullptr;
+		std::wstring	title = L"";
+		std::wstring	className = L"";
+		int				width = 0;
+		int				height = 0;
+		int				showCommand = 0;
+	};
 
 	class Application
 	{
@@ -28,7 +40,7 @@ namespace gm
 		}
 
 	public:
-		void				Initialize(HWND hWnd, uint32 width, uint32 height);
+		bool				Initialize(const ApplicationDesc& desc);
 		void				Run();
 
 		void				Update();
@@ -38,8 +50,8 @@ namespace gm
 		void				EndFrame();
 
 		void				ShutDownRuntime();
-		uint32				GetWidth() { return _width; }
-		uint32				GetHeight() { return _height; }
+		uint32				GetWidth() const;
+		uint32				GetHeight() const;
 
 	public: // subsystem
 		Input&				GetInput() { return *_input; }
@@ -59,26 +71,23 @@ namespace gm
 		const UIManager&	GetUIManager() const { return *_uiManager; }
 
 	private:
-		void				initializeWindow(HWND hWnd, uint32 width, uint32 height);
+		void				Loop();
+		bool				initializeWindow(const ApplicationDesc& desc);
+		bool				initializeSubSystem();
 		void				createBackDC();
-		void				initializeSubSystem();
 
 	private:
-		HWND						_hWnd = nullptr;
 		HDC							_hDC = nullptr;
-
 		HDC							_backHDC = nullptr;
 		HBITMAP						_backBuffer = nullptr;
 
-		uint32 						_width = 0;
-		uint32 						_height = 0;
-
 		std::unique_ptr<Input>			_input;
 		std::unique_ptr<PhysicsSystem>	_physicsSystem;
-		std::unique_ptr<TimeSystem>			_time;
+		std::unique_ptr<TimeSystem>		_time;
 		std::unique_ptr<SceneManager>	_sceneManager;
 		std::unique_ptr<Resources>		_resources;
 		std::unique_ptr<AudioSystem>	_audioSystem;
 		std::unique_ptr<UIManager>		_uiManager;
+		std::unique_ptr<Window>			_window;
 	};
 }

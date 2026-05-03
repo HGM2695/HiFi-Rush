@@ -182,6 +182,7 @@
     <ClInclude Include="Border.h" />
     <ClInclude Include="TextBlock.h" />
     <ClInclude Include="WidgetComponent.h" />
+    <ClInclude Include="Window.h" />
     <ClInclude Include="WindowsCore.h" />
   </ItemGroup>
   <ItemGroup>
@@ -225,8 +226,10 @@
     <ClCompile Include="Border.cpp" />
     <ClCompile Include="TextBlock.cpp" />
     <ClCompile Include="WidgetComponent.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>
+

@@ -141,7 +141,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="DebugInputHandler.h" />
-    <ClInclude Include="framework.h" />
     <ClInclude Include="CommonLoadingScene.h" />
     <ClInclude Include="LoadResources.h" />
     <ClInclude Include="LoadScenes.h" />

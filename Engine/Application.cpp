@@ -1,5 +1,5 @@
-﻿#include "Application.h"
-#include "windows.h"
+#include "Application.h"
+#include "WindowsCore.h"
 #include "Input.h"
 #include "PhysicsSystem.h"
 #include "TimeSystem.h"
@@ -9,40 +9,51 @@
 #include "AudioSystem.h"
 #include "DebugRenderer.h"
 #include "UIManager.h"
+#include "Window.h"
 
 namespace gm
 {
     Application::Application() = default;
     Application::~Application() = default;
 
-    void Application::Initialize(HWND hWnd, uint32 width, uint32 height)
+    bool Application::Initialize(const ApplicationDesc& desc)
     {
-        initializeWindow(hWnd, width, height);
+        GM_ASSERT_RETURN_VAL(initializeWindow(desc), false, "Window 초기화 실패");
         createBackDC();
-        initializeSubSystem();
+        GM_ASSERT_RETURN_VAL(initializeSubSystem(), false, "SubSystem 초기화 실패");
+        
+        return true;
     }
 
-    void Application::initializeWindow(HWND hWnd, uint32 width, uint32 height)
+    bool Application::initializeWindow(const ApplicationDesc& desc)
     {
-        _hWnd = hWnd;
-        _hDC = GetDC(_hWnd);
+        WindowDesc windowDesc;
+        windowDesc.className = desc.className;
+        windowDesc.title = desc.title;
+        windowDesc.instance = desc.instance;
+        windowDesc.showCommand = desc.showCommand;
+        windowDesc.width = desc.width;
+        windowDesc.height = desc.height;
 
-        _width = width;
-        _height = height;
+        _window = std::make_unique<Window>();
+        GM_ASSERT_RETURN_VAL(_window->Initialize(windowDesc), false, "Window 초기화에 실패했습니다.");
+
+        _hDC = GetDC(_window->GetHandle());
+        return true;
     }
 
     void Application::createBackDC()
     {
         _backHDC = CreateCompatibleDC(_hDC);
-        _backBuffer = CreateCompatibleBitmap(_hDC, _width, _height);
+        _backBuffer = CreateCompatibleBitmap(_hDC, _window->GetWidth(), _window->GetHeight());
 
         HBITMAP oldBitmap = static_cast<HBITMAP>(SelectObject(_backHDC, _backBuffer));
         DeleteObject(oldBitmap);
     }
 
-    void Application::initializeSubSystem()
+    bool Application::initializeSubSystem()
     {
-        _input = std::make_unique<Input>(_hWnd);
+        _input = std::make_unique<Input>(_window->GetHandle());
 
 		_physicsSystem = std::make_unique<PhysicsSystem>();
 
@@ -53,12 +64,37 @@ namespace gm
         _resources = std::make_unique<Resources>();
 
 		_audioSystem = std::make_unique<AudioSystem>();
-		GM_ASSERT(_audioSystem->Initialize(), "AudioSystem 초기화에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(_audioSystem->Initialize(), false, "AudioSystem 초기화에 실패했습니다.");
 
 		_uiManager = std::make_unique<UIManager>();
+
+        return true;
     }
 
     void Application::Run()
+    {
+        MSG msg;
+
+        while (true)
+        {
+            if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+            {
+                if (msg.message == WM_QUIT)
+                    break;
+
+                TranslateMessage(&msg);
+                DispatchMessage(&msg);
+            }
+            else
+            {
+                Loop();
+            }
+        }
+
+        APPLICATION.ShutDownRuntime();
+    }
+
+    void Application::Loop()
     {
         Update();
         PhysicsUpdate();
@@ -91,14 +127,16 @@ namespace gm
 
     void Application::Render()
     {
-        Rectangle(_backHDC, -1, -1, _width + 1, _height + 1);
+        const uint32 width = _window->GetWidth();
+        const uint32 height = _window->GetHeight();
+        Rectangle(_backHDC, -1, -1, width + 1, height + 1);
 
         _time->Render(_backHDC);
         _sceneManager->Render(_backHDC);
         debug::DebugRenderer::Render(_backHDC);
 		_uiManager->Render(_backHDC);
 
-        BitBlt(_hDC, 0, 0, _width, _height, _backHDC, 0, 0, SRCCOPY);
+        BitBlt(_hDC, 0, 0, width, height, _backHDC, 0, 0, SRCCOPY);
     }
 
     void Application::EndFrame()
@@ -118,5 +156,15 @@ namespace gm
 			_audioSystem.reset();
 		if (_uiManager)
 			_uiManager.reset();
+    }
+
+    uint32 Application::GetWidth() const
+    {
+        return _window->GetWidth();
+    }
+
+    uint32 Application::GetHeight() const
+    {
+        return _window->GetHeight();
     }
 }

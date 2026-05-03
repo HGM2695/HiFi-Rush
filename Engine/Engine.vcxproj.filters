@@ -152,6 +152,7 @@
     <ClInclude Include="EngineCore.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -272,6 +273,7 @@
     <ClCompile Include="WidgetComponent.cpp">
       <Filter>Engine Component</Filter>
     </ClCompile>
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
@@ -324,3 +326,4 @@
     </Filter>
   </ItemGroup>
 </Project>
+
