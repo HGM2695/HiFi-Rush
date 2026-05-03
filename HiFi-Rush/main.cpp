@@ -33,6 +33,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     desc.width = 1600;
     desc.height = 900;
     desc.showCommand = nCmdShow;
+    desc.isVSync = true;
     GM_ASSERT_RETURN_VAL(APPLICATION.Initialize(desc), -1, "Application 초기화 실패");
 
     Gdiplus::GdiplusStartup(&gpToken, &gpsi, nullptr);

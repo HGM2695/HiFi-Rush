@@ -32,7 +32,7 @@ namespace gm
 		bool	CreateWindowHandle(uint32 width, uint32 height, HINSTANCE instance, const std::wstring& className, const std::wstring& title, int nCmdShow);
 
 	private:
-		HINSTANCE	instance;
+		HINSTANCE	_instance;
 		HWND		_hWnd{};
 		uint32		_width{};
 		uint32		_height{};

@@ -10,6 +10,7 @@
 #include "DebugRenderer.h"
 #include "UIManager.h"
 #include "Window.h"
+#include "D3D11GraphicsDevice.h"
 
 namespace gm
 {
@@ -19,6 +20,8 @@ namespace gm
     bool Application::Initialize(const ApplicationDesc& desc)
     {
         GM_ASSERT_RETURN_VAL(initializeWindow(desc), false, "Window 초기화 실패");
+        GM_ASSERT_RETURN_VAL(initializeGraphics(desc), false, "Graphics Device 초기화 실패");
+        // dx11 전환 후 제거 예정
         createBackDC();
         GM_ASSERT_RETURN_VAL(initializeSubSystem(), false, "SubSystem 초기화 실패");
         
@@ -27,7 +30,7 @@ namespace gm
 
     bool Application::initializeWindow(const ApplicationDesc& desc)
     {
-        WindowDesc windowDesc;
+        WindowDesc windowDesc{};
         windowDesc.className = desc.className;
         windowDesc.title = desc.title;
         windowDesc.instance = desc.instance;
@@ -39,6 +42,19 @@ namespace gm
         GM_ASSERT_RETURN_VAL(_window->Initialize(windowDesc), false, "Window 초기화에 실패했습니다.");
 
         _hDC = GetDC(_window->GetHandle());
+        return true;
+    }
+
+    bool Application::initializeGraphics(const ApplicationDesc& desc)
+    {
+        D3D11GraphicsDeviceDesc d3d11Desc{};
+        d3d11Desc.width = desc.width;
+        d3d11Desc.height = desc.height;
+        d3d11Desc.hWnd = _window->GetHandle();
+        d3d11Desc.isVSync = desc.isVSync;
+        _graphicsDevice = D3D11GraphicsDevice::Create(d3d11Desc);
+        GM_ASSERT_RETURN_VAL(_graphicsDevice, false, "_graphicsDevice 생성에 실패하였습니다");
+
         return true;
     }
 

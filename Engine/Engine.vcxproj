@@ -145,6 +145,7 @@
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="DebugRenderer.h" />
+    <ClInclude Include="D3D11GraphicsDevice.h" />
     <ClInclude Include="EngineCore.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="BoxCollider2D.h" />
@@ -153,6 +154,7 @@
     <ClInclude Include="GMAssert.h" />
     <ClInclude Include="GMLog.h" />
     <ClInclude Include="IAnimator.h" />
+    <ClInclude Include="IGraphicsDevice.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="PhysicsSystem2D.h" />
@@ -199,6 +201,7 @@
     <ClCompile Include="Collider2D.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="DebugRenderer.cpp" />
+    <ClCompile Include="D3D11GraphicsDevice.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GMAssert.cpp" />
@@ -232,4 +235,3 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>
-

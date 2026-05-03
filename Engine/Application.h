@@ -15,6 +15,7 @@ namespace gm
 	class AudioSystem;
 	class UIManager;
 	class Window;
+	class IGraphicsDevice;
 
 	struct ApplicationDesc
 	{
@@ -24,6 +25,7 @@ namespace gm
 		int				width = 0;
 		int				height = 0;
 		int				showCommand = 0;
+		bool			isVSync = true;
 	};
 
 	class Application
@@ -73,6 +75,7 @@ namespace gm
 	private:
 		void				Loop();
 		bool				initializeWindow(const ApplicationDesc& desc);
+		bool				initializeGraphics(const ApplicationDesc& desc);
 		bool				initializeSubSystem();
 		void				createBackDC();
 
@@ -81,13 +84,14 @@ namespace gm
 		HDC							_backHDC = nullptr;
 		HBITMAP						_backBuffer = nullptr;
 
-		std::unique_ptr<Input>			_input;
-		std::unique_ptr<PhysicsSystem>	_physicsSystem;
-		std::unique_ptr<TimeSystem>		_time;
-		std::unique_ptr<SceneManager>	_sceneManager;
-		std::unique_ptr<Resources>		_resources;
-		std::unique_ptr<AudioSystem>	_audioSystem;
-		std::unique_ptr<UIManager>		_uiManager;
-		std::unique_ptr<Window>			_window;
+		std::unique_ptr<Input>				_input;
+		std::unique_ptr<PhysicsSystem>		_physicsSystem;
+		std::unique_ptr<TimeSystem>			_time;
+		std::unique_ptr<SceneManager>		_sceneManager;
+		std::unique_ptr<Resources>			_resources;
+		std::unique_ptr<AudioSystem>		_audioSystem;
+		std::unique_ptr<UIManager>			_uiManager;
+		std::unique_ptr<Window>				_window;
+		std::unique_ptr<IGraphicsDevice>	_graphicsDevice;
 	};
 }

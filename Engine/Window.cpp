@@ -11,7 +11,7 @@ namespace gm
         if (CreateWindowHandle(desc.width, desc.height, desc.instance, desc.className, desc.title, desc.showCommand) == false)
             return false;
 
-        instance = desc.instance;
+        _instance = desc.instance;
         _width = desc.width;
         _height = desc.height;
 
