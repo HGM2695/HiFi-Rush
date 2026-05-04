@@ -165,6 +165,12 @@
     <ClInclude Include="D3D11Shader.h">
       <Filter>Resource\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Resource\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11Mesh.h">
+      <Filter>Resource\Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -295,6 +301,12 @@
     <ClCompile Include="D3D11Shader.cpp">
       <Filter>Resource\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Resource\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11Mesh.cpp">
+      <Filter>Resource\Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
@@ -353,6 +365,9 @@
     </Filter>
     <Filter Include="Resource\Shader">
       <UniqueIdentifier>{9297e9cd-82a6-4668-9439-bc7459a93e71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Mesh">
+      <UniqueIdentifier>{eb196191-5cfb-44d3-9435-30bee7b63668}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

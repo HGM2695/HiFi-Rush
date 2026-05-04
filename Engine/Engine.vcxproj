@@ -144,6 +144,7 @@
     <ClInclude Include="Collider2D.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="D3D11Mesh.h" />
     <ClInclude Include="DebugRenderer.h" />
     <ClInclude Include="D3D11GraphicsDevice.h" />
     <ClInclude Include="EngineCore.h" />
@@ -157,6 +158,7 @@
     <ClInclude Include="IGraphicsDevice.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="PhysicsSystem2D.h" />
     <ClInclude Include="PhysicsSystem3D.h" />
     <ClInclude Include="PhysicsSystem.h" />
@@ -202,6 +204,7 @@
     <ClCompile Include="CircleCollider2D.cpp" />
     <ClCompile Include="Collider2D.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="D3D11Mesh.cpp" />
     <ClCompile Include="DebugRenderer.cpp" />
     <ClCompile Include="D3D11GraphicsDevice.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -210,6 +213,7 @@
     <ClCompile Include="GMLog.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="PhysicsSystem2D.cpp" />
     <ClCompile Include="PhysicsSystem3D.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
