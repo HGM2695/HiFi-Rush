@@ -12,9 +12,9 @@ namespace gm
 
 	std::unique_ptr<IGraphicsDevice> D3D11GraphicsDevice::Create(const D3D11GraphicsDeviceDesc& desc)
 	{
-		GM_ASSERT_RETURN_VAL(desc.hWnd, nullptr, "윈도우 핸들이 정상적으로 입력되지 않았습니다.");
+		GM_ASSERT_RETURN_VAL(desc.hWnd, nullptr, "윈도우 핸들이 유효하지 않습니다.");
 		std::unique_ptr<D3D11GraphicsDevice> device(new D3D11GraphicsDevice(desc));
-		GM_ASSERT_RETURN_VAL(device->Initialize(desc), nullptr, "D3D11 Device 초기화에 실패했습니다");
+		GM_ASSERT_RETURN_VAL(device->Initialize(desc), nullptr, "D3D11 디바이스 초기화에 실패했습니다.");
 
 		return device;
 	}
@@ -32,7 +32,7 @@ namespace gm
 	{
 		const UINT syncInterval = _isVSync ? 1 : 0;
 		const HRESULT hr = _swapChain->Present(syncInterval, 0);
-		GM_ASSERT(SUCCEEDED(hr), "SwapChain Present에 실패했습니다.");
+		GM_ASSERT(SUCCEEDED(hr), "스왑체인 Present에 실패했습니다.");
 	}
 
 	void D3D11GraphicsDevice::OnResize()
@@ -40,7 +40,7 @@ namespace gm
 		releaseBackBufferResources();
 
 		const HRESULT hr = _swapChain->ResizeBuffers(0, _width, _height, DXGI_FORMAT_UNKNOWN, 0);
-		GM_ASSERT_RETURN(SUCCEEDED(hr), "SwapChain ResizeBuffers에 실패했습니다.");
+		GM_ASSERT_RETURN(SUCCEEDED(hr), "스왑체인 ResizeBuffers에 실패했습니다.");
 		GM_ASSERT_RETURN(createBackBufferResources(), "리사이즈 후 백 버퍼 리소스 생성에 실패했습니다.");
 
 		setViewport();
@@ -111,12 +111,12 @@ namespace gm
 
 	bool D3D11GraphicsDevice::createBackBufferResources()
 	{
-		ComPtr<ID3D11Texture2D> backBuffer = nullptr;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer = nullptr;
 		HRESULT hr = _swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(backBuffer.GetAddressOf()));
-		GM_ASSERT_RETURN_VAL(SUCCEEDED(hr), false, "SwapChain에서 백 버퍼를 가져오는데 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(SUCCEEDED(hr), false, "스왑체인에서 백 버퍼를 가져오지 못했습니다.");
 
 		hr = _device->CreateRenderTargetView(backBuffer.Get(), nullptr, _renderTargetView.GetAddressOf());
-		GM_ASSERT_RETURN_VAL(SUCCEEDED(hr), false, "RenderTargetView 생성에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(SUCCEEDED(hr), false, "렌더 타겟 뷰 생성에 실패했습니다.");
 
 		D3D11_TEXTURE2D_DESC depthStencilDesc{};
 		depthStencilDesc.Width = _width;
@@ -130,10 +130,10 @@ namespace gm
 		depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 
 		hr = _device->CreateTexture2D(&depthStencilDesc, nullptr, _depthStencilBuffer.GetAddressOf());
-		GM_ASSERT_RETURN_VAL(SUCCEEDED(hr), false, "DepthStencil 버퍼 생성에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(SUCCEEDED(hr), false, "깊이 스텐실 버퍼 생성에 실패했습니다.");
 
 		hr = _device->CreateDepthStencilView(_depthStencilBuffer.Get(), nullptr, _depthStencilView.GetAddressOf());
-		GM_ASSERT_RETURN_VAL(SUCCEEDED(hr), false, "DepthStencilView 생성에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(SUCCEEDED(hr), false, "깊이 스텐실 뷰 생성에 실패했습니다.");
 
 		return true;
 	}

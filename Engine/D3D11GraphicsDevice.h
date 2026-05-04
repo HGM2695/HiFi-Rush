@@ -15,8 +15,6 @@ namespace gm
 		HWND	hWnd = nullptr;
 	};
 
-	using Microsoft::WRL::ComPtr;
-
 	class D3D11GraphicsDevice : public IGraphicsDevice
 	{
 	public:
@@ -48,11 +46,11 @@ namespace gm
 	private:
 		HWND							_hWnd = nullptr;
 
-		ComPtr<ID3D11Device>			_device;
-		ComPtr<ID3D11DeviceContext>		_deviceContext;
-		ComPtr<IDXGISwapChain>			_swapChain;
-		ComPtr<ID3D11RenderTargetView>	_renderTargetView;
-		ComPtr<ID3D11Texture2D>			_depthStencilBuffer;
-		ComPtr<ID3D11DepthStencilView>	_depthStencilView;
+		Microsoft::WRL::ComPtr<ID3D11Device>			_device;
+		Microsoft::WRL::ComPtr<ID3D11DeviceContext>		_deviceContext;
+		Microsoft::WRL::ComPtr<IDXGISwapChain>			_swapChain;
+		Microsoft::WRL::ComPtr<ID3D11RenderTargetView>	_renderTargetView;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D>			_depthStencilBuffer;
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilView>	_depthStencilView;
 	};
 }
