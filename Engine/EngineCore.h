@@ -1,6 +1,7 @@
-﻿#pragma once
+#pragma once
 
 #include "Types.h"
+#include "MathTypes.h"
 #include "GMAssert.h"
 #include <memory>
 

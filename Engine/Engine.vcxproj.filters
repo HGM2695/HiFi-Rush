@@ -171,6 +171,7 @@
     <ClInclude Include="D3D11Mesh.h">
       <Filter>Resource\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="MathTypes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
