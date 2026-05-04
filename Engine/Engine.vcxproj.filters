@@ -159,6 +159,12 @@
       <Filter>Graphics\Device</Filter>
     </ClInclude>
     <ClInclude Include="Window.h" />
+    <ClInclude Include="Shader.h">
+      <Filter>Resource\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11Shader.h">
+      <Filter>Resource\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -283,6 +289,12 @@
       <Filter>Graphics\Device</Filter>
     </ClCompile>
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="Shader.cpp">
+      <Filter>Resource\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11Shader.cpp">
+      <Filter>Resource\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
@@ -338,6 +350,9 @@
     </Filter>
     <Filter Include="Graphics\Device">
       <UniqueIdentifier>{de4755bf-c859-427d-8e1b-200e872f51c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Shader">
+      <UniqueIdentifier>{9297e9cd-82a6-4668-9439-bc7459a93e71}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

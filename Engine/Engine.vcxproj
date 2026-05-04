@@ -166,6 +166,8 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="AudioSystem.h" />
+    <ClInclude Include="D3D11Shader.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="SoundWave.h" />
     <ClInclude Include="SpriteAnimationClip.h" />
     <ClInclude Include="SpriteAnimator.h" />
@@ -216,6 +218,8 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="AudioSystem.cpp" />
+    <ClCompile Include="D3D11Shader.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SoundWave.cpp" />
     <ClCompile Include="SpriteAnimationClip.cpp" />
     <ClCompile Include="SpriteAnimator.cpp" />
