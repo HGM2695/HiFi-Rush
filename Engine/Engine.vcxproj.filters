@@ -47,9 +47,6 @@
     <ClInclude Include="GMAssert.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="Color.h">
-      <Filter>Util</Filter>
-    </ClInclude>
     <ClInclude Include="GMLog.h">
       <Filter>Util</Filter>
     </ClInclude>

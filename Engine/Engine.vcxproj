@@ -142,7 +142,6 @@
     <ClInclude Include="AudioStatics.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collider2D.h" />
-    <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="D3D11Mesh.h" />
     <ClInclude Include="DebugRenderer.h" />

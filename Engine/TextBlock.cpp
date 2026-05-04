@@ -1,13 +1,19 @@
 #include "TextBlock.h"
+#include <algorithm>
 #include <windows.h>
 
 namespace gm
 {
 	namespace
 	{
+		BYTE ToByte(float color)
+		{
+			return static_cast<BYTE>(std::clamp(color, 0.f, 1.f) * 255.f + 0.5f);
+		}
+
 		COLORREF ToColorRef(Color color)
 		{
-			return RGB(color.r, color.g, color.b);
+			return RGB(ToByte(color.x), ToByte(color.y), ToByte(color.z));
 		}
 	}
 

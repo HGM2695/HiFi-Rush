@@ -9,7 +9,7 @@ namespace gm
 	{
 #ifdef _DEBUG
 		const Vector2 worldCenter = GetOwner().GetTransform()->GetPosition() + GetOffset();
-		const Color color = IsTrigger() ? Color::Red() : Color::Green();
+		const Color color = IsTrigger() ? Colors::Red : Colors::Green;
 		debug::DebugRenderer::RequestDrawRect(worldCenter, GetSize(), color);
 #endif
 	}

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Color.h"
 #include "Widget.h"
 
 namespace gm
@@ -15,7 +14,7 @@ namespace gm
 		void OnRender(HDC hDC, const Vector2& absolutePosition) override;
 
 	private:
-		Color _backgroundColor = Color::Black();
-		Color _outlineColor = Color::White();
+		Color _backgroundColor = Colors::Black;
+		Color _outlineColor = Colors::White;
 	};
 }

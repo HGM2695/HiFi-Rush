@@ -6,12 +6,14 @@
 #include "SpriteAnimationClip.h"
 #include "SoundWave.h"
 #include "Paths.h"
+#include <vector>
 
 namespace gm
 {
 	void LoadTexture(Resources& resources);
 	void LoadTempAnimationClip(Resources& resources);
 	void LoadAudio(Resources& resources);
+	void LoadMesh(Resources& resources);
 
 	void LoadResources()
 	{
@@ -115,5 +117,11 @@ namespace gm
 
 		desc.path = GetAudioPath(L"Two.wav");
 		resources.Load<SoundWave>(L"Two", desc);
+	}
+
+	void LoadMesh(Resources& resources)
+	{
+		std::vector<Vector3> positions;
+		
 	}
 }

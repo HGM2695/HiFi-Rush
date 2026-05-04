@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include "Color.h"
 #include "Widget.h"
 
 namespace gm
@@ -16,10 +15,10 @@ namespace gm
 		Color				GetColor() const { return _color; }
 
 	protected:
-		void OnRender(HDC hDC, const Vector2& absolutePosition) override;
+		void				OnRender(HDC hDC, const Vector2& absolutePosition) override;
 
 	private:
-		std::wstring	_text{};
-		Color			_color = Color::White();
+		std::wstring		_text{};
+		Color				_color = Colors::White;
 	};
 }

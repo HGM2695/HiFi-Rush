@@ -12,8 +12,8 @@ namespace gm
 		Border* panel = root->AddChild<Border>();
 		panel->SetPosition({ 20.f, 20.f });
 		panel->SetSize({ 320.f, 110.f });
-		panel->SetBackgroundColor({ 24, 24, 24, 220 });
-		panel->SetOutlineColor({ 90, 180, 255, 255 });
+		panel->SetBackgroundColor(ColorFromRGBA(24, 24, 24, 220));
+		panel->SetOutlineColor(ColorFromRGBA(90, 180, 255));
 
 		/*
 		Image* panel = root->AddChild<Image>();
@@ -25,17 +25,17 @@ namespace gm
 		TextBlock* titleText = panel->AddChild<TextBlock>();
 		titleText->SetPosition({ 16.f, 14.f });
 		titleText->SetText(L"Main HUD");
-		titleText->SetColor(Color::Cyan());
+		titleText->SetColor(Colors::Cyan);
 
 		TextBlock* bodyText = panel->AddChild<TextBlock>();
 		bodyText->SetPosition({ 16.f, 44.f });
 		bodyText->SetText(L"Move : Arrow Key  |  Jump : T");
-		bodyText->SetColor(Color::White());
+		bodyText->SetColor(Colors::White);
 
 		TextBlock* hintText = panel->AddChild<TextBlock>();
 		hintText->SetPosition({ 16.f, 72.f });
 		hintText->SetText(L"Unreal-style UserWidget prototype");
-		hintText->SetColor(Color::Yellow());
+		hintText->SetColor(Colors::Yellow);
 
 		return root;
 	}
