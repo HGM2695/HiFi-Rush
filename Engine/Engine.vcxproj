@@ -183,7 +183,6 @@
     <ClInclude Include="Types.h" />
     <ClInclude Include="UIManager.h" />
     <ClInclude Include="UserWidget.h" />
-    <ClInclude Include="Vector2.h" />
     <ClInclude Include="Widget.h" />
     <ClInclude Include="CanvasPanel.h" />
     <ClInclude Include="Border.h" />

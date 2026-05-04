@@ -1,4 +1,4 @@
-﻿#include "PlayerAnimationFSM.h"
+#include "PlayerAnimationFSM.h"
 #include "PlayerMovement.h"
 #include <windows.h>
 #include "GameObject.h"
@@ -35,7 +35,7 @@ namespace gm
 
 	void PlayerAnimationFSM::SyncDirection()
 	{
-		const math::Vector2 forward = _ownerTransform->GetForward();
+		const Vector2 forward = _ownerTransform->GetForward();
 		if (_lastForward == forward)
 			return;
 

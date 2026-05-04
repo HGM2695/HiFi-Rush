@@ -1,10 +1,9 @@
-﻿#pragma once
+#pragma once
 
 #include "EngineCore.h"
 #include <vector>
 #include <memory>
 #include "Entity.h"
-#include "Vector2.h"
 
 namespace gm
 {
@@ -25,7 +24,7 @@ namespace gm
 		}
 
 		template<typename T, typename... Args>
-		T* Instantiate(const math::Vector2& position, Args&&... args)
+		T* Instantiate(const Vector2& position, Args&&... args)
 		{
 			return CreateGameObject<T>(position, std::forward<Args>(args)...);
 		}

@@ -1,10 +1,9 @@
-﻿#pragma once
+#pragma once
 
 #include <memory>
 #include <type_traits>
 #include <utility>
 #include "Component.h"
-#include "Vector2.h"
 
 namespace gm
 {
@@ -30,8 +29,8 @@ namespace gm
 			return raw;
 		}
 
-		void					SetWorldOffset(const math::Vector2& worldOffset) { _worldOffset = worldOffset; }
-		const math::Vector2&	GetWorldOffset() const { return _worldOffset; }
+		void					SetWorldOffset(const Vector2& worldOffset) { _worldOffset = worldOffset; }
+		const Vector2&			GetWorldOffset() const { return _worldOffset; }
 
 		void					SetWidgetVisible(bool isVisible);
 		bool					IsWidgetVisible() const;
@@ -41,13 +40,13 @@ namespace gm
 		const UserWidget*		GetWidget() const { return _widget.get(); }
 
 	protected:
-		void OnInitialize() override;
-		void OnUpdate() override;
-		void OnRender(HDC hDC) override;
+		void					OnInitialize() override;
+		void					OnUpdate() override;
+		void					OnRender(HDC hDC) override;
 
 	private:
 		Transform*					_ownerTransform = nullptr;
 		std::unique_ptr<UserWidget> _widget{};
-		math::Vector2				_worldOffset{};
+		Vector2						_worldOffset{};
 	};
 }

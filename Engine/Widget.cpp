@@ -1,4 +1,4 @@
-﻿#include "Widget.h"
+#include "Widget.h"
 
 namespace gm
 {
@@ -13,12 +13,12 @@ namespace gm
 			child->Update();
 	}
 
-	void Widget::Render(HDC hDC, const math::Vector2& parentPosition)
+	void Widget::Render(HDC hDC, const Vector2& parentPosition)
 	{
 		if (_isVisible == false)
 			return;
 
-		const math::Vector2 absolutePosition = parentPosition + _position;
+		const Vector2 absolutePosition = parentPosition + _position;
 		OnRender(hDC, absolutePosition);
 
 		for (const auto& child : _childList)

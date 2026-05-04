@@ -1,9 +1,11 @@
-﻿#include "Camera.h"
+#include "Camera.h"
 #include "Transform.h"
 #include "GameObject.h"
 #include "GMAssert.h"
 #include "Application.h"
 #include "TimeSystem.h"
+#include <algorithm>
+#include <cmath>
 
 namespace gm
 {
@@ -24,17 +26,17 @@ namespace gm
         _mainCamera = camera;
     }
 
-    math::Vector2 Camera::MainWorldToScreen(const math::Vector2& worldPos)
+    Vector2 Camera::MainWorldToScreen(const Vector2& worldPos)
     {
-        GM_ASSERT_RETURN_VAL(_mainCamera, math::Vector2(), "메인 카메라가 존재하지 않습니다.");
+        GM_ASSERT_RETURN_VAL(_mainCamera, Vector2(), "메인 카메라가 존재하지 않습니다.");
         return _mainCamera->WorldToScreen(worldPos);
     }
 
-    math::Vector2 Camera::WorldToScreen(const math::Vector2& worldPos) const
+    Vector2 Camera::WorldToScreen(const Vector2& worldPos) const
     {
-        const math::Vector2 cameraSpacePos = worldPos - _cameraPosition;
+        const Vector2 cameraSpacePos = worldPos - _cameraPosition;
         // 카메라의 위치를 화면 중앙에 고정한다는 의미.
-        return math::Vector2(APPLICATION.GetWidth() * 0.5f + cameraSpacePos._x, APPLICATION.GetHeight() * 0.5f - cameraSpacePos._y);
+        return Vector2(APPLICATION.GetWidth() * 0.5f + cameraSpacePos.x, APPLICATION.GetHeight() * 0.5f - cameraSpacePos.y);
     }
 
     void Camera::OnInitialize()
@@ -53,26 +55,27 @@ namespace gm
 
     void Camera::FollowOwner()
     {
-        math::Vector2 ownerPosition = _ownerTransform->GetPosition();
-        math::Vector2 targetPosition = _cameraPosition;
+        Vector2 ownerPosition = _ownerTransform->GetPosition();
+        Vector2 targetPosition = _cameraPosition;
 
-        const float gapX = ownerPosition._x - _cameraPosition._x;
-        const float gapY = ownerPosition._y - _cameraPosition._y;
+        const float gapX = ownerPosition.x - _cameraPosition.x;
+        const float gapY = ownerPosition.y - _cameraPosition.y;
         const float halfWidth = _deadZoneWidth * 0.5f;
         const float halfHeight = _deadZoneHeight * 0.5f;
 
         if (gapX > halfWidth)
-            targetPosition._x = ownerPosition._x - halfWidth;
+            targetPosition.x = ownerPosition.x - halfWidth;
         else if (gapX < -halfWidth)
-            targetPosition._x = ownerPosition._x + halfWidth;
+            targetPosition.x = ownerPosition.x + halfWidth;
         if (gapY > halfHeight)
-            targetPosition._y = ownerPosition._y - halfHeight;
+            targetPosition.y = ownerPosition.y - halfHeight;
         else if (gapY < -halfHeight)
-            targetPosition._y = ownerPosition._y + halfHeight;
+            targetPosition.y = ownerPosition.y + halfHeight;
 
         float deltaTime = APPLICATION.GetTimeSystem().GetDeltaTime();
         float t = 1.f - std::exp(-_followSpeed * deltaTime);
 
-        _cameraPosition = math::Vector2::LerpClamped(_cameraPosition, targetPosition, t);
+        t = std::clamp(t, 0.f, 1.f);
+        _cameraPosition = _cameraPosition + (targetPosition - _cameraPosition) * t;
     }
 }

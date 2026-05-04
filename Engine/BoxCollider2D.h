@@ -7,18 +7,15 @@ namespace gm
 	class BoxCollider2D : public Collider2D
 	{
 	public:
-		BoxCollider2D()
-			: Collider2D(Collider2DType::Box)
-		{
-		}
+		BoxCollider2D() : Collider2D(Collider2DType::Box) {}
 
-		void					SetSize(const math::Vector2& size) { _size = size; }
-		const math::Vector2&	GetSize() const { return _size; }
+		void					SetSize(const Vector2& size) { _size = size; }
+		const Vector2&			GetSize() const { return _size; }
 
 	protected:
-		void OnLateUpdate() override;
+		void					OnLateUpdate() override;
 
 	private:
-		math::Vector2 _size{ 100.f, 100.f };
+		Vector2					_size{ 100.f, 100.f };
 	};
 }

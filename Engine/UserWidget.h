@@ -1,8 +1,7 @@
-﻿#pragma once
+#pragma once
 
 #include "EngineCore.h"
 #include <memory>
-#include "Vector2.h"
 namespace gm
 {
 	class Widget;
@@ -15,7 +14,7 @@ namespace gm
 
 		void			Initialize();
 		void			Update();
-		void			Render(HDC hDC, const math::Vector2& rootPosition = math::Vector2::Zero());
+		void			Render(HDC hDC, const Vector2& rootPosition = Vector2{});
 
 		void			SetVisible(bool isVisible) { _isVisible = isVisible; }
 		bool			IsVisible() const { return _isVisible; }

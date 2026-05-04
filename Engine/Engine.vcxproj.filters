@@ -41,9 +41,6 @@
     <ClInclude Include="Component.h">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="Vector2.h">
-      <Filter>Util</Filter>
-    </ClInclude>
     <ClInclude Include="StringUtil.h">
       <Filter>Util</Filter>
     </ClInclude>
@@ -171,7 +168,9 @@
     <ClInclude Include="D3D11Mesh.h">
       <Filter>Resource\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="MathTypes.h" />
+    <ClInclude Include="MathTypes.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />

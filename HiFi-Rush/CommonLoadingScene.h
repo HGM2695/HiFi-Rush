@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Scene.h"
 
@@ -14,7 +14,5 @@ namespace gm
 
 	private:
 		std::wstring _pendingSceneName{};
-
 	};
-
 }

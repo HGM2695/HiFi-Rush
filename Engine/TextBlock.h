@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <string>
 #include "Color.h"
@@ -16,10 +16,10 @@ namespace gm
 		Color				GetColor() const { return _color; }
 
 	protected:
-		void OnRender(HDC hDC, const math::Vector2& absolutePosition) override;
+		void OnRender(HDC hDC, const Vector2& absolutePosition) override;
 
 	private:
-		std::wstring _text{};
-		Color _color = Color::White();
+		std::wstring	_text{};
+		Color			_color = Color::White();
 	};
 }

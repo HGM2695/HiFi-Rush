@@ -1,4 +1,4 @@
-﻿#include "PlayerMovement.h"
+#include "PlayerMovement.h"
 #include "Application.h"
 #include "GameObject.h"
 #include "GMAssert.h"
@@ -23,7 +23,7 @@ namespace gm
 		const float moveAxisX = input.GetMoveAxisX();
 		const bool isGrounded = _ownerRigidbody->IsGrounded();
 		const float moveSpeed = isGrounded ? _groundMoveSpeed : _airMoveSpeed;
-		math::Vector2 velocity = _ownerRigidbody->GetVelocity();
+		Vector2 velocity = _ownerRigidbody->GetVelocity();
 
 		_isMoving = moveAxisX != 0.f;
 
@@ -32,7 +32,7 @@ namespace gm
 		else if (moveAxisX > 0.f)
 			_ownerTransform->SetForward({ 1.f, 0.f });
 
-		velocity._x = moveAxisX * moveSpeed;
+		velocity.x = moveAxisX * moveSpeed;
 		_ownerRigidbody->SetVelocity(velocity);
 
 		if (isGrounded && input.IsKeyRepeat(KeyCode::T))

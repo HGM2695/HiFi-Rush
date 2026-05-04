@@ -1,7 +1,6 @@
-﻿#pragma once
+#pragma once
 
 #include "Component.h"
-#include "Vector2.h"
 
 namespace gm
 {
@@ -15,10 +14,10 @@ namespace gm
 
 		static Camera*			GetMainCamera();
 		static void				SetMainCamera(Camera* camera);
-		static math::Vector2	MainWorldToScreen(const math::Vector2& worldPos);
+		static Vector2			MainWorldToScreen(const Vector2& worldPos);
 
-		math::Vector2			WorldToScreen(const math::Vector2& worldPos) const;
-		math::Vector2			GetCameraPosition() const { return _cameraPosition; }
+		Vector2					WorldToScreen(const Vector2& worldPos) const;
+		Vector2					GetCameraPosition() const { return _cameraPosition; }
 		float					GetFollowSpeed() const { return _followSpeed; }
 		
 		void					SetDeadZoneWidth(float width) { _deadZoneWidth = width; }
@@ -37,7 +36,7 @@ namespace gm
 		inline static Camera*	_mainCamera = nullptr;
 
 		Transform*				_ownerTransform = nullptr;
-		math::Vector2			_cameraPosition{};
+		Vector2					_cameraPosition{};
 
 		// 카메라가 움직이지 않는 Dead Zone 영역 크기
 		float					_deadZoneWidth{};

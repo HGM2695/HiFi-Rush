@@ -1,4 +1,4 @@
-﻿#include "CommonLoadingScene.h"
+#include "CommonLoadingScene.h"
 #include "GMAssert.h"
 #include "Application.h"
 #include "SceneManager.h"
@@ -21,6 +21,6 @@ namespace gm
 
 	void CommonLoadingScene::OnRender(HDC hDC)
 	{
-		debug::DebugRenderer::RequestDrawText(L"Loading Scene...", math::Vector2(APPLICATION.GetWidth() * 0.5f, APPLICATION.GetHeight() * 0.5f));
+		debug::DebugRenderer::RequestDrawText(L"Loading Scene...", Vector2(APPLICATION.GetWidth() * 0.5f, APPLICATION.GetHeight() * 0.5f));
 	}
 }

@@ -11,7 +11,7 @@ namespace gm
 		}
 	}
 
-	void TextBlock::OnRender(HDC hDC, const math::Vector2& absolutePosition)
+	void TextBlock::OnRender(HDC hDC, const Vector2& absolutePosition)
 	{
 		if (_text.empty())
 			return;
@@ -21,8 +21,8 @@ namespace gm
 
 		TextOutW(
 			hDC,
-			static_cast<int>(absolutePosition._x),
-			static_cast<int>(absolutePosition._y),
+			static_cast<int>(absolutePosition.x),
+			static_cast<int>(absolutePosition.y),
 			_text.c_str(),
 			static_cast<int>(_text.size())
 		);

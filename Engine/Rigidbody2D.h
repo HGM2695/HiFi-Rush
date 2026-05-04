@@ -1,8 +1,7 @@
-﻿#pragma once
+#pragma once
 
 #include "Component.h"
 #include "GMAssert.h"
-#include "Vector2.h"
 
 namespace gm
 {
@@ -11,17 +10,17 @@ namespace gm
 	friend class PhysicsSystem2D;
 
 	public:
-		void					SetVelocity(const math::Vector2& velocity) { _velocity = velocity; }
-		const math::Vector2&	GetVelocity() const { return _velocity; }
+		void					SetVelocity(const Vector2& velocity) { _velocity = velocity; }
+		const Vector2&			GetVelocity() const { return _velocity; }
 
-		void					AddForce(const math::Vector2& force) { _accumulatedForce += force; }
-		void					AddImpulse(const math::Vector2& impulse)
+		void					AddForce(const Vector2& force) { _accumulatedForce += force; }
+		void					AddImpulse(const Vector2& impulse)
 		{
 			GM_ASSERT_RETURN(_mass > 0.f, "Rigidbody2D의 mass는 0보다 커야 합니다.");
 			_velocity += impulse / _mass;
 		}
 
-		void					ClearForces() { _accumulatedForce = math::Vector2::Zero(); }
+		void					ClearForces() { _accumulatedForce = Vector2{}; }
 
 		void					SetMass(float mass)
 		{
@@ -56,8 +55,8 @@ namespace gm
 		bool					IsGrounded() const { return _isGrounded; }
 
 	private:
-		math::Vector2	_velocity{};
-		math::Vector2	_accumulatedForce{};
+		Vector2			_velocity{};
+		Vector2			_accumulatedForce{};
 		float			_mass = 1.f;
 		float			_gravityScale = 1.f;
 		float			_linearDamping = 0.f;

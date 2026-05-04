@@ -1,4 +1,4 @@
-﻿#include "Input.h"
+#include "Input.h"
 #include <Windows.h>
 
 namespace gm
@@ -91,9 +91,9 @@ namespace gm
 		updateMousePosition();
 	}
 
-	math::Vector2 Input::GetAxis2D(KeyCode right, KeyCode left, KeyCode up, KeyCode down) const
+	Vector2 Input::GetAxis2D(KeyCode right, KeyCode left, KeyCode up, KeyCode down) const
 	{
-		math::Vector2 v
+		Vector2 v
 		{
 			GetAxis(right, left),
 			GetAxis(up, down)

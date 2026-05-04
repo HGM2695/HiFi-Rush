@@ -1,4 +1,4 @@
-﻿#include "WidgetComponent.h"
+#include "WidgetComponent.h"
 
 #include "Camera.h"
 #include "GameObject.h"
@@ -49,8 +49,8 @@ namespace gm
 		if (_widget == nullptr || _ownerTransform == nullptr)
 			return;
 
-		const math::Vector2 worldPosition = _ownerTransform->GetPosition() + _worldOffset;
-		const math::Vector2 screenPosition = Camera::MainWorldToScreen(worldPosition);
+		const Vector2 worldPosition = _ownerTransform->GetPosition() + _worldOffset;
+		const Vector2 screenPosition = Camera::MainWorldToScreen(worldPosition);
 		_widget->Render(hDC, screenPosition);
 	}
 }

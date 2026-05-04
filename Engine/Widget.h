@@ -1,11 +1,10 @@
-﻿#pragma once
+#pragma once
 
 #include "EngineCore.h"
 #include <memory>
 #include <type_traits>
 #include <utility>
 #include <vector>
-#include "Vector2.h"
 
 namespace gm
 {
@@ -27,21 +26,21 @@ namespace gm
 			return raw;
 		}
 
-		void					SetPosition(const math::Vector2& position) { _position = position; }
-		const math::Vector2&	GetPosition() const { return _position; }
+		void					SetPosition(const Vector2& position) { _position = position; }
+		const Vector2&			GetPosition() const { return _position; }
 
-		void					SetSize(const math::Vector2& size) { _size = size; }
-		const math::Vector2&	GetSize() const { return _size; }
+		void					SetSize(const Vector2& size) { _size = size; }
+		const Vector2&			GetSize() const { return _size; }
 
 		void					SetVisible(bool isVisible) { _isVisible = isVisible; }
 		bool					IsVisible() const { return _isVisible; }
 
 		void					Update();
-		void					Render(HDC hDC, const math::Vector2& parentPosition = math::Vector2::Zero());
+		void					Render(HDC hDC, const Vector2& parentPosition = Vector2{});
 
 	protected:
 		virtual void			OnUpdate() {}
-		virtual void			OnRender(HDC hDC, const math::Vector2& absolutePosition) {}
+		virtual void			OnRender(HDC hDC, const Vector2& absolutePosition) {}
 
 	private:
 		bool 									_isVisible = true;
@@ -49,7 +48,7 @@ namespace gm
 		Widget*									_parent = nullptr;
 		std::vector<std::unique_ptr<Widget>>	_childList{};
 
-		math::Vector2							_position{};
-		math::Vector2							_size{};
+		Vector2									_position{};
+		Vector2									_size{};
 	};
 }

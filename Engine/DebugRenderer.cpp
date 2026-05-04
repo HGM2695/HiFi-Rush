@@ -1,4 +1,4 @@
-﻿#include "DebugRenderer.h"
+#include "DebugRenderer.h"
 #include "Camera.h"
 #include <vector>
 #include <windows.h>
@@ -9,30 +9,30 @@ namespace gm::debug
 	{
 		struct DebugLine
 		{
-			math::Vector2 worldStart;
-			math::Vector2 worldEnd;
-			Color color;
+			Vector2 worldStart;
+			Vector2 worldEnd;
+			Color	color;
 		};
 
 		struct DebugRect
 		{
-			math::Vector2 worldCenter;
-			math::Vector2 size;
-			Color color;
+			Vector2 worldCenter;
+			Vector2 size;
+			Color	color;
 		};
 
 		struct DebugCircle
 		{
-			math::Vector2 worldCenter;
-			float radius;
-			Color color;
+			Vector2 worldCenter;
+			float	radius;
+			Color	color;
 		};
 
 		struct DebugText
 		{
-			std::wstring content;
-			math::Vector2 viewPosition;
-			Color color;
+			std::wstring	content;
+			Vector2			viewPosition;
+			Color			color;
 		};
 
 		std::vector<DebugLine> g_lines;
@@ -47,28 +47,28 @@ namespace gm::debug
 		}
 	}
 
-	void DebugRenderer::RequestDrawLine(const math::Vector2& worldStart, const math::Vector2& worldEnd, Color color)
+	void DebugRenderer::RequestDrawLine(const Vector2& worldStart, const Vector2& worldEnd, Color color)
 	{
 #ifdef _DEBUG
 		g_lines.emplace_back(worldStart, worldEnd, color);
 #endif
 	}
 
-	void DebugRenderer::RequestDrawRect(const math::Vector2& worldCenter, const math::Vector2& size, Color color)
+	void DebugRenderer::RequestDrawRect(const Vector2& worldCenter, const Vector2& size, Color color)
 	{
 #ifdef _DEBUG
 		g_rects.emplace_back(worldCenter, size, color);
 #endif
 	}
 
-	void DebugRenderer::RequestDrawCircle(const math::Vector2& worldCenter, float radius, Color color)
+	void DebugRenderer::RequestDrawCircle(const Vector2& worldCenter, float radius, Color color)
 	{
 #ifdef _DEBUG
 		g_circles.emplace_back(worldCenter, radius, color);
 #endif
 	}
 
-	void DebugRenderer::RequestDrawText(const std::wstring& content, const gm::math::Vector2& viewPosition, gm::Color color)
+	void DebugRenderer::RequestDrawText(const std::wstring& content, const gm::Vector2& viewPosition, gm::Color color)
 	{
 #ifdef _DEBUG
 		g_Texts.emplace_back(content, viewPosition, color);
@@ -85,13 +85,13 @@ namespace gm::debug
 
 		for (const DebugLine& line : g_lines)
 		{
-			const math::Vector2 start = Camera::MainWorldToScreen(line.worldStart);
-			const math::Vector2 end = Camera::MainWorldToScreen(line.worldEnd);
+			const Vector2 start = Camera::MainWorldToScreen(line.worldStart);
+			const Vector2 end = Camera::MainWorldToScreen(line.worldEnd);
 			HPEN pen = CreatePen(PS_SOLID, 1, ToColorRef(line.color));
 			HGDIOBJ oldPen = SelectObject(hDC, pen);
 
-			MoveToEx(hDC, static_cast<int>(start._x), static_cast<int>(start._y), nullptr);
-			LineTo(hDC, static_cast<int>(end._x), static_cast<int>(end._y));
+			MoveToEx(hDC, static_cast<int>(start.x), static_cast<int>(start.y), nullptr);
+			LineTo(hDC, static_cast<int>(end.x), static_cast<int>(end.y));
 
 			SelectObject(hDC, oldPen);
 			DeleteObject(pen);
@@ -99,17 +99,17 @@ namespace gm::debug
 
 		for (const DebugRect& rect : g_rects)
 		{
-			const math::Vector2 screenCenter = Camera::MainWorldToScreen(rect.worldCenter);
-			const math::Vector2 halfSize = rect.size * 0.5f;
+			const Vector2 screenCenter = Camera::MainWorldToScreen(rect.worldCenter);
+			const Vector2 halfSize = rect.size * 0.5f;
 			HPEN pen = CreatePen(PS_SOLID, 1, ToColorRef(rect.color));
 			HGDIOBJ oldPen = SelectObject(hDC, pen);
 
 			Rectangle(
 				hDC,
-				static_cast<int>(screenCenter._x - halfSize._x),
-				static_cast<int>(screenCenter._y - halfSize._y),
-				static_cast<int>(screenCenter._x + halfSize._x),
-				static_cast<int>(screenCenter._y + halfSize._y)
+				static_cast<int>(screenCenter.x - halfSize.x),
+				static_cast<int>(screenCenter.y - halfSize.y),
+				static_cast<int>(screenCenter.x + halfSize.x),
+				static_cast<int>(screenCenter.y + halfSize.y)
 			);
 
 			SelectObject(hDC, oldPen);
@@ -118,16 +118,16 @@ namespace gm::debug
 
 		for (const DebugCircle& circle : g_circles)
 		{
-			const math::Vector2 screenCenter = Camera::MainWorldToScreen(circle.worldCenter);
+			const Vector2 screenCenter = Camera::MainWorldToScreen(circle.worldCenter);
 			HPEN pen = CreatePen(PS_SOLID, 1, ToColorRef(circle.color));
 			HGDIOBJ oldPen = SelectObject(hDC, pen);
 
 			Ellipse(
 				hDC,
-				static_cast<int>(screenCenter._x - circle.radius),
-				static_cast<int>(screenCenter._y - circle.radius),
-				static_cast<int>(screenCenter._x + circle.radius),
-				static_cast<int>(screenCenter._y + circle.radius)
+				static_cast<int>(screenCenter.x - circle.radius),
+				static_cast<int>(screenCenter.y - circle.radius),
+				static_cast<int>(screenCenter.x + circle.radius),
+				static_cast<int>(screenCenter.y + circle.radius)
 			);
 
 			SelectObject(hDC, oldPen);
@@ -141,8 +141,8 @@ namespace gm::debug
 
 			TextOutW(
 				hDC,
-				static_cast<int>(text.viewPosition._x),
-				static_cast<int>(text.viewPosition._y),
+				static_cast<int>(text.viewPosition.x),
+				static_cast<int>(text.viewPosition.y),
 				text.content.c_str(),
 				static_cast<int>(text.content.size())
 			);

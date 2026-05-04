@@ -1,8 +1,7 @@
-﻿#pragma once
+#pragma once
 
 #include "EngineCore.h"
 #include <vector>
-#include "Vector2.h"
 
 namespace gm
 {
@@ -106,19 +105,19 @@ namespace gm
 		bool			IsKeyRepeat(KeyCode code) const { return getKey(code)._pressed == true; }
 
 		float			GetAxis(KeyCode positive, KeyCode negative) const { return (IsKeyRepeat(positive) ? 1.f : 0.f) - (IsKeyRepeat(negative) ? 1.f : 0.f); }
-		math::Vector2	GetAxis2D(KeyCode right, KeyCode left, KeyCode up, KeyCode down) const;
+		Vector2			GetAxis2D(KeyCode right, KeyCode left, KeyCode up, KeyCode down) const;
 
 		float			GetMoveAxisX() const { return GetAxis(KeyCode::Right, KeyCode::Left); }
 		float			GetMoveAxisY() const { return GetAxis(KeyCode::Down, KeyCode::Up); }
-		math::Vector2	GetMoveAxisXY() const { return GetAxis2D(KeyCode::Right, KeyCode::Left, KeyCode::Up, KeyCode::Down); }
+		Vector2			GetMoveAxisXY() const { return GetAxis2D(KeyCode::Right, KeyCode::Left, KeyCode::Up, KeyCode::Down); }
 
 		// Mouse
 		bool			IsMouseUp(MouseButton button) const { return getMouse(button)._keyState == KeyState::Up; }
 		bool			IsMouseDown(MouseButton button) const { return getMouse(button)._keyState == KeyState::Down; }
 		bool			IsMouseRepeat(MouseButton button) const { return getMouse(button)._pressed == true; }
 
-		math::Vector2	GetMousePosition() const { return _mousePosition; }
-		math::Vector2	GetMouseDelta() const { return _mouseDelta; }
+		Vector2			GetMousePosition() const { return _mousePosition; }
+		Vector2			GetMouseDelta() const { return _mouseDelta; }
 
 	private:
 		// Keyboard
@@ -135,8 +134,8 @@ namespace gm
 
 		HWND				_hWnd = nullptr;
 		std::vector<Mouse>	_mouseList;
-		math::Vector2		_mousePosition{};
-		math::Vector2		_previousMousePosition{};
-		math::Vector2		_mouseDelta{};
+		Vector2				_mousePosition{};
+		Vector2				_previousMousePosition{};
+		Vector2				_mouseDelta{};
 	};
 }

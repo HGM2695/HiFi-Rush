@@ -1,10 +1,9 @@
-﻿#pragma once
+#pragma once
 
 #include "EngineCore.h"
 #include <memory>
 #include <vector>
 #include "Component.h"
-#include "Vector2.h"
 
 namespace gm
 {
@@ -22,7 +21,7 @@ namespace gm
 	{
 	public:
 		GameObject();
-		GameObject(const math::Vector2& position);
+		GameObject(const Vector2& position);
 		virtual ~GameObject();
 
 		template <typename T, typename... Args>
@@ -75,25 +74,25 @@ namespace gm
 		Rigidbody2D*					GetRigidbody2D() { return _rigidbody2D; }
 		const std::vector<Collider2D*>& GetColliders2D() const { return _colliders2D; }
 
-		void Initialize();
-		void Update();
-		void LateUpdate();
-		void Render(HDC hDC);
+		void			Initialize();
+		void			Update();
+		void			LateUpdate();
+		void			Render(HDC hDC);
 
-		void Destroy();
-		bool IsPendingDestroy() const { return _lifeState == GameObjectLifeState::PendingDestroy; }
+		void			Destroy();
+		bool			IsPendingDestroy() const { return _lifeState == GameObjectLifeState::PendingDestroy; }
 
-		void SetRender(bool isRender) { _isRender = isRender; }
-		bool IsRenderEnabled() const { return _isRender; }
+		void			SetRender(bool isRender) { _isRender = isRender; }
+		bool			IsRenderEnabled() const { return _isRender; }
 
 	protected:
-		virtual void OnInitialize() {}
-		virtual void OnUpdate() {}
-		virtual void OnLateUpdate() {}
-		virtual void OnRender(HDC hDC) {}
+		virtual void	OnInitialize() {}
+		virtual void	OnUpdate() {}
+		virtual void	OnLateUpdate() {}
+		virtual void	OnRender(HDC hDC) {}
 
 	private:
-		bool RegisterComponent(Component* component);
+		bool			RegisterComponent(Component* component);
 
 	private:
 		std::vector<std::unique_ptr<Component>> _componentList{};

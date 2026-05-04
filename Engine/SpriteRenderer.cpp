@@ -1,4 +1,4 @@
-﻿#include "SpriteRenderer.h"
+#include "SpriteRenderer.h"
 #include "GameObject.h"
 #include "Transform.h"
 #include "GMAssert.h"
@@ -39,7 +39,7 @@ namespace gm
 		if (_texture == nullptr)
 			return;
 
-		math::Vector2 pos = _ownerTransform->GetPosition();
+		Vector2 pos = _ownerTransform->GetPosition();
 		pos = Camera::MainWorldToScreen(pos);
 
 		Gdiplus::Graphics graphics(hDC);
@@ -51,13 +51,13 @@ namespace gm
 			drawWidth = _sourceFrame.width;
 			drawHeight = _sourceFrame.height;
 			graphics.DrawImage(
-				_texture->GetImage(), Gdiplus::Rect(static_cast<int>(pos._x - drawWidth * 0.5f), static_cast<int>(pos._y - drawHeight * 0.5f), drawWidth, drawHeight),
+				_texture->GetImage(), Gdiplus::Rect(static_cast<int>(pos.x - drawWidth * 0.5f), static_cast<int>(pos.y - drawHeight * 0.5f), drawWidth, drawHeight),
 				_sourceFrame.left, _sourceFrame.top, _sourceFrame.width, _sourceFrame.height, Gdiplus::UnitPixel
 			);
 			return;
 		}
 
 		graphics.DrawImage(_texture->GetImage(),
-			Gdiplus::Rect(static_cast<int>(pos._x - drawWidth * 0.5f), static_cast<int>(pos._y - drawHeight * 0.5f), drawWidth, drawHeight));
+			Gdiplus::Rect(static_cast<int>(pos.x - drawWidth * 0.5f), static_cast<int>(pos.y - drawHeight * 0.5f), drawWidth, drawHeight));
 	}
 }

@@ -1,4 +1,4 @@
-﻿#include "UserWidget.h"
+#include "UserWidget.h"
 #include "Widget.h"
 
 namespace gm
@@ -27,7 +27,7 @@ namespace gm
 			_rootWidget->Update();
 	}
 
-	void UserWidget::Render(HDC hDC, const math::Vector2& rootPosition)
+	void UserWidget::Render(HDC hDC, const Vector2& rootPosition)
 	{
 		if (_isInitialized == false || _isVisible == false || _rootWidget == nullptr)
 			return;

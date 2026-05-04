@@ -12,7 +12,7 @@ namespace gm
 		void SetOutlineColor(Color color) { _outlineColor = color; }
 
 	protected:
-		void OnRender(HDC hDC, const math::Vector2& absolutePosition) override;
+		void OnRender(HDC hDC, const Vector2& absolutePosition) override;
 
 	private:
 		Color _backgroundColor = Color::Black();

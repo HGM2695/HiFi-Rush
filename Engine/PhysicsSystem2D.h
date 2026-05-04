@@ -1,6 +1,6 @@
-﻿#pragma once
+#pragma once
 
-#include "Vector2.h"
+#include "EngineCore.h"
 
 namespace gm
 {
@@ -14,7 +14,7 @@ namespace gm
 	struct CollisionHit
 	{
 		bool			isHit = false;
-		math::Vector2	normal{};
+		Vector2			normal{};
 		float			penetrationDepth = 0.f;
 	};
 
@@ -30,8 +30,8 @@ namespace gm
 		void			ClampVelocity(Rigidbody2D& rigidbody) const;
 		void			SimulateRigidbody(Scene& scene, GameObject& gameObject, Rigidbody2D& rigidbody, float deltaTime) const;
 
-		void			ResolveXAxis(Scene& scene, GameObject& gameObject, Rigidbody2D& rigidbody, const math::Vector2& movement) const;
-		void			ResolveYAxis(Scene& scene, GameObject& gameObject, Rigidbody2D& rigidbody, const math::Vector2& movement) const;
+		void			ResolveXAxis(Scene& scene, GameObject& gameObject, Rigidbody2D& rigidbody, const Vector2& movement) const;
+		void			ResolveYAxis(Scene& scene, GameObject& gameObject, Rigidbody2D& rigidbody, const Vector2& movement) const;
 
 		CollisionHit	CheckCollision(const Collider2D& lhs, const GameObject& lhsObject, const Collider2D& rhs, const GameObject& rhsObject) const;
 		CollisionHit	CheckBoxCollision(const BoxCollider2D& lhs, const GameObject& lhsObject, const BoxCollider2D& rhs, const GameObject& rhsObject) const;
