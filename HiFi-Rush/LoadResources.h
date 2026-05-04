@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Application.h"
 #include "Resources.h"
@@ -24,17 +24,27 @@ namespace gm
 
 	void LoadTexture(Resources& resources)
 	{
-		resources.Load<Texture>(L"OrangeMushroom", GetTexturePath(L"Test/orange_mushroom.png"));
-		resources.Load<Texture>(L"Xanadu", GetTexturePath(L"Test/Xanadu.png"));
-		resources.Load<Texture>(L"PlayerLeft", GetTexturePath(L"Test/NewPlayer_Left.bmp"));
-		resources.Load<Texture>(L"PlayerRight", GetTexturePath(L"Test/NewPlayer_Right.bmp"));
+		TextureDesc desc{};
+
+		desc.path = GetTexturePath(L"Test/orange_mushroom.png");
+		resources.Load<Texture>(L"OrangeMushroom", desc);
+
+		desc.path = GetTexturePath(L"Test/Xanadu.png");
+		resources.Load<Texture>(L"Xanadu", desc);
+
+		desc.path = GetTexturePath(L"Test/NewPlayer_Left.bmp");
+		resources.Load<Texture>(L"PlayerLeft", desc);
+
+		desc.path = GetTexturePath(L"Test/NewPlayer_Right.bmp");
+		resources.Load<Texture>(L"PlayerRight", desc);
 	}
 
 	void LoadTempAnimationClip(Resources& resources)
 	{
 		// 추후 Animation Data 파일로 부터 파싱하는 구조로 변경 예정
 		// IdleLeft
-		std::shared_ptr<SpriteAnimationClip> spriteAnimatinoClip = std::make_shared< SpriteAnimationClip>();
+
+		std::shared_ptr<SpriteAnimationClip> spriteAnimatinoClip = SpriteAnimationClip::Create(SpriteAnimationClipDesc());
 		auto texture = APPLICATION.GetResources().Find<Texture>(L"PlayerLeft");
 		GM_ASSERT(texture, "SpriteAnimationClip이 사용하는 Texture가 존재하지 않습니다.");
 		spriteAnimatinoClip->SetTexture(texture);
@@ -48,7 +58,7 @@ namespace gm
 		APPLICATION.GetResources().Add(L"Player_IdleLeft", spriteAnimatinoClip);
 
 		// MoveLeft
-		spriteAnimatinoClip = std::make_shared<SpriteAnimationClip>();
+		spriteAnimatinoClip = SpriteAnimationClip::Create(SpriteAnimationClipDesc());
 		texture = APPLICATION.GetResources().Find<Texture>(L"PlayerLeft");
 		GM_ASSERT(texture, "SpriteAnimationClip이 사용하는 Texture가 존재하지 않습니다.");
 		spriteAnimatinoClip->SetTexture(texture);
@@ -65,7 +75,7 @@ namespace gm
 		spriteAnimatinoClip->AddNotify(0.9f, L"MoveLeftStep");
 
 		// IdleRight
-		spriteAnimatinoClip = std::make_shared< SpriteAnimationClip>();
+		spriteAnimatinoClip = SpriteAnimationClip::Create(SpriteAnimationClipDesc());
 		texture = APPLICATION.GetResources().Find<Texture>(L"PlayerRight");
 		GM_ASSERT(texture, "SpriteAnimationClip이 사용하는 Texture가 존재하지 않습니다.");
 		spriteAnimatinoClip->SetTexture(texture);
@@ -79,7 +89,7 @@ namespace gm
 		APPLICATION.GetResources().Add(L"Player_IdleRight", spriteAnimatinoClip);
 
 		// MoveRight
-		spriteAnimatinoClip = std::make_shared< SpriteAnimationClip>();
+		spriteAnimatinoClip = SpriteAnimationClip::Create(SpriteAnimationClipDesc());
 		texture = APPLICATION.GetResources().Find<Texture>(L"PlayerRight");
 		GM_ASSERT(texture, "SpriteAnimationClip이 사용하는 Texture가 존재하지 않습니다.");
 		spriteAnimatinoClip->SetTexture(texture);
@@ -98,7 +108,12 @@ namespace gm
 
 	void LoadAudio(Resources& resources)
 	{
-		resources.Load<SoundWave>(L"TestBGM", GetAudioPath(L"Lake Of Oblivion.mp3"));
-		resources.Load<SoundWave>(L"Two", GetAudioPath(L"Two.wav"));
+		SoundWaveDesc desc{};
+
+		desc.path = GetAudioPath(L"Lake Of Oblivion.mp3");
+		resources.Load<SoundWave>(L"TestBGM", desc);
+
+		desc.path = GetAudioPath(L"Two.wav");
+		resources.Load<SoundWave>(L"Two", desc);
 	}
 }

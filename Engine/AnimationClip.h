@@ -19,9 +19,6 @@ namespace gm
 		void										SetLoop(bool isLoop) { _isLoop = isLoop; }
 
 	protected:
-		virtual bool								Load(const std::wstring& path) override = 0;
-
-	protected:
 		float								_length = 0.f;
 		uint32								_frameCount = 0;
 		bool								_isLoop = true;

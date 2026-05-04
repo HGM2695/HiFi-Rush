@@ -11,9 +11,17 @@ namespace Gdiplus
 
 namespace gm
 {
+	struct TextureDesc
+	{
+		std::wstring path;
+	};
+
 	class Texture : public Resource
 	{
 	public:
+		static std::shared_ptr<Texture> Create(const TextureDesc& desc);
+		~Texture();
+
 		static constexpr ResourceType Type = ResourceType::Texture;
 		virtual	ResourceType	GetType() const override { return Type; }
 			
@@ -21,10 +29,9 @@ namespace gm
 		uint32					GetHeight() const { return _height; }
 		Gdiplus::Image*			GetImage() const { return _image.get(); }
 
-	protected:
-		bool			        Load(const std::wstring& path) override;
-
 	private:
+		Texture(Gdiplus::Image* image);
+
 		std::unique_ptr<Gdiplus::Image>	 _image{};
 		uint32							 _width{};
 		uint32							 _height{};

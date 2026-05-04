@@ -29,8 +29,8 @@ namespace gm
         }
 
         // 있으면 기존 반환, 없으면 생성 + Load + 캐싱
-        template<typename T>
-        std::shared_ptr<T> Load(const std::wstring& key, const std::wstring& path)
+        template<typename T, typename TDesc>
+        std::shared_ptr<T> Load(const std::wstring& key, const TDesc& desc)
         {
             static_assert(std::is_base_of_v<Resource, T>, "T는 반드시 Resource를 상속해야 합니다.");
 
@@ -41,8 +41,8 @@ namespace gm
                 return std::static_pointer_cast<T>(base);
             }
 
-            std::shared_ptr<Resource> resource = std::make_shared<T>();
-            GM_ASSERT_RETURN_VAL(resource->Load(path), nullptr, "Load 실패");
+            std::shared_ptr<Resource> resource = T::Create(desc);
+            GM_ASSERT_RETURN_VAL(resource, nullptr, "Load 실패");
 
             resource->SetName(key);
 

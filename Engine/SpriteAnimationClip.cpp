@@ -7,6 +7,14 @@
 
 namespace gm
 {
+	std::shared_ptr<SpriteAnimationClip> SpriteAnimationClip::Create(const SpriteAnimationClipDesc& desc)
+	{
+		// TODO: 추후 Animation Data 파일 파싱 구조로 변경.
+		// 현재 SpriteAnimationClip은 코드에서 직접 구성한 뒤 Resources::Add로 등록한다.
+
+		return std::shared_ptr<SpriteAnimationClip>(new SpriteAnimationClip());
+	}
+
 	SpriteAnimationClip::SpriteAnimationClip() = default;
 	SpriteAnimationClip::~SpriteAnimationClip() = default;
 
@@ -34,14 +42,5 @@ namespace gm
 		}
 
 		return _frameCount - 1;
-	}
-
-	bool SpriteAnimationClip::Load(const std::wstring& path)
-	{
-		// TODO: 추후 Animation Data 파일 파싱 구조로 변경.
-		// 현재 SpriteAnimationClip은 코드에서 직접 구성한 뒤 Resources::Add로 등록한다.
-		GM_ASSERT_RETURN_VAL(false, false, "SpriteAnimationClip::Load는 아직 지원하지 않습니다.");
-
-		return false;
 	}
 }

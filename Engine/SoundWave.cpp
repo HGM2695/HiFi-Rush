@@ -6,6 +6,17 @@
 
 namespace gm
 {
+	std::shared_ptr<SoundWave> SoundWave::Create(const SoundWaveDesc& desc)
+	{
+		FMOD::Sound* sound = nullptr;
+		if (APPLICATION.GetAudioSystem().CreateSound(desc.path, &sound, desc.isLooping) == false)
+			return nullptr;
+
+		return std::shared_ptr<SoundWave>(new SoundWave(sound, desc.isLooping));
+	}
+
+	SoundWave::SoundWave(FMOD::Sound* sound, bool isLooping) : _sound(sound), _isLooping(isLooping) {}
+
 	SoundWave::~SoundWave()
 	{
 		if (_sound)
@@ -26,13 +37,4 @@ namespace gm
 		}
 	}
 
-	bool SoundWave::Load(const std::wstring& path)
-	{
-		FMOD::Sound* sound = nullptr;
-		if (APPLICATION.GetAudioSystem().CreateSound(path, &sound, _isLooping) == false)
-			return false;
-
-		_sound = sound;
-		return true;
-	}
 }

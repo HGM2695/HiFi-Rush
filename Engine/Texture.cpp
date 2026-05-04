@@ -4,14 +4,18 @@
 
 namespace gm
 {
-	bool Texture::Load(const std::wstring& path)
+	std::shared_ptr<Texture> Texture::Create(const TextureDesc& desc)
 	{
-		_image = std::make_unique<Gdiplus::Image>(path.c_str());
-		GM_ASSERT_RETURN_VAL(_image->GetLastStatus() == Gdiplus::Ok, false, "Image load failed");
+		Gdiplus::Image* image = new Gdiplus::Image(desc.path.c_str());
+		if (image->GetLastStatus() != Gdiplus::Ok)
+		{
+			delete image;
+			GM_ASSERT_RETURN_VAL(false, nullptr, "Image load failed");
+		}
 
-		_width = _image->GetWidth();
-		_height = _image->GetHeight();
-
-		return true;
+		return std::shared_ptr<Texture>(new Texture(image));
 	}
+
+	Texture::Texture(Gdiplus::Image* image) : _image(image), _width(_image->GetWidth()), _height(_image->GetHeight()) {}
+	Texture::~Texture() = default;
 }

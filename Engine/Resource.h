@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Entity.h"
+#include "EngineCore.h"
 
 namespace gm
 {
@@ -12,6 +13,7 @@ namespace gm
 		Mesh,
 		Skeleton,
 		SpriteAnimationClip,
+		Shader,
 
 		Count
 	};
@@ -25,8 +27,5 @@ namespace gm
 		virtual ~Resource() = default;
 
 		virtual	ResourceType	GetType() const = 0;
-
-	protected:
-		virtual bool			Load(const std::wstring& path) = 0;
 	};
 }

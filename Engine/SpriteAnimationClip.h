@@ -10,14 +10,20 @@ namespace gm
 {
     class Texture;
 
+    struct SpriteAnimationClipDesc
+    {
+        std::wstring path;
+    };
+
     class SpriteAnimationClip : public AnimationClip
     {
     public:
-        SpriteAnimationClip();
+        static std::shared_ptr<SpriteAnimationClip> Create(const SpriteAnimationClipDesc& desc);
         virtual ~SpriteAnimationClip();
 
         static constexpr ResourceType Type = ResourceType::SpriteAnimationClip;
         virtual	ResourceType	    GetType() const override { return Type; }
+
 
         void                        SetTexture(const std::shared_ptr<Texture>& texture) { _texture = texture; }
         std::shared_ptr<Texture>    GetTexture() const { return _texture; }
@@ -28,8 +34,8 @@ namespace gm
         uint32                      GetFrameIndexByTime(float time) const;
         const SpriteFrame&          GetFrameByTime(float time) { return GetFrame(GetFrameIndexByTime(time)); }
 
-    protected:
-        bool			            Load(const std::wstring& path) override;
+    private:
+        SpriteAnimationClip();
 
     private:
         std::shared_ptr<Texture>     _texture;
