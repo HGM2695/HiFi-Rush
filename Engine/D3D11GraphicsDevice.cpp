@@ -1,5 +1,4 @@
 #include "D3D11GraphicsDevice.h"
-#include "GMAssert.h"
 #include "DirectXMath.h"
 
 #pragma comment(lib, "d3d11.lib")

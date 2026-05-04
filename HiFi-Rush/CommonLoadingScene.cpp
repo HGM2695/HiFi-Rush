@@ -1,5 +1,4 @@
 #include "CommonLoadingScene.h"
-#include "GMAssert.h"
 #include "Application.h"
 #include "SceneManager.h"
 #include "Input.h"

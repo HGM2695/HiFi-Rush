@@ -3,7 +3,6 @@
 #include "AnimationClipSet.h"
 #include "AnimationNotify.h"
 #include "Application.h"
-#include "GMAssert.h"
 #include "GameObject.h"
 #include "SpriteAnimationClip.h"
 #include "SpriteRenderer.h"

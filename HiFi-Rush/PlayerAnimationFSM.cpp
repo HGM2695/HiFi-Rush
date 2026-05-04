@@ -2,7 +2,6 @@
 #include "PlayerMovement.h"
 #include <windows.h>
 #include "GameObject.h"
-#include "GMAssert.h"
 #include "SpriteAnimator.h"
 
 namespace gm

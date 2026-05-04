@@ -1,8 +1,9 @@
 #pragma once
 
 #include "EngineCore.h"
+#include <type_traits>
+#include <utility>
 #include <vector>
-#include <memory>
 #include "Entity.h"
 
 namespace gm

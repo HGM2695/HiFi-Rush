@@ -3,7 +3,6 @@
 #include "EngineCore.h"
 #include "AnimationClip.h"
 #include "SpriteFrame.h"
-#include <memory>
 #include <vector>
 
 namespace gm

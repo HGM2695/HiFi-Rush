@@ -3,7 +3,6 @@
 #include "Resources.h"
 #include "AudioSystem.h"
 #include "SoundWave.h"
-#include "../Engine/GMAssert.h"
 
 namespace gm
 {

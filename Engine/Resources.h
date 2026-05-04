@@ -2,10 +2,9 @@
 
 #include <unordered_map>
 #include <string>
-#include <memory>
+#include <type_traits>
 
 #include "Resource.h"
-#include "GMAssert.h"
 
 namespace gm
 {

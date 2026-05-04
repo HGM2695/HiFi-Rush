@@ -2,7 +2,6 @@
 
 #include "EngineCore.h"
 #include "Resource.h"
-#include <memory>
 
 namespace Gdiplus
 {

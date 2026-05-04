@@ -5,7 +5,6 @@
 #include "Rigidbody2D.h"
 #include "Scene.h"
 #include "Transform.h"
-#include "GMAssert.h"
 #include <algorithm>
 #include <cmath>
 

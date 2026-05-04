@@ -2,7 +2,6 @@
 #include "Application.h"
 #include "AudioSystem.h"
 #include "Resources.h"
-#include "GMAssert.h"
 #include "SoundWave.h"
 #include <algorithm>
 #include <fmod.hpp>

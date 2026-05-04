@@ -1,7 +1,6 @@
 #include "PlayerMovement.h"
 #include "Application.h"
 #include "GameObject.h"
-#include "GMAssert.h"
 #include "Input.h"
 #include "Rigidbody2D.h"
 #include "Transform.h"

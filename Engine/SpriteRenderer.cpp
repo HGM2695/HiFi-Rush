@@ -1,7 +1,6 @@
 #include "SpriteRenderer.h"
 #include "GameObject.h"
 #include "Transform.h"
-#include "GMAssert.h"
 #include "Texture.h"
 #include "Camera.h"
 #include <Windows.h>

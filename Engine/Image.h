@@ -2,7 +2,6 @@
 
 #include "EngineCore.h"
 #include "Widget.h"
-#include <memory>
 #include <string>
 
 namespace gm

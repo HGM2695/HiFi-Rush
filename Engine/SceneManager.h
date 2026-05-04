@@ -1,9 +1,10 @@
 ﻿#pragma once
 
 #include "EngineCore.h"
-#include <unordered_map>
-#include <memory>
 #include <string>
+#include <type_traits>
+#include <unordered_map>
+#include <utility>
 #include "Scene.h"
 
 namespace gm

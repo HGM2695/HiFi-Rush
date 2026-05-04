@@ -1,6 +1,5 @@
 #include "SoundWave.h"
 #include "Application.h"
-#include "GMAssert.h"
 #include "AudioSystem.h"
 #include <fmod.hpp>
 

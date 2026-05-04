@@ -1,7 +1,8 @@
 #pragma once
 
 #include "EngineCore.h"
-#include <memory>
+#include <type_traits>
+#include <utility>
 #include <vector>
 #include "Component.h"
 

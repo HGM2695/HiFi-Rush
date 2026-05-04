@@ -1,7 +1,6 @@
 #include "Camera.h"
 #include "Transform.h"
 #include "GameObject.h"
-#include "GMAssert.h"
 #include "Application.h"
 #include "TimeSystem.h"
 #include <algorithm>

@@ -1,10 +1,9 @@
 #pragma once
 
 #include "Shader.h"
+#include <vector>
 #include <d3d11.h>
 #include <d3dcompiler.h>
-#include <memory>
-#include <vector>
 #include <wrl/client.h>
 
 namespace gm
