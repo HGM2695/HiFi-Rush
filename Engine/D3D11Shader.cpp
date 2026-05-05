@@ -6,59 +6,8 @@ namespace gm
 {
 	namespace
 	{
-		const char* GetDefaultTarget(ShaderStage stage)
-		{
-			switch (stage)
-			{
-			case ShaderStage::Vertex:
-				return "vs_5_0";
-			case ShaderStage::Pixel:
-				return "ps_5_0";
-			default:
-				return "";
-			}
-		}
-
-		Microsoft::WRL::ComPtr<ID3DBlob> CompileShader(ShaderStage stage, const D3D11ShaderDesc& desc)
-		{
-			GM_ASSERT_RETURN_VAL(desc.device, nullptr, "D3D11 디바이스가 유효하지 않습니다.");
-			GM_ASSERT_RETURN_VAL(desc.filePath.empty() == false, nullptr, "셰이더 파일 경로가 비어 있습니다.");
-			GM_ASSERT_RETURN_VAL(desc.entryPoint.empty() == false, nullptr, "셰이더 진입점이 비어 있습니다.");
-
-			UINT compileFlags = desc.compileFlags;
-#ifdef _DEBUG
-			compileFlags |= D3DCOMPILE_DEBUG;
-			compileFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
-#else
-			compileFlags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
-#endif
-
-			const std::string target = desc.target.empty() ? GetDefaultTarget(stage) : desc.target;
-			GM_ASSERT_RETURN_VAL(target.empty() == false, nullptr, "셰이더 타겟이 비어 있습니다.");
-
-			Microsoft::WRL::ComPtr<ID3DBlob> byteCode;
-			Microsoft::WRL::ComPtr<ID3DBlob> errorBlob;
-
-			const HRESULT hr = D3DCompileFromFile(
-				desc.filePath.c_str(),
-				nullptr,
-				D3D_COMPILE_STANDARD_FILE_INCLUDE,
-				desc.entryPoint.c_str(),
-				target.c_str(),
-				compileFlags,
-				0,
-				byteCode.GetAddressOf(),
-				errorBlob.GetAddressOf()
-			);
-
-			if (FAILED(hr))
-			{
-				const char* message = errorBlob ? static_cast<const char*>(errorBlob->GetBufferPointer()) : "알 수 없는 셰이더 컴파일 오류입니다.";
-				GM_ASSERT_RETURN_VAL(false, nullptr, "셰이더 컴파일에 실패했습니다. %s", message);
-			}
-
-			return byteCode;
-		}
+		const char* GetDefaultTarget(ShaderStage stage);
+		Microsoft::WRL::ComPtr<ID3DBlob> CompileShader(ShaderStage stage, const D3D11ShaderDesc& desc);
 	}
 
 	/// Vertex Shader
@@ -147,5 +96,64 @@ namespace gm
 
 		GM_ASSERT_RETURN_VAL(SUCCEEDED(hr), false, "픽셀 셰이더 생성에 실패했습니다.");
 		return true;
+	}
+
+	/// helper
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	namespace
+	{
+		const char* GetDefaultTarget(ShaderStage stage)
+		{
+			switch (stage)
+			{
+			case ShaderStage::Vertex:
+				return "vs_5_0";
+			case ShaderStage::Pixel:
+				return "ps_5_0";
+			default:
+				return "";
+			}
+		}
+
+		Microsoft::WRL::ComPtr<ID3DBlob> CompileShader(ShaderStage stage, const D3D11ShaderDesc& desc)
+		{
+			GM_ASSERT_RETURN_VAL(desc.device, nullptr, "D3D11 디바이스가 유효하지 않습니다.");
+			GM_ASSERT_RETURN_VAL(desc.filePath.empty() == false, nullptr, "셰이더 파일 경로가 비어 있습니다.");
+			GM_ASSERT_RETURN_VAL(desc.entryPoint.empty() == false, nullptr, "셰이더 진입점이 비어 있습니다.");
+
+			UINT compileFlags = desc.compileFlags;
+#ifdef _DEBUG
+			compileFlags |= D3DCOMPILE_DEBUG;
+			compileFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
+#else
+			compileFlags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
+#endif
+
+			const std::string target = desc.target.empty() ? GetDefaultTarget(stage) : desc.target;
+			GM_ASSERT_RETURN_VAL(target.empty() == false, nullptr, "셰이더 타겟이 비어 있습니다.");
+
+			Microsoft::WRL::ComPtr<ID3DBlob> byteCode;
+			Microsoft::WRL::ComPtr<ID3DBlob> errorBlob;
+
+			const HRESULT hr = D3DCompileFromFile(
+				desc.filePath.c_str(),
+				nullptr,
+				D3D_COMPILE_STANDARD_FILE_INCLUDE,
+				desc.entryPoint.c_str(),
+				target.c_str(),
+				compileFlags,
+				0,
+				byteCode.GetAddressOf(),
+				errorBlob.GetAddressOf()
+			);
+
+			if (FAILED(hr))
+			{
+				const char* message = errorBlob ? static_cast<const char*>(errorBlob->GetBufferPointer()) : "알 수 없는 셰이더 컴파일 오류입니다.";
+				GM_ASSERT_RETURN_VAL(false, nullptr, "셰이더 컴파일에 실패했습니다. %s", message);
+			}
+
+			return byteCode;
+		}
 	}
 }

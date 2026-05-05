@@ -44,7 +44,7 @@ namespace gm
 		void releaseBackBufferResources();
 
 	private:
-		HWND							_hWnd = nullptr;
+		HWND											_hWnd = nullptr;
 
 		Microsoft::WRL::ComPtr<ID3D11Device>			_device;
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext>		_deviceContext;
