@@ -143,6 +143,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collider2D.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="D3D11GraphicsResourceFactory.h" />
     <ClInclude Include="D3D11Mesh.h" />
     <ClInclude Include="DebugRenderer.h" />
     <ClInclude Include="D3D11GraphicsDevice.h" />
@@ -153,8 +154,10 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GMAssert.h" />
     <ClInclude Include="GMLog.h" />
+    <ClInclude Include="GraphicsBackend.h" />
     <ClInclude Include="IAnimator.h" />
     <ClInclude Include="IGraphicsDevice.h" />
+    <ClInclude Include="IGraphicsResourceFactory.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="MathTypes.h" />
@@ -182,6 +185,8 @@
     <ClInclude Include="Types.h" />
     <ClInclude Include="UIManager.h" />
     <ClInclude Include="UserWidget.h" />
+    <ClInclude Include="VertexTypes.h" />
+    <ClInclude Include="VertexLayout.h" />
     <ClInclude Include="Widget.h" />
     <ClInclude Include="CanvasPanel.h" />
     <ClInclude Include="Border.h" />
@@ -204,14 +209,17 @@
     <ClCompile Include="Collider2D.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="D3D11Mesh.cpp" />
+    <ClCompile Include="D3D11GraphicsResourceFactory.cpp" />
     <ClCompile Include="DebugRenderer.cpp" />
     <ClCompile Include="D3D11GraphicsDevice.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GMAssert.cpp" />
     <ClCompile Include="GMLog.cpp" />
+    <ClCompile Include="GraphicsBackend.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="IGraphicsResourceFactory.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="PhysicsSystem2D.cpp" />
     <ClCompile Include="PhysicsSystem3D.cpp" />

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EngineCore.h"
+#include "GraphicsBackend.h"
 #include <string>
 
 namespace gm
@@ -16,6 +17,7 @@ namespace gm
 	class UIManager;
 	class Window;
 	class IGraphicsDevice;
+	class IGraphicsResourceFactory;
 
 	struct ApplicationDesc
 	{
@@ -26,6 +28,7 @@ namespace gm
 		int				height = 0;
 		int				showCommand = 0;
 		bool			isVSync = true;
+		GraphicsAPI		graphicsAPI = GraphicsAPI::D3D11;
 	};
 
 	class Application
@@ -63,6 +66,8 @@ namespace gm
 		Resources&			GetResources() { return *_resources; }
 		AudioSystem&		GetAudioSystem() { return *_audioSystem; }
 		UIManager&			GetUIManager() { return *_uiManager; }
+		IGraphicsDevice&	GetGraphicsDevice() { return *_graphicsDevice; }
+		IGraphicsResourceFactory& GetGraphicsResourceFactory() { return *_graphicsResourceFactory; }
 
 		const Input&		GetInput() const { return *_input; }
 		const PhysicsSystem& GetPhysicsSystem() const { return *_physicsSystem; }
@@ -71,6 +76,8 @@ namespace gm
 		const Resources&	GetResources() const { return *_resources; }
 		const AudioSystem&	GetAudioSystem() const { return *_audioSystem; }
 		const UIManager&	GetUIManager() const { return *_uiManager; }
+		const IGraphicsDevice& GetGraphicsDevice() const { return *_graphicsDevice; }
+		const IGraphicsResourceFactory& GetGraphicsResourceFactory() const { return *_graphicsResourceFactory; }
 
 	private:
 		void				Loop();
@@ -84,14 +91,15 @@ namespace gm
 		HDC							_backHDC = nullptr;
 		HBITMAP						_backBuffer = nullptr;
 
-		std::unique_ptr<Input>				_input;
-		std::unique_ptr<PhysicsSystem>		_physicsSystem;
-		std::unique_ptr<TimeSystem>			_time;
-		std::unique_ptr<SceneManager>		_sceneManager;
-		std::unique_ptr<Resources>			_resources;
-		std::unique_ptr<AudioSystem>		_audioSystem;
-		std::unique_ptr<UIManager>			_uiManager;
-		std::unique_ptr<Window>				_window;
-		std::unique_ptr<IGraphicsDevice>	_graphicsDevice;
+		std::unique_ptr<Input>						_input;
+		std::unique_ptr<PhysicsSystem>				_physicsSystem;
+		std::unique_ptr<TimeSystem>					_time;
+		std::unique_ptr<SceneManager>				_sceneManager;
+		std::unique_ptr<Resources>					_resources;
+		std::unique_ptr<AudioSystem>				_audioSystem;
+		std::unique_ptr<UIManager>					_uiManager;
+		std::unique_ptr<Window>						_window;
+		std::unique_ptr<IGraphicsDevice>			_graphicsDevice;
+		std::unique_ptr<IGraphicsResourceFactory>	_graphicsResourceFactory;
 	};
 }

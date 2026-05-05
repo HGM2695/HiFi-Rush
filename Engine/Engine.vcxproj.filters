@@ -149,8 +149,17 @@
     <ClInclude Include="D3D11GraphicsDevice.h">
       <Filter>Graphics\Device</Filter>
     </ClInclude>
+    <ClInclude Include="D3D11GraphicsResourceFactory.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="IGraphicsDevice.h">
       <Filter>Graphics\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="IGraphicsResourceFactory.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsBackend.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Window.h" />
     <ClInclude Include="Shader.h">
@@ -166,7 +175,13 @@
       <Filter>Resource\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="MathTypes.h">
-      <Filter>Util</Filter>
+      <Filter>Util\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexTypes.h">
+      <Filter>Util\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexLayout.h">
+      <Filter>Util\Types</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -291,6 +306,15 @@
     <ClCompile Include="D3D11GraphicsDevice.cpp">
       <Filter>Graphics\Device</Filter>
     </ClCompile>
+    <ClCompile Include="D3D11GraphicsResourceFactory.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsBackend.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="IGraphicsResourceFactory.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="Shader.cpp">
       <Filter>Resource\Shader</Filter>
@@ -365,6 +389,12 @@
     </Filter>
     <Filter Include="Resource\Mesh">
       <UniqueIdentifier>{eb196191-5cfb-44d3-9435-30bee7b63668}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\Types">
+      <UniqueIdentifier>{1cfa3622-071c-458c-9aec-df890e36d650}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\D3D11">
+      <UniqueIdentifier>{f86b6ff7-dac8-4d87-89ae-89ea13ec5260}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

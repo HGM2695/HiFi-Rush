@@ -8,9 +8,10 @@
 #include "Scene.h"
 #include "AudioSystem.h"
 #include "DebugRenderer.h"
+#include "IGraphicsDevice.h"
+#include "IGraphicsResourceFactory.h"
 #include "UIManager.h"
 #include "Window.h"
-#include "D3D11GraphicsDevice.h"
 
 namespace gm
 {
@@ -47,13 +48,19 @@ namespace gm
 
     bool Application::initializeGraphics(const ApplicationDesc& desc)
     {
-        D3D11GraphicsDeviceDesc d3d11Desc{};
-        d3d11Desc.width = desc.width;
-        d3d11Desc.height = desc.height;
-        d3d11Desc.hWnd = _window->GetHandle();
-        d3d11Desc.isVSync = desc.isVSync;
-        _graphicsDevice = D3D11GraphicsDevice::Create(d3d11Desc);
-        GM_ASSERT_RETURN_VAL(_graphicsDevice, false, "_graphicsDevice 생성에 실패하였습니다");
+        GraphicsBackendDesc graphicsDesc{};
+        graphicsDesc.graphicsAPI = desc.graphicsAPI;
+        graphicsDesc.width = desc.width;
+        graphicsDesc.height = desc.height;
+        graphicsDesc.hWnd = _window->GetHandle();
+        graphicsDesc.isVSync = desc.isVSync;
+
+        GraphicsBackend graphicsBackend = CreateGraphicsBackend(graphicsDesc);
+        GM_ASSERT_RETURN_VAL(graphicsBackend.device, false, "그래픽 디바이스 생성에 실패했습니다.");
+        GM_ASSERT_RETURN_VAL(graphicsBackend.resourceFactory, false, "그래픽 리소스 팩토리 생성에 실패했습니다.");
+
+        _graphicsDevice = std::move(graphicsBackend.device);
+        _graphicsResourceFactory = std::move(graphicsBackend.resourceFactory);
 
         return true;
     }
