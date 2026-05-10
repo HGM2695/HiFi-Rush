@@ -6,6 +6,8 @@
 
 namespace gm
 {
+	class D3D11GraphicsResourceFactory;
+
 	struct D3D11MeshDesc
 	{
 		ID3D11Device*		device{};
@@ -21,11 +23,14 @@ namespace gm
 
 	class D3D11Mesh : public Mesh
 	{
+		friend class D3D11GraphicsResourceFactory;
+
 	public:
-		static std::shared_ptr<Mesh> Create(const D3D11MeshDesc& desc);
 		virtual ~D3D11Mesh() = default;
 
 	private:
+		static std::shared_ptr<Mesh> Create(const D3D11MeshDesc& desc);
+
 		D3D11Mesh(const D3D11MeshDesc& desc);
 
 		bool			Initialize(const D3D11MeshDesc& desc);

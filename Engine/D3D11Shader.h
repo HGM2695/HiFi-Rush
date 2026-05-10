@@ -8,6 +8,8 @@
 
 namespace gm
 {
+	class D3D11GraphicsResourceFactory;
+
 	struct D3D11ShaderDesc : ShaderDesc
 	{
 		ID3D11Device*	device = nullptr;
@@ -23,14 +25,17 @@ namespace gm
 
 	class D3D11VertexShader : public Shader
 	{
+		friend class D3D11GraphicsResourceFactory;
+
 	public:
-		static std::shared_ptr<Shader> Create(const D3D11VertexShaderDesc& desc);
 		virtual ~D3D11VertexShader() = default;
 
 		ID3D11VertexShader* GetNativeShader() const { return _vertexShader.Get(); }
 		ID3D11InputLayout*	GetInputLayout() const { return _inputLayout.Get(); }
 
 	private:
+		static std::shared_ptr<Shader> Create(const D3D11VertexShaderDesc& desc);
+
 		D3D11VertexShader(const D3D11VertexShaderDesc& desc);
 
 		bool Initialize(const D3D11VertexShaderDesc& desc);
@@ -51,13 +56,16 @@ namespace gm
 
 	class D3D11PixelShader : public Shader
 	{
+		friend class D3D11GraphicsResourceFactory;
+
 	public:
-		static std::shared_ptr<Shader> Create(const D3D11PixelShaderDesc& desc);
 		virtual ~D3D11PixelShader() = default;
 
 		ID3D11PixelShader*	GetNativeShader() const { return _pixelShader.Get(); }
 
 	private:
+		static std::shared_ptr<Shader> Create(const D3D11PixelShaderDesc& desc);
+
 		D3D11PixelShader(const D3D11PixelShaderDesc& desc);
 
 		bool Initialize(const D3D11PixelShaderDesc& desc);
