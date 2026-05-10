@@ -183,6 +183,7 @@
     <ClInclude Include="VertexLayout.h">
       <Filter>Util\Types</Filter>
     </ClInclude>
+    <ClInclude Include="BuiltinGraphicsResources.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -328,6 +329,7 @@
     <ClCompile Include="D3D11Mesh.cpp">
       <Filter>Resource\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="BuiltinGraphicsResources.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
@@ -396,5 +398,16 @@
     <Filter Include="Util\D3D11">
       <UniqueIdentifier>{f86b6ff7-dac8-4d87-89ae-89ea13ec5260}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{b819c7ba-4aed-42f5-9d76-3414e4aff449}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Resources\Shaders\FullScreenTextureVS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\FullScreenTexturePS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

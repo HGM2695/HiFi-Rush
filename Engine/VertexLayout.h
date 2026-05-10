@@ -3,6 +3,7 @@
 #include "EngineCore.h"
 #include <vector>
 
+// 정점에 속하는 원소의 형식 그리고 정점 그 자체의 형식을 나타내는 구조체.
 namespace gm
 {
 	enum class VertexElementSemantic

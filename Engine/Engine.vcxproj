@@ -140,6 +140,7 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="AudioComponent.h" />
     <ClInclude Include="AudioStatics.h" />
+    <ClInclude Include="BuiltinGraphicsResources.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collider2D.h" />
     <ClInclude Include="Component.h" />
@@ -204,6 +205,7 @@
     <ClCompile Include="AudioComponent.cpp" />
     <ClCompile Include="AudioStatics.cpp" />
     <ClCompile Include="BoxCollider2D.cpp" />
+    <ClCompile Include="BuiltinGraphicsResources.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CircleCollider2D.cpp" />
     <ClCompile Include="Collider2D.cpp" />
@@ -245,6 +247,20 @@
     <ClCompile Include="TextBlock.cpp" />
     <ClCompile Include="WidgetComponent.cpp" />
     <ClCompile Include="Window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Resources\Shaders\FullScreenTexturePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\FullScreenTextureVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
