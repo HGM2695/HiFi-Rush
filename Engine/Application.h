@@ -18,6 +18,7 @@ namespace gm
 	class Window;
 	class IGraphicsDevice;
 	class IGraphicsResourceFactory;
+	class IGraphicsCommandContext;
 
 	struct ApplicationDesc
 	{
@@ -52,6 +53,7 @@ namespace gm
 		void				PhysicsUpdate();
 		void				LateUpdate();
 		void				Render();
+		void				DxRender();
 		void				EndFrame();
 
 		void				ShutDownRuntime();
@@ -84,6 +86,7 @@ namespace gm
 		bool				initializeWindow(const ApplicationDesc& desc);
 		bool				initializeGraphics(const ApplicationDesc& desc);
 		bool				initializeSubSystem();
+		bool				initializeBuiltinResources();
 		void				createBackDC();
 
 	private:
@@ -101,5 +104,6 @@ namespace gm
 		std::unique_ptr<Window>						_window;
 		std::unique_ptr<IGraphicsDevice>			_graphicsDevice;
 		std::unique_ptr<IGraphicsResourceFactory>	_graphicsResourceFactory;
+		std::unique_ptr<IGraphicsCommandContext>	_graphicsCommandContext;
 	};
 }

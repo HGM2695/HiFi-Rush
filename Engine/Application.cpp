@@ -10,8 +10,10 @@
 #include "DebugRenderer.h"
 #include "IGraphicsDevice.h"
 #include "IGraphicsResourceFactory.h"
+#include "IGraphicsCommandContext.h"
 #include "UIManager.h"
 #include "Window.h"
+#include "BuiltinGraphicsResources.h"
 
 namespace gm
 {
@@ -25,6 +27,7 @@ namespace gm
         // dx11 전환 후 제거 예정
         createBackDC();
         GM_ASSERT_RETURN_VAL(initializeSubSystem(), false, "SubSystem 초기화 실패");
+        GM_ASSERT_RETURN_VAL(initializeBuiltinResources(), false, "builtin Resource 초기화 실패");
         
         return true;
     }
@@ -61,6 +64,7 @@ namespace gm
 
         _graphicsDevice = std::move(graphicsBackend.device);
         _graphicsResourceFactory = std::move(graphicsBackend.resourceFactory);
+        _graphicsCommandContext = std::move(graphicsBackend.commandContext);
 
         return true;
     }
@@ -94,6 +98,11 @@ namespace gm
         return true;
     }
 
+    bool Application::initializeBuiltinResources()
+    {
+        return BuiltinGraphicsResources::Load(*_resources, *_graphicsResourceFactory);
+    }
+
     void Application::Run()
     {
         MSG msg;
@@ -122,7 +131,8 @@ namespace gm
         Update();
         PhysicsUpdate();
         LateUpdate();
-        Render();
+        //Render();
+        DxRender();
         EndFrame();
     }
 
@@ -160,6 +170,27 @@ namespace gm
 		_uiManager->Render(_backHDC);
 
         BitBlt(_hDC, 0, 0, width, height, _backHDC, 0, 0, SRCCOPY);
+    }
+
+    void Application::DxRender()
+    {
+        auto fullScreenMesh = _resources->Find<Mesh>(FullScreenMesh);
+        GM_ASSERT_RETURN(fullScreenMesh, "_resources에 fullScreenMesh가 없습니다.");
+        auto fullScreenVS = _resources->Find<Shader>(FullScreenTextureVS);
+        GM_ASSERT_RETURN(fullScreenVS, "_resources에 fullScreenVS가 없습니다.");
+        auto fullScreenPS = _resources->Find<Shader>(FullScreenTexturePS);
+        GM_ASSERT_RETURN(fullScreenPS, "_resources에 fullScreenPS가 없습니다.");
+
+        static const Color backBufferColor = Colors::Magenta;
+        _graphicsDevice->BeginFrame(backBufferColor);
+
+        _graphicsCommandContext->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
+        _graphicsCommandContext->SetMesh(*fullScreenMesh);
+        _graphicsCommandContext->SetVertexShader(*fullScreenVS);
+        _graphicsCommandContext->SetPixelShader(*fullScreenPS);
+        _graphicsCommandContext->DrawIndexed(fullScreenMesh->GetIndexCount());
+
+        _graphicsDevice->EndFrame();
     }
 
     void Application::EndFrame()

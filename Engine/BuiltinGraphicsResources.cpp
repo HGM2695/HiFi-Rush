@@ -13,8 +13,8 @@ namespace gm
 
 	bool BuiltinGraphicsResources::Load(Resources& resources, IGraphicsResourceFactory& factory)
 	{
-		LoadFullScreenMesh(resources, factory);
-		LoadFullscreenTextureShader(resources, factory);
+		GM_ASSERT_RETURN_VAL(LoadFullScreenMesh(resources, factory), false, "FullScreenMesh 로드 실패");
+		GM_ASSERT_RETURN_VAL(LoadFullscreenTextureShader(resources, factory), false, "FullscreenTextureShader 로드 실패");
 		return true;
 	}
 
@@ -24,16 +24,16 @@ namespace gm
 		{
 			std::vector<VertexPosTex> vertices(4);
 
-			vertices[0].position = Vector3(-1.0f, 1.0f, 0.0f);
+			vertices[0].position = Vector3(-0.5f, 0.5f, 0.0f);
 			vertices[0].texcoord = Vector2(0.0f, 0.0f);
 
-			vertices[1].position = Vector3(1.0f, 1.0f, 0.0f);
+			vertices[1].position = Vector3(0.5f, 0.5f, 0.0f);
 			vertices[1].texcoord = Vector2(1.0f, 0.0f);
 
-			vertices[2].position = Vector3(1.0f, -1.0f, 0.0f);
+			vertices[2].position = Vector3(0.5f, -0.5f, 0.0f);
 			vertices[2].texcoord = Vector2(1.0f, 1.0f);
 
-			vertices[3].position = Vector3(-1.0f, -1.0f, 0.0f);
+			vertices[3].position = Vector3(-0.5f, -0.5f, 0.0f);
 			vertices[3].texcoord = Vector2(0.0f, 1.0f);
 
 			std::vector<uint32> indices = {
