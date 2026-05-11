@@ -28,6 +28,10 @@ namespace gm
 	public:
 		virtual ~D3D11Mesh() = default;
 
+		uint32			GetVertexStride() const { return _vertexStride; }
+		ID3D11Buffer*	GetVertexBuffer() const { return _vertexBuffer.Get(); }
+		ID3D11Buffer*	GetIndexBuffer() const { return _indexBuffer.Get(); };
+
 	private:
 		static std::shared_ptr<Mesh> Create(const D3D11MeshDesc& desc);
 
@@ -36,10 +40,6 @@ namespace gm
 		bool			Initialize(const D3D11MeshDesc& desc);
 		bool			CreateVertexBuffer(const D3D11MeshDesc& desc);
 		bool			CreateIndexBuffer(const D3D11MeshDesc& desc);
-
-		uint32			GetVertexStride() const { return _vertexStride; }
-		ID3D11Buffer*	GetVertexBuffer() const { return _vertexBuffer.Get(); }
-		ID3D11Buffer*	GetIndexBuffer() const { return _indexBuffer.Get(); };
 
 	private:
 		uint32									_vertexStride{};

@@ -10,7 +10,10 @@ namespace gm
 		return mesh;
 	}
 
-	D3D11Mesh::D3D11Mesh(const D3D11MeshDesc& desc) : Mesh(desc.topology, desc.vertexCount, desc.indexCount) {}
+	D3D11Mesh::D3D11Mesh(const D3D11MeshDesc& desc)
+		: Mesh(desc.topology, desc.vertexCount, desc.indexCount), _vertexStride(desc.vertexStride)
+	{
+	}
 
 	bool D3D11Mesh::Initialize(const D3D11MeshDesc& desc)
 	{
