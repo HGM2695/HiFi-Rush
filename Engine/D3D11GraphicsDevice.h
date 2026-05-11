@@ -22,7 +22,7 @@ namespace gm
 
 		static std::unique_ptr<IGraphicsDevice> Create(const D3D11GraphicsDeviceDesc& desc);
 
-		virtual void BeginFrame(float red, float green, float blue, float alpha = 1.f) override;
+		virtual void BeginFrame(const Color& color) override;
 		virtual void EndFrame() override;
 
 		ID3D11Device*			GetNativeDevice() const { return _device.Get(); }

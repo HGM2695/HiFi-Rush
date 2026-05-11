@@ -18,12 +18,10 @@ namespace gm
 		return device;
 	}
 
-	void D3D11GraphicsDevice::BeginFrame(float red, float green, float blue, float alpha)
+	void D3D11GraphicsDevice::BeginFrame(const Color& color)
 	{
-		const float clearColor[] = { red, green, blue, alpha };
-
 		_deviceContext->OMSetRenderTargets(1, _renderTargetView.GetAddressOf(), _depthStencilView.Get());
-		_deviceContext->ClearRenderTargetView(_renderTargetView.Get(), clearColor);
+		_deviceContext->ClearRenderTargetView(_renderTargetView.Get(), color);
 		_deviceContext->ClearDepthStencilView(_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 	}
 
