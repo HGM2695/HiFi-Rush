@@ -146,22 +146,12 @@
     <ClInclude Include="EngineCore.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="D3D11GraphicsDevice.h">
-      <Filter>Graphics\Device</Filter>
-    </ClInclude>
-    <ClInclude Include="D3D11GraphicsResourceFactory.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="IGraphicsDevice.h">
-      <Filter>Graphics\Device</Filter>
-    </ClInclude>
     <ClInclude Include="IGraphicsResourceFactory.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsBackend.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Window.h" />
     <ClInclude Include="Shader.h">
       <Filter>Resource\Shader</Filter>
     </ClInclude>
@@ -183,7 +173,28 @@
     <ClInclude Include="VertexLayout.h">
       <Filter>Util\Types</Filter>
     </ClInclude>
-    <ClInclude Include="BuiltinGraphicsResources.h" />
+    <ClInclude Include="IGraphicsDevice.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11GraphicsDevice.h">
+      <Filter>Graphics\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11GraphicsResourceFactory.h">
+      <Filter>Graphics\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="IGraphicsCommandContext.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="BuiltinGraphicsResources.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsTypes.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>SubSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11GraphicsCommandContext.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -304,19 +315,9 @@
     <ClCompile Include="WidgetComponent.cpp">
       <Filter>Engine Component</Filter>
     </ClCompile>
-    <ClCompile Include="D3D11GraphicsDevice.cpp">
-      <Filter>Graphics\Device</Filter>
-    </ClCompile>
-    <ClCompile Include="D3D11GraphicsResourceFactory.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="GraphicsBackend.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="IGraphicsResourceFactory.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Window.cpp" />
     <ClCompile Include="Shader.cpp">
       <Filter>Resource\Shader</Filter>
     </ClCompile>
@@ -329,7 +330,19 @@
     <ClCompile Include="D3D11Mesh.cpp">
       <Filter>Resource\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="BuiltinGraphicsResources.cpp" />
+    <ClCompile Include="D3D11GraphicsDevice.cpp">
+      <Filter>Graphics\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11GraphicsResourceFactory.cpp">
+      <Filter>Graphics\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="BuiltinGraphicsResources.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>SubSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11GraphicsCommandContext.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
@@ -383,9 +396,6 @@
     <Filter Include="Graphics">
       <UniqueIdentifier>{d217ae0a-0c6e-4ff9-824d-e91acd9d3921}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Graphics\Device">
-      <UniqueIdentifier>{de4755bf-c859-427d-8e1b-200e872f51c0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource\Shader">
       <UniqueIdentifier>{9297e9cd-82a6-4668-9439-bc7459a93e71}</UniqueIdentifier>
     </Filter>
@@ -395,11 +405,11 @@
     <Filter Include="Util\Types">
       <UniqueIdentifier>{1cfa3622-071c-458c-9aec-df890e36d650}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Util\D3D11">
-      <UniqueIdentifier>{f86b6ff7-dac8-4d87-89ae-89ea13ec5260}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders">
       <UniqueIdentifier>{b819c7ba-4aed-42f5-9d76-3414e4aff449}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\D3D11">
+      <UniqueIdentifier>{c6772289-3abf-4939-bb06-5a9ed43a9411}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

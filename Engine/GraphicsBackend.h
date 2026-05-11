@@ -1,21 +1,19 @@
 #pragma once
 
 #include "EngineCore.h"
+#include "GraphicsTypes.h"
 
 namespace gm
 {
 	class IGraphicsDevice;
 	class IGraphicsResourceFactory;
-
-	enum class GraphicsAPI
-	{
-		D3D11,
-	};
+	class IGraphicsCommandContext;
 
 	struct GraphicsBackend
 	{
-		std::unique_ptr<IGraphicsDevice> device;
-		std::unique_ptr<IGraphicsResourceFactory> resourceFactory;
+		std::unique_ptr<IGraphicsDevice>			device;
+		std::unique_ptr<IGraphicsResourceFactory>	resourceFactory;
+		std::unique_ptr<IGraphicsCommandContext>	commandContext;
 	};
 
 	struct GraphicsBackendDesc

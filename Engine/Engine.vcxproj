@@ -144,6 +144,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collider2D.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="D3D11GraphicsCommandContext.h" />
     <ClInclude Include="D3D11GraphicsResourceFactory.h" />
     <ClInclude Include="D3D11Mesh.h" />
     <ClInclude Include="DebugRenderer.h" />
@@ -156,7 +157,9 @@
     <ClInclude Include="GMAssert.h" />
     <ClInclude Include="GMLog.h" />
     <ClInclude Include="GraphicsBackend.h" />
+    <ClInclude Include="GraphicsTypes.h" />
     <ClInclude Include="IAnimator.h" />
+    <ClInclude Include="IGraphicsCommandContext.h" />
     <ClInclude Include="IGraphicsDevice.h" />
     <ClInclude Include="IGraphicsResourceFactory.h" />
     <ClInclude Include="Image.h" />
@@ -210,6 +213,7 @@
     <ClCompile Include="CircleCollider2D.cpp" />
     <ClCompile Include="Collider2D.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="D3D11GraphicsCommandContext.cpp" />
     <ClCompile Include="D3D11Mesh.cpp" />
     <ClCompile Include="D3D11GraphicsResourceFactory.cpp" />
     <ClCompile Include="DebugRenderer.cpp" />
@@ -221,7 +225,6 @@
     <ClCompile Include="GraphicsBackend.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Input.cpp" />
-    <ClCompile Include="IGraphicsResourceFactory.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="PhysicsSystem2D.cpp" />
     <ClCompile Include="PhysicsSystem3D.cpp" />

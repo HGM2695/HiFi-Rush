@@ -1,20 +1,14 @@
 #pragma once
 
 #include "Resource.h"
+#include "GraphicsTypes.h"
 
 namespace gm
 {
-	enum class PrimitiveTopology
-	{
-		TriangleList,
-		LineList,
-		PointList
-	};
-
 	class Mesh : public Resource
 	{
 	public:
-		~Mesh() = default;
+		virtual ~Mesh() = default;
 
 		static inline ResourceType Type = ResourceType::Mesh;
 		virtual ResourceType GetType() const override { return Type; }

@@ -1,6 +1,7 @@
 #include "GraphicsBackend.h"
 #include "D3D11GraphicsDevice.h"
 #include "D3D11GraphicsResourceFactory.h"
+#include "D3D11GraphicsCommandContext.h"
 
 namespace gm
 {
@@ -22,6 +23,7 @@ namespace gm
 			GraphicsBackend backend{};
 			backend.resourceFactory = std::make_unique<D3D11GraphicsResourceFactory>(*d3d11Device);
 			backend.device = std::move(device);
+			backend.commandContext = std::make_unique<D3D11GraphicsCommandContext>(d3d11Device->GetImmediateContext());
 
 			return backend;
 		}
