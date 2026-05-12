@@ -12,6 +12,8 @@ namespace gm
 		Normal,
 		TexCoord,
 		Color,
+
+		Count
 	};
 
 	enum class VertexElementFormat
@@ -19,6 +21,8 @@ namespace gm
 		Float2,
 		Float3,
 		Float4,
+
+		Count
 	};
 
 	struct VertexElementDesc

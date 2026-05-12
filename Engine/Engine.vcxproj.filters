@@ -195,6 +195,9 @@
       <Filter>SubSystem</Filter>
     </ClInclude>
     <ClInclude Include="D3D11GraphicsCommandContext.h" />
+    <ClInclude Include="D3D11TypeConverter.h">
+      <Filter>Graphics\D3D11</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -343,6 +346,9 @@
       <Filter>SubSystem</Filter>
     </ClCompile>
     <ClCompile Include="D3D11GraphicsCommandContext.cpp" />
+    <ClCompile Include="D3D11TypeConverter.cpp">
+      <Filter>Graphics\D3D11</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">

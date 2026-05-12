@@ -6,6 +6,7 @@ namespace gm
     enum class GraphicsAPI
     {
         D3D11,
+        Count
     };
 
     enum class PrimitiveTopology
@@ -13,12 +14,14 @@ namespace gm
         TriangleList,
         LineList,
         PointList,
+        Count
     };
 
     enum class FillMode
     {
         Solid,
         Wireframe,
+        Count
     };
 
     enum class CullMode
@@ -26,6 +29,7 @@ namespace gm
         None,
         Front,
         Back,
+        Count
     };
 
     enum class CompareFunc
@@ -38,6 +42,7 @@ namespace gm
         NotEqual,
         GreaterEqual,
         Always,
+        Count
     };
 
     enum class BlendFactor
@@ -46,12 +51,14 @@ namespace gm
         One,
         SrcAlpha,
         InvSrcAlpha,
+        Count
     };
 
     enum class BlendOp
     {
         Add,
         Subtract,
+        Count
     };
 
     struct DepthStencilDesc

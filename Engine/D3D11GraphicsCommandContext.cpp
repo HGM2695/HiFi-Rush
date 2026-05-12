@@ -1,16 +1,12 @@
 #include "D3D11GraphicsCommandContext.h"
 #include "D3D11Mesh.h"
 #include "D3D11Shader.h"
+#include "D3D11TypeConverter.h"
 #include "Shader.h"
 #include <d3d11.h>
 
 namespace gm
 {
-	namespace
-	{
-		D3D11_PRIMITIVE_TOPOLOGY ToD3D11PrimitiveTopology(PrimitiveTopology topology);
-	}
-
 	D3D11GraphicsCommandContext::D3D11GraphicsCommandContext(ID3D11DeviceContext* context) : _context(context) {}
 
 	void D3D11GraphicsCommandContext::SetPrimitiveTopology(PrimitiveTopology topology)
@@ -79,22 +75,4 @@ namespace gm
 		_context->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	}
 
-	/// helper
-	namespace
-	{
-		D3D11_PRIMITIVE_TOPOLOGY ToD3D11PrimitiveTopology(PrimitiveTopology topology)
-		{
-			switch (topology)
-			{
-			case PrimitiveTopology::TriangleList:
-				return D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-			case PrimitiveTopology::LineList:
-				return D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
-			case PrimitiveTopology::PointList:
-				return D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
-			default:
-				GM_ASSERT_RETURN_VAL(false, D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED, "지원하지 않는 PrimitiveTopology입니다.");
-			}
-		}
-	}
 }

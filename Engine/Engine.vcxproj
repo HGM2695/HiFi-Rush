@@ -147,6 +147,7 @@
     <ClInclude Include="D3D11GraphicsCommandContext.h" />
     <ClInclude Include="D3D11GraphicsResourceFactory.h" />
     <ClInclude Include="D3D11Mesh.h" />
+    <ClInclude Include="D3D11TypeConverter.h" />
     <ClInclude Include="DebugRenderer.h" />
     <ClInclude Include="D3D11GraphicsDevice.h" />
     <ClInclude Include="EngineCore.h" />
@@ -216,6 +217,7 @@
     <ClCompile Include="D3D11GraphicsCommandContext.cpp" />
     <ClCompile Include="D3D11Mesh.cpp" />
     <ClCompile Include="D3D11GraphicsResourceFactory.cpp" />
+    <ClCompile Include="D3D11TypeConverter.cpp" />
     <ClCompile Include="DebugRenderer.cpp" />
     <ClCompile Include="D3D11GraphicsDevice.cpp" />
     <ClCompile Include="Entity.cpp" />
