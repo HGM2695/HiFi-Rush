@@ -3,7 +3,9 @@
 #include "Types.h"
 #include "MathTypes.h"
 #include "GMAssert.h"
+#include "GMLog.h"
 #include <memory>
+#include <string>
 
 struct HWND__;
 typedef struct HWND__* HWND;
