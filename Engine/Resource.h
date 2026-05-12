@@ -14,6 +14,7 @@ namespace gm
 		Skeleton,
 		SpriteAnimationClip,
 		Shader,
+		PipelineState,
 
 		Count
 	};

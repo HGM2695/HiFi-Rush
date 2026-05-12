@@ -147,6 +147,7 @@
     <ClInclude Include="D3D11GraphicsCommandContext.h" />
     <ClInclude Include="D3D11GraphicsResourceFactory.h" />
     <ClInclude Include="D3D11Mesh.h" />
+    <ClInclude Include="D3D11PipelineState.h" />
     <ClInclude Include="D3D11TypeConverter.h" />
     <ClInclude Include="DebugRenderer.h" />
     <ClInclude Include="D3D11GraphicsDevice.h" />
@@ -170,6 +171,7 @@
     <ClInclude Include="PhysicsSystem2D.h" />
     <ClInclude Include="PhysicsSystem3D.h" />
     <ClInclude Include="PhysicsSystem.h" />
+    <ClInclude Include="PipelineState.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Rigidbody2D.h" />
@@ -217,6 +219,7 @@
     <ClCompile Include="D3D11GraphicsCommandContext.cpp" />
     <ClCompile Include="D3D11Mesh.cpp" />
     <ClCompile Include="D3D11GraphicsResourceFactory.cpp" />
+    <ClCompile Include="D3D11PipelineState.cpp" />
     <ClCompile Include="D3D11TypeConverter.cpp" />
     <ClCompile Include="DebugRenderer.cpp" />
     <ClCompile Include="D3D11GraphicsDevice.cpp" />
@@ -231,6 +234,7 @@
     <ClCompile Include="PhysicsSystem2D.cpp" />
     <ClCompile Include="PhysicsSystem3D.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
+    <ClCompile Include="PipelineState.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Scene.cpp" />

@@ -1,5 +1,6 @@
-// GraphicsTypes.h
 #pragma once
+
+#include <memory>
 
 namespace gm
 {

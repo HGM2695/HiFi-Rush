@@ -194,8 +194,16 @@
     <ClInclude Include="Window.h">
       <Filter>SubSystem</Filter>
     </ClInclude>
-    <ClInclude Include="D3D11GraphicsCommandContext.h" />
     <ClInclude Include="D3D11TypeConverter.h">
+      <Filter>Graphics\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState.h">
+      <Filter>Resource\PSO</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11PipelineState.h">
+      <Filter>Resource\PSO</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11GraphicsCommandContext.h">
       <Filter>Graphics\D3D11</Filter>
     </ClInclude>
   </ItemGroup>
@@ -345,8 +353,16 @@
     <ClCompile Include="Window.cpp">
       <Filter>SubSystem</Filter>
     </ClCompile>
-    <ClCompile Include="D3D11GraphicsCommandContext.cpp" />
     <ClCompile Include="D3D11TypeConverter.cpp">
+      <Filter>Graphics\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineState.cpp">
+      <Filter>Resource\PSO</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11PipelineState.cpp">
+      <Filter>Resource\PSO</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11GraphicsCommandContext.cpp">
       <Filter>Graphics\D3D11</Filter>
     </ClCompile>
   </ItemGroup>
@@ -416,6 +432,9 @@
     </Filter>
     <Filter Include="Graphics\D3D11">
       <UniqueIdentifier>{c6772289-3abf-4939-bb06-5a9ed43a9411}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\PSO">
+      <UniqueIdentifier>{5cc0a678-0a9b-403a-b1be-0959fb7c0ee1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
