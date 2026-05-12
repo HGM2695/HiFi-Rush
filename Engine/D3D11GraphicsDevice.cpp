@@ -1,5 +1,6 @@
 #include "D3D11GraphicsDevice.h"
 #include "DirectXMath.h"
+#include <d3d11.h>
 
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")

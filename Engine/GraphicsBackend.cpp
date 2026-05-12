@@ -2,6 +2,7 @@
 #include "D3D11GraphicsDevice.h"
 #include "D3D11GraphicsResourceFactory.h"
 #include "D3D11GraphicsCommandContext.h"
+#include <d3d11.h>
 
 namespace gm
 {

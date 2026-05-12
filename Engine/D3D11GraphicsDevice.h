@@ -1,9 +1,14 @@
 #pragma once
 
-#include <cstdint>
-#include <d3d11.h>
-#include <wrl/client.h>
 #include "IGraphicsDevice.h"
+#include <wrl/client.h>
+
+struct ID3D11Device;
+struct ID3D11DeviceContext;
+struct IDXGISwapChain;
+struct ID3D11RenderTargetView;
+struct ID3D11Texture2D;
+struct ID3D11DepthStencilView;
 
 namespace gm
 {
