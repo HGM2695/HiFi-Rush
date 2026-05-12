@@ -1,23 +1,14 @@
 #pragma once
 
 #include "EngineCore.h"
-#include "Mesh.h"
-#include "Shader.h"
-#include "VertexLayout.h"
 
 namespace gm
 {
-	struct MeshDesc
-	{
-		PrimitiveTopology	topology = PrimitiveTopology::TriangleList;
-
-		const void*			vertexData = nullptr;
-		uint32				vertexCount = 0;
-		uint32				vertexStride = 0;
-
-		const uint32*		indexData = nullptr;
-		uint32				indexCount = 0;
-	};
+	class Shader;
+	class Mesh;
+	struct ShaderDesc;
+	struct VertexLayoutDesc;
+	struct MeshDesc;
 
 	class IGraphicsResourceFactory
 	{

@@ -2,6 +2,8 @@
 #include "IGraphicsResourceFactory.h"
 #include "VertexTypes.h"
 #include "Resources.h"
+#include "Mesh.h"
+#include "Shader.h"
 
 namespace gm
 {

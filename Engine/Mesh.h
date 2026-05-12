@@ -5,6 +5,18 @@
 
 namespace gm
 {
+	struct MeshDesc
+	{
+		PrimitiveTopology	topology = PrimitiveTopology::TriangleList;
+
+		const void*			vertexData = nullptr;
+		uint32				vertexCount = 0;
+		uint32				vertexStride = 0;
+
+		const uint32*		indexData = nullptr;
+		uint32				indexCount = 0;
+	};
+
 	class Mesh : public Resource
 	{
 	public:

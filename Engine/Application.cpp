@@ -14,6 +14,8 @@
 #include "UIManager.h"
 #include "Window.h"
 #include "BuiltinGraphicsResources.h"
+#include "Mesh.h"
+#include "Shader.h"
 
 namespace gm
 {
