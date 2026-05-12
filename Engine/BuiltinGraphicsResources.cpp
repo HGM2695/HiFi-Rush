@@ -4,19 +4,22 @@
 #include "Resources.h"
 #include "Mesh.h"
 #include "Shader.h"
+#include "PipelineState.h"
 
 namespace gm
 {
 	namespace
 	{
 		bool LoadFullScreenMesh(Resources& resources, IGraphicsResourceFactory& factory);
-		bool LoadFullscreenTextureShader(Resources& resources, IGraphicsResourceFactory& factory);
+		bool LoadFullScreenTextureShader(Resources& resources, IGraphicsResourceFactory& factory);
+		bool LoadFullScreenPipelineState(Resources& resources, IGraphicsResourceFactory& factory);
 	}
 
 	bool BuiltinGraphicsResources::Load(Resources& resources, IGraphicsResourceFactory& factory)
 	{
 		GM_ASSERT_RETURN_VAL(LoadFullScreenMesh(resources, factory), false, "FullScreenMesh 로드 실패");
-		GM_ASSERT_RETURN_VAL(LoadFullscreenTextureShader(resources, factory), false, "FullscreenTextureShader 로드 실패");
+		GM_ASSERT_RETURN_VAL(LoadFullScreenTextureShader(resources, factory), false, "FullscreenTextureShader 로드 실패");
+		GM_ASSERT_RETURN_VAL(LoadFullScreenPipelineState(resources, factory), false, "FullScreenPipelineState 로드 실패");
 		return true;
 	}
 
@@ -55,7 +58,7 @@ namespace gm
 			return true;
 		}
 
-		bool LoadFullscreenTextureShader(Resources& resources, IGraphicsResourceFactory& factory)
+		bool LoadFullScreenTextureShader(Resources& resources, IGraphicsResourceFactory& factory)
 		{
 			ShaderDesc vsDesc{};
 			vsDesc.filePath = L"../Engine/Resources/Shaders/FullScreenTextureVS.hlsl";
@@ -70,6 +73,17 @@ namespace gm
 
 			auto pixelShader = factory.CreatePixelShader(psDesc);
 			GM_ASSERT_RETURN_VAL(resources.Add(FullScreenTexturePS, pixelShader), false, "FullScreenTexturePS Add 실패");
+			return true;
+		}
+
+		bool LoadFullScreenPipelineState(Resources& resources, IGraphicsResourceFactory& factory)
+		{
+			PipelineStateDesc desc{};
+			desc.vertexShader = resources.Find<Shader>(FullScreenTextureVS);
+			desc.pixelShader = resources.Find<Shader>(FullScreenTexturePS);
+
+			auto pipelinestate = factory.CraetePipelineState(desc);
+			GM_ASSERT_RETURN_VAL(resources.Add(FullScreenPipelineState, pipelinestate), false, "FullScreenPipelineState Add 실패");
 			return true;
 		}
 	}

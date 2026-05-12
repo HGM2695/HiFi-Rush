@@ -15,7 +15,7 @@
 #include "Window.h"
 #include "BuiltinGraphicsResources.h"
 #include "Mesh.h"
-#include "Shader.h"
+#include "PipelineState.h"
 
 namespace gm
 {
@@ -177,19 +177,15 @@ namespace gm
     void Application::DxRender()
     {
         auto fullScreenMesh = _resources->Find<Mesh>(FullScreenMesh);
-        GM_ASSERT_RETURN(fullScreenMesh, "_resources에 fullScreenMesh가 없습니다.");
-        auto fullScreenVS = _resources->Find<Shader>(FullScreenTextureVS);
-        GM_ASSERT_RETURN(fullScreenVS, "_resources에 fullScreenVS가 없습니다.");
-        auto fullScreenPS = _resources->Find<Shader>(FullScreenTexturePS);
-        GM_ASSERT_RETURN(fullScreenPS, "_resources에 fullScreenPS가 없습니다.");
+        GM_ASSERT_RETURN(fullScreenMesh, "_resources에 fullScreenMesh가 없습니다. initializeBuiltinResources() 정상 호출 바랍니다.");
+        auto fullScreenPSO = _resources->Find<PipelineState>(FullScreenPipelineState);
+        GM_ASSERT_RETURN(fullScreenPSO, "_resources에 FullScreenPipelineState가 없습니다. initializeBuiltinResources() 정상 호출 바랍니다.");
 
         static const Color backBufferColor = Colors::Magenta;
         _graphicsDevice->BeginFrame(backBufferColor);
 
-        _graphicsCommandContext->SetPrimitiveTopology(PrimitiveTopology::TriangleList);
+        _graphicsCommandContext->SetPipelineState(*fullScreenPSO);
         _graphicsCommandContext->SetMesh(*fullScreenMesh);
-        _graphicsCommandContext->SetVertexShader(*fullScreenVS);
-        _graphicsCommandContext->SetPixelShader(*fullScreenPS);
         _graphicsCommandContext->DrawIndexed(fullScreenMesh->GetIndexCount());
 
         _graphicsDevice->EndFrame();

@@ -2,6 +2,7 @@
 #include "D3D11Mesh.h"
 #include "D3D11Shader.h"
 #include "D3D11TypeConverter.h"
+#include "D3D11PipelineState.h"
 #include "Shader.h"
 #include <d3d11.h>
 
@@ -9,22 +10,32 @@ namespace gm
 {
 	D3D11GraphicsCommandContext::D3D11GraphicsCommandContext(ID3D11DeviceContext* context) : _context(context) {}
 
+	void D3D11GraphicsCommandContext::SetPipelineState(const PipelineState& state)
+	{
+		const D3D11PipelineState& d3d11State = static_cast<const D3D11PipelineState&>(state);
+
+		SetPrimitiveTopology(d3d11State.GetTopology());
+		SetVertexShader(*d3d11State.GetVertexShader());
+		SetPixelShader(*d3d11State.GetPixelShader());
+		// depthStencil, rasterizer, blend state도 추후 대응해야 합니다.
+	}
+
 	void D3D11GraphicsCommandContext::SetPrimitiveTopology(PrimitiveTopology topology)
 	{
 		_context->IASetPrimitiveTopology(ToD3D11PrimitiveTopology(topology));
 	}
 
-	void D3D11GraphicsCommandContext::SetVertexShader(Shader& shader)
+	void D3D11GraphicsCommandContext::SetVertexShader(const Shader& shader)
 	{
 		GM_ASSERT_RETURN(shader.GetStage() == ShaderStage::Vertex, "VertexShader가 아닌 셰이더를 VertexShader 슬롯에 바인딩할 수 없습니다.");
-		D3D11VertexShader& vertexShader = static_cast<D3D11VertexShader&>(shader);
+		const D3D11VertexShader& vertexShader = static_cast<const D3D11VertexShader&>(shader);
 		BindVertexShader(vertexShader.GetNativeShader(), vertexShader.GetInputLayout());
 	}
 
-	void D3D11GraphicsCommandContext::SetPixelShader(Shader& shader)
+	void D3D11GraphicsCommandContext::SetPixelShader(const Shader& shader)
 	{
 		GM_ASSERT_RETURN(shader.GetStage() == ShaderStage::Pixel, "PixelShader가 아닌 셰이더를 PixelShader 슬롯에 바인딩할 수 없습니다.");
-		D3D11PixelShader& pixelShader = static_cast<D3D11PixelShader&>(shader);
+		const D3D11PixelShader& pixelShader = static_cast<const D3D11PixelShader&>(shader);
 		BindPixelShader(pixelShader.GetNativeShader());
 	}
 

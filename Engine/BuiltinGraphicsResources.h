@@ -7,9 +7,10 @@ namespace gm
 	class Resources;
 	class IGraphicsResourceFactory;
 
-	inline constexpr const wchar_t* FullScreenMesh = L"Engine.FullscreenMesh";
-	inline constexpr const wchar_t* FullScreenTextureVS = L"Engine.FullscreenTextureVS";
-	inline constexpr const wchar_t* FullScreenTexturePS = L"Engine.FullscreenTexturePS";
+	inline constexpr const wchar_t* FullScreenMesh = L"Engine.FullScreenMesh";
+	inline constexpr const wchar_t* FullScreenTextureVS = L"Engine.FullScreenTextureVS";
+	inline constexpr const wchar_t* FullScreenTexturePS = L"Engine.FullScreenTexturePS";
+	inline constexpr const wchar_t* FullScreenPipelineState = L"Engine.FullScreenPipelineState";
 
 	class BuiltinGraphicsResources
 	{

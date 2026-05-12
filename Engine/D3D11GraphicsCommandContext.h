@@ -15,9 +15,11 @@ namespace gm
 	public:
 		explicit D3D11GraphicsCommandContext(ID3D11DeviceContext* context);
 
+		virtual void		SetPipelineState(const PipelineState& state) override;
+
 		virtual void		SetPrimitiveTopology(PrimitiveTopology topology) override;
-		virtual void		SetVertexShader(Shader& shader) override;
-		virtual void		SetPixelShader(Shader& shader) override;
+		virtual void		SetVertexShader(const Shader& shader) override;
+		virtual void		SetPixelShader(const Shader& shader) override;
 		virtual void		SetMesh(Mesh& mesh) override;
 
 		virtual void		DrawIndexed(uint32 indexCount) override;
