@@ -15,6 +15,7 @@ namespace gm
 		SpriteAnimationClip,
 		Shader,
 		PipelineState,
+		Sampler,
 
 		Count
 	};

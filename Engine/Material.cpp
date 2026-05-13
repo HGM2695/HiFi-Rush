@@ -1,22 +1,19 @@
 #include "Material.h"
 #include "IGraphicsCommandContext.h"
 #include "PipelineState.h"
+#include "Sampler.h"
 #include "Texture.h"
 
 namespace gm
 {
+	Material::Material(const MaterialDesc& desc) : _pipelineState(desc.pipelineState), _textures(desc.textures), _samplers(desc.samplers) {}
+	Material::~Material() = default;
+
 	std::shared_ptr<Material> Material::Create(const MaterialDesc& desc)
 	{
 		GM_ASSERT_RETURN_VAL(desc.pipelineState, nullptr, "Material PipelineState가 유효하지 않습니다.");
 		return std::shared_ptr<Material>(new Material(desc));
 	}
-
-	Material::Material(const MaterialDesc& desc)
-		: _pipelineState(desc.pipelineState), _textures(desc.textures)
-	{
-	}
-
-	Material::~Material() = default;
 
 	Texture* Material::GetTexture(uint32 slot) const
 	{
@@ -24,9 +21,14 @@ namespace gm
 		return _textures[slot].get();
 	}
 
+	Sampler* Material::GetSampler(uint32 slot) const
+	{
+		GM_ASSERT_RETURN_VAL(slot < MaxMaterialSamplerSlots, nullptr, "Material Sampler Slot이 범위를 벗어났습니다.");
+		return _samplers[slot].get();
+	}
+
 	void Material::SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState)
 	{
-		GM_ASSERT_RETURN(pipelineState, "Material PipelineState가 유효하지 않습니다.");
 		_pipelineState = pipelineState;
 	}
 
@@ -36,15 +38,25 @@ namespace gm
 		_textures[slot] = texture;
 	}
 
+	void Material::SetSampler(uint32 slot, const std::shared_ptr<Sampler>& sampler)
+	{
+		GM_ASSERT_RETURN(slot < MaxMaterialSamplerSlots, "Material Sampler Slot이 범위를 벗어났습니다.");
+		_samplers[slot] = sampler;
+	}
+
 	void Material::Apply(IGraphicsCommandContext& commandContext) const
 	{
-		GM_ASSERT_RETURN(_pipelineState, "Material PipelineState가 유효하지 않습니다.");
-
 		commandContext.SetPipelineState(*_pipelineState);
 		for (uint32 slot = 0; slot < MaxMaterialTextureSlots; ++slot)
 		{
 			if (_textures[slot])
 				commandContext.SetTexture(slot, *_textures[slot]);
+		}
+
+		for (uint32 slot = 0; slot < MaxMaterialSamplerSlots; ++slot)
+		{
+			if (_samplers[slot])
+				commandContext.SetSampler(slot, *_samplers[slot]);
 		}
 	}
 }

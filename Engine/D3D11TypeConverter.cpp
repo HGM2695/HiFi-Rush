@@ -112,6 +112,40 @@ namespace gm
 		static_assert(static_cast<uint32>(BlendOp::Count) == 2, "BlendOp를 추가했다면, D3D11로의 변환도 고려");
 	}
 
+	D3D11_FILTER ToD3D11Filter(TextureFilter filter)
+	{
+		switch (filter)
+		{
+		case TextureFilter::Point:
+			return D3D11_FILTER_MIN_MAG_MIP_POINT;
+		case TextureFilter::Linear:
+			return D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		case TextureFilter::Anisotropic:
+			return D3D11_FILTER_ANISOTROPIC;
+		default:
+			GM_ASSERT_RETURN_VAL(false, D3D11_FILTER_MIN_MAG_MIP_LINEAR, "지원하지 않는 TextureFilter입니다.");
+		}
+
+		static_assert(static_cast<uint32>(TextureFilter::Count) == 3, "TextureFilter를 추가했다면, D3D11로의 변환도 고려");
+	}
+
+	D3D11_TEXTURE_ADDRESS_MODE ToD3D11TextureAddressMode(TextureAddressMode addressMode)
+	{
+		switch (addressMode)
+		{
+		case TextureAddressMode::Wrap:
+			return D3D11_TEXTURE_ADDRESS_WRAP;
+		case TextureAddressMode::Clamp:
+			return D3D11_TEXTURE_ADDRESS_CLAMP;
+		case TextureAddressMode::Border:
+			return D3D11_TEXTURE_ADDRESS_BORDER;
+		default:
+			GM_ASSERT_RETURN_VAL(false, D3D11_TEXTURE_ADDRESS_CLAMP, "지원하지 않는 TextureAddressMode입니다.");
+		}
+
+		static_assert(static_cast<uint32>(TextureAddressMode::Count) == 3, "TextureAddressMode을 추가했다면, D3D11로의 변환도 고려");
+	}
+
 	DXGI_FORMAT ToDXGIFormat(VertexElementFormat format)
 	{
 		switch (format)

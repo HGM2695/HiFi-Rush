@@ -62,6 +62,22 @@ namespace gm
         Count
     };
 
+    enum class TextureFilter
+    {
+        Point,
+        Linear,
+        Anisotropic,
+        Count
+    };
+
+    enum class TextureAddressMode
+    {
+        Wrap,
+        Clamp,
+        Border,
+        Count
+    };
+
     struct DepthStencilDesc
     {
         bool        depthEnable = true;

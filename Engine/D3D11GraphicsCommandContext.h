@@ -8,6 +8,7 @@ struct ID3D11VertexShader;
 struct ID3D11PixelShader;
 struct ID3D11InputLayout;
 struct ID3D11ShaderResourceView;
+struct ID3D11SamplerState;
 
 namespace gm
 {
@@ -23,6 +24,7 @@ namespace gm
 		virtual void		SetPixelShader(const Shader& shader) override;
 		virtual void		SetMesh(Mesh& mesh) override;
 		virtual void		SetTexture(uint32 slot, const Texture& texture) override;
+		virtual void		SetSampler(uint32 slot, const Sampler& sampler) override;
 
 		virtual void		DrawIndexed(uint32 indexCount) override;
 
@@ -32,6 +34,7 @@ namespace gm
 		void BindVertexBuffer(ID3D11Buffer* vertexBuffer, uint32 stride);
 		void BindIndexBuffer(ID3D11Buffer* indexBuffer);
 		void BindTexture(uint32 slot, ID3D11ShaderResourceView* shaderResourceView);
+		void BindSampler(uint32 slot, ID3D11SamplerState* samplerState);
 
 		ID3D11DeviceContext* _context = nullptr;
 	};

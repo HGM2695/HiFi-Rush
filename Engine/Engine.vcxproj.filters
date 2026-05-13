@@ -209,6 +209,12 @@
     <ClInclude Include="D3D11Texture.h">
       <Filter>Resource\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="Sampler.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11Sampler.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
     <ClInclude Include="Material.h">
       <Filter>Resource</Filter>
     </ClInclude>
@@ -373,6 +379,12 @@
     </ClCompile>
     <ClCompile Include="D3D11Texture.cpp">
       <Filter>Resource\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Sampler.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11Sampler.cpp">
+      <Filter>Resource</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
       <Filter>Resource</Filter>

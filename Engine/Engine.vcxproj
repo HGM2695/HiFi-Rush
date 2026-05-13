@@ -148,6 +148,7 @@
     <ClInclude Include="D3D11GraphicsResourceFactory.h" />
     <ClInclude Include="D3D11Mesh.h" />
     <ClInclude Include="D3D11PipelineState.h" />
+    <ClInclude Include="D3D11Sampler.h" />
     <ClInclude Include="D3D11Texture.h" />
     <ClInclude Include="D3D11TypeConverter.h" />
     <ClInclude Include="DebugRenderer.h" />
@@ -179,6 +180,7 @@
     <ClInclude Include="Rigidbody2D.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="Sampler.h" />
     <ClInclude Include="AudioSystem.h" />
     <ClInclude Include="D3D11Shader.h" />
     <ClInclude Include="Shader.h" />
@@ -222,6 +224,7 @@
     <ClCompile Include="D3D11Mesh.cpp" />
     <ClCompile Include="D3D11GraphicsResourceFactory.cpp" />
     <ClCompile Include="D3D11PipelineState.cpp" />
+    <ClCompile Include="D3D11Sampler.cpp" />
     <ClCompile Include="D3D11Texture.cpp" />
     <ClCompile Include="D3D11TypeConverter.cpp" />
     <ClCompile Include="DebugRenderer.cpp" />
@@ -243,6 +246,7 @@
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="Sampler.cpp" />
     <ClCompile Include="AudioSystem.cpp" />
     <ClCompile Include="D3D11Shader.cpp" />
     <ClCompile Include="Shader.cpp" />

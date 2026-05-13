@@ -9,6 +9,7 @@ namespace gm
 	class Shader;
 	class Mesh;
 	class Texture;
+	class Sampler;
 
 	class IGraphicsCommandContext
 	{
@@ -22,6 +23,7 @@ namespace gm
 		virtual void		SetPixelShader(const Shader& shader) = 0;
 		virtual void		SetMesh(Mesh& mesh) = 0;
 		virtual void		SetTexture(uint32 slot, const Texture& texture) = 0;
+		virtual void		SetSampler(uint32 slot, const Sampler& sampler) = 0;
 		virtual void		DrawIndexed(uint32 indexCount) = 0;
 	};
 }

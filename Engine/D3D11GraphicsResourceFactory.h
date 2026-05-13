@@ -17,6 +17,7 @@ namespace gm
 		virtual std::shared_ptr<Mesh>			CreateMesh(const MeshDesc& meshDesc) override;
 		virtual std::shared_ptr<PipelineState>	CraetePipelineState(const PipelineStateDesc& pipelineStateDesc) override;
 		virtual std::shared_ptr<Texture>		CreateTexture(const TextureDesc& textureDesc) override;
+		virtual std::shared_ptr<Sampler>		CreateSampler(const SamplerDesc& samplerDesc) override;
 
 	private:
 		D3D11GraphicsDevice& _graphicsDevice;

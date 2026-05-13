@@ -5,6 +5,7 @@
 #include "D3D11TypeConverter.h"
 #include "D3D11PipelineState.h"
 #include "D3D11Texture.h"
+#include "D3D11Sampler.h"
 
 namespace gm
 {
@@ -71,5 +72,17 @@ namespace gm
 		desc.device = _graphicsDevice.GetNativeDevice();
 
 		return D3D11Texture::Create(desc);
+	}
+
+	std::shared_ptr<Sampler> D3D11GraphicsResourceFactory::CreateSampler(const SamplerDesc& samplerDesc)
+	{
+		D3D11SamplerDesc desc{};
+		desc.filter = samplerDesc.filter;
+		desc.addressU = samplerDesc.addressU;
+		desc.addressV = samplerDesc.addressV;
+		desc.addressW = samplerDesc.addressW;
+		desc.device = _graphicsDevice.GetNativeDevice();
+
+		return D3D11Sampler::Create(desc);
 	}
 }

@@ -4,6 +4,7 @@
 #include "D3D11TypeConverter.h"
 #include "D3D11PipelineState.h"
 #include "D3D11Texture.h"
+#include "D3D11Sampler.h"
 #include "Shader.h"
 #include <d3d11.h>
 
@@ -55,6 +56,12 @@ namespace gm
 		BindTexture(slot, d3d11Texture.GetShaderResourceView());
 	}
 
+	void D3D11GraphicsCommandContext::SetSampler(uint32 slot, const Sampler& sampler)
+	{
+		const D3D11Sampler& d3d11Sampler = static_cast<const D3D11Sampler&>(sampler);
+		BindSampler(slot, d3d11Sampler.GetNativeSampler());
+	}
+
 	void D3D11GraphicsCommandContext::DrawIndexed(uint32 indexCount)
 	{
 		_context->DrawIndexed(indexCount, 0, 0);
@@ -98,5 +105,12 @@ namespace gm
 		GM_ASSERT_RETURN(shaderResourceView, "ShaderResourceView가 유효하지 않습니다.");
 
 		_context->PSSetShaderResources(slot, 1, &shaderResourceView);
+	}
+
+	void D3D11GraphicsCommandContext::BindSampler(uint32 slot, ID3D11SamplerState* samplerState)
+	{
+		GM_ASSERT_RETURN(samplerState, "SamplerState가 유효하지 않습니다.");
+
+		_context->PSSetSamplers(slot, 1, &samplerState);
 	}
 }
