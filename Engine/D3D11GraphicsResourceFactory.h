@@ -16,6 +16,7 @@ namespace gm
 		virtual std::shared_ptr<Shader>			CreatePixelShader(const ShaderDesc& shaderDesc) override;
 		virtual std::shared_ptr<Mesh>			CreateMesh(const MeshDesc& meshDesc) override;
 		virtual std::shared_ptr<PipelineState>	CraetePipelineState(const PipelineStateDesc& pipelineStateDesc) override;
+		virtual std::shared_ptr<Texture>		CreateTexture(const TextureDesc& textureDesc) override;
 
 	private:
 		D3D11GraphicsDevice& _graphicsDevice;

@@ -4,6 +4,7 @@
 #include "D3D11Shader.h"
 #include "D3D11TypeConverter.h"
 #include "D3D11PipelineState.h"
+#include "D3D11Texture.h"
 
 namespace gm
 {
@@ -61,5 +62,14 @@ namespace gm
 		desc.device = _graphicsDevice.GetNativeDevice();
 
 		return D3D11PipelineState::Create(desc);
+	}
+
+	std::shared_ptr<Texture> D3D11GraphicsResourceFactory::CreateTexture(const TextureDesc& textureDesc)
+	{
+		D3D11TextureDesc desc{};
+		desc.path = textureDesc.path;
+		desc.device = _graphicsDevice.GetNativeDevice();
+
+		return D3D11Texture::Create(desc);
 	}
 }

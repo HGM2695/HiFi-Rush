@@ -3,6 +3,7 @@
 #include "D3D11Shader.h"
 #include "D3D11TypeConverter.h"
 #include "D3D11PipelineState.h"
+#include "D3D11Texture.h"
 #include "Shader.h"
 #include <d3d11.h>
 
@@ -48,6 +49,12 @@ namespace gm
 			BindIndexBuffer(d3d11Mesh.GetIndexBuffer());
 	}
 
+	void D3D11GraphicsCommandContext::SetTexture(uint32 slot, const Texture& texture)
+	{
+		const D3D11Texture& d3d11Texture = static_cast<const D3D11Texture&>(texture);
+		BindTexture(slot, d3d11Texture.GetShaderResourceView());
+	}
+
 	void D3D11GraphicsCommandContext::DrawIndexed(uint32 indexCount)
 	{
 		_context->DrawIndexed(indexCount, 0, 0);
@@ -86,4 +93,10 @@ namespace gm
 		_context->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	}
 
+	void D3D11GraphicsCommandContext::BindTexture(uint32 slot, ID3D11ShaderResourceView* shaderResourceView)
+	{
+		GM_ASSERT_RETURN(shaderResourceView, "ShaderResourceView가 유효하지 않습니다.");
+
+		_context->PSSetShaderResources(slot, 1, &shaderResourceView);
+	}
 }

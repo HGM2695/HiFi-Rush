@@ -206,6 +206,9 @@
     <ClInclude Include="D3D11GraphicsCommandContext.h">
       <Filter>Graphics\D3D11</Filter>
     </ClInclude>
+    <ClInclude Include="D3D11Texture.h">
+      <Filter>Resource\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -364,6 +367,9 @@
     </ClCompile>
     <ClCompile Include="D3D11GraphicsCommandContext.cpp">
       <Filter>Graphics\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11Texture.cpp">
+      <Filter>Resource\Texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

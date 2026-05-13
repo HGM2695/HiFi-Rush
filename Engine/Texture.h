@@ -18,21 +18,22 @@ namespace gm
 	class Texture : public Resource
 	{
 	public:
-		static std::shared_ptr<Texture> Create(const TextureDesc& desc);
-		~Texture();
+		virtual ~Texture() = default;
 
 		static constexpr ResourceType Type = ResourceType::Texture;
 		virtual	ResourceType	GetType() const override { return Type; }
-			
-		uint32					GetWidth() const { return _width; }
-		uint32					GetHeight() const { return _height; }
-		Gdiplus::Image*			GetImage() const { return _image.get(); }
+
+		const std::wstring&		GetPath() const { return _path; }
+		uint32                  GetWidth() const { return _width; }
+		uint32                  GetHeight() const { return _height; }
+		Gdiplus::Image*			GetImage() const { return nullptr; }
+
+	protected:
+		Texture(const TextureDesc& desc, uint32 width, uint32 height) : _path(desc.path), _width(width), _height(height) {}
 
 	private:
-		Texture(Gdiplus::Image* image);
-
-		std::unique_ptr<Gdiplus::Image>	 _image{};
-		uint32							 _width{};
-		uint32							 _height{};
+		std::wstring	_path;
+		uint32			_width = 0;
+		uint32			_height = 0;
 	};
 }

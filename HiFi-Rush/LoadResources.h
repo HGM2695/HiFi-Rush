@@ -21,25 +21,26 @@ namespace gm
 		Resources& resources = APPLICATION.GetResources();
 
 		LoadTexture(resources);
-		LoadTempAnimationClip(resources);
+		//LoadTempAnimationClip(resources);
 		LoadAudio(resources);
 	}
 
 	void LoadTexture(Resources& resources)
 	{
-		TextureDesc desc{};
+		IGraphicsResourceFactory& factory = APPLICATION.GetGraphicsResourceFactory();
 
-		desc.path = GetTexturePath(L"Test/orange_mushroom.png");
-		resources.Load<Texture>(L"OrangeMushroom", desc);
+		auto LoadTextureResource = [&](const std::wstring& key, const std::wstring& path)
+		{
+			TextureDesc desc{};
+			desc.path = path;
 
-		desc.path = GetTexturePath(L"Test/Xanadu.png");
-		resources.Load<Texture>(L"Xanadu", desc);
+			std::shared_ptr<Texture> texture = factory.CreateTexture(desc);
+		};
 
-		desc.path = GetTexturePath(L"Test/NewPlayer_Left.bmp");
-		resources.Load<Texture>(L"PlayerLeft", desc);
-
-		desc.path = GetTexturePath(L"Test/NewPlayer_Right.bmp");
-		resources.Load<Texture>(L"PlayerRight", desc);
+		LoadTextureResource(L"OrangeMushroom", GetTexturePath(L"Test/orange_mushroom.png"));
+		LoadTextureResource(L"Xanadu", GetTexturePath(L"Test/Xanadu.png"));
+		LoadTextureResource(L"PlayerLeft", GetTexturePath(L"Test/NewPlayer_Left.bmp"));
+		LoadTextureResource(L"PlayerRight", GetTexturePath(L"Test/NewPlayer_Right.bmp"));
 	}
 
 	void LoadTempAnimationClip(Resources& resources)

@@ -8,6 +8,7 @@ namespace gm
 	class PipelineState;
 	class Shader;
 	class Mesh;
+	class Texture;
 
 	class IGraphicsCommandContext
 	{
@@ -20,6 +21,7 @@ namespace gm
 		virtual void		SetVertexShader(const Shader& shader) = 0;
 		virtual void		SetPixelShader(const Shader& shader) = 0;
 		virtual void		SetMesh(Mesh& mesh) = 0;
+		virtual void		SetTexture(uint32 slot, const Texture& texture) = 0;
 		virtual void		DrawIndexed(uint32 indexCount) = 0;
 	};
 }
