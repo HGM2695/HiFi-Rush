@@ -4,7 +4,6 @@
 #include "Component.h"
 #include "IAnimator.h"
 #include <memory>
-#include <string>
 
 namespace gm
 {
@@ -26,8 +25,8 @@ namespace gm
 		std::shared_ptr<SpriteAnimationClip>	GetCurrentClip() const { return _currentClip; }
 
 		[[nodiscard]] 
-		NotifyConnection						BindNotifyCallback(const AnimationNotifyCallback& notifyCallback);
-		void									ClearNotifyCallbacks();
+		NotifyConnection						BindNotifyListener(const AnimationNotifyListener& notifyListener);
+		void									ClearNotifyListeners();
 
 		// IAnimator
 		bool									HasClip(const std::wstring& name) const override;

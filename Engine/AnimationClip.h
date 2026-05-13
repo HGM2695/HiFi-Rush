@@ -7,6 +7,7 @@
 
 namespace gm
 {
+	// 실제 프레임, 키프레임, 본 트랙 같은 재생 데이터는 SpriteAnimationClip 등 구체 Clip 클래스가 직접 관리합니다.
 	class AnimationClip : public Resource
 	{
 	public:

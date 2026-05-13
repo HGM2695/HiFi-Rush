@@ -1,6 +1,8 @@
-﻿#pragma once
+#pragma once
 
 #include <optional>
+#include <functional>
+#include <string>
 
 namespace gm
 {
@@ -17,4 +19,6 @@ namespace gm
         float startTime = 0.f;
         std::optional<bool> loopOverride;
     };
+
+    using AnimationNotifyListener = std::function<void(const std::wstring&)>;
 }

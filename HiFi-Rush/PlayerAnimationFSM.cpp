@@ -10,7 +10,7 @@ namespace gm
 	{
 		_spriteAnimator = GetOwner().GetComponent<SpriteAnimator>();
 		GM_ASSERT(_spriteAnimator, "PlayerAnimationFSM은 SpriteAnimator가 필요합니다.");
-		_notifyConnection = _spriteAnimator->BindNotifyCallback(
+		_notifyConnection = _spriteAnimator->BindNotifyListener(
 			[this](const std::wstring& notifyName)
 			{
 				OnAnimationNotify(notifyName);

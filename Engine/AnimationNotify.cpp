@@ -14,21 +14,21 @@ namespace gm
 		_previousTime = currentTime;
 	}
 
-	NotifyConnection AnimationNotifyDispatcher::BindNotifyCallback(const AnimationNotifyCallback& notifyCallback)
+	NotifyConnection AnimationNotifyDispatcher::BindNotifyListener(const AnimationNotifyListener& notifyListener)
 	{
-		const int id = _nextNotifyCallbackId++;
-		_notifyCallbacks.emplace_back(id, notifyCallback);
+		const int id = _nextNotifyListenerId++;
+		_notifyListeners.emplace_back(id, notifyListener);
 		return NotifyConnection(this, _lifetimeToken, id);
 	}
 
-	void AnimationNotifyDispatcher::RemoveNotifyCallback(int id)
+	void AnimationNotifyDispatcher::RemoveNotifyListener(int id)
 	{
-		_notifyCallbacks.erase(std::remove_if(_notifyCallbacks.begin(), _notifyCallbacks.end(),
-				[id](const NotifyCallbackEntry& entry)
+		_notifyListeners.erase(std::remove_if(_notifyListeners.begin(), _notifyListeners.end(),
+				[id](const NotifyListenerEntry& entry)
 				{
 					return entry.id == id;
 				}),
-			_notifyCallbacks.end());
+			_notifyListeners.end());
 	}
 
 	void AnimationNotifyDispatcher::Dispatch(const std::vector<AnimationNotifyEvent>& clipNotifyEvents, float currentTime, float clipLength)
@@ -38,8 +38,8 @@ namespace gm
 			if (HasPassedNotifyTime(currentTime, notifyEvent.time, clipLength) == false)
 				continue;
 
-			for (const auto& notifyCallback : _notifyCallbacks)
-				notifyCallback.callback(notifyEvent.name);
+			for (const auto& notifyListener : _notifyListeners)
+				notifyListener.listener(notifyEvent.name);
 		}
 
 		_previousTime = currentTime;
@@ -76,7 +76,7 @@ namespace gm
 			return;
 
 		if (_lifetimeToken.lock())
-			_dispatcher->RemoveNotifyCallback(_id);
+			_dispatcher->RemoveNotifyListener(_id);
 
 		_lifetimeToken.reset();
 		_dispatcher = nullptr;

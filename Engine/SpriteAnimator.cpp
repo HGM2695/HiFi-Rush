@@ -14,20 +14,18 @@ namespace gm
 	SpriteAnimator::SpriteAnimator()
 		: _animationController(std::make_unique<AnimationController>())
 		, _animationClipSet(std::make_unique<AnimationClipSet>())
-		, _animationNotifyDispatcher(std::make_unique<AnimationNotifyDispatcher>())
-	{
-	}
+		, _animationNotifyDispatcher(std::make_unique<AnimationNotifyDispatcher>()) { }
 
 	SpriteAnimator::~SpriteAnimator() = default;
 
-	NotifyConnection SpriteAnimator::BindNotifyCallback(const AnimationNotifyCallback& notifyCallback)
+	NotifyConnection SpriteAnimator::BindNotifyListener(const AnimationNotifyListener& notifyListener)
 	{
-		return _animationNotifyDispatcher->BindNotifyCallback(notifyCallback);
+		return _animationNotifyDispatcher->BindNotifyListener(notifyListener);
 	}
 
-	void SpriteAnimator::ClearNotifyCallbacks()
+	void SpriteAnimator::ClearNotifyListeners()
 	{
-		_animationNotifyDispatcher->ClearNotifyCallbacks();
+		_animationNotifyDispatcher->ClearNotifyListeners();
 	}
 
 	bool SpriteAnimator::AddClip(const std::wstring& name, const std::wstring& clipKey)
