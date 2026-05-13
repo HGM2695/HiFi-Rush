@@ -41,7 +41,7 @@ namespace gm
     void Camera::OnInitialize()
     {
         _ownerTransform = GetOwner().GetComponent<Transform>();
-        _cameraPosition = _ownerTransform->GetPosition();
+        _cameraPosition = _ownerTransform->GetPosition2D();
 
         if (_mainCamera == nullptr)
             Camera::SetMainCamera(this);
@@ -54,7 +54,7 @@ namespace gm
 
     void Camera::FollowOwner()
     {
-        Vector2 ownerPosition = _ownerTransform->GetPosition();
+        Vector2 ownerPosition = _ownerTransform->GetPosition2D();
         Vector2 targetPosition = _cameraPosition;
 
         const float gapX = ownerPosition.x - _cameraPosition.x;

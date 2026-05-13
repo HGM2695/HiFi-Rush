@@ -22,14 +22,14 @@ namespace gm
 
 		BoxBounds GetWorldBounds(const BoxCollider2D& collider, const GameObject& gameObject)
 		{
-			const Vector2 center = gameObject.GetTransform()->GetPosition() + collider.GetOffset();
+			const Vector2 center = gameObject.GetTransform()->GetPosition2D() + collider.GetOffset();
 			const Vector2 halfSize = collider.GetSize() * 0.5f;
 			return { center - halfSize, center + halfSize };
 		}
 
 		Vector2 GetWorldCenter(const CircleCollider2D& collider, const GameObject& gameObject)
 		{
-			return gameObject.GetTransform()->GetPosition() + collider.GetOffset();
+			return gameObject.GetTransform()->GetPosition2D() + collider.GetOffset();
 		}
 	}
 

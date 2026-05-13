@@ -21,7 +21,7 @@ namespace gm
 
 		_ownerTransform = GetOwner().GetTransform();
 		GM_ASSERT(_ownerTransform, "PlayerAnimationFSM은 Transform이 필요합니다.");
-		_lastForward = _ownerTransform->GetForward();
+		_lastForward = _ownerTransform->GetForward2D();
 
 		ChangeState(PlayerAnimState::Idle);
 	}
@@ -34,7 +34,7 @@ namespace gm
 
 	void PlayerAnimationFSM::SyncDirection()
 	{
-		const Vector2 forward = _ownerTransform->GetForward();
+		const Vector2 forward = _ownerTransform->GetForward2D();
 		if (_lastForward == forward)
 			return;
 

@@ -27,9 +27,9 @@ namespace gm
 		_isMoving = moveAxisX != 0.f;
 
 		if (moveAxisX < 0.f)
-			_ownerTransform->SetForward({ -1.f, 0.f });
+			_ownerTransform->SetForward2D({ -1.f, 0.f });
 		else if (moveAxisX > 0.f)
-			_ownerTransform->SetForward({ 1.f, 0.f });
+			_ownerTransform->SetForward2D({ 1.f, 0.f });
 
 		velocity.x = moveAxisX * moveSpeed;
 		_ownerRigidbody->SetVelocity(velocity);
