@@ -1,8 +1,8 @@
 #include "PlayerAnimationFSM.h"
-#include "PlayerMovement.h"
-#include <windows.h>
 #include "GameObject.h"
+#include "PlayerMovement.h"
 #include "SpriteAnimator.h"
+#include <windows.h>
 
 namespace gm
 {
@@ -18,10 +18,7 @@ namespace gm
 
 		_playerMovement = GetOwner().GetComponent<PlayerMovement>();
 		GM_ASSERT(_playerMovement, "PlayerAnimationFSM은 PlayerMovement가 필요합니다.");
-
-		_ownerTransform = GetOwner().GetTransform();
-		GM_ASSERT(_ownerTransform, "PlayerAnimationFSM은 Transform이 필요합니다.");
-		_lastForward = _ownerTransform->GetForward2D();
+		_lastFacingDirection = _playerMovement->GetFacingDirection();
 
 		ChangeState(PlayerAnimState::Idle);
 	}
@@ -34,11 +31,11 @@ namespace gm
 
 	void PlayerAnimationFSM::SyncDirection()
 	{
-		const Vector2 forward = _ownerTransform->GetForward2D();
-		if (_lastForward == forward)
+		const Vector2 facingDirection = _playerMovement->GetFacingDirection();
+		if (_lastFacingDirection == facingDirection)
 			return;
 
-		_lastForward = forward;
+		_lastFacingDirection = facingDirection;
 		PlayCurrentAnimation({ _spriteAnimator->GetPlayTime() });
 	}
 
@@ -64,14 +61,14 @@ namespace gm
 		switch (_currentState)
 		{
 		case PlayerAnimState::Idle:
-			if (IsLookingLeft(_lastForward))
+			if (_playerMovement->IsFacingLeft())
 				_spriteAnimator->Play(L"IdleLeft", playOption);
 			else
 				_spriteAnimator->Play(L"IdleRight", playOption);
 			break;
 
 		case PlayerAnimState::Move:
-			if (IsLookingLeft(_lastForward))
+			if (_playerMovement->IsFacingLeft())
 				_spriteAnimator->Play(L"MoveLeft", playOption);
 			else
 				_spriteAnimator->Play(L"MoveRight", playOption);

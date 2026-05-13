@@ -3,7 +3,6 @@
 #include "AnimationNotify.h"
 #include "Component.h"
 #include "AnimationTypes.h"
-#include "Transform.h"
 
 namespace gm
 {
@@ -25,7 +24,6 @@ namespace gm
 
 	private:
 		void			OnAnimationNotify(const std::wstring& notifyName);
-		bool			IsLookingLeft(const Vector2& forward) const { return forward.x < 0.f; }
 		void			SyncDirection();
 		void			UpdateState();
 		void			ChangeState(PlayerAnimState nextState);
@@ -33,11 +31,10 @@ namespace gm
 
 	private:
 		PlayerAnimState		_currentState = PlayerAnimState::None;
-		Vector2				_lastForward{ 1.f, 0.f };
+		Vector2				_lastFacingDirection{ 1.f, 0.f };
 
 		NotifyConnection	_notifyConnection{};
 		SpriteAnimator*		_spriteAnimator = nullptr;
 		PlayerMovement*		_playerMovement = nullptr;
-		Transform*			_ownerTransform = nullptr;
 	};
 }

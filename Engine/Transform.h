@@ -15,10 +15,11 @@ namespace gm
         void            SetX(float x) { _position.x = x; }
         void            SetY(float y) { _position.y = y; }
         void            SetZ(float z) { _position.z = z; }
-        void            SetForward(const Vector3& forward) { _forward = forward; }
-        void            SetForward(const Vector2& forward) { _forward = Vector3(forward.x, forward.y, _forward.z); }
-        void            SetForward2D(const Vector2& forward) { SetForward(forward); }
-
+        void            SetRotation(const Quaternion& rotation) { _rotation = rotation; }
+        void            SetRotationEuler(const Vector3& eulerRadians);
+        void            SetRotationZ(float radians);
+        void            SetScale(const Vector3& scale) { _scale = scale; }
+        void            SetScale(const Vector2& scale) { _scale = Vector3(scale.x, scale.y, _scale.z); }
         void            Translate(const Vector3& delta) { _position += delta; }
         void            Translate(const Vector2& delta) { _position.x += delta.x; _position.y += delta.y; }
         void            Translate(float dx, float dy) { _position.x += dx; _position.y += dy; }
@@ -28,14 +29,16 @@ namespace gm
 
         Vector3         GetPosition() const { return _position; }
         Vector2         GetPosition2D() const { return Vector2(_position.x, _position.y); }
+        Quaternion      GetRotation() const { return _rotation; }
+        Vector3         GetScale() const { return _scale; }
         float           GetX() const { return _position.x; }
         float           GetY() const { return _position.y; }
         float           GetZ() const { return _position.z; }
-        Vector3         GetForward() const { return _forward; }
-        Vector2         GetForward2D() const { return Vector2(_forward.x, _forward.y); }
+        Matrix          GetWorldMatrix() const;
 
     private:
         Vector3         _position{};
-        Vector3         _forward{ 1.f, 0.f, 0.f };
+        Quaternion      _rotation{};
+        Vector3         _scale{ 1.f, 1.f, 1.f };
     };
 }
