@@ -64,7 +64,7 @@ namespace gm
 	{
 		_animationController->Reset();
 		_animationNotifyDispatcher->Reset();
-		ApplyRenderInfo();
+		UpdateRenderInfo();
 	}
 
 	void SpriteAnimator::Pause()
@@ -97,7 +97,7 @@ namespace gm
 		_spriteRenderer = GetOwner().GetComponent<SpriteRenderer>();
 		GM_ASSERT(_spriteRenderer, "SpriteAnimator는 SpriteRenderer가 필요합니다.");
 
-		ApplyRenderInfo();
+		UpdateRenderInfo();
 	}
 
 	void SpriteAnimator::OnUpdate()
@@ -111,10 +111,10 @@ namespace gm
 			_animationNotifyDispatcher->Dispatch(_currentClip->GetNotifyEvents(), _animationController->GetPlayTime(), _currentClip->GetLength());
 		}
 
-		ApplyRenderInfo();
+		UpdateRenderInfo();
 	}
 
-	void SpriteAnimator::ApplyRenderInfo()
+	void SpriteAnimator::UpdateRenderInfo()
 	{
 		if (_currentClip == nullptr)
 			return;

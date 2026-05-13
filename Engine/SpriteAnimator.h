@@ -43,7 +43,7 @@ namespace gm
 		virtual void							OnUpdate() override;
 
 	private:
-		void									ApplyRenderInfo();
+		void									UpdateRenderInfo();
 
 	private:		
 		std::unique_ptr<AnimationClipSet>			_animationClipSet;
