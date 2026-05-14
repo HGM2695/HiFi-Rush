@@ -6,6 +6,7 @@
 #include "D3D11Texture.h"
 #include "D3D11Sampler.h"
 #include "Shader.h"
+#include "Material.h"
 #include <d3d11.h>
 
 namespace gm
@@ -16,9 +17,14 @@ namespace gm
 	{
 		const D3D11PipelineState& d3d11State = static_cast<const D3D11PipelineState&>(state);
 
+		Shader* vertexShader = d3d11State.GetVertexShader();
+		Shader* pixelShader = d3d11State.GetPixelShader();
+		GM_ASSERT_RETURN(vertexShader, "PipelineState에 VertexShader가 없습니다.");
+		GM_ASSERT_RETURN(pixelShader, "PipelineState에 PixelShader가 없습니다.");
+
 		SetPrimitiveTopology(d3d11State.GetTopology());
-		SetVertexShader(*d3d11State.GetVertexShader());
-		SetPixelShader(*d3d11State.GetPixelShader());
+		SetVertexShader(*vertexShader);
+		SetPixelShader(*pixelShader);
 		// depthStencil, rasterizer, blend state도 추후 대응해야 합니다.
 	}
 
@@ -41,25 +47,40 @@ namespace gm
 		BindPixelShader(pixelShader.GetNativeShader());
 	}
 
-	void D3D11GraphicsCommandContext::SetMesh(Mesh& mesh)
+	void D3D11GraphicsCommandContext::SetMesh(const Mesh& mesh)
 	{
-		D3D11Mesh& d3d11Mesh = static_cast<D3D11Mesh&>(mesh);
+		const D3D11Mesh& d3d11Mesh = static_cast<const D3D11Mesh&>(mesh);
 		BindVertexBuffer(d3d11Mesh.GetVertexBuffer(), d3d11Mesh.GetVertexStride());
 
 		if (d3d11Mesh.GetIndexBuffer())
 			BindIndexBuffer(d3d11Mesh.GetIndexBuffer());
 	}
 
-	void D3D11GraphicsCommandContext::SetTexture(uint32 slot, const Texture& texture)
+	void D3D11GraphicsCommandContext::SetTexture(uint32 slot, const Texture* texture)
 	{
-		const D3D11Texture& d3d11Texture = static_cast<const D3D11Texture&>(texture);
-		BindTexture(slot, d3d11Texture.GetShaderResourceView());
+		const D3D11Texture* d3d11Texture = static_cast<const D3D11Texture*>(texture);
+		ID3D11ShaderResourceView* srv = d3d11Texture ? d3d11Texture->GetShaderResourceView() : nullptr;
+		BindTexture(slot, srv);
 	}
 
-	void D3D11GraphicsCommandContext::SetSampler(uint32 slot, const Sampler& sampler)
+	void D3D11GraphicsCommandContext::SetSampler(uint32 slot, const Sampler* sampler)
 	{
-		const D3D11Sampler& d3d11Sampler = static_cast<const D3D11Sampler&>(sampler);
-		BindSampler(slot, d3d11Sampler.GetNativeSampler());
+		const D3D11Sampler* d3d11Sampler = static_cast<const D3D11Sampler*>(sampler);
+		ID3D11SamplerState* nativeSampler = d3d11Sampler ? d3d11Sampler->GetNativeSampler() : nullptr;
+		BindSampler(slot, nativeSampler);
+	}
+
+	void D3D11GraphicsCommandContext::SetMaterial(const Material& material)
+	{
+		PipelineState* pipelineState = material.GetPipelineState();
+		GM_ASSERT_RETURN(pipelineState, "Material에 PipelineState가 없습니다.");
+		SetPipelineState(*pipelineState);
+
+		for (uint32 i = 0; i < MaxMaterialTextureSlots; ++i)
+			SetTexture(i, material.GetTexture(i));
+		
+		for (uint32 i = 0; i < MaxMaterialSamplerSlots; ++i)
+			SetSampler(i, material.GetSampler(i));
 	}
 
 	void D3D11GraphicsCommandContext::DrawIndexed(uint32 indexCount)
@@ -102,15 +123,13 @@ namespace gm
 
 	void D3D11GraphicsCommandContext::BindTexture(uint32 slot, ID3D11ShaderResourceView* shaderResourceView)
 	{
-		GM_ASSERT_RETURN(shaderResourceView, "ShaderResourceView가 유효하지 않습니다.");
-
+		// 비어있는 경우 nullptr 바인딩을 수행합니다.
 		_context->PSSetShaderResources(slot, 1, &shaderResourceView);
 	}
 
 	void D3D11GraphicsCommandContext::BindSampler(uint32 slot, ID3D11SamplerState* samplerState)
 	{
-		GM_ASSERT_RETURN(samplerState, "SamplerState가 유효하지 않습니다.");
-
+		// 비어있는 경우 nullptr 바인딩을 수행합니다.
 		_context->PSSetSamplers(slot, 1, &samplerState);
 	}
 }

@@ -1,5 +1,4 @@
 #include "Material.h"
-#include "IGraphicsCommandContext.h"
 #include "PipelineState.h"
 #include "Sampler.h"
 #include "Texture.h"
@@ -42,21 +41,5 @@ namespace gm
 	{
 		GM_ASSERT_RETURN(slot < MaxMaterialSamplerSlots, "Material Sampler Slot이 범위를 벗어났습니다.");
 		_samplers[slot] = sampler;
-	}
-
-	void Material::Apply(IGraphicsCommandContext& commandContext) const
-	{
-		commandContext.SetPipelineState(*_pipelineState);
-		for (uint32 slot = 0; slot < MaxMaterialTextureSlots; ++slot)
-		{
-			if (_textures[slot])
-				commandContext.SetTexture(slot, *_textures[slot]);
-		}
-
-		for (uint32 slot = 0; slot < MaxMaterialSamplerSlots; ++slot)
-		{
-			if (_samplers[slot])
-				commandContext.SetSampler(slot, *_samplers[slot]);
-		}
 	}
 }

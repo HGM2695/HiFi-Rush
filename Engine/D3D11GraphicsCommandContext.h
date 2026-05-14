@@ -22,9 +22,11 @@ namespace gm
 		virtual void		SetPrimitiveTopology(PrimitiveTopology topology) override;
 		virtual void		SetVertexShader(const Shader& shader) override;
 		virtual void		SetPixelShader(const Shader& shader) override;
-		virtual void		SetMesh(Mesh& mesh) override;
-		virtual void		SetTexture(uint32 slot, const Texture& texture) override;
-		virtual void		SetSampler(uint32 slot, const Sampler& sampler) override;
+		virtual void		SetMesh(const Mesh& mesh) override;
+		virtual void		SetMaterial(const Material& material) override;
+
+		virtual void		SetTexture(uint32 slot, const Texture* texture) override;
+		virtual void		SetSampler(uint32 slot, const Sampler* sampler) override;
 
 		virtual void		DrawIndexed(uint32 indexCount) override;
 

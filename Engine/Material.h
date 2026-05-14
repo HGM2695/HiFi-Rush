@@ -5,7 +5,6 @@
 
 namespace gm
 {
-	class IGraphicsCommandContext;
 	class PipelineState;
 	class Sampler;
 	class Texture;
@@ -36,7 +35,6 @@ namespace gm
 		void					SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState);
 		void					SetTexture(uint32 slot, const std::shared_ptr<Texture>& texture);
 		void					SetSampler(uint32 slot, const std::shared_ptr<Sampler>& sampler);
-		void					Apply(IGraphicsCommandContext& commandContext) const;
 
 	private:
 		Material(const MaterialDesc& desc);
