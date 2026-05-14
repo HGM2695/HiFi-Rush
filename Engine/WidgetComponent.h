@@ -42,7 +42,7 @@ namespace gm
 	protected:
 		void					OnInitialize() override;
 		void					OnUpdate() override;
-		void					OnRender(HDC hDC) override;
+		void					OnRender() override;
 
 	private:
 		Transform*					_ownerTransform = nullptr;

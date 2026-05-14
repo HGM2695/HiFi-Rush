@@ -27,11 +27,11 @@ namespace gm
 			_rootWidget->Update();
 	}
 
-	void UserWidget::Render(HDC hDC, const Vector2& rootPosition)
+	void UserWidget::Render(const Vector2& rootPosition)
 	{
 		if (_isInitialized == false || _isVisible == false || _rootWidget == nullptr)
 			return;
 
-		_rootWidget->Render(hDC, rootPosition);
+		_rootWidget->Render(rootPosition);
 	}
 }

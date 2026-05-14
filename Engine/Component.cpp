@@ -20,9 +20,9 @@ namespace gm
 		OnLateUpdate();
 	}
 
-	void Component::Render(HDC hDC)
+	void Component::Render()
 	{
-		OnRender(hDC);
+		OnRender();
 	}
 
 	GameObject& Component::GetOwner()

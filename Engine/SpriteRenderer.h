@@ -22,7 +22,7 @@ namespace gm
 
     protected:
         virtual void    OnInitialize() override;
-        virtual void    OnRender(HDC hDC) override;
+        virtual void    OnRender() override;
 
     private:
         std::shared_ptr<Texture> _texture;

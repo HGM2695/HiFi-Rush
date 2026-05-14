@@ -15,7 +15,7 @@ namespace gm
 		Color				GetColor() const { return _color; }
 
 	protected:
-		void				OnRender(HDC hDC, const Vector2& absolutePosition) override;
+		void				OnRender(const Vector2& absolutePosition) override;
 
 	private:
 		std::wstring		_text{};

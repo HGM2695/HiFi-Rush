@@ -13,7 +13,7 @@ namespace gm
 
 		void			Initialize();
 		void			Update();
-		void			Render(HDC hDC, const Vector2& rootPosition = Vector2{});
+		void			Render(const Vector2& rootPosition = Vector2{});
 
 		void			SetVisible(bool isVisible) { _isVisible = isVisible; }
 		bool			IsVisible() const { return _isVisible; }

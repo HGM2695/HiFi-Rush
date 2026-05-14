@@ -3,11 +3,6 @@
 #include "EngineCore.h"
 #include "Resource.h"
 
-namespace Gdiplus
-{
-	class Image;
-}
-
 namespace gm
 {
 	struct TextureDesc
@@ -26,7 +21,6 @@ namespace gm
 		const std::wstring&		GetPath() const { return _path; }
 		uint32                  GetWidth() const { return _width; }
 		uint32                  GetHeight() const { return _height; }
-		Gdiplus::Image*			GetImage() const { return nullptr; }
 
 	protected:
 		Texture(const TextureDesc& desc, uint32 width, uint32 height) : _path(desc.path), _width(width), _height(height) {}

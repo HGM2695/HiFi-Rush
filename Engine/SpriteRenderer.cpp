@@ -3,8 +3,6 @@
 #include "Transform.h"
 #include "Texture.h"
 #include "Camera.h"
-#include <Windows.h>
-#include <gdiplus.h>
 
 namespace gm
 {
@@ -33,30 +31,9 @@ namespace gm
 		_ownerTransform = GetOwner().GetComponent<Transform>();
 	}
 
-	void SpriteRenderer::OnRender(HDC hDC)
+	void SpriteRenderer::OnRender()
 	{
 		if (_texture == nullptr)
 			return;
-
-		Vector2 pos = _ownerTransform->GetPosition();
-		pos = Camera::MainWorldToScreen(pos);
-
-		Gdiplus::Graphics graphics(hDC);
-		int drawWidth = static_cast<int>(_texture->GetWidth());
-		int drawHeight = static_cast<int>(_texture->GetHeight());
-
-		if (_useSourceRect)
-		{
-			drawWidth = _sourceFrame.width;
-			drawHeight = _sourceFrame.height;
-			graphics.DrawImage(
-				_texture->GetImage(), Gdiplus::Rect(static_cast<int>(pos.x - drawWidth * 0.5f), static_cast<int>(pos.y - drawHeight * 0.5f), drawWidth, drawHeight),
-				_sourceFrame.left, _sourceFrame.top, _sourceFrame.width, _sourceFrame.height, Gdiplus::UnitPixel
-			);
-			return;
-		}
-
-		graphics.DrawImage(_texture->GetImage(),
-			Gdiplus::Rect(static_cast<int>(pos.x - drawWidth * 0.5f), static_cast<int>(pos.y - drawHeight * 0.5f), drawWidth, drawHeight));
 	}
 }

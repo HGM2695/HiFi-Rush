@@ -10,7 +10,7 @@ namespace gm
 	protected:
 		void OnEnter() override;
 		void OnUpdate() override;
-		void OnRender(HDC hDC) override;
+		void OnRender() override;
 
 	private:
 		std::wstring _pendingSceneName{};

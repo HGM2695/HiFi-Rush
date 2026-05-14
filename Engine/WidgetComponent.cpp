@@ -44,13 +44,13 @@ namespace gm
 		_widget->Update();
 	}
 
-	void WidgetComponent::OnRender(HDC hDC)
+	void WidgetComponent::OnRender()
 	{
 		if (_widget == nullptr || _ownerTransform == nullptr)
 			return;
 
 		const Vector2 worldPosition = _ownerTransform->GetPosition2D() + _worldOffset;
 		const Vector2 screenPosition = Camera::MainWorldToScreen(worldPosition);
-		_widget->Render(hDC, screenPosition);
+		_widget->Render(screenPosition);
 	}
 }

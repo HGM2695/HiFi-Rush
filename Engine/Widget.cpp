@@ -13,15 +13,15 @@ namespace gm
 			child->Update();
 	}
 
-	void Widget::Render(HDC hDC, const Vector2& parentPosition)
+	void Widget::Render(const Vector2& parentPosition)
 	{
 		if (_isVisible == false)
 			return;
 
 		const Vector2 absolutePosition = parentPosition + _position;
-		OnRender(hDC, absolutePosition);
+		OnRender(absolutePosition);
 
 		for (const auto& child : _childList)
-			child->Render(hDC, absolutePosition);
+			child->Render(absolutePosition);
 	}
 }

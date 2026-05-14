@@ -20,7 +20,7 @@ namespace gm
 		void SetTextureByName(const std::wstring& textureName);
 
 	protected:
-		virtual void OnRender(HDC hDC, const Vector2& absolutePosition) override;
+		virtual void OnRender(const Vector2& absolutePosition) override;
 
 	private:
 		std::shared_ptr<Texture> _texture = nullptr;

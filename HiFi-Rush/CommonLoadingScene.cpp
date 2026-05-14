@@ -18,7 +18,7 @@ namespace gm
 			APPLICATION.GetSceneManager().RequestSceneChange(_pendingSceneName);
 	}
 
-	void CommonLoadingScene::OnRender(HDC hDC)
+	void CommonLoadingScene::OnRender()
 	{
 		debug::DebugRenderer::RequestDrawText(L"Loading Scene...", Vector2(APPLICATION.GetWidth() * 0.5f, APPLICATION.GetHeight() * 0.5f));
 	}

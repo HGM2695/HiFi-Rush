@@ -18,7 +18,7 @@ namespace gm
 			APPLICATION.GetSceneManager().RequestSceneChange(L"MainScene");
 	}
 
-	void TitleScene::OnRender(HDC hDC)
+	void TitleScene::OnRender()
 	{
 		debug::DebugRenderer::RequestDrawText(L"TitleScene", { APPLICATION.GetWidth() * 0.5f, APPLICATION.GetHeight() * 0.5f });
 	}

@@ -33,7 +33,7 @@ namespace gm
 		void			Initialize();
 		void			Update();
 		void			LateUpdate();
-		void			Render(HDC hDC);
+		void			Render();
 		void			EndFrame();
 
 		template <typename TFunc>
@@ -80,7 +80,7 @@ namespace gm
 		virtual void	OnInitialize() {}
 		virtual void	OnUpdate() {}
 		virtual void	OnLateUpdate() {}
-		virtual void	OnRender(HDC hDC) {}
+		virtual void	OnRender() {}
 
 		virtual void	OnEnter() {};
 		virtual void	OnExit() {};

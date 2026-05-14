@@ -53,7 +53,6 @@ namespace gm
 		void				PhysicsUpdate();
 		void				LateUpdate();
 		void				Render();
-		void				DxRender();
 		void				EndFrame();
 
 		void				ShutDownRuntime();
@@ -87,13 +86,8 @@ namespace gm
 		bool				initializeGraphics(const ApplicationDesc& desc);
 		bool				initializeSubSystem();
 		bool				initializeBuiltinResources();
-		void				createBackDC();
 
 	private:
-		HDC							_hDC = nullptr;
-		HDC							_backHDC = nullptr;
-		HBITMAP						_backBuffer = nullptr;
-
 		std::unique_ptr<Input>						_input;
 		std::unique_ptr<PhysicsSystem>				_physicsSystem;
 		std::unique_ptr<TimeSystem>					_time;

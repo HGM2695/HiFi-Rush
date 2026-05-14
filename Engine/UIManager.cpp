@@ -1,4 +1,4 @@
-﻿#include "UIManager.h"
+#include "UIManager.h"
 #include "UserWidget.h"
 
 namespace gm
@@ -9,10 +9,10 @@ namespace gm
 			widget->Update();
 	}
 
-	void UIManager::Render(HDC hDC)
+	void UIManager::Render()
 	{
 		for (const auto& widget : _widgetList)
-			widget->Render(hDC);
+			widget->Render();
 	}
 
 	void UIManager::ClearViewportWidgets()

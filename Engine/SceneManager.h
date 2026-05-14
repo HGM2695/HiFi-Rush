@@ -37,7 +37,7 @@ namespace gm
 
 		void				Update();
 		void				LateUpdate();
-		void				Render(HDC hDC);
+		void				Render();
 		void				EndFrame();
 
 		void				RequestSceneChange(const std::wstring& pendingSceneName, const std::wstring& loadingSceneName = L"");

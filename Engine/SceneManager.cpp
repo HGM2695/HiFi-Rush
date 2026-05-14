@@ -21,11 +21,11 @@ namespace gm
 		_activeScene->LateUpdate();
 	}
 
-	void SceneManager::Render(HDC hDC)
+	void SceneManager::Render()
 	{
 		GM_ASSERT_RETURN(_activeScene, "활성 Scene이 없습니다.");
 
-		_activeScene->Render(hDC);
+		_activeScene->Render();
 	}
 
 	void SceneManager::EndFrame()

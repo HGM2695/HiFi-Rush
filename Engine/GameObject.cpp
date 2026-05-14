@@ -1,5 +1,4 @@
 #include "GameObject.h"
-#include "Windows.h"
 #include "Collider2D.h"
 #include "Rigidbody2D.h"
 #include "Transform.h"
@@ -95,14 +94,14 @@ namespace gm
 			component->LateUpdate();
 	}
 
-	void GameObject::Render(HDC hDC)
+	void GameObject::Render()
 	{
 		if (IsPendingDestroy() || _isRender == false)
 			return;
 
-		OnRender(hDC);
+		OnRender();
 
 		for (auto& component : _componentList)
-			component->Render(hDC);
+			component->Render();
 	}
 }

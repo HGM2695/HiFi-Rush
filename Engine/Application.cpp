@@ -26,8 +26,6 @@ namespace gm
     {
         GM_ASSERT_RETURN_VAL(initializeWindow(desc), false, "Window 초기화 실패");
         GM_ASSERT_RETURN_VAL(initializeGraphics(desc), false, "Graphics Device 초기화 실패");
-        // dx11 전환 후 제거 예정
-        createBackDC();
         GM_ASSERT_RETURN_VAL(initializeSubSystem(), false, "SubSystem 초기화 실패");
         GM_ASSERT_RETURN_VAL(initializeBuiltinResources(), false, "builtin Resource 초기화 실패");
         
@@ -47,7 +45,6 @@ namespace gm
         _window = std::make_unique<Window>();
         GM_ASSERT_RETURN_VAL(_window->Initialize(windowDesc), false, "Window 초기화에 실패했습니다.");
 
-        _hDC = GetDC(_window->GetHandle());
         return true;
     }
 
@@ -69,15 +66,6 @@ namespace gm
         _graphicsCommandContext = std::move(graphicsBackend.commandContext);
 
         return true;
-    }
-
-    void Application::createBackDC()
-    {
-        _backHDC = CreateCompatibleDC(_hDC);
-        _backBuffer = CreateCompatibleBitmap(_hDC, _window->GetWidth(), _window->GetHeight());
-
-        HBITMAP oldBitmap = static_cast<HBITMAP>(SelectObject(_backHDC, _backBuffer));
-        DeleteObject(oldBitmap);
     }
 
     bool Application::initializeSubSystem()
@@ -133,8 +121,7 @@ namespace gm
         Update();
         PhysicsUpdate();
         LateUpdate();
-        //Render();
-        DxRender();
+        Render();
         EndFrame();
     }
 
@@ -162,20 +149,6 @@ namespace gm
 
     void Application::Render()
     {
-        const uint32 width = _window->GetWidth();
-        const uint32 height = _window->GetHeight();
-        Rectangle(_backHDC, -1, -1, width + 1, height + 1);
-
-        _time->Render(_backHDC);
-        _sceneManager->Render(_backHDC);
-        debug::DebugRenderer::Render(_backHDC);
-		_uiManager->Render(_backHDC);
-
-        BitBlt(_hDC, 0, 0, width, height, _backHDC, 0, 0, SRCCOPY);
-    }
-
-    void Application::DxRender()
-    {
         auto fullScreenMesh = _resources->Find<Mesh>(FullScreenMesh);
         GM_ASSERT_RETURN(fullScreenMesh, "_resources에 fullScreenMesh가 없습니다. initializeBuiltinResources() 정상 호출 바랍니다.");
         auto fullScreenPSO = _resources->Find<PipelineState>(FullScreenPipelineState);
@@ -187,6 +160,10 @@ namespace gm
         _graphicsCommandContext->SetPipelineState(*fullScreenPSO);
         _graphicsCommandContext->SetMesh(*fullScreenMesh);
         _graphicsCommandContext->DrawIndexed(fullScreenMesh->GetIndexCount());
+
+        _sceneManager->Render();
+        debug::DebugRenderer::Render();
+		_uiManager->Render();
 
         _graphicsDevice->EndFrame();
     }

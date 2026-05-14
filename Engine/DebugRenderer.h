@@ -12,7 +12,7 @@ namespace gm::debug
 		static void RequestDrawRect(const gm::Vector2& worldCenter, const gm::Vector2& size, gm::Color color = gm::Colors::Green);
 		static void RequestDrawCircle(const gm::Vector2& worldCenter, float radius, gm::Color color = gm::Colors::Green);
 		static void RequestDrawText(const std::wstring& content, const gm::Vector2& viewPosition, gm::Color color = gm::Colors::Black);
-		static void Render(HDC hDC);
+		static void Render();
 		static void Clear();
 	};
 }

@@ -78,7 +78,7 @@ namespace gm
 		void			Initialize();
 		void			Update();
 		void			LateUpdate();
-		void			Render(HDC hDC);
+		void			Render();
 
 		void			Destroy();
 		bool			IsPendingDestroy() const { return _lifeState == GameObjectLifeState::PendingDestroy; }
@@ -90,7 +90,7 @@ namespace gm
 		virtual void	OnInitialize() {}
 		virtual void	OnUpdate() {}
 		virtual void	OnLateUpdate() {}
-		virtual void	OnRender(HDC hDC) {}
+		virtual void	OnRender() {}
 
 	private:
 		bool			RegisterComponent(Component* component);

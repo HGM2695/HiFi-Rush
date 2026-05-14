@@ -1,4 +1,4 @@
-﻿#include "TimeSystem.h"
+#include "TimeSystem.h"
 #include <wchar.h>
 
 namespace gm
@@ -12,28 +12,6 @@ namespace gm
 	void TimeSystem::Update()
 	{
 		calcDeltaTime();
-	}
-
-	void TimeSystem::Render(HDC hDC)
-	{
-		static float timeElapsed = 0.0f;
-		static int frameCount = 0;
-		static float fps = 0.0f;
-		static wchar_t szFPS[50] = L"";
-
-		timeElapsed += _deltaTime;
-		frameCount++;
-
-		if (timeElapsed >= 1.0f)
-		{
-			fps = static_cast<float>(frameCount) / timeElapsed;
-			swprintf_s(szFPS, 50, L"FPS: %.2f", fps);
-
-			frameCount = 0;
-			timeElapsed = 0.0f;
-		}
-
-		TextOut(hDC, 0, 0, szFPS, wcsnlen_s(szFPS, static_cast<size_t>(50)));
 	}
 
 	void TimeSystem::SetTimeScale(float timeScale)

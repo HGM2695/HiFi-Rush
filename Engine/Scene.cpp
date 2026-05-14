@@ -32,12 +32,12 @@ namespace gm
 			gameObject->LateUpdate();
 	}
 
-	void Scene::Render(HDC hDC)
+	void Scene::Render()
 	{
-		OnRender(hDC);
+		OnRender();
 
 		for (auto& gameObject : _gameObjectList)
-			gameObject->Render(hDC);
+			gameObject->Render();
 	}
 
 	void Scene::EndFrame()

@@ -1,8 +1,5 @@
 #include "DebugRenderer.h"
-#include "Camera.h"
-#include <algorithm>
 #include <vector>
-#include <windows.h>
 
 namespace gm::debug
 {
@@ -40,17 +37,6 @@ namespace gm::debug
 		std::vector<DebugRect> g_rects;
 		std::vector<DebugCircle> g_circles;
 		std::vector<DebugText> g_Texts;
-
-
-		BYTE ToByte(float color)
-		{
-			return static_cast<BYTE>(std::clamp(color, 0.f, 1.f) * 255.f + 0.5f);
-		}
-
-		COLORREF ToColorRef(Color color)
-		{
-			return RGB(ToByte(color.x), ToByte(color.y), ToByte(color.z));
-		}
 	}
 
 	void DebugRenderer::RequestDrawLine(const Vector2& worldStart, const Vector2& worldEnd, Color color)
@@ -81,83 +67,10 @@ namespace gm::debug
 #endif
 	}
 
-	void DebugRenderer::Render(HDC hDC)
+	void DebugRenderer::Render()
 	{
 #ifdef _DEBUG
-		GM_ASSERT_RETURN(hDC, "DC가 nullptr입니다.");
-
-		// 속을 채워넣지 않기 위해, HOLLOW_BRUSH
-		HGDIOBJ oldBrush = SelectObject(hDC, GetStockObject(HOLLOW_BRUSH));
-
-		for (const DebugLine& line : g_lines)
-		{
-			const Vector2 start = Camera::MainWorldToScreen(line.worldStart);
-			const Vector2 end = Camera::MainWorldToScreen(line.worldEnd);
-			HPEN pen = CreatePen(PS_SOLID, 1, ToColorRef(line.color));
-			HGDIOBJ oldPen = SelectObject(hDC, pen);
-
-			MoveToEx(hDC, static_cast<int>(start.x), static_cast<int>(start.y), nullptr);
-			LineTo(hDC, static_cast<int>(end.x), static_cast<int>(end.y));
-
-			SelectObject(hDC, oldPen);
-			DeleteObject(pen);
-		}
-
-		for (const DebugRect& rect : g_rects)
-		{
-			const Vector2 screenCenter = Camera::MainWorldToScreen(rect.worldCenter);
-			const Vector2 halfSize = rect.size * 0.5f;
-			HPEN pen = CreatePen(PS_SOLID, 1, ToColorRef(rect.color));
-			HGDIOBJ oldPen = SelectObject(hDC, pen);
-
-			Rectangle(
-				hDC,
-				static_cast<int>(screenCenter.x - halfSize.x),
-				static_cast<int>(screenCenter.y - halfSize.y),
-				static_cast<int>(screenCenter.x + halfSize.x),
-				static_cast<int>(screenCenter.y + halfSize.y)
-			);
-
-			SelectObject(hDC, oldPen);
-			DeleteObject(pen);
-		}
-
-		for (const DebugCircle& circle : g_circles)
-		{
-			const Vector2 screenCenter = Camera::MainWorldToScreen(circle.worldCenter);
-			HPEN pen = CreatePen(PS_SOLID, 1, ToColorRef(circle.color));
-			HGDIOBJ oldPen = SelectObject(hDC, pen);
-
-			Ellipse(
-				hDC,
-				static_cast<int>(screenCenter.x - circle.radius),
-				static_cast<int>(screenCenter.y - circle.radius),
-				static_cast<int>(screenCenter.x + circle.radius),
-				static_cast<int>(screenCenter.y + circle.radius)
-			);
-
-			SelectObject(hDC, oldPen);
-			DeleteObject(pen);
-		}
-
-		const int oldBkMode = SetBkMode(hDC, TRANSPARENT);
-		for (const DebugText& text : g_Texts)
-		{
-			const COLORREF oldTextColor = SetTextColor(hDC, ToColorRef(text.color));
-
-			TextOutW(
-				hDC,
-				static_cast<int>(text.viewPosition.x),
-				static_cast<int>(text.viewPosition.y),
-				text.content.c_str(),
-				static_cast<int>(text.content.size())
-			);
-
-			SetTextColor(hDC, oldTextColor);
-		}
-		SetBkMode(hDC, oldBkMode);
-
-		SelectObject(hDC, oldBrush);
+		// TODO: DX11 기반 debug primitive 렌더링으로 교체합니다.
 		Clear();
 #endif
 	}

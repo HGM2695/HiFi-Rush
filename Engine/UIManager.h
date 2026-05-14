@@ -1,10 +1,10 @@
-﻿#pragma once
+#pragma once
 
 #include "EngineCore.h"
+#include "UserWidget.h"
 #include <type_traits>
 #include <utility>
 #include <vector>
-#include "UserWidget.h"
 
 namespace gm
 {
@@ -25,7 +25,7 @@ namespace gm
 		}
 
 		void Update();
-		void Render(HDC hDC);
+		void Render();
 		void ClearViewportWidgets();
 
 	private:

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "EngineCore.h"
 #include "WindowsCore.h"
@@ -11,7 +11,6 @@ namespace gm
 		TimeSystem();
 
 		void	Update();
-		void	Render(HDC hDC);
 
 		float	GetDeltaTime() const { return _deltaTime; }
 		float	GetUnscaledDeltaTime() const { return _unscaledDeltaTime; }
@@ -19,7 +18,7 @@ namespace gm
 		void	SetTimeScale(float timeScale);
 
 	private:
-		void calcDeltaTime();
+		void	calcDeltaTime();
 
 	private:
 		LARGE_INTEGER	_cpuFrequency{};

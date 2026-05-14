@@ -35,11 +35,11 @@ namespace gm
 		bool					IsVisible() const { return _isVisible; }
 
 		void					Update();
-		void					Render(HDC hDC, const Vector2& parentPosition = Vector2{});
+		void					Render(const Vector2& parentPosition = Vector2{});
 
 	protected:
 		virtual void			OnUpdate() {}
-		virtual void			OnRender(HDC hDC, const Vector2& absolutePosition) {}
+		virtual void			OnRender(const Vector2& absolutePosition) {}
 
 	private:
 		bool 									_isVisible = true;
