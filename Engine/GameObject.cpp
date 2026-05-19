@@ -20,15 +20,20 @@ namespace gm
 
 	void GameObject::Initialize()
 	{
+		if (_isInitialized)
+			return;
+
 		OnInitialize();
 
 		for (auto& component : _componentList)
 			component->Initialize();
+
+		_isInitialized = true;
 	}
 
 	void GameObject::Tick(float deltaTime)
 	{
-		if (IsPendingDestroy())
+		if (_isInitialized == false || IsPendingDestroy())
 			return;
 
 		OnTick(deltaTime);
@@ -36,7 +41,7 @@ namespace gm
 
 	void GameObject::Render()
 	{
-		if (IsPendingDestroy() || _isRender == false)
+		if (_isInitialized == false || IsPendingDestroy() || _isRender == false)
 			return;
 
 		OnRender();

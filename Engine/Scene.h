@@ -106,22 +106,21 @@ namespace gm
 			auto gameobject = std::make_unique<T>(std::forward<Args>(args)...);
 			T* ptr = gameobject.get();
 			ptr->SetScene(this);
-			RegisterGameObjectComponents(*ptr);
 
 			_gameObjectList.push_back(std::move(gameobject));
-
-			if (_isInitialized)
-				ptr->Initialize();
+			_pendingInitializeGameObjects.push_back(ptr);
 
 			return ptr;
 		}
 
+		void InitializePendingGameObjects();
 		void RemovePendingDestroyGameObjects();
 		void RegisterGameObjectComponents(GameObject& gameObject);
 		void NotifyComponentAdded(Component& component);
 		
 	private:
 		std::vector<std::unique_ptr<GameObject>>	_gameObjectList{};
+		std::vector<GameObject*>					_pendingInitializeGameObjects{};
 		std::unique_ptr<CameraManager>				_cameraManager = nullptr;
 		std::unique_ptr<TickManager>				_tickManager = nullptr;
 		bool										_isUnloadOnExit = true;

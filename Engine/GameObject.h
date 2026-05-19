@@ -39,7 +39,13 @@ namespace gm
 				return nullptr;
 
 			_componentList.push_back(std::move(comp));
-			NotifyComponentAdded(*raw);
+
+			if (_isInitialized)
+			{
+				raw->Initialize();
+				NotifyComponentAdded(*raw);
+			}
+
 			return raw;
 		}
 
@@ -82,6 +88,7 @@ namespace gm
 		void			Render();
 
 		void			Destroy();
+		bool			IsInitialized() const { return _isInitialized; }
 		bool			IsPendingDestroy() const { return _lifeState == GameObjectLifeState::PendingDestroy; }
 
 		void			SetRender(bool isRender) { _isRender = isRender; }
@@ -126,6 +133,7 @@ namespace gm
 
 		GameObjectLifeState						_lifeState = GameObjectLifeState::Active;
 		bool									_isRender = true;
+		bool									_isInitialized = false;
 	};
 }
 

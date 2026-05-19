@@ -34,9 +34,7 @@ namespace gm
 			return;
 
 		OnInitialize();
-
-		for (auto& gameObject : _gameObjectList)
-			gameObject->Initialize();
+		InitializePendingGameObjects();
 
 		_isInitialized = true;
 	}
@@ -48,6 +46,7 @@ namespace gm
 
 		OnUnload();
 		_gameObjectList.clear();
+		_pendingInitializeGameObjects.clear();
 		_tickManager = std::make_unique<TickManager>();
 		_cameraManager = std::make_unique<CameraManager>();
 		_isInitialized = false;
@@ -81,7 +80,25 @@ namespace gm
 
 	void Scene::EndFrame()
 	{
+		InitializePendingGameObjects();
 		RemovePendingDestroyGameObjects();
+	}
+
+	void Scene::InitializePendingGameObjects()
+	{
+		if (_pendingInitializeGameObjects.empty())
+			return;
+
+		for (GameObject* gameObject : _pendingInitializeGameObjects)
+		{
+			if (gameObject->IsPendingDestroy())
+				continue;
+
+			gameObject->Initialize();
+			RegisterGameObjectComponents(*gameObject);
+		}
+
+		_pendingInitializeGameObjects.clear();
 	}
 
 	void Scene::RemovePendingDestroyGameObjects()
