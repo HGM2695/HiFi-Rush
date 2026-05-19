@@ -13,7 +13,7 @@ namespace gm
 		const Vector2&			GetSize() const { return _size; }
 
 	protected:
-		void					OnLateUpdate() override;
+		void					OnTick(float deltaTime) override;
 
 	private:
 		Vector2					_size{ 100.f, 100.f };

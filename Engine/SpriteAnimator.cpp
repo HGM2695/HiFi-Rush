@@ -100,14 +100,14 @@ namespace gm
 		UpdateRenderInfo();
 	}
 
-	void SpriteAnimator::OnUpdate()
+	void SpriteAnimator::OnTick(float deltaTime)
 	{
 		if (_currentClip == nullptr)
 			return;
 
 		if (_animationController->IsPlaying())
 		{
-			_animationController->Update(APPLICATION.GetTimeSystem().GetDeltaTime());
+			_animationController->Tick(deltaTime);
 			_animationNotifyDispatcher->Dispatch(_currentClip->GetNotifyEvents(), _animationController->GetPlayTime(), _currentClip->GetLength());
 		}
 

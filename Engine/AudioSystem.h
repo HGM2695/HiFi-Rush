@@ -21,7 +21,7 @@ namespace gm
 		~AudioSystem();
 
 		bool			Initialize();
-		void			Update();
+		void			Tick();
 		void			ShutDown();
 
 		bool			IsInitialized() const { return _system != nullptr; }

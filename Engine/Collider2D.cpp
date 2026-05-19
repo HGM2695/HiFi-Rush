@@ -2,7 +2,7 @@
 
 namespace gm
 {
-	void Collider2D::OnLateUpdate()
+	void Collider2D::OnTick(float deltaTime)
 	{
 	}
 }

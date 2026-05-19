@@ -12,7 +12,7 @@ namespace gm
 		APPLICATION.GetPhysicsSystem().SetPhysicsMode(PhysicsMode::None);
 	}
 
-	void TitleScene::OnUpdate()
+	void TitleScene::OnTick(float deltaTime)
 	{
 		if (APPLICATION.GetInput().IsKeyDown(KeyCode::M))
 			APPLICATION.GetSceneManager().RequestSceneChange(L"MainScene");

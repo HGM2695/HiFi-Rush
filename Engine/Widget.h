@@ -34,11 +34,11 @@ namespace gm
 		void					SetVisible(bool isVisible) { _isVisible = isVisible; }
 		bool					IsVisible() const { return _isVisible; }
 
-		void					Update();
+		void					Tick(float deltaTime);
 		void					Render(const Vector2& parentPosition = Vector2{});
 
 	protected:
-		virtual void			OnUpdate() {}
+		virtual void			OnTick(float deltaTime) {}
 		virtual void			OnRender(const Vector2& absolutePosition) {}
 
 	private:

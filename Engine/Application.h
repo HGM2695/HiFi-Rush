@@ -49,9 +49,8 @@ namespace gm
 		bool				Initialize(const ApplicationDesc& desc);
 		void				Run();
 
-		void				Update();
-		void				PhysicsUpdate();
-		void				LateUpdate();
+		float				TickSystems();
+		void				SimulatePhysics(float deltaTime);
 		void				Render();
 		void				EndFrame();
 

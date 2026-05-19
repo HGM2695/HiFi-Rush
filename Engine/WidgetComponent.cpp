@@ -36,12 +36,12 @@ namespace gm
 		_ownerTransform = GetOwner().GetComponent<Transform>();
 	}
 
-	void WidgetComponent::OnUpdate()
+	void WidgetComponent::OnTick(float deltaTime)
 	{
 		if (_widget == nullptr)
 			return;
 
-		_widget->Update();
+		_widget->Tick(deltaTime);
 	}
 
 	void WidgetComponent::OnRender()

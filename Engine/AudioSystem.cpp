@@ -47,7 +47,7 @@ namespace gm
 		return true;
 	}
 
-	void AudioSystem::Update()
+	void AudioSystem::Tick()
 	{
 		if (_system == nullptr)
 			return;

@@ -12,7 +12,7 @@ namespace gm
 		virtual ~UserWidget();
 
 		void			Initialize();
-		void			Update();
+		void			Tick(float deltaTime);
 		void			Render(const Vector2& rootPosition = Vector2{});
 
 		void			SetVisible(bool isVisible) { _isVisible = isVisible; }
@@ -25,7 +25,7 @@ namespace gm
 	protected:
 		virtual std::unique_ptr<Widget>		BuildWidgetTree() = 0;
 		virtual void						NativeConstruct() {}
-		virtual void						NativeTick() {}
+		virtual void						NativeTick(float deltaTime) {}
 
 	private:
 		std::unique_ptr<Widget>		_rootWidget{};

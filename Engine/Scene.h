@@ -1,19 +1,23 @@
 #pragma once
 
 #include "EngineCore.h"
+#include "Entity.h"
+#include "TickGroup.h"
 #include <type_traits>
 #include <utility>
 #include <vector>
-#include "Entity.h"
 
 namespace gm
 {
 	class GameObject;
 	class CameraManager;
+	class Component;
+	class TickManager;
 
 	class Scene : public Entity
 	{
 	friend class SceneManager;
+	friend class GameObject;
 
 	public:
 		Scene();
@@ -35,8 +39,7 @@ namespace gm
 		void			Exit();
 		void			Initialize();
 		void			Unload();
-		void			Update();
-		void			LateUpdate();
+		void			Tick(TickGroup group, float deltaTime);
 		void			Render();
 		void			EndFrame();
 
@@ -88,8 +91,7 @@ namespace gm
 	protected:
 		virtual void	OnInitialize() {}
 		virtual void	OnUnload() {}
-		virtual void	OnUpdate() {}
-		virtual void	OnLateUpdate() {}
+		virtual void	OnTick(float deltaTime) {}
 		virtual void	OnRender() {}
 
 		virtual void	OnEnter() {};
@@ -103,17 +105,25 @@ namespace gm
 
 			auto gameobject = std::make_unique<T>(std::forward<Args>(args)...);
 			T* ptr = gameobject.get();
+			ptr->SetScene(this);
+			RegisterGameObjectComponents(*ptr);
 
 			_gameObjectList.push_back(std::move(gameobject));
+
+			if (_isInitialized)
+				ptr->Initialize();
 
 			return ptr;
 		}
 
 		void RemovePendingDestroyGameObjects();
+		void RegisterGameObjectComponents(GameObject& gameObject);
+		void NotifyComponentAdded(Component& component);
 		
 	private:
 		std::vector<std::unique_ptr<GameObject>>	_gameObjectList{};
 		std::unique_ptr<CameraManager>				_cameraManager = nullptr;
+		std::unique_ptr<TickManager>				_tickManager = nullptr;
 		bool										_isUnloadOnExit = true;
 		bool										_isInitialized = false;
 	};

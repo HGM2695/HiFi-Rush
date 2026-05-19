@@ -12,7 +12,7 @@ namespace gm
 	{
 	public:
 		virtual void	OnInitialize() override;
-		virtual void	OnUpdate() override;
+		virtual void	OnTick(float deltaTime) override;
 
 		bool			IsMoving() const { return _isMoving; }
 		const Vector2&	GetFacingDirection() const { return _facingDirection; }

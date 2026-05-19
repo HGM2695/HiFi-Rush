@@ -5,7 +5,7 @@
 
 namespace gm
 {
-	void BoxCollider2D::OnLateUpdate()
+	void BoxCollider2D::OnTick(float deltaTime)
 	{
 #ifdef _DEBUG
 		const Vector2 worldCenter = GetOwner().GetTransform()->GetPosition2D() + GetOffset();

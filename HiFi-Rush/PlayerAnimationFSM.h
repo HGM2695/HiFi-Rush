@@ -18,9 +18,12 @@ namespace gm
 
 	class PlayerAnimationFSM : public Component
 	{
+	public:
+		virtual TickGroup GetTickGroup() const override { return TickGroup::PostPhysics; }
+
 	protected:
 		virtual void	OnInitialize() override;
-		virtual void	OnLateUpdate() override;
+		virtual void	OnTick(float deltaTime) override;
 
 	private:
 		void			OnAnimationNotify(const std::wstring& notifyName);

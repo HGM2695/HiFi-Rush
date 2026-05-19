@@ -1,6 +1,7 @@
 #include "GameObject.h"
 #include "Collider2D.h"
 #include "Rigidbody2D.h"
+#include "Scene.h"
 #include "Transform.h"
 
 namespace gm
@@ -15,8 +16,33 @@ namespace gm
 		GetTransform()->SetPosition(position);
 	}
 
-	GameObject::~GameObject()
+	GameObject::~GameObject() {}
+
+	void GameObject::Initialize()
 	{
+		OnInitialize();
+
+		for (auto& component : _componentList)
+			component->Initialize();
+	}
+
+	void GameObject::Tick(float deltaTime)
+	{
+		if (IsPendingDestroy())
+			return;
+
+		OnTick(deltaTime);
+	}
+
+	void GameObject::Render()
+	{
+		if (IsPendingDestroy() || _isRender == false)
+			return;
+
+		OnRender();
+
+		for (auto& component : _componentList)
+			component->Render();
 	}
 
 	bool GameObject::RegisterComponent(Component* component)
@@ -44,6 +70,12 @@ namespace gm
 		return true;
 	}
 
+	void GameObject::NotifyComponentAdded(Component& component)
+	{
+		if (_scene)
+			_scene->NotifyComponentAdded(component);
+	}
+
 	void GameObject::Destroy()
 	{
 		if (_lifeState == GameObjectLifeState::PendingDestroy)
@@ -62,46 +94,5 @@ namespace gm
 	{
 		GM_ASSERT(_transform, "GameObject는 반드시 Transform 컴포넌트를 가져야 합니다.");
 		return _transform;
-	}
-
-	void GameObject::Initialize()
-	{
-		OnInitialize();
-
-		for (auto& component : _componentList)
-			component->Initialize();
-	}
-
-	void GameObject::Update()
-	{
-		if (IsPendingDestroy())
-			return;
-
-		OnUpdate();
-
-		for (auto& component : _componentList)
-			component->Update();
-	}
-
-	void GameObject::LateUpdate()
-	{
-		if (IsPendingDestroy())
-			return;
-
-		OnLateUpdate();
-
-		for (auto& component : _componentList)
-			component->LateUpdate();
-	}
-
-	void GameObject::Render()
-	{
-		if (IsPendingDestroy() || _isRender == false)
-			return;
-
-		OnRender();
-
-		for (auto& component : _componentList)
-			component->Render();
 	}
 }

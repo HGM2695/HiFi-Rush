@@ -2,15 +2,15 @@
 
 namespace gm
 {
-	void Widget::Update()
+	void Widget::Tick(float deltaTime)
 	{
 		if (_isVisible == false)
 			return;
 
-		OnUpdate();
+		OnTick(deltaTime);
 
 		for (const auto& child : _childList)
-			child->Update();
+			child->Tick(deltaTime);
 	}
 
 	void Widget::Render(const Vector2& parentPosition)

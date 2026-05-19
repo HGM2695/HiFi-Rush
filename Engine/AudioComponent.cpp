@@ -37,7 +37,7 @@ namespace gm
 			Play();
 	}
 
-	void AudioComponent::OnUpdate()
+	void AudioComponent::OnTick(float deltaTime)
 	{
 		if (_channel == nullptr)
 			return;

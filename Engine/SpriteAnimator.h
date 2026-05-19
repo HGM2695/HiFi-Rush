@@ -40,7 +40,7 @@ namespace gm
 
 	protected:
 		virtual void							OnInitialize() override;
-		virtual void							OnUpdate() override;
+		virtual void							OnTick(float deltaTime) override;
 
 	private:
 		void									UpdateRenderInfo();

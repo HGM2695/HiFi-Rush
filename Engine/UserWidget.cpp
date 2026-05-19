@@ -16,15 +16,15 @@ namespace gm
 		_isInitialized = true;
 	}
 
-	void UserWidget::Update()
+	void UserWidget::Tick(float deltaTime)
 	{
 		if (_isInitialized == false || _isVisible == false)
 			return;
 
-		NativeTick();
+		NativeTick(deltaTime);
 
 		if (_rootWidget)
-			_rootWidget->Update();
+			_rootWidget->Tick(deltaTime);
 	}
 
 	void UserWidget::Render(const Vector2& rootPosition)

@@ -118,33 +118,38 @@ namespace gm
 
     void Application::Loop()
     {
-        Update();
-        PhysicsUpdate();
-        LateUpdate();
+		const float deltaTime = TickSystems();
+
+		_sceneManager->BeginFrame();
+		_sceneManager->Tick(TickGroup::PrePhysics, deltaTime);
+		_sceneManager->Tick(TickGroup::GameLogic, deltaTime);
+		SimulatePhysics(deltaTime);
+		_sceneManager->Tick(TickGroup::PostPhysics, deltaTime);
+		_sceneManager->Tick(TickGroup::Attachment, deltaTime);
+		_sceneManager->Tick(TickGroup::Camera, deltaTime);
+		_sceneManager->Tick(TickGroup::RenderSubmit, deltaTime);
         Render();
         EndFrame();
     }
 
-    void Application::Update()
+    float Application::TickSystems()
     {
-        _input->Update();
-        _time->Update();
-        _sceneManager->Update();
-		_audioSystem->Update();
-		_uiManager->Update();
+        _input->Tick();
+        _time->Tick();
+		_audioSystem->Tick();
+
+		const float deltaTime = _time->GetDeltaTime();
+		_uiManager->Tick(deltaTime);
+
+		return deltaTime;
     }
 
-    void Application::LateUpdate()
-    {
-        _sceneManager->LateUpdate();
-    }
-
-	void Application::PhysicsUpdate()
+	void Application::SimulatePhysics(float deltaTime)
 	{
 		Scene* activeScene = _sceneManager->GetActiveScene();
 		GM_ASSERT_RETURN(activeScene, "활성 Scene이 없습니다.");
 
-		_physicsSystem->Simulate(*activeScene, _time->GetDeltaTime());
+		_physicsSystem->Simulate(*activeScene, deltaTime);
 	}
 
     void Application::Render()

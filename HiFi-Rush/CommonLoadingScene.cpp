@@ -12,7 +12,7 @@ namespace gm
 		GM_ASSERT_RETURN(_pendingSceneName.empty() == false, "로딩 씬을 호출했는데, pendingScene이 존재하지 않습니다.");
 	}
 
-	void CommonLoadingScene::OnUpdate()
+	void CommonLoadingScene::OnTick(float deltaTime)
 	{
 		if (APPLICATION.GetInput().IsKeyDown(KeyCode::S))
 			APPLICATION.GetSceneManager().RequestSceneChange(_pendingSceneName);

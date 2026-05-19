@@ -3,11 +3,12 @@
 #include "CameraManager.h"
 #include "Application.h"
 #include "TimeSystem.h"
+#include "TickManager.h"
 #include <algorithm>
 
 namespace gm
 {
-	Scene::Scene() : _cameraManager(std::make_unique<CameraManager>()){ }
+	Scene::Scene() : _cameraManager(std::make_unique<CameraManager>()), _tickManager(std::make_unique<TickManager>()){}
 
 	Scene::~Scene() = default;
 
@@ -47,26 +48,27 @@ namespace gm
 
 		OnUnload();
 		_gameObjectList.clear();
+		_tickManager = std::make_unique<TickManager>();
 		_cameraManager = std::make_unique<CameraManager>();
 		_isInitialized = false;
 	}
 
-	void Scene::Update()
+	void Scene::Tick(TickGroup group, float deltaTime)
 	{
-		OnUpdate();
+		_tickManager->Tick(group, deltaTime);
 
-		for (auto& gameObject : _gameObjectList)
-			gameObject->Update();
-	}
+		// GameLogic Tick 시점에 Scene과 GameObject에 대해 OnTick 호출.
+		if (group == TickGroup::GameLogic)
+		{
+			OnTick(deltaTime);
 
-	void Scene::LateUpdate()
-	{
-		OnLateUpdate();
+			for (auto& gameObject : _gameObjectList)
+				gameObject->Tick(deltaTime);
+		}
 
-		for (auto& gameObject : _gameObjectList)
-			gameObject->LateUpdate();
-
-		_cameraManager->Update(APPLICATION.GetTimeSystem().GetDeltaTime());
+		// GameLogic Tick 시점에 Scene과 GameObject에 대해 OnTick 호출.
+		if (group == TickGroup::Camera)
+			_cameraManager->Tick(deltaTime);
 	}
 
 	void Scene::Render()
@@ -84,12 +86,26 @@ namespace gm
 
 	void Scene::RemovePendingDestroyGameObjects()
 	{
-		_gameObjectList.erase(
-			std::remove_if(_gameObjectList.begin(), _gameObjectList.end(),
-				[](const std::unique_ptr<GameObject>& gameObject)
-				{
-					return gameObject->IsPendingDestroy();
-				}),
-			_gameObjectList.end());
+		for (auto& gameObject : _gameObjectList)
+		{
+			if (gameObject->IsPendingDestroy())
+				_tickManager->UnregisterGameObject(*gameObject);
+		}
+
+		std::erase_if(_gameObjectList,
+			[](const std::unique_ptr<GameObject>& gameObject)
+			{
+				return gameObject->IsPendingDestroy();
+			});
+	}
+
+	void Scene::RegisterGameObjectComponents(GameObject& gameObject)
+	{
+		_tickManager->RegisterGameObject(gameObject);
+	}
+
+	void Scene::NotifyComponentAdded(Component& component)
+	{
+		_tickManager->Register(component);
 	}
 }

@@ -44,7 +44,7 @@ namespace gm
 
 	protected:
 		void								OnInitialize() override;
-		void								OnUpdate() override;
+		void								OnTick(float deltaTime) override;
 
 	private:
 		std::shared_ptr<SoundWave>		_sound{};

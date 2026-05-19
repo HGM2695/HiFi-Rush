@@ -9,7 +9,7 @@ namespace gm
 		
 	protected:
 		void OnEnter() override;
-		void OnUpdate() override;
+		void OnTick(float deltaTime) override;
 		void OnRender() override;
 
 	private:

@@ -16,7 +16,7 @@ namespace gm
 		GM_ASSERT(_ownerRigidbody, "PlayerMovement는 Rigidbody2D가 필요합니다.");
 	}
 
-	void PlayerMovement::OnUpdate()
+	void PlayerMovement::OnTick(float deltaTime)
 	{
 		auto& input = APPLICATION.GetInput();
 		const float moveAxisX = input.GetMoveAxisX();

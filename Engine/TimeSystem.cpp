@@ -9,7 +9,7 @@ namespace gm
 		QueryPerformanceCounter(&_prevFrequency);
 	}
 
-	void TimeSystem::Update()
+	void TimeSystem::Tick()
 	{
 		calcDeltaTime();
 	}

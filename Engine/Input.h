@@ -98,7 +98,7 @@ namespace gm
 		Input(HWND hWnd);
 
 		// Keyboard
-		void			Update();
+		void			Tick();
 
 		bool			IsKeyUp(KeyCode code) const { return getKey(code)._keyState == KeyState::Up; }
 		bool			IsKeyDown(KeyCode code) const { return getKey(code)._keyState == KeyState::Down; }
@@ -122,7 +122,7 @@ namespace gm
 	private:
 		// Keyboard
 		const Key&		getKey(KeyCode code) const { return _keyList[static_cast<size_t>(code)]; }
-		void			updateKeyListState();
+		void			updateKeyState();
 
 		// Mouse
 		const Mouse&	getMouse(MouseButton button) const { return _mouseList[static_cast<size_t>(button)]; }

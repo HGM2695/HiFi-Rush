@@ -24,13 +24,14 @@ namespace gm
 		void					SetDeadZoneHeight(float height) { _deadZoneHeight = height; }
 		void					SetDeadZone(float width, float height) { SetDeadZoneWidth(width); SetDeadZoneHeight(height); }
 		void					SetFollowSpeed(float followSpeed) { _followSpeed = followSpeed; }
+		virtual TickGroup		GetTickGroup() const override { return TickGroup::Camera; }
 
 	protected:
 		virtual void			OnInitialize() override;
-		virtual void			OnLateUpdate() override;
+		virtual void			OnTick(float deltaTime) override;
 
 	private:
-		void					FollowOwner();
+		void					FollowOwner(float deltaTime);
 
 	private:
 		inline static Camera*	_mainCamera = nullptr;

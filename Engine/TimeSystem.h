@@ -10,7 +10,7 @@ namespace gm
 	public:
 		TimeSystem();
 
-		void	Update();
+		void	Tick();
 
 		float	GetDeltaTime() const { return _deltaTime; }
 		float	GetUnscaledDeltaTime() const { return _unscaledDeltaTime; }

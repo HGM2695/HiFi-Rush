@@ -41,7 +41,7 @@ namespace gm
 
 	protected:
 		void					OnInitialize() override;
-		void					OnUpdate() override;
+		void					OnTick(float deltaTime) override;
 		void					OnRender() override;
 
 	private:

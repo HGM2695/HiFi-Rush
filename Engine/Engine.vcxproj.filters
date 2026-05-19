@@ -41,6 +41,10 @@
     <ClInclude Include="Component.h">
       <Filter>Base</Filter>
     </ClInclude>
+    <ClInclude Include="TickGroup.h" />
+    <ClInclude Include="TickManager.h">
+      <Filter>Base</Filter>
+    </ClInclude>
     <ClInclude Include="StringUtil.h">
       <Filter>Util</Filter>
     </ClInclude>
@@ -261,6 +265,9 @@
       <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="Component.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="TickManager.cpp">
       <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="GMAssert.cpp">

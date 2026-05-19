@@ -13,7 +13,7 @@ namespace gm
         void            Reset();
         void            Pause();
         void            Resume();
-        void            Update(float deltaTime);
+        void            Tick(float deltaTime);
 
         float           GetPlayTime() const { return _currentTime; }
         AnimationState  GetState() const { return _state; }

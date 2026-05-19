@@ -6,20 +6,16 @@ namespace gm
 	SceneManager::SceneManager() = default;
 	SceneManager::~SceneManager() = default;
 
-	void SceneManager::Update()
+	void SceneManager::BeginFrame()
 	{
 		CheckSceneChange();
-
-		GM_ASSERT_RETURN(_activeScene, "활성 Scene이 없습니다.");
-
-		_activeScene->Update();
 	}
 
-	void SceneManager::LateUpdate()
+	void SceneManager::Tick(TickGroup group, float deltaTime)
 	{
 		GM_ASSERT_RETURN(_activeScene, "활성 Scene이 없습니다.");
 
-		_activeScene->LateUpdate();
+		_activeScene->Tick(group, deltaTime);
 	}
 
 	void SceneManager::Render()

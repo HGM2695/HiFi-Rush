@@ -3,10 +3,10 @@
 
 namespace gm
 {
-	void UIManager::Update()
+	void UIManager::Tick(float deltaTime)
 	{
 		for (const auto& widget : _widgetList)
-			widget->Update();
+			widget->Tick(deltaTime);
 	}
 
 	void UIManager::Render()

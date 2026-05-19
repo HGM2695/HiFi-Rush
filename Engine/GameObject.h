@@ -10,6 +10,7 @@ namespace gm
 {
 	class Collider2D;
 	class Rigidbody2D;
+	class Scene;
 	class Transform;
 
 	enum class GameObjectLifeState
@@ -38,6 +39,7 @@ namespace gm
 				return nullptr;
 
 			_componentList.push_back(std::move(comp));
+			NotifyComponentAdded(*raw);
 			return raw;
 		}
 
@@ -76,8 +78,7 @@ namespace gm
 		const std::vector<Collider2D*>& GetColliders2D() const { return _colliders2D; }
 
 		void			Initialize();
-		void			Update();
-		void			LateUpdate();
+		void			Tick(float deltaTime);
 		void			Render();
 
 		void			Destroy();
@@ -86,17 +87,37 @@ namespace gm
 		void			SetRender(bool isRender) { _isRender = isRender; }
 		bool			IsRenderEnabled() const { return _isRender; }
 
+		Scene*			GetScene() const { return _scene; }
+
+		template <typename TFunc>
+		void ForEachComponent(TFunc&& func)
+		{
+			for (auto& component : _componentList)
+				func(*component);
+		}
+
+		template <typename TFunc>
+		void ForEachComponent(TFunc&& func) const
+		{
+			for (const auto& component : _componentList)
+				func(*component);
+		}
+
 	protected:
 		virtual void	OnInitialize() {}
-		virtual void	OnUpdate() {}
-		virtual void	OnLateUpdate() {}
+		virtual void	OnTick(float deltaTime) {}
 		virtual void	OnRender() {}
 
 	private:
+		friend class Scene;
+
+		void			SetScene(Scene* scene) { _scene = scene; }
 		bool			RegisterComponent(Component* component);
+		void			NotifyComponentAdded(Component& component);
 
 	private:
 		std::vector<std::unique_ptr<Component>> _componentList{};
+		Scene*									_scene = nullptr;
 
 		Transform*								_transform = nullptr;
 

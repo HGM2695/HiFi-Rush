@@ -1,4 +1,4 @@
-﻿#include "Component.h"
+#include "Component.h"
 
 namespace gm
 {
@@ -10,14 +10,9 @@ namespace gm
 		OnInitialize();
 	}
 
-	void Component::Update()
+	void Component::Tick(float deltaTime)
 	{
-		OnUpdate();
-	}
-	
-	void Component::LateUpdate()
-	{
-		OnLateUpdate();
+		OnTick(deltaTime);
 	}
 
 	void Component::Render()

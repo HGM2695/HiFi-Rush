@@ -24,7 +24,7 @@ namespace gm
 			return raw;
 		}
 
-		void Update();
+		void Tick(float deltaTime);
 		void Render();
 		void ClearViewportWidgets();
 

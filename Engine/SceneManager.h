@@ -31,8 +31,8 @@ namespace gm
 			return scenePtr;
 		}
 
-		void				Update();
-		void				LateUpdate();
+		void				BeginFrame();
+		void				Tick(TickGroup group, float deltaTime);
 		void				Render();
 		void				EndFrame();
 

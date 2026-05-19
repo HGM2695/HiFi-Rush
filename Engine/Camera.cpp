@@ -2,7 +2,6 @@
 #include "Transform.h"
 #include "GameObject.h"
 #include "Application.h"
-#include "TimeSystem.h"
 #include <algorithm>
 #include <cmath>
 
@@ -47,12 +46,12 @@ namespace gm
             Camera::SetMainCamera(this);
     }
 
-    void Camera::OnLateUpdate()
+    void Camera::OnTick(float deltaTime)
     {
-        FollowOwner();
+        FollowOwner(deltaTime);
     }
 
-    void Camera::FollowOwner()
+    void Camera::FollowOwner(float deltaTime)
     {
         Vector2 ownerPosition = _ownerTransform->GetPosition2D();
         Vector2 targetPosition = _cameraPosition;
@@ -71,7 +70,6 @@ namespace gm
         else if (gapY < -halfHeight)
             targetPosition.y = ownerPosition.y + halfHeight;
 
-        float deltaTime = APPLICATION.GetTimeSystem().GetDeltaTime();
         float t = 1.f - std::exp(-_followSpeed * deltaTime);
 
         t = std::clamp(t, 0.f, 1.f);

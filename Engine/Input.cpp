@@ -84,9 +84,9 @@ namespace gm
 		_previousMousePosition = _mousePosition;
 	}
 
-	void Input::Update()
+	void Input::Tick()
 	{
-		updateKeyListState();
+		updateKeyState();
 		updateMouseState();
 		updateMousePosition();
 	}
@@ -105,7 +105,7 @@ namespace gm
 		return v;
 	}
 
-	void Input::updateKeyListState()
+	void Input::updateKeyState()
 	{
 		const int size = static_cast<int>(_keyList.size());
 		for (int i = 0; i < size; ++i)

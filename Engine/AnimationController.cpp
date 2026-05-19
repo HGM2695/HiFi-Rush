@@ -34,7 +34,7 @@ namespace gm
             _state = AnimationState::Playing;
     }
 
-    void AnimationController::Update(float deltaTime)
+    void AnimationController::Tick(float deltaTime)
     {
         if (_state != AnimationState::Playing)
             return;

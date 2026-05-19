@@ -42,7 +42,7 @@ namespace gm
 			const float curTime = accumulatedTime > 0.016f ? 0.016f : accumulatedTime;
 			accumulatedTime -= curTime;
 
-			scene.ForEachAliveGameObject([this, &scene, curTime](GameObject& gameObject)
+			scene.ForEachGameObject([this, &scene, curTime](GameObject& gameObject)
 				{
 					Rigidbody2D* rigidbody = gameObject.GetRigidbody2D();
 					if (rigidbody == nullptr || rigidbody->IsKinematic())
@@ -56,7 +56,7 @@ namespace gm
 				});
 		}
 
-		scene.ForEachAliveGameObject([](GameObject& gameObject)
+		scene.ForEachGameObject([](GameObject& gameObject)
 			{
 				Rigidbody2D* rigidbody = gameObject.GetRigidbody2D();
 				if (rigidbody == nullptr || rigidbody->IsKinematic())
@@ -118,7 +118,7 @@ namespace gm
 		Transform* transform = gameObject.GetTransform();
 		transform->TranslateX(movement.x);
 
-		scene.ForEachAliveGameObject([this, &gameObject, &rigidbody, transform](GameObject& otherObject)
+		scene.ForEachGameObject([this, &gameObject, &rigidbody, transform](GameObject& otherObject)
 		{
 			if (&gameObject == &otherObject)
 				return;
@@ -148,7 +148,7 @@ namespace gm
 		Transform* transform = gameObject.GetTransform();
 		transform->TranslateY(movement.y);
 
-		scene.ForEachAliveGameObject([this, &gameObject, &rigidbody, transform](GameObject& otherObject)
+		scene.ForEachGameObject([this, &gameObject, &rigidbody, transform](GameObject& otherObject)
 		{
 			if (&gameObject == &otherObject)
 				return;

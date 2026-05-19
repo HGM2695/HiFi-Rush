@@ -23,7 +23,7 @@ namespace gm
 		ChangeState(PlayerAnimState::Idle);
 	}
 
-	void PlayerAnimationFSM::OnLateUpdate()
+	void PlayerAnimationFSM::OnTick(float deltaTime)
 	{
 		SyncDirection();
 		UpdateState();
