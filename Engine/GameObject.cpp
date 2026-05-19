@@ -3,6 +3,7 @@
 #include "Rigidbody2D.h"
 #include "Scene.h"
 #include "Transform.h"
+#include "WeakGameObjectPtr.h"
 
 namespace gm
 {
@@ -87,6 +88,11 @@ namespace gm
 			return;
 
 		_lifeState = GameObjectLifeState::PendingDestroy;
+	}
+
+	WeakGameObjectPtr GameObject::GetWeakPtr() const
+	{
+		return WeakGameObjectPtr(_scene, const_cast<GameObject*>(this), _handle);
 	}
 
 	Transform* GameObject::GetTransform()

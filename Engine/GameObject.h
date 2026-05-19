@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EngineCore.h"
+#include "GameObjectHandle.h"
 #include <type_traits>
 #include <utility>
 #include <vector>
@@ -12,6 +13,7 @@ namespace gm
 	class Rigidbody2D;
 	class Scene;
 	class Transform;
+	class WeakGameObjectPtr;
 
 	enum class GameObjectLifeState
 	{
@@ -94,7 +96,9 @@ namespace gm
 		void			SetRender(bool isRender) { _isRender = isRender; }
 		bool			IsRenderEnabled() const { return _isRender; }
 
-		Scene*			GetScene() const { return _scene; }
+		Scene*				GetScene() const { return _scene; }
+		GameObjectHandle	GetHandle() const { return _handle; }
+		WeakGameObjectPtr	GetWeakPtr() const;
 
 		template <typename TFunc>
 		void ForEachComponent(TFunc&& func)
@@ -119,12 +123,14 @@ namespace gm
 		friend class Scene;
 
 		void			SetScene(Scene* scene) { _scene = scene; }
+		void			SetHandle(GameObjectHandle handle) { _handle = handle; }
 		bool			RegisterComponent(Component* component);
 		void			NotifyComponentAdded(Component& component);
 
 	private:
 		std::vector<std::unique_ptr<Component>> _componentList{};
 		Scene*									_scene = nullptr;
+		GameObjectHandle						_handle{};
 
 		Transform*								_transform = nullptr;
 

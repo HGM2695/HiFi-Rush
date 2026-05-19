@@ -2,6 +2,7 @@
 
 #include "EngineCore.h"
 #include "Entity.h"
+#include "GameObjectHandle.h"
 #include "TickGroup.h"
 #include <type_traits>
 #include <utility>
@@ -38,38 +39,48 @@ namespace gm
 		template <typename TFunc>
 		void ForEachGameObjectIncludingPending(TFunc&& func)
 		{
-			for (auto& gameObject : _gameObjectList)
-				func(*gameObject);
+			for (auto& slot : _gameObjectSlots)
+			{
+				if (slot.gameObject == nullptr)
+					continue;
+
+				func(*slot.gameObject);
+			}
 		}
 
 		template <typename TFunc>
 		void ForEachGameObjectIncludingPending(TFunc&& func) const
 		{
-			for (const auto& gameObject : _gameObjectList)
-				func(static_cast<const GameObject&>(*gameObject));
+			for (const auto& slot : _gameObjectSlots)
+			{
+				if (slot.gameObject == nullptr)
+					continue;
+
+				func(static_cast<const GameObject&>(*slot.gameObject));
+			}
 		}
 
 		template <typename TFunc>
 		void ForEachGameObject(TFunc&& func)
 		{
-			for (auto& gameObject : _gameObjectList)
+			for (auto& slot : _gameObjectSlots)
 			{
-				if (gameObject->IsPendingDestroy())
+				if (slot.gameObject == nullptr || slot.gameObject->IsPendingDestroy())
 					continue;
 
-				func(*gameObject);
+				func(*slot.gameObject);
 			}
 		}
 
 		template <typename TFunc>
 		void ForEachGameObject(TFunc&& func) const
 		{
-			for (const auto& gameObject : _gameObjectList)
+			for (const auto& slot : _gameObjectSlots)
 			{
-				if (gameObject->IsPendingDestroy())
+				if (slot.gameObject == nullptr || slot.gameObject->IsPendingDestroy())
 					continue;
 
-				func(*gameObject);
+				func(*slot.gameObject);
 			}
 		}
 
@@ -79,6 +90,9 @@ namespace gm
 
 		CameraManager*			GetCameraManager() { return _cameraManager.get(); }
 		const CameraManager*	GetCameraManager() const { return _cameraManager.get(); }
+		GameObject*				FindGameObject(GameObjectHandle handle);
+		const GameObject*		FindGameObject(GameObjectHandle handle) const;
+		bool					IsValid(GameObjectHandle handle) const;
 
 	protected:
 		virtual void	OnInitialize() {}
@@ -98,12 +112,19 @@ namespace gm
 			auto gameobject = std::make_unique<T>(std::forward<Args>(args)...);
 			T* ptr = gameobject.get();
 			ptr->SetScene(this);
+			const uint32 slotIndex = AddGameObjectToSlot(std::move(gameobject));
+			ptr->SetHandle(GameObjectHandle{ slotIndex, _gameObjectSlots[slotIndex].generation });
 
-			_gameObjectList.push_back(std::move(gameobject));
 			_pendingInitializeGameObjects.push_back(ptr);
 
 			return ptr;
 		}
+
+		struct GameObjectSlot
+		{
+			std::unique_ptr<GameObject> gameObject;
+			uint32						generation = 1;
+		};
 
 		void			Enter();
 		void			Exit();
@@ -113,13 +134,15 @@ namespace gm
 		void			Render();
 		void			EndFrame();
 
-		void InitializePendingGameObjects();
-		void RemovePendingDestroyGameObjects();
-		void RegisterGameObjectComponents(GameObject& gameObject);
-		void NotifyComponentAdded(Component& component);
+		void	InitializePendingGameObjects();
+		void	RemovePendingDestroyGameObjects();
+		void	RegisterGameObjectComponents(GameObject& gameObject);
+		void	NotifyComponentAdded(Component& component);
+		uint32	AddGameObjectToSlot(std::unique_ptr<GameObject> gameObject);
 		
 	private:
-		std::vector<std::unique_ptr<GameObject>>	_gameObjectList{};
+		std::vector<GameObjectSlot>					_gameObjectSlots{};
+		std::vector<uint32>							_freeGameObjectSlotIndices{};
 		std::vector<GameObject*>					_pendingInitializeGameObjects{};
 		std::unique_ptr<CameraManager>				_cameraManager = nullptr;
 		std::unique_ptr<TickManager>				_tickManager = nullptr;

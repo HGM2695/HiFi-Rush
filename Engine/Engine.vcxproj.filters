@@ -35,6 +35,12 @@
     <ClInclude Include="GameObject.h">
       <Filter>Base</Filter>
     </ClInclude>
+    <ClInclude Include="GameObjectHandle.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="WeakGameObjectPtr.h">
+      <Filter>Base</Filter>
+    </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Base</Filter>
     </ClInclude>
@@ -259,6 +265,9 @@
       <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="WeakGameObjectPtr.cpp">
       <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
