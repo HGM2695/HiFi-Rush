@@ -51,8 +51,8 @@ namespace gm
 
 		auto camera = player->AddComponent<Camera>();
 		camera->SetOrthographic(static_cast<float>(APPLICATION.GetWidth()), static_cast<float>(APPLICATION.GetHeight()));
-		camera->SetDeadZone(400, 300);
-		GetCameraManager()->PushCamera(camera);
+		GetCameraManager()->RegisterCamera(L"PlayerCamera", camera);
+		GetCameraManager()->SetActiveCamera(L"PlayerCamera");
 
 		auto spriteAnimator = player->AddComponent<SpriteAnimator>();
 		spriteAnimator->AddClip(L"IdleLeft", L"Player_IdleLeft");

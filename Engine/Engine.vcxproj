@@ -142,6 +142,8 @@
     <ClInclude Include="AudioStatics.h" />
     <ClInclude Include="BuiltinGraphicsResources.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraManager.h" />
+    <ClInclude Include="CameraViewInfo.h" />
     <ClInclude Include="Collider2D.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="D3D11GraphicsCommandContext.h" />
@@ -224,6 +226,7 @@
     <ClCompile Include="BoxCollider2D.cpp" />
     <ClCompile Include="BuiltinGraphicsResources.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="CircleCollider2D.cpp" />
     <ClCompile Include="Collider2D.cpp" />
     <ClCompile Include="Component.cpp" />

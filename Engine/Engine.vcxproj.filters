@@ -75,6 +75,12 @@
     <ClInclude Include="Camera.h">
       <Filter>Engine Component</Filter>
     </ClInclude>
+    <ClInclude Include="CameraManager.h">
+      <Filter>Engine Component</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraViewInfo.h">
+      <Filter>Engine Component</Filter>
+    </ClInclude>
     <ClInclude Include="SocketComponent.h">
       <Filter>Engine Component</Filter>
     </ClInclude>
@@ -304,6 +310,9 @@
       <Filter>Debugger</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
+      <Filter>Engine Component</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraManager.cpp">
       <Filter>Engine Component</Filter>
     </ClCompile>
     <ClCompile Include="SocketComponent.cpp">

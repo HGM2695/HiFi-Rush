@@ -1,78 +1,57 @@
 #include "Camera.h"
 #include "Transform.h"
 #include "GameObject.h"
-#include "Application.h"
-#include <algorithm>
-#include <cmath>
+#include "MathUtil.h"
 
 namespace gm
 {
-    Camera::~Camera()
-    {
-        if (_mainCamera == this)
-            _mainCamera = nullptr;
-    }
+	Camera::~Camera() = default;
 
-    Camera* Camera::GetMainCamera()
-    {
-        return _mainCamera;
-    }
+	void Camera::OnInitialize()
+	{
+		_ownerTransform = GetOwner().GetComponent<Transform>();
+		GM_ASSERT_RETURN(_ownerTransform, "Camera 소유자의 Transform이 존재하지 않습니다.");
+	}
 
-    void Camera::SetMainCamera(Camera* camera)
-    {
-        GM_ASSERT_RETURN(camera, "카메라가 nullptr 입니다.");
-        _mainCamera = camera;
-    }
+	CameraViewInfo Camera::GetViewInfo() const
+	{
+		CameraViewInfo viewInfo{};
+		viewInfo.position = _ownerTransform->GetPosition();
+		viewInfo.rotation = _ownerTransform->GetRotation();
+		viewInfo.view = Math::CreateViewMatrix(viewInfo.position, viewInfo.rotation);
+		viewInfo.projection = CreateProjectionMatrix();
 
-    Vector2 Camera::MainWorldToScreen(const Vector2& worldPos)
-    {
-        GM_ASSERT_RETURN_VAL(_mainCamera, Vector2(), "메인 카메라가 존재하지 않습니다.");
-        return _mainCamera->WorldToScreen(worldPos);
-    }
+		return viewInfo;
+	}
 
-    Vector2 Camera::WorldToScreen(const Vector2& worldPos) const
-    {
-        const Vector2 cameraSpacePos = worldPos - _cameraPosition;
-        // 카메라의 위치를 화면 중앙에 고정한다는 의미.
-        return Vector2(APPLICATION.GetWidth() * 0.5f + cameraSpacePos.x, APPLICATION.GetHeight() * 0.5f - cameraSpacePos.y);
-    }
+	void Camera::SetOrthographic(float width, float height, float nearZ, float farZ)
+	{
+		_projectionMode = CameraProjectionMode::Orthographic;
+		_orthographicWidth = width;
+		_orthographicHeight = height;
+		_nearZ = nearZ;
+		_farZ = farZ;
+	}
 
-    void Camera::OnInitialize()
-    {
-        _ownerTransform = GetOwner().GetComponent<Transform>();
-        _cameraPosition = _ownerTransform->GetPosition2D();
+	void Camera::SetPerspective(float fovYRadians, float aspectRatio, float nearZ, float farZ)
+	{
+		_projectionMode = CameraProjectionMode::Perspective;
+		_fovYRadians = fovYRadians;
+		_aspectRatio = aspectRatio;
+		_nearZ = nearZ;
+		_farZ = farZ;
+	}
 
-        if (_mainCamera == nullptr)
-            Camera::SetMainCamera(this);
-    }
-
-    void Camera::OnTick(float deltaTime)
-    {
-        FollowOwner(deltaTime);
-    }
-
-    void Camera::FollowOwner(float deltaTime)
-    {
-        Vector2 ownerPosition = _ownerTransform->GetPosition2D();
-        Vector2 targetPosition = _cameraPosition;
-
-        const float gapX = ownerPosition.x - _cameraPosition.x;
-        const float gapY = ownerPosition.y - _cameraPosition.y;
-        const float halfWidth = _deadZoneWidth * 0.5f;
-        const float halfHeight = _deadZoneHeight * 0.5f;
-
-        if (gapX > halfWidth)
-            targetPosition.x = ownerPosition.x - halfWidth;
-        else if (gapX < -halfWidth)
-            targetPosition.x = ownerPosition.x + halfWidth;
-        if (gapY > halfHeight)
-            targetPosition.y = ownerPosition.y - halfHeight;
-        else if (gapY < -halfHeight)
-            targetPosition.y = ownerPosition.y + halfHeight;
-
-        float t = 1.f - std::exp(-_followSpeed * deltaTime);
-
-        t = std::clamp(t, 0.f, 1.f);
-        _cameraPosition = _cameraPosition + (targetPosition - _cameraPosition) * t;
-    }
+	Matrix Camera::CreateProjectionMatrix() const
+	{
+		switch (_projectionMode)
+		{
+		case CameraProjectionMode::Orthographic:
+			return Matrix::CreateOrthographic(_orthographicWidth, _orthographicHeight, _nearZ, _farZ);
+		case CameraProjectionMode::Perspective:
+			return Matrix::CreatePerspectiveFieldOfView(_fovYRadians, _aspectRatio, _nearZ, _farZ);
+		default:
+			GM_ASSERT_RETURN_VAL(false, Math::IdentityMatrix(), "지원하지 않는 카메라 투영 모드입니다.");
+		}
+	}
 }

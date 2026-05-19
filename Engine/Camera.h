@@ -1,47 +1,45 @@
 #pragma once
 
 #include "Component.h"
+#include "CameraViewInfo.h"
 
 namespace gm
 {
 	class Transform;
+
+	enum class CameraProjectionMode
+	{
+		Orthographic,
+		Perspective,
+	};
 
 	class Camera : public Component
 	{
 	public:
 		Camera() = default;
 		virtual ~Camera() override;
-
-		static Camera*			GetMainCamera();
-		static void				SetMainCamera(Camera* camera);
-		static Vector2			MainWorldToScreen(const Vector2& worldPos);
-
-		Vector2					WorldToScreen(const Vector2& worldPos) const;
-		Vector2					GetCameraPosition() const { return _cameraPosition; }
-		float					GetFollowSpeed() const { return _followSpeed; }
-		
-		void					SetDeadZoneWidth(float width) { _deadZoneWidth = width; }
-		void					SetDeadZoneHeight(float height) { _deadZoneHeight = height; }
-		void					SetDeadZone(float width, float height) { SetDeadZoneWidth(width); SetDeadZoneHeight(height); }
-		void					SetFollowSpeed(float followSpeed) { _followSpeed = followSpeed; }
 		virtual TickGroup		GetTickGroup() const override { return TickGroup::Camera; }
+
+		CameraViewInfo			GetViewInfo() const;
+
+		void					SetOrthographic(float width, float height, float nearZ = 0.f, float farZ = 1000.f);
+		void					SetPerspective(float fovYRadians, float aspectRatio, float nearZ = 0.1f, float farZ = 1000.f);
 
 	protected:
 		virtual void			OnInitialize() override;
-		virtual void			OnTick(float deltaTime) override;
 
 	private:
-		void					FollowOwner(float deltaTime);
+		Matrix					CreateProjectionMatrix() const;
 
 	private:
-		inline static Camera*	_mainCamera = nullptr;
-
 		Transform*				_ownerTransform = nullptr;
-		Vector2					_cameraPosition{};
 
-		// 카메라가 움직이지 않는 Dead Zone 영역 크기
-		float					_deadZoneWidth{};
-		float					_deadZoneHeight{};
-		float					_followSpeed{ 5.f };
+		CameraProjectionMode	_projectionMode = CameraProjectionMode::Orthographic;
+		float					_orthographicWidth = 1280.f;
+		float					_orthographicHeight = 720.f;
+		float					_fovYRadians = 1.04719755f;
+		float					_aspectRatio = 16.f / 9.f;
+		float					_nearZ = 0.1f;
+		float					_farZ = 1000.f;
 	};
 }
