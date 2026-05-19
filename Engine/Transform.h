@@ -20,6 +20,7 @@ namespace gm
         void            SetRotationZ(float radians);
         void            SetScale(const Vector3& scale) { _scale = scale; }
         void            SetScale(const Vector2& scale) { _scale = Vector3(scale.x, scale.y, _scale.z); }
+        void            SetWorldMatrix(const Matrix& worldMatrix);
         void            Translate(const Vector3& delta) { _position += delta; }
         void            Translate(const Vector2& delta) { _position.x += delta.x; _position.y += delta.y; }
         void            Translate(float dx, float dy) { _position.x += dx; _position.y += dy; }

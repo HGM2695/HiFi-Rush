@@ -75,6 +75,12 @@
     <ClInclude Include="Camera.h">
       <Filter>Engine Component</Filter>
     </ClInclude>
+    <ClInclude Include="SocketComponent.h">
+      <Filter>Engine Component</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketFollowComponent.h">
+      <Filter>Engine Component</Filter>
+    </ClInclude>
     <ClInclude Include="Collider2D.h">
       <Filter>Engine Component\Physics</Filter>
     </ClInclude>
@@ -176,6 +182,9 @@
     </ClInclude>
     <ClInclude Include="MathTypes.h">
       <Filter>Util\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="MathUtil.h">
+      <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="VertexTypes.h">
       <Filter>Util\Types</Filter>
@@ -295,6 +304,12 @@
       <Filter>Debugger</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
+      <Filter>Engine Component</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketComponent.cpp">
+      <Filter>Engine Component</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketFollowComponent.cpp">
       <Filter>Engine Component</Filter>
     </ClCompile>
     <ClCompile Include="CircleCollider2D.cpp">

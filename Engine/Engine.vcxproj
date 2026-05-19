@@ -170,6 +170,7 @@
     <ClInclude Include="Image.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="MathTypes.h" />
+    <ClInclude Include="MathUtil.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="PhysicsSystem2D.h" />
@@ -186,6 +187,8 @@
     <ClInclude Include="D3D11Shader.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SoundWave.h" />
+    <ClInclude Include="SocketComponent.h" />
+    <ClInclude Include="SocketFollowComponent.h" />
     <ClInclude Include="SpriteAnimationClip.h" />
     <ClInclude Include="SpriteAnimator.h" />
     <ClInclude Include="SpriteFrame.h" />
@@ -255,6 +258,8 @@
     <ClCompile Include="D3D11Shader.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SoundWave.cpp" />
+    <ClCompile Include="SocketComponent.cpp" />
+    <ClCompile Include="SocketFollowComponent.cpp" />
     <ClCompile Include="SpriteAnimationClip.cpp" />
     <ClCompile Include="SpriteAnimator.cpp" />
     <ClCompile Include="SpriteRenderer.cpp" />

@@ -15,6 +15,12 @@ namespace gm
 		_rotation = Quaternion::CreateFromAxisAngle(Vector3(0.f, 0.f, 1.f), radians);
 	}
 
+	void Transform::SetWorldMatrix(const Matrix& worldMatrix)
+	{
+		Matrix matrix = worldMatrix;
+		matrix.Decompose(_scale, _rotation, _position);
+	}
+
 	Matrix Transform::GetWorldMatrix() const
 	{
 		const Matrix scale = Matrix::CreateScale(_scale);
