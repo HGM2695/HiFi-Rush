@@ -82,12 +82,6 @@ namespace gm
 		RemovePendingDestroyGameObjects();
 	}
 
-	void Scene::AddGameObject(std::unique_ptr<GameObject> gameObject)
-	{
-		if (gameObject)
-			_gameObjectList.push_back(std::move(gameObject));
-	}
-
 	void Scene::RemovePendingDestroyGameObjects()
 	{
 		_gameObjectList.erase(

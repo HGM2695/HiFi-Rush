@@ -20,15 +20,15 @@ namespace gm
 		virtual ~Scene();
 
 		template<typename T, typename... Args>
-		T* Instantiate(Args&&... args)
+		T* SpawnGameObject(Args&&... args)
 		{
-			return CreateGameObject<T>(std::forward<Args>(args)...);
+			return SpawnGameObjectInternal<T>(std::forward<Args>(args)...);
 		}
 
 		template<typename T, typename... Args>
-		T* Instantiate(const Vector2& position, Args&&... args)
+		T* SpawnGameObject(const Vector2& position, Args&&... args)
 		{
-			return CreateGameObject<T>(position, std::forward<Args>(args)...);
+			return SpawnGameObjectInternal<T>(position, std::forward<Args>(args)...);
 		}
 
 		void			Enter();
@@ -82,7 +82,6 @@ namespace gm
 		void					SetUnloadOnExit(bool isUnloadOnExit) { _isUnloadOnExit = isUnloadOnExit; }
 		bool					GetUnloadOnExit() const { return _isUnloadOnExit; }
 
-		void					AddGameObject(std::unique_ptr<GameObject> gameObject);
 		CameraManager*			GetCameraManager() { return _cameraManager.get(); }
 		const CameraManager*	GetCameraManager() const { return _cameraManager.get(); }
 
@@ -98,7 +97,7 @@ namespace gm
 
 	private:
 		template<typename T, typename... Args>
-		T* CreateGameObject(Args&&... args)
+		T* SpawnGameObjectInternal(Args&&... args)
 		{
 			static_assert(std::is_base_of_v<GameObject, T>);
 

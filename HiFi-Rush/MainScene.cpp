@@ -16,6 +16,9 @@
 #include "Rigidbody2D.h"
 #include "BoxCollider2D.h"
 #include "WidgetComponent.h"
+#include "CameraManager.h"
+#include "Material.h"
+#include "Transform.h"
 
 namespace gm
 {
@@ -28,21 +31,28 @@ namespace gm
 
 	void MainScene::OnInitialize()
 	{
-		InitializeSubObject();
+		//InitializeSubObject();
 		InitializePlayer();
 	}
 
 	void MainScene::InitializePlayer()
 	{
-		auto player = Instantiate<GameObject>({ 0, 200 });
+		auto player = SpawnGameObject<GameObject>({ 0, 200 });
 
+		auto transform = player->GetTransform();
+		transform->SetScale(Vector2{ 60.f, 120.f });
+
+		//MaterialDesc materialDesc{};
+		//materialDesc.pipelineState = APPLICATION.GetResources().Find<PipelineState>(L"OrangeMushroom");
 		auto spriteRenderer = player->AddComponent<SpriteRenderer>();
-		spriteRenderer->SetTexture(APPLICATION.GetResources().Find<Texture>(L"PlayerRight"));
+		//spriteRenderer->SetTexture(APPLICATION.GetResources().Find<Texture>(L"PlayerRight"));
 
 		player->AddComponent<PlayerMovement>();
 
 		auto camera = player->AddComponent<Camera>();
+		camera->SetOrthographic(static_cast<float>(APPLICATION.GetWidth()), static_cast<float>(APPLICATION.GetHeight()));
 		camera->SetDeadZone(400, 300);
+		GetCameraManager()->PushCamera(camera);
 
 		auto spriteAnimator = player->AddComponent<SpriteAnimator>();
 		spriteAnimator->AddClip(L"IdleLeft", L"Player_IdleLeft");
@@ -57,27 +67,27 @@ namespace gm
 		BoxCollider2D* collider = player->AddComponent<BoxCollider2D>();
 		collider->SetSize({ 100.f, 100.f });
 
-		WidgetComponent* userWidget = player->AddComponent<WidgetComponent>();
-		userWidget->SetWorldOffset({ -175.f, 200.f });
-		userWidget->CreateUserWidget<MainHUDWidget>();
+		//WidgetComponent* userWidget = player->AddComponent<WidgetComponent>();
+		//userWidget->SetWorldOffset({ -175.f, 200.f });
+		//userWidget->CreateUserWidget<MainHUDWidget>();
 	}
 
 	void MainScene::InitializeSubObject()
 	{
 		//// BackGround
-		//auto BackGround = Instantiate<GameObject>({ 0, 0 });
+		//auto BackGround = SpawnGameObject<GameObject>({ 0, 0 });
 		//spriteRenderer->SetTexture(APPLICATION.GetResources().Find<Texture>(L"Xanadu"));
 
 		// Monster
 		for (int i = 0; i < 20; ++i)
 		{
-			auto monster = Instantiate<GameObject>({ (float)200 * i, 300 });
+			auto monster = SpawnGameObject<GameObject>({ (float)200 * i, 300 });
 			auto spriteRenderer = monster->AddComponent<SpriteRenderer>();
 			spriteRenderer = monster->AddComponent<SpriteRenderer>();
 			spriteRenderer->SetTexture(APPLICATION.GetResources().Find<Texture>(L"OrangeMushroom"));
 		}
 
-		auto ground = Instantiate<GameObject>({ 0, -250 });
+		auto ground = SpawnGameObject<GameObject>({ 0, -250 });
 		BoxCollider2D* groundCollider = ground->AddComponent<BoxCollider2D>();
 		groundCollider->SetSize({ 120000.f, 100.f });
 	}
