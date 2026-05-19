@@ -1,4 +1,5 @@
-﻿#include "SceneManager.h"
+#include "SceneManager.h"
+#include "Scene.h"
 
 namespace gm
 {
@@ -40,18 +41,19 @@ namespace gm
 		auto sceneIter = _sceneList.find(pendingSceneName);
 		GM_ASSERT_RETURN(sceneIter != _sceneList.end(), "%ls 은 존재하지 않습니다.", pendingSceneName);
 
-		if (loadingSceneName.empty() == false)
+		if (loadingSceneName.empty())
 		{
-			auto loadingSceneIter = _sceneList.find(loadingSceneName);
-			GM_ASSERT_RETURN(loadingSceneIter != _sceneList.end(), "%ls 은 존재하지 않습니다.", loadingSceneName);
+			_pendingSceneName.clear();
+			_nextSceneName = pendingSceneName;
 
-			_pendingSceneName = pendingSceneName;
-			_nextSceneName = loadingSceneName;
 			return;
 		}
 
-		_pendingSceneName.clear();
-		_nextSceneName = pendingSceneName;
+		auto loadingSceneIter = _sceneList.find(loadingSceneName);
+		GM_ASSERT_RETURN(loadingSceneIter != _sceneList.end(), "%ls 은 존재하지 않습니다.", loadingSceneName);
+
+		_pendingSceneName = pendingSceneName;
+		_nextSceneName = loadingSceneName;
 	}
 
 	void SceneManager::CheckSceneChange()
@@ -60,10 +62,10 @@ namespace gm
 			return;
 
 		if (_activeScene)
-			_activeScene->OnExit();
+			_activeScene->Exit();
 
 		_activeScene = _sceneList[_nextSceneName].get();
-		_activeScene->OnEnter();
+		_activeScene->Enter();
 
 		_nextSceneName.clear();
 	}

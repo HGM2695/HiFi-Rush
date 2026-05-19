@@ -1,16 +1,13 @@
-﻿#pragma once
+#pragma once
 
 #include "EngineCore.h"
-#include <string>
+#include "Scene.h"
 #include <type_traits>
 #include <unordered_map>
 #include <utility>
-#include "Scene.h"
 
 namespace gm
 {
-	class Scene;
-
 	class SceneManager
 	{
 	public:
@@ -28,7 +25,6 @@ namespace gm
 
 			std::unique_ptr<T> newScene = std::make_unique<T>();
 			newScene->SetName(sceneName);
-			newScene->Initialize();
 
 			Scene* scenePtr = newScene.get();
 			_sceneList.insert({ sceneName, std::move(newScene) });

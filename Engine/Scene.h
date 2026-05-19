@@ -9,6 +9,7 @@
 namespace gm
 {
 	class GameObject;
+	class CameraManager;
 
 	class Scene : public Entity
 	{
@@ -30,28 +31,31 @@ namespace gm
 			return CreateGameObject<T>(position, std::forward<Args>(args)...);
 		}
 
+		void			Enter();
+		void			Exit();
 		void			Initialize();
+		void			Unload();
 		void			Update();
 		void			LateUpdate();
 		void			Render();
 		void			EndFrame();
 
 		template <typename TFunc>
-		void ForEachGameObject(TFunc&& func)
+		void ForEachGameObjectIncludingPending(TFunc&& func)
 		{
 			for (auto& gameObject : _gameObjectList)
 				func(*gameObject);
 		}
 
 		template <typename TFunc>
-		void ForEachGameObject(TFunc&& func) const
+		void ForEachGameObjectIncludingPending(TFunc&& func) const
 		{
 			for (const auto& gameObject : _gameObjectList)
 				func(static_cast<const GameObject&>(*gameObject));
 		}
 
 		template <typename TFunc>
-		void ForEachAliveGameObject(TFunc&& func)
+		void ForEachGameObject(TFunc&& func)
 		{
 			for (auto& gameObject : _gameObjectList)
 			{
@@ -63,7 +67,7 @@ namespace gm
 		}
 
 		template <typename TFunc>
-		void ForEachAliveGameObject(TFunc&& func) const
+		void ForEachGameObject(TFunc&& func) const
 		{
 			for (const auto& gameObject : _gameObjectList)
 			{
@@ -74,10 +78,17 @@ namespace gm
 			}
 		}
 
-		void			AddGameObject(std::unique_ptr<GameObject> gameObject);
+		bool					IsInitialized() const { return _isInitialized; }
+		void					SetUnloadOnExit(bool isUnloadOnExit) { _isUnloadOnExit = isUnloadOnExit; }
+		bool					GetUnloadOnExit() const { return _isUnloadOnExit; }
+
+		void					AddGameObject(std::unique_ptr<GameObject> gameObject);
+		CameraManager*			GetCameraManager() { return _cameraManager.get(); }
+		const CameraManager*	GetCameraManager() const { return _cameraManager.get(); }
 
 	protected:
 		virtual void	OnInitialize() {}
+		virtual void	OnUnload() {}
 		virtual void	OnUpdate() {}
 		virtual void	OnLateUpdate() {}
 		virtual void	OnRender() {}
@@ -99,10 +110,13 @@ namespace gm
 			return ptr;
 		}
 
-		void			RemovePendingDestroyGameObjects();
+		void RemovePendingDestroyGameObjects();
 		
 	private:
 		std::vector<std::unique_ptr<GameObject>>	_gameObjectList{};
+		std::unique_ptr<CameraManager>				_cameraManager = nullptr;
+		bool										_isUnloadOnExit = true;
+		bool										_isInitialized = false;
 	};
 }
 
