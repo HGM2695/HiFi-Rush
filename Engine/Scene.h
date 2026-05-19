@@ -35,14 +35,6 @@ namespace gm
 			return SpawnGameObjectInternal<T>(position, std::forward<Args>(args)...);
 		}
 
-		void			Enter();
-		void			Exit();
-		void			Initialize();
-		void			Unload();
-		void			Tick(TickGroup group, float deltaTime);
-		void			Render();
-		void			EndFrame();
-
 		template <typename TFunc>
 		void ForEachGameObjectIncludingPending(TFunc&& func)
 		{
@@ -112,6 +104,14 @@ namespace gm
 
 			return ptr;
 		}
+
+		void			Enter();
+		void			Exit();
+		void			Initialize();
+		void			Unload();
+		void			Tick(TickGroup group, float deltaTime);
+		void			Render();
+		void			EndFrame();
 
 		void InitializePendingGameObjects();
 		void RemovePendingDestroyGameObjects();
