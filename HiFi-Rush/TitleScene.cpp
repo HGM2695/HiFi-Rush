@@ -1,9 +1,9 @@
 ﻿#include "TitleScene.h"
 #include "Input.h"
 #include "Application.h"
+#include "IDebugRenderer.h"
 #include "PhysicsSystem.h"
 #include "SceneManager.h"
-#include "DebugRenderer.h"
 
 namespace gm
 {
@@ -20,7 +20,7 @@ namespace gm
 
 	void TitleScene::OnRender()
 	{
-		debug::DebugRenderer::RequestDrawText(L"TitleScene", { APPLICATION.GetWidth() * 0.5f, APPLICATION.GetHeight() * 0.5f });
+		APPLICATION.GetDebugRenderer().RequestDrawText(L"TitleScene", { APPLICATION.GetWidth() * 0.5f, APPLICATION.GetHeight() * 0.5f });
 	}
 }
 

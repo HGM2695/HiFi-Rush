@@ -7,10 +7,10 @@
 #include "Resources.h"
 #include "Scene.h"
 #include "AudioSystem.h"
-#include "DebugRenderer.h"
 #include "IGraphicsDevice.h"
 #include "IGraphicsResourceFactory.h"
 #include "IGraphicsCommandContext.h"
+#include "IDebugRenderer.h"
 #include "UIManager.h"
 #include "Window.h"
 #include "BuiltinGraphicsResources.h"
@@ -64,10 +64,13 @@ namespace gm
         GraphicsBackend graphicsBackend = CreateGraphicsBackend(graphicsDesc);
         GM_ASSERT_RETURN_VAL(graphicsBackend.device, false, "그래픽 디바이스 생성에 실패했습니다.");
         GM_ASSERT_RETURN_VAL(graphicsBackend.resourceFactory, false, "그래픽 리소스 팩토리 생성에 실패했습니다.");
+        GM_ASSERT_RETURN_VAL(graphicsBackend.commandContext, false, "Graphics CommandContext 생성에 실패했습니다.");
+        GM_ASSERT_RETURN_VAL(graphicsBackend.debugRenderer, false, "DebugRenderer 생성에 실패했습니다.");
 
         _graphicsDevice = std::move(graphicsBackend.device);
         _graphicsResourceFactory = std::move(graphicsBackend.resourceFactory);
         _graphicsCommandContext = std::move(graphicsBackend.commandContext);
+        _debugRenderer = std::move(graphicsBackend.debugRenderer);
 
         return true;
     }
@@ -100,7 +103,9 @@ namespace gm
     bool Application::initializeRenderer()
     {
         _renderer = std::make_unique<Renderer>(*_resources, *_graphicsCommandContext, *_graphicsResourceFactory);
-        return _renderer->Initialize();
+        GM_ASSERT_RETURN_VAL(_renderer->Initialize(), false, "Renderer 초기화에 실패했습니다.");
+
+        return true;
     }
 
     void Application::Run()
@@ -172,8 +177,9 @@ namespace gm
 		GM_ASSERT_RETURN(activeScene, "활성 Scene이 없습니다.");
 		GM_ASSERT_RETURN(activeScene->GetCameraManager(), "CameraManager가 존재하지 않습니다.");
 
-		_renderer->Render(activeScene->GetCameraManager()->GetViewInfo());
-        debug::DebugRenderer::Render();
+		const CameraViewInfo viewInfo = activeScene->GetCameraManager()->GetViewInfo();
+		_renderer->Render(viewInfo);
+		_debugRenderer->Render(viewInfo);
 		_uiManager->Render();
 
         _graphicsDevice->EndFrame();
@@ -198,6 +204,8 @@ namespace gm
 			_audioSystem.reset();
 		if (_uiManager)
 			_uiManager.reset();
+		if (_debugRenderer)
+			_debugRenderer.reset();
     }
 
     uint32 Application::GetWidth() const

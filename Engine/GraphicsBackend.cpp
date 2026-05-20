@@ -2,6 +2,7 @@
 #include "D3D11GraphicsDevice.h"
 #include "D3D11GraphicsResourceFactory.h"
 #include "D3D11GraphicsCommandContext.h"
+#include "D3D11DebugRenderer.h"
 #include <d3d11.h>
 
 namespace gm
@@ -23,8 +24,10 @@ namespace gm
 
 			GraphicsBackend backend{};
 			backend.resourceFactory = std::make_unique<D3D11GraphicsResourceFactory>(*d3d11Device);
-			backend.device = std::move(device);
 			backend.commandContext = std::make_unique<D3D11GraphicsCommandContext>(d3d11Device->GetImmediateContext());
+			backend.debugRenderer = std::make_unique<D3D11DebugRenderer>();
+			GM_ASSERT_RETURN_VAL(backend.debugRenderer->Initialize(*device), GraphicsBackend{}, "D3D11 DebugRenderer 초기화에 실패했습니다.");
+			backend.device = std::move(device);
 
 			return backend;
 		}

@@ -75,7 +75,7 @@
       <AdditionalIncludeDirectories>..\ThirdParty\FMOD\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;NOMINMAX;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;NOMINMAX;DIRECTX_TOOLKIT_IMPORT;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -90,7 +90,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;NOMINMAX;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;NOMINMAX;DIRECTX_TOOLKIT_IMPORT;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -103,7 +103,7 @@
       <AdditionalIncludeDirectories>..\ThirdParty\FMOD\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;NOMINMAX;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;NOMINMAX;DIRECTX_TOOLKIT_IMPORT;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 /we4834 %(AdditionalOptions)</AdditionalOptions>
@@ -121,7 +121,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;NOMINMAX;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;NOMINMAX;DIRECTX_TOOLKIT_IMPORT;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -155,7 +155,8 @@
     <ClInclude Include="D3D11Sampler.h" />
     <ClInclude Include="D3D11Texture.h" />
     <ClInclude Include="D3D11TypeConverter.h" />
-    <ClInclude Include="DebugRenderer.h" />
+    <ClInclude Include="D3D11DebugRenderer.h" />
+    <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="D3D11GraphicsDevice.h" />
     <ClInclude Include="EngineCore.h" />
     <ClInclude Include="Entity.h" />
@@ -173,6 +174,7 @@
     <ClInclude Include="IGraphicsResourceFactory.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="IDebugRenderer.h" />
     <ClInclude Include="MathTypes.h" />
     <ClInclude Include="MathUtil.h" />
     <ClInclude Include="Material.h" />
@@ -244,7 +246,8 @@
     <ClCompile Include="D3D11Sampler.cpp" />
     <ClCompile Include="D3D11Texture.cpp" />
     <ClCompile Include="D3D11TypeConverter.cpp" />
-    <ClCompile Include="DebugRenderer.cpp" />
+    <ClCompile Include="D3D11DebugRenderer.cpp" />
+    <ClCompile Include="DebugDraw.cpp" />
     <ClCompile Include="D3D11GraphicsDevice.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GameObject.cpp" />

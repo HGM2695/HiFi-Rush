@@ -1,7 +1,5 @@
 #include "D3D11Shader.h"
 
-#pragma comment(lib, "d3dcompiler.lib")
-
 namespace gm
 {
 	namespace

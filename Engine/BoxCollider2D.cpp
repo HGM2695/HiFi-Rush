@@ -1,5 +1,6 @@
 #include "BoxCollider2D.h"
-#include "DebugRenderer.h"
+#include "Application.h"
+#include "IDebugRenderer.h"
 #include "GameObject.h"
 #include "Transform.h"
 
@@ -10,7 +11,7 @@ namespace gm
 #ifdef _DEBUG
 		const Vector2 worldCenter = GetOwner().GetTransform()->GetPosition2D() + GetOffset();
 		const Color color = IsTrigger() ? Colors::Red : Colors::Green;
-		debug::DebugRenderer::RequestDrawRect(worldCenter, GetSize(), color);
+		APPLICATION.GetDebugRenderer().RequestDrawRect(worldCenter, GetSize(), color);
 #endif
 	}
 }

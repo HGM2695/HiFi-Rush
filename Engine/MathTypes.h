@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Types.h"
+#include <DirectXCollision.h>
 #include <directxtk/SimpleMath.h>
 
 namespace gm
@@ -11,6 +12,11 @@ namespace gm
     using Matrix = DirectX::SimpleMath::Matrix;
     using Quaternion = DirectX::SimpleMath::Quaternion;
     using Color = DirectX::SimpleMath::Color;
+    using Ray = DirectX::SimpleMath::Ray;
+    using BoundingBox = DirectX::BoundingBox;
+    using BoundingOrientedBox = DirectX::BoundingOrientedBox;
+    using BoundingSphere = DirectX::BoundingSphere;
+    using BoundingFrustum = DirectX::BoundingFrustum;
 
     constexpr Color ColorFromRGBA(uint8 r, uint8 g, uint8 b, uint8 a = 255)
     {
