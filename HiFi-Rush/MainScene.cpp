@@ -19,6 +19,8 @@
 #include "CameraManager.h"
 #include "Material.h"
 #include "Transform.h"
+#include "SocketComponent.h"
+#include "SocketFollowComponent.h"
 
 namespace gm
 {
@@ -31,8 +33,9 @@ namespace gm
 
 	void MainScene::OnInitialize()
 	{
-		//InitializeSubObject();
+		InitializeSubObject();
 		InitializePlayer();
+		GetCameraManager()->SetPixelSnapEnabled(true);
 	}
 
 	void MainScene::InitializePlayer()
@@ -40,19 +43,13 @@ namespace gm
 		auto player = SpawnGameObject<GameObject>({ 0, 200 });
 
 		auto transform = player->GetTransform();
-		transform->SetScale(Vector2{ 60.f, 120.f });
 
-		//MaterialDesc materialDesc{};
-		//materialDesc.pipelineState = APPLICATION.GetResources().Find<PipelineState>(L"OrangeMushroom");
 		auto spriteRenderer = player->AddComponent<SpriteRenderer>();
-		//spriteRenderer->SetTexture(APPLICATION.GetResources().Find<Texture>(L"PlayerRight"));
+		auto texture = APPLICATION.GetResources().Find<Texture>(L"PlayerRight");
+		spriteRenderer->SetTexture(texture);
+		transform->SetScale(Vector2{ 100.f , 100.f });
 
 		player->AddComponent<PlayerMovement>();
-
-		auto camera = player->AddComponent<Camera>();
-		camera->SetOrthographic(static_cast<float>(APPLICATION.GetWidth()), static_cast<float>(APPLICATION.GetHeight()));
-		GetCameraManager()->RegisterCamera(L"PlayerCamera", camera);
-		GetCameraManager()->SetActiveCamera(L"PlayerCamera");
 
 		auto spriteAnimator = player->AddComponent<SpriteAnimator>();
 		spriteAnimator->AddClip(L"IdleLeft", L"Player_IdleLeft");
@@ -63,32 +60,59 @@ namespace gm
 		player->AddComponent<PlayerAnimationFSM>();
 		Rigidbody2D* rigidbody = player->AddComponent<Rigidbody2D>();
 		rigidbody->SetLinearDamping(1.f);
+		rigidbody->SetGravityScale(0.f);
 
 		BoxCollider2D* collider = player->AddComponent<BoxCollider2D>();
 		collider->SetSize({ 100.f, 100.f });
 
+		SocketComponent* socketComponent = player->AddComponent<SocketComponent>();
+		Socket socket{};
+		socket.position = Vector3{ 0.f, 0.f, -1.f };
+		socketComponent->AddSocket(L"Player.Camera", socket);
+
 		//WidgetComponent* userWidget = player->AddComponent<WidgetComponent>();
 		//userWidget->SetWorldOffset({ -175.f, 200.f });
 		//userWidget->CreateUserWidget<MainHUDWidget>();
+
+		InitializeCamera(player);
 	}
 
 	void MainScene::InitializeSubObject()
 	{
-		//// BackGround
-		//auto BackGround = SpawnGameObject<GameObject>({ 0, 0 });
-		//spriteRenderer->SetTexture(APPLICATION.GetResources().Find<Texture>(L"Xanadu"));
+		// BackGround
+		auto BackGround = SpawnGameObject<GameObject>({ 0, 0 });
+		auto spriteRenderer = BackGround->AddComponent<SpriteRenderer>();
+		auto texture = APPLICATION.GetResources().Find<Texture>(L"Xanadu");
+		spriteRenderer->SetTexture(texture);
+		auto transform = BackGround->GetTransform();
+		transform->SetScale(Vector2{ static_cast<float>(texture->GetWidth()),static_cast<float>(texture->GetHeight()) });
 
 		// Monster
 		for (int i = 0; i < 20; ++i)
 		{
 			auto monster = SpawnGameObject<GameObject>({ (float)200 * i, 300 });
 			auto spriteRenderer = monster->AddComponent<SpriteRenderer>();
-			spriteRenderer = monster->AddComponent<SpriteRenderer>();
-			spriteRenderer->SetTexture(APPLICATION.GetResources().Find<Texture>(L"OrangeMushroom"));
+			auto texture = APPLICATION.GetResources().Find<Texture>(L"OrangeMushroom");
+			spriteRenderer->SetTexture(texture);
+
+			auto transform = monster->GetTransform();
+			transform->SetScale(Vector2{ static_cast<float>(texture->GetWidth()),static_cast<float>(texture->GetHeight()) });
 		}
 
-		auto ground = SpawnGameObject<GameObject>({ 0, -250 });
-		BoxCollider2D* groundCollider = ground->AddComponent<BoxCollider2D>();
-		groundCollider->SetSize({ 120000.f, 100.f });
+		//auto ground = SpawnGameObject<GameObject>({ 0, -250 });
+		//BoxCollider2D* groundCollider = ground->AddComponent<BoxCollider2D>();
+		//groundCollider->SetSize({ 120000.f, 100.f });
+	}
+
+	void MainScene::InitializeCamera(GameObject* player)
+	{
+		auto cameraObject = SpawnGameObject<GameObject>({ 0, 0 });
+
+		SocketFollowComponent* followComponent = cameraObject->AddComponent<SocketFollowComponent>();
+		followComponent->SetTarget(*player, L"Player.Camera");
+
+		auto cameraComponent = cameraObject->AddComponent<Camera>();
+		cameraComponent->SetOrthographic(static_cast<float>(APPLICATION.GetWidth()), static_cast<float>(APPLICATION.GetHeight()));
+		GetCameraManager()->RegisterCamera(L"PlayerCamera", cameraComponent);
 	}
 }

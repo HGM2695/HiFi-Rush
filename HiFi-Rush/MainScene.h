@@ -1,9 +1,11 @@
-﻿#pragma once
+#pragma once
 
 #include "Scene.h"
 
 namespace gm
 {
+	class GameObject;
+
 	class MainScene : public Scene
 	{
 	protected:
@@ -13,6 +15,7 @@ namespace gm
 	private:
 		void			InitializePlayer();
 		void			InitializeSubObject();
+		void			InitializeCamera(GameObject* player);
 	};
 }
 

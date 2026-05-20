@@ -21,7 +21,7 @@ namespace gm
 		Resources& resources = APPLICATION.GetResources();
 
 		LoadTexture(resources);
-		//LoadTempAnimationClip(resources);
+		LoadTempAnimationClip(resources);
 		LoadAudio(resources);
 	}
 
@@ -35,6 +35,7 @@ namespace gm
 			desc.path = path;
 
 			std::shared_ptr<Texture> texture = factory.CreateTexture(desc);
+			resources.Add(key, texture);
 		};
 
 		LoadTextureResource(L"OrangeMushroom", GetTexturePath(L"Test/orange_mushroom.png"));
