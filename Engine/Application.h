@@ -1,8 +1,7 @@
 #pragma once
 
 #include "EngineCore.h"
-#include "GraphicsBackend.h"
-#include <string>
+#include "GraphicsTypes.h"
 
 namespace gm
 {
@@ -19,6 +18,7 @@ namespace gm
 	class IGraphicsDevice;
 	class IGraphicsResourceFactory;
 	class IGraphicsCommandContext;
+	class Renderer;
 
 	struct ApplicationDesc
 	{
@@ -68,6 +68,8 @@ namespace gm
 		UIManager&			GetUIManager() { return *_uiManager; }
 		IGraphicsDevice&	GetGraphicsDevice() { return *_graphicsDevice; }
 		IGraphicsResourceFactory& GetGraphicsResourceFactory() { return *_graphicsResourceFactory; }
+		IGraphicsCommandContext& GetGraphicsCommandContext() { return *_graphicsCommandContext; }
+		Renderer&			GetRenderer() { return *_renderer; }
 
 		const Input&		GetInput() const { return *_input; }
 		const PhysicsSystem& GetPhysicsSystem() const { return *_physicsSystem; }
@@ -78,6 +80,8 @@ namespace gm
 		const UIManager&	GetUIManager() const { return *_uiManager; }
 		const IGraphicsDevice& GetGraphicsDevice() const { return *_graphicsDevice; }
 		const IGraphicsResourceFactory& GetGraphicsResourceFactory() const { return *_graphicsResourceFactory; }
+		const IGraphicsCommandContext& GetGraphicsCommandContext() const { return *_graphicsCommandContext; }
+		const Renderer&		GetRenderer() const { return *_renderer; }
 
 	private:
 		void				Loop();
@@ -85,6 +89,7 @@ namespace gm
 		bool				initializeGraphics(const ApplicationDesc& desc);
 		bool				initializeSubSystem();
 		bool				initializeBuiltinResources();
+		bool				initializeRenderer();
 
 	private:
 		std::unique_ptr<Input>						_input;
@@ -98,5 +103,6 @@ namespace gm
 		std::unique_ptr<IGraphicsDevice>			_graphicsDevice;
 		std::unique_ptr<IGraphicsResourceFactory>	_graphicsResourceFactory;
 		std::unique_ptr<IGraphicsCommandContext>	_graphicsCommandContext;
+		std::unique_ptr<Renderer>					_renderer;
 	};
 }

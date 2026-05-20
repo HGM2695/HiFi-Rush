@@ -26,7 +26,9 @@ namespace gm
 		SetPrimitiveTopology(d3d11State.GetTopology());
 		SetVertexShader(*vertexShader);
 		SetPixelShader(*pixelShader);
-		// depthStencil, rasterizer, blend state도 추후 대응해야 합니다.
+		BindRasterizerState(d3d11State.GetRasterizerState());
+		BindDepthStencilState(d3d11State.GetDepthStencilState());
+		BindBlendState(d3d11State.GetBlendState());
 	}
 
 	void D3D11GraphicsCommandContext::SetPrimitiveTopology(PrimitiveTopology topology)
@@ -162,5 +164,21 @@ namespace gm
 	{
 		// 비어있는 경우 nullptr 바인딩을 수행합니다.
 		_context->PSSetSamplers(slot, 1, &samplerState);
+	}
+
+	void D3D11GraphicsCommandContext::BindRasterizerState(ID3D11RasterizerState* rasterizerState)
+	{
+		_context->RSSetState(rasterizerState);
+	}
+
+	void D3D11GraphicsCommandContext::BindDepthStencilState(ID3D11DepthStencilState* depthStencilState)
+	{
+		_context->OMSetDepthStencilState(depthStencilState, 0);
+	}
+
+	void D3D11GraphicsCommandContext::BindBlendState(ID3D11BlendState* blendState)
+	{
+		const float blendFactor[4] = { 0.f, 0.f, 0.f, 0.f };
+		_context->OMSetBlendState(blendState, blendFactor, 0xffffffff);
 	}
 }

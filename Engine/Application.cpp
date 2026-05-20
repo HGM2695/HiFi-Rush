@@ -16,6 +16,9 @@
 #include "BuiltinGraphicsResources.h"
 #include "Mesh.h"
 #include "PipelineState.h"
+#include "GraphicsBackend.h"
+#include "CameraManager.h"
+#include "Renderer.h"
 
 namespace gm
 {
@@ -28,6 +31,7 @@ namespace gm
         GM_ASSERT_RETURN_VAL(initializeGraphics(desc), false, "Graphics Device 초기화 실패");
         GM_ASSERT_RETURN_VAL(initializeSubSystem(), false, "SubSystem 초기화 실패");
         GM_ASSERT_RETURN_VAL(initializeBuiltinResources(), false, "builtin Resource 초기화 실패");
+        GM_ASSERT_RETURN_VAL(initializeRenderer(), false, "Renderer 초기화 실패");
         
         return true;
     }
@@ -93,6 +97,12 @@ namespace gm
         return BuiltinGraphicsResources::Load(*_resources, *_graphicsResourceFactory);
     }
 
+    bool Application::initializeRenderer()
+    {
+        _renderer = std::make_unique<Renderer>(*_resources, *_graphicsCommandContext, *_graphicsResourceFactory);
+        return _renderer->Initialize();
+    }
+
     void Application::Run()
     {
         MSG msg;
@@ -154,19 +164,15 @@ namespace gm
 
     void Application::Render()
     {
-        auto fullScreenMesh = _resources->Find<Mesh>(FullScreenMesh);
-        GM_ASSERT_RETURN(fullScreenMesh, "_resources에 fullScreenMesh가 없습니다. initializeBuiltinResources() 정상 호출 바랍니다.");
-        auto fullScreenPSO = _resources->Find<PipelineState>(FullScreenPipelineState);
-        GM_ASSERT_RETURN(fullScreenPSO, "_resources에 FullScreenPipelineState가 없습니다. initializeBuiltinResources() 정상 호출 바랍니다.");
-
         static const Color backBufferColor = Colors::Magenta;
         _graphicsDevice->BeginFrame(backBufferColor);
 
-        _graphicsCommandContext->SetPipelineState(*fullScreenPSO);
-        _graphicsCommandContext->SetMesh(*fullScreenMesh);
-        _graphicsCommandContext->DrawIndexed(fullScreenMesh->GetIndexCount());
-
         _sceneManager->Render();
+		Scene* activeScene = _sceneManager->GetActiveScene();
+		GM_ASSERT_RETURN(activeScene, "활성 Scene이 없습니다.");
+		GM_ASSERT_RETURN(activeScene->GetCameraManager(), "CameraManager가 존재하지 않습니다.");
+
+		_renderer->Render(activeScene->GetCameraManager()->GetViewInfo());
         debug::DebugRenderer::Render();
 		_uiManager->Render();
 
@@ -182,6 +188,8 @@ namespace gm
     {
         if (_sceneManager)
             _sceneManager.reset();
+		if (_renderer)
+			_renderer.reset();
         if (_resources)
             _resources.reset();
 		if (_physicsSystem)

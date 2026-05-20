@@ -47,10 +47,6 @@
     <ClInclude Include="Component.h">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="TickGroup.h" />
-    <ClInclude Include="TickManager.h">
-      <Filter>Base</Filter>
-    </ClInclude>
     <ClInclude Include="StringUtil.h">
       <Filter>Util</Filter>
     </ClInclude>
@@ -234,17 +230,30 @@
     <ClInclude Include="D3D11Texture.h">
       <Filter>Resource\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="Sampler.h">
-      <Filter>Resource</Filter>
+    <ClInclude Include="Material.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTypes.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteRenderPass.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="D3D11Sampler.h">
-      <Filter>Resource</Filter>
+      <Filter>Resource\Sampler</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Resource</Filter>
+    <ClInclude Include="Sampler.h">
+      <Filter>Resource\Sampler</Filter>
     </ClInclude>
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="D3D11ConstantBuffer.h" />
+    <ClInclude Include="TickGroup.h" />
+    <ClInclude Include="TickManager.h">
+      <Filter>Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -290,10 +299,10 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="Component.cpp">
+    <ClCompile Include="TickManager.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="TickManager.cpp">
+    <ClCompile Include="Component.cpp">
       <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="GMAssert.cpp">
@@ -422,14 +431,20 @@
     <ClCompile Include="D3D11Texture.cpp">
       <Filter>Resource\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="Sampler.cpp">
-      <Filter>Resource</Filter>
+    <ClCompile Include="Material.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteRenderPass.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="D3D11Sampler.cpp">
-      <Filter>Resource</Filter>
+      <Filter>Resource\Sampler</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>Resource</Filter>
+    <ClCompile Include="Sampler.cpp">
+      <Filter>Resource\Sampler</Filter>
     </ClCompile>
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="D3D11ConstantBuffer.cpp" />
@@ -504,13 +519,28 @@
     <Filter Include="Resource\PSO">
       <UniqueIdentifier>{5cc0a678-0a9b-403a-b1be-0959fb7c0ee1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\PS">
+      <UniqueIdentifier>{1d1c9ebf-fcf7-4b33-a237-3eaca86077ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\VS">
+      <UniqueIdentifier>{c0c8fdc4-74e9-4e86-a72c-207b7ce6ee6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Sampler">
+      <UniqueIdentifier>{a5f31706-4c0c-4a8a-a078-65845563392c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\Shaders\FullScreenTextureVS.hlsl">
-      <Filter>Shaders</Filter>
+    <FxCompile Include="Shaders\FullScreenTexturePS.hlsl">
+      <Filter>Shaders\PS</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\Shaders\FullScreenTexturePS.hlsl">
-      <Filter>Shaders</Filter>
+    <FxCompile Include="Shaders\SpriteTexturePS.hlsl">
+      <Filter>Shaders\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\FullScreenTextureVS.hlsl">
+      <Filter>Shaders\VS</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\QuadVS.hlsl">
+      <Filter>Shaders\VS</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

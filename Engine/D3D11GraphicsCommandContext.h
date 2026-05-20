@@ -9,6 +9,9 @@ struct ID3D11PixelShader;
 struct ID3D11InputLayout;
 struct ID3D11ShaderResourceView;
 struct ID3D11SamplerState;
+struct ID3D11RasterizerState;
+struct ID3D11DepthStencilState;
+struct ID3D11BlendState;
 
 namespace gm
 {
@@ -40,6 +43,9 @@ namespace gm
 		void BindIndexBuffer(ID3D11Buffer* indexBuffer);
 		void BindTexture(uint32 slot, ID3D11ShaderResourceView* shaderResourceView);
 		void BindSampler(uint32 slot, ID3D11SamplerState* samplerState);
+		void BindRasterizerState(ID3D11RasterizerState* rasterizerState);
+		void BindDepthStencilState(ID3D11DepthStencilState* depthStencilState);
+		void BindBlendState(ID3D11BlendState* blendState);
 
 		ID3D11DeviceContext* _context = nullptr;
 	};
