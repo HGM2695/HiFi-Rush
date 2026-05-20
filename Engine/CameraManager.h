@@ -40,6 +40,9 @@ namespace gm
 		void				AddShake(const CameraShakeDesc& desc);
 		void				StopShake();
 
+		void				SetPixelSnapEnabled(bool enabled) { _isPixelSnapEnabled = enabled; }
+		bool				IsPixelSnapEnabled() const { return _isPixelSnapEnabled; }
+
 	private:
 		void				TickShake(float deltaTime);
 		void				ApplyShake(CameraViewInfo& viewInfo) const;
@@ -60,5 +63,6 @@ namespace gm
 		CameraShakeDesc								_activeShakeDesc{};
 		float										_remainShakeTime = 0.f;
 		float										_shakePhase = 0.f;
+		bool										_isPixelSnapEnabled = false;
 	};
 }

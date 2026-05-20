@@ -14,6 +14,14 @@ namespace gm
 		GM_ASSERT_RETURN(activeCamera, "활성 카메라가 없습니다.");
 
 		_viewInfo = activeCamera->GetViewInfo();
+
+		if (_isPixelSnapEnabled)
+		{
+			_viewInfo.position.x = std::round(_viewInfo.position.x);
+			_viewInfo.position.y = std::round(_viewInfo.position.y);
+			_viewInfo.view = Math::CreateViewMatrix(_viewInfo.position, _viewInfo.rotation);
+		}
+
 		TickShake(deltaTime);
 		ApplyShake(_viewInfo);
 	}
