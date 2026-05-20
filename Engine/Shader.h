@@ -1,20 +1,11 @@
 #pragma once
 
 #include "Resource.h"
+#include "GraphicsTypes.h"
 #include <string>
 
 namespace gm
 {
-	enum class ShaderStage
-	{
-		Vertex,
-		Pixel,
-		//Geometry,
-		//Compute,
-		//Hull,
-		//Domain
-	};
-
 	struct ShaderDesc
 	{
 		std::wstring	filePath;

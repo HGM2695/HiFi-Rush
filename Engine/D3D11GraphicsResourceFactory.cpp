@@ -6,6 +6,7 @@
 #include "D3D11PipelineState.h"
 #include "D3D11Texture.h"
 #include "D3D11Sampler.h"
+#include "D3D11ConstantBuffer.h"
 
 namespace gm
 {
@@ -84,5 +85,15 @@ namespace gm
 		desc.device = _graphicsDevice.GetNativeDevice();
 
 		return D3D11Sampler::Create(desc);
+	}
+
+	std::unique_ptr<ConstantBuffer> D3D11GraphicsResourceFactory::CreateConstantBuffer(const ConstantBufferDesc& constantBufferDesc)
+	{
+		D3D11ConstantBufferDesc desc{};
+		desc.size = constantBufferDesc.size;
+		desc.initialData = constantBufferDesc.initialData;
+		desc.device = _graphicsDevice.GetNativeDevice();
+
+		return D3D11ConstantBuffer::Create(desc);
 	}
 }

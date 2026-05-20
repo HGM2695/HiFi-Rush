@@ -19,6 +19,8 @@ namespace gm
 		virtual std::shared_ptr<Texture>		CreateTexture(const TextureDesc& textureDesc) override;
 		virtual std::shared_ptr<Sampler>		CreateSampler(const SamplerDesc& samplerDesc) override;
 
+		virtual std::unique_ptr<ConstantBuffer>	CreateConstantBuffer(const ConstantBufferDesc& constantBufferDesc) override;
+
 	private:
 		D3D11GraphicsDevice& _graphicsDevice;
 	};

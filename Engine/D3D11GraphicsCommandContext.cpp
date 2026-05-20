@@ -5,6 +5,7 @@
 #include "D3D11PipelineState.h"
 #include "D3D11Texture.h"
 #include "D3D11Sampler.h"
+#include "D3D11ConstantBuffer.h"
 #include "Shader.h"
 #include "Material.h"
 #include <d3d11.h>
@@ -68,6 +69,36 @@ namespace gm
 		const D3D11Sampler* d3d11Sampler = static_cast<const D3D11Sampler*>(sampler);
 		ID3D11SamplerState* nativeSampler = d3d11Sampler ? d3d11Sampler->GetNativeSampler() : nullptr;
 		BindSampler(slot, nativeSampler);
+	}
+
+	void D3D11GraphicsCommandContext::SetConstantBuffer(ShaderStage stage, uint32 slot, const ConstantBuffer* cbuffer)
+	{
+		const D3D11ConstantBuffer* d3dBuffer = static_cast<const D3D11ConstantBuffer*>(cbuffer);
+		ID3D11Buffer* nativeBuffer = d3dBuffer ? d3dBuffer->GetNativeBuffer() : nullptr;
+
+		switch (stage)
+		{
+		case gm::ShaderStage::Vertex:
+			_context->VSSetConstantBuffers(slot, 1, &nativeBuffer);
+			break;
+
+		case gm::ShaderStage::Pixel:
+			_context->PSSetConstantBuffers(slot, 1, &nativeBuffer);
+			break;
+
+		default:
+			GM_ASSERT_RETURN(false, "지원하지 않는 ShaderStage입니다.");
+		}
+	}
+
+	void D3D11GraphicsCommandContext::UpdateConstantBuffer(ConstantBuffer& buffer, const void* data, uint32 size)
+	{
+		GM_ASSERT_RETURN(data, "상수 버퍼 업데이트 데이터가 nullptr입니다.");
+		GM_ASSERT_RETURN(size > 0, "상수 버퍼 업데이트 크기가 0입니다.");
+		GM_ASSERT_RETURN(size <= buffer.GetSize(), "상수 버퍼 업데이트 크기가 버퍼 크기를 초과했습니다.");
+
+		D3D11ConstantBuffer& d3dBuffer = static_cast<D3D11ConstantBuffer&>(buffer);
+		_context->UpdateSubresource(d3dBuffer.GetNativeBuffer(), 0, nullptr, data, 0, 0);
 	}
 
 	void D3D11GraphicsCommandContext::SetMaterial(const Material& material)

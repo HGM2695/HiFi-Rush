@@ -243,6 +243,8 @@
     <ClInclude Include="Material.h">
       <Filter>Resource</Filter>
     </ClInclude>
+    <ClInclude Include="ConstantBuffer.h" />
+    <ClInclude Include="D3D11ConstantBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -429,6 +431,8 @@
     <ClCompile Include="Material.cpp">
       <Filter>Resource</Filter>
     </ClCompile>
+    <ClCompile Include="ConstantBuffer.cpp" />
+    <ClCompile Include="D3D11ConstantBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">

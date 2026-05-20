@@ -11,6 +11,7 @@ namespace gm
 	class Texture;
 	class Sampler;
 	class Material;
+	class ConstantBuffer;
 
 	class IGraphicsCommandContext
 	{
@@ -27,6 +28,9 @@ namespace gm
 
 		virtual void		SetTexture(uint32 slot, const Texture* texture) = 0;
 		virtual void		SetSampler(uint32 slot, const Sampler* sampler) = 0;
+
+		virtual void		SetConstantBuffer(ShaderStage stage, uint32 slot, const ConstantBuffer* cbuffer) = 0;
+		virtual void		UpdateConstantBuffer(ConstantBuffer& buffer, const void* data, uint32 size) = 0;
 
 		virtual void		DrawIndexed(uint32 indexCount) = 0;
 	};

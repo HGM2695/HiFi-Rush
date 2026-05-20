@@ -10,6 +10,16 @@ namespace gm
         Count
     };
 
+    enum class ShaderStage
+    {
+        Vertex,
+        Pixel,
+        //Geometry,
+        //Compute,
+        //Hull,
+        //Domain
+    };
+
     enum class PrimitiveTopology
     {
         TriangleList,

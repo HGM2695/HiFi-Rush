@@ -146,6 +146,8 @@
     <ClInclude Include="CameraViewInfo.h" />
     <ClInclude Include="Collider2D.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="ConstantBuffer.h" />
+    <ClInclude Include="D3D11ConstantBuffer.h" />
     <ClInclude Include="D3D11GraphicsCommandContext.h" />
     <ClInclude Include="D3D11GraphicsResourceFactory.h" />
     <ClInclude Include="D3D11Mesh.h" />
@@ -230,6 +232,8 @@
     <ClCompile Include="CircleCollider2D.cpp" />
     <ClCompile Include="Collider2D.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="ConstantBuffer.cpp" />
+    <ClCompile Include="D3D11ConstantBuffer.cpp" />
     <ClCompile Include="D3D11GraphicsCommandContext.cpp" />
     <ClCompile Include="D3D11Mesh.cpp" />
     <ClCompile Include="D3D11GraphicsResourceFactory.cpp" />

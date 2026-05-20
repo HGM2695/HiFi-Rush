@@ -28,6 +28,9 @@ namespace gm
 		virtual void		SetTexture(uint32 slot, const Texture* texture) override;
 		virtual void		SetSampler(uint32 slot, const Sampler* sampler) override;
 
+		virtual void		SetConstantBuffer(ShaderStage stage, uint32 slot, const ConstantBuffer* cbuffer) override;
+		virtual void		UpdateConstantBuffer(ConstantBuffer& buffer, const void* data, uint32 size) override;
+
 		virtual void		DrawIndexed(uint32 indexCount) override;
 
 	private:
