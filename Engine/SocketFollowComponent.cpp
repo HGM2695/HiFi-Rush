@@ -5,7 +5,7 @@
 
 namespace gm
 {
-	void SocketFollowComponent::SetTarget(GameObject& target, const std::wstring& socketName)
+	void SocketFollowComponent::SetTarget(const GameObject& target, const std::wstring& socketName)
 	{
 		_target = target.GetWeakPtr();
 		_targetSocketComponent = target.GetComponent<SocketComponent>();

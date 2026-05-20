@@ -14,7 +14,7 @@ namespace gm
 	public:
 		virtual TickGroup GetTickGroup() const override { return TickGroup::Attachment; }
 
-		void						SetTarget(GameObject& target, const std::wstring& socketName);
+		void						SetTarget(const GameObject& target, const std::wstring& socketName);
 		void						ClearTarget();
 
 		const WeakGameObjectPtr&	GetTargetObject() const { return _target; }
@@ -25,9 +25,9 @@ namespace gm
 		virtual void				OnTick(float deltaTime) override;
 
 	private:
-		Transform*			_ownerTransform = nullptr;
-		WeakGameObjectPtr	_target;
-		SocketComponent*	_targetSocketComponent = nullptr;
-		std::wstring		_followSocketName;
+		Transform*				_ownerTransform = nullptr;
+		WeakGameObjectPtr		_target;
+		const SocketComponent*	_targetSocketComponent = nullptr;
+		std::wstring			_followSocketName;
 	};
 }
