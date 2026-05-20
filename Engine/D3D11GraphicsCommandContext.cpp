@@ -103,15 +103,15 @@ namespace gm
 
 	void D3D11GraphicsCommandContext::SetMaterial(const Material& material)
 	{
-		PipelineState* pipelineState = material.GetPipelineState();
+		PipelineState* pipelineState = material.GetPipelineState().get();
 		GM_ASSERT_RETURN(pipelineState, "Material에 PipelineState가 없습니다.");
 		SetPipelineState(*pipelineState);
 
 		for (uint32 i = 0; i < MaxMaterialTextureSlots; ++i)
-			SetTexture(i, material.GetTexture(i));
+			SetTexture(i, material.GetTexture(i).get());
 		
 		for (uint32 i = 0; i < MaxMaterialSamplerSlots; ++i)
-			SetSampler(i, material.GetSampler(i));
+			SetSampler(i, material.GetSampler(i).get());
 	}
 
 	void D3D11GraphicsCommandContext::DrawIndexed(uint32 indexCount)

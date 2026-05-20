@@ -9,7 +9,6 @@ namespace gm
 	{
 		Texture,
 		Audio,
-		Material,
 		Mesh,
 		Skeleton,
 		SpriteAnimationClip,

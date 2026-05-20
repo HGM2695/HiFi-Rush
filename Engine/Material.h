@@ -19,28 +19,22 @@ namespace gm
 		std::array<std::shared_ptr<Sampler>, MaxMaterialSamplerSlots> samplers{};
 	};
 
-	class Material : public Resource
+	class Material final
 	{
 	public:
-		static std::shared_ptr<Material> Create(const MaterialDesc& desc);
-		virtual ~Material();
-
-		static constexpr ResourceType Type = ResourceType::Material;
-		virtual ResourceType	GetType() const override { return Type; }
-
-		PipelineState*			GetPipelineState() const { return _pipelineState.get(); }
-		Texture*				GetTexture(uint32 slot) const;
-		Sampler*				GetSampler(uint32 slot) const;
-
-		void					SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState);
-		void					SetTexture(uint32 slot, const std::shared_ptr<Texture>& texture);
-		void					SetSampler(uint32 slot, const std::shared_ptr<Sampler>& sampler);
-
-	private:
+		Material() = default;
 		Material(const MaterialDesc& desc);
 
+		std::shared_ptr<PipelineState>	GetPipelineState() const { return _pipelineState; }
+		std::shared_ptr<Texture>		GetTexture(uint32 slot) const;
+		std::shared_ptr<Sampler>		GetSampler(uint32 slot) const;
+
+		void							SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState);
+		void							SetTexture(uint32 slot, const std::shared_ptr<Texture>& texture);
+		void							SetSampler(uint32 slot, const std::shared_ptr<Sampler>& sampler);
+
 	private:
-		std::shared_ptr<PipelineState>									_pipelineState;
+		std::shared_ptr<PipelineState>									_pipelineState = nullptr;
 		std::array<std::shared_ptr<Texture>, MaxMaterialTextureSlots>	_textures{};
 		std::array<std::shared_ptr<Sampler>, MaxMaterialSamplerSlots>	_samplers{};
 	};

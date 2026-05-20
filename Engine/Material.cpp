@@ -6,24 +6,17 @@
 namespace gm
 {
 	Material::Material(const MaterialDesc& desc) : _pipelineState(desc.pipelineState), _textures(desc.textures), _samplers(desc.samplers) {}
-	Material::~Material() = default;
 
-	std::shared_ptr<Material> Material::Create(const MaterialDesc& desc)
-	{
-		GM_ASSERT_RETURN_VAL(desc.pipelineState, nullptr, "Material PipelineState가 유효하지 않습니다.");
-		return std::shared_ptr<Material>(new Material(desc));
-	}
-
-	Texture* Material::GetTexture(uint32 slot) const
+	std::shared_ptr<Texture> Material::GetTexture(uint32 slot) const
 	{
 		GM_ASSERT_RETURN_VAL(slot < MaxMaterialTextureSlots, nullptr, "Material Texture Slot이 범위를 벗어났습니다.");
-		return _textures[slot].get();
+		return _textures[slot];
 	}
 
-	Sampler* Material::GetSampler(uint32 slot) const
+	std::shared_ptr<Sampler> Material::GetSampler(uint32 slot) const
 	{
 		GM_ASSERT_RETURN_VAL(slot < MaxMaterialSamplerSlots, nullptr, "Material Sampler Slot이 범위를 벗어났습니다.");
-		return _samplers[slot].get();
+		return _samplers[slot];
 	}
 
 	void Material::SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState)
