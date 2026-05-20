@@ -10,7 +10,9 @@ namespace gm
 
 	bool Renderer::Initialize()
 	{
-		return _spriteRenderPass->Initialize();
+		GM_ASSERT_RETURN_VAL(_spriteRenderPass->Initialize(), false, "SpriteRenderPass 초기화 실패");
+
+		return true;
 	}
 
 	void Renderer::SubmitSprite(const SpriteRenderItem& item)

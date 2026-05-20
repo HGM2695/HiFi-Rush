@@ -48,7 +48,12 @@ namespace gm
 		OnRender();
 
 		for (auto& component : _componentList)
+		{
+			if (component->IsEnabled() == false)
+				continue;
+
 			component->Render();
+		}
 	}
 
 	bool GameObject::RegisterComponent(Component* component)
