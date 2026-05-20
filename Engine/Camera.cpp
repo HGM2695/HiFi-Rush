@@ -47,9 +47,9 @@ namespace gm
 		switch (_projectionMode)
 		{
 		case CameraProjectionMode::Orthographic:
-			return Matrix::CreateOrthographic(_orthographicWidth, _orthographicHeight, _nearZ, _farZ);
+			return Math::CreateOrthographicLH(_orthographicWidth, _orthographicHeight, _nearZ, _farZ);
 		case CameraProjectionMode::Perspective:
-			return Matrix::CreatePerspectiveFieldOfView(_fovYRadians, _aspectRatio, _nearZ, _farZ);
+			return Math::CreatePerspectiveFieldOfViewLH(_fovYRadians, _aspectRatio, _nearZ, _farZ);
 		default:
 			GM_ASSERT_RETURN_VAL(false, Math::IdentityMatrix(), "지원하지 않는 카메라 투영 모드입니다.");
 		}

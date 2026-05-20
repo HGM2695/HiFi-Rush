@@ -9,9 +9,9 @@ namespace gm
 
 	struct Socket
 	{
-		Vector3 position{};
-		Quaternion rotation{};
-		Vector3 scale{ 1.f, 1.f, 1.f };
+		Vector3		position{};
+		Quaternion	rotation{ 0.f, 0.f, 0.f, 1.f };
+		Vector3		scale{ 1.f, 1.f, 1.f };
 
 		Matrix GetLocalMatrix() const;
 	};

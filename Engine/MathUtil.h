@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MathTypes.h"
+#include <DirectXMath.h>
 
 namespace gm::Math
 {
@@ -32,5 +33,24 @@ namespace gm::Math
 	inline Matrix CreateViewMatrix(const Vector3& position, const Quaternion& rotation)
 	{
 		return CreateWorldMatrix(position, rotation).Invert();
+	}
+
+	inline Matrix CreateOrthographicLH(float width, float height, float nearZ, float farZ)
+	{
+		Matrix result;
+		DirectX::XMStoreFloat4x4(&result, DirectX::XMMatrixOrthographicLH(width, height, nearZ, farZ));
+		return result;
+	}
+
+	inline Matrix CreatePerspectiveFieldOfViewLH(float fovYRadians, float aspectRatio, float nearZ, float farZ)
+	{
+		Matrix result;
+		DirectX::XMStoreFloat4x4(&result, DirectX::XMMatrixPerspectiveFovLH(fovYRadians, aspectRatio, nearZ, farZ));
+		return result;
+	}
+
+	inline Quaternion IdentityQuaternion()
+	{
+		return Quaternion(0.f, 0.f, 0.f, 1.f);
 	}
 }

@@ -39,7 +39,7 @@ namespace gm
 
     private:
         Vector3         _position{};
-        Quaternion      _rotation{};
+        Quaternion      _rotation{ 0.f, 0.f, 0.f, 1.f };
         Vector3         _scale{ 1.f, 1.f, 1.f };
     };
 }
