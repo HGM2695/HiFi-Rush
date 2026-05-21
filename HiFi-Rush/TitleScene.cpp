@@ -1,7 +1,7 @@
-﻿#include "TitleScene.h"
+#include "TitleScene.h"
 #include "Input.h"
 #include "Application.h"
-#include "IDebugRenderer.h"
+#include "ITextRenderer.h"
 #include "PhysicsSystem.h"
 #include "SceneManager.h"
 
@@ -20,7 +20,7 @@ namespace gm
 
 	void TitleScene::OnRender()
 	{
-		APPLICATION.GetDebugRenderer().RequestDrawText(L"TitleScene", { APPLICATION.GetWidth() * 0.5f, APPLICATION.GetHeight() * 0.5f });
+		APPLICATION.GetTextRenderer().RequestDrawText(L"TitleScene", L"Engine.DefaultUI", { APPLICATION.GetWidth() * 0.5f, APPLICATION.GetHeight() * 0.5f }, 44.f, Colors::White);
 	}
 }
 

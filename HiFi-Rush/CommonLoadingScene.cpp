@@ -1,6 +1,6 @@
 #include "CommonLoadingScene.h"
 #include "Application.h"
-#include "IDebugRenderer.h"
+#include "ITextRenderer.h"
 #include "SceneManager.h"
 #include "Input.h"
 
@@ -20,6 +20,6 @@ namespace gm
 
 	void CommonLoadingScene::OnRender()
 	{
-		APPLICATION.GetDebugRenderer().RequestDrawText(L"Loading Scene...", Vector2(APPLICATION.GetWidth() * 0.5f, APPLICATION.GetHeight() * 0.5f));
+		APPLICATION.GetTextRenderer().RequestDrawText(L"Loading Scene...", L"Engine.DefaultUI", Vector2(APPLICATION.GetWidth() * 0.5f, APPLICATION.GetHeight() * 0.5f), 24.f, Colors::White);
 	}
 }

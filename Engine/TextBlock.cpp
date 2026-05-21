@@ -1,5 +1,6 @@
 #include "TextBlock.h"
-#include <algorithm>
+#include "Application.h"
+#include "ITextRenderer.h"
 
 namespace gm
 {
@@ -7,5 +8,7 @@ namespace gm
 	{
 		if (_text.empty())
 			return;
+
+		APPLICATION.GetTextRenderer().RequestDrawText(_text, L"Engine.DefaultUI", absolutePosition, 24.f, _color);
 	}
 }
