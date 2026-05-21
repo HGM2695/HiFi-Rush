@@ -56,7 +56,6 @@ namespace gm
 		void				Render();
 		void				EndFrame();
 
-		void				ShutDownRuntime();
 		uint32				GetWidth() const;
 		uint32				GetHeight() const;
 
@@ -98,19 +97,22 @@ namespace gm
 		bool				initializeRenderer();
 
 	private:
-		std::unique_ptr<Input>						_input;
-		std::unique_ptr<PhysicsSystem>				_physicsSystem;
-		std::unique_ptr<TimeSystem>					_time;
-		std::unique_ptr<SceneManager>				_sceneManager;
-		std::unique_ptr<Resources>					_resources;
-		std::unique_ptr<AudioSystem>				_audioSystem;
-		std::unique_ptr<UIManager>					_uiManager;
-		std::unique_ptr<Window>						_window;
-		std::unique_ptr<IGraphicsDevice>			_graphicsDevice;
-		std::unique_ptr<IGraphicsResourceFactory>	_graphicsResourceFactory;
-		std::unique_ptr<IGraphicsCommandContext>	_graphicsCommandContext;
-		std::unique_ptr<Renderer>					_renderer;
-		std::unique_ptr<IDebugRenderer>				_debugRenderer;
-		std::unique_ptr<ITextRenderer>				_textRenderer;
+		std::unique_ptr<Window>                      _window;
+		std::unique_ptr<IGraphicsDevice>             _graphicsDevice;
+		std::unique_ptr<IGraphicsCommandContext>     _graphicsCommandContext;
+		std::unique_ptr<IGraphicsResourceFactory>    _graphicsResourceFactory;
+
+		std::unique_ptr<ITextRenderer>               _textRenderer;
+		std::unique_ptr<IDebugRenderer>              _debugRenderer;
+		std::unique_ptr<Renderer>                    _renderer;
+
+		std::unique_ptr<AudioSystem>                 _audioSystem;
+		std::unique_ptr<Resources>                   _resources;
+		std::unique_ptr<UIManager>                   _uiManager;
+		std::unique_ptr<SceneManager>                _sceneManager;
+
+		std::unique_ptr<PhysicsSystem>               _physicsSystem;
+		std::unique_ptr<Input>                       _input;
+		std::unique_ptr<TimeSystem>                  _time;
 	};
 }
