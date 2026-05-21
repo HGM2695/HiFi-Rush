@@ -11,6 +11,7 @@
 #include "IGraphicsResourceFactory.h"
 #include "IGraphicsCommandContext.h"
 #include "IDebugRenderer.h"
+#include "ITextRenderer.h"
 #include "UIManager.h"
 #include "Window.h"
 #include "BuiltinGraphicsResources.h"
@@ -66,11 +67,13 @@ namespace gm
         GM_ASSERT_RETURN_VAL(graphicsBackend.resourceFactory, false, "그래픽 리소스 팩토리 생성에 실패했습니다.");
         GM_ASSERT_RETURN_VAL(graphicsBackend.commandContext, false, "Graphics CommandContext 생성에 실패했습니다.");
         GM_ASSERT_RETURN_VAL(graphicsBackend.debugRenderer, false, "DebugRenderer 생성에 실패했습니다.");
+        GM_ASSERT_RETURN_VAL(graphicsBackend.textRenderer, false, "TextRenderer 생성에 실패했습니다.");
 
         _graphicsDevice = std::move(graphicsBackend.device);
         _graphicsResourceFactory = std::move(graphicsBackend.resourceFactory);
         _graphicsCommandContext = std::move(graphicsBackend.commandContext);
         _debugRenderer = std::move(graphicsBackend.debugRenderer);
+        _textRenderer = std::move(graphicsBackend.textRenderer);
 
         return true;
     }
@@ -177,10 +180,12 @@ namespace gm
 		GM_ASSERT_RETURN(activeScene, "활성 Scene이 없습니다.");
 		GM_ASSERT_RETURN(activeScene->GetCameraManager(), "CameraManager가 존재하지 않습니다.");
 
+		_uiManager->Render();
+
 		const CameraViewInfo viewInfo = activeScene->GetCameraManager()->GetViewInfo();
 		_renderer->Render(viewInfo);
 		_debugRenderer->Render(viewInfo);
-		_uiManager->Render();
+		_textRenderer->Render();
 
         _graphicsDevice->EndFrame();
     }

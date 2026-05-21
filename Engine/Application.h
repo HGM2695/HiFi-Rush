@@ -20,6 +20,7 @@ namespace gm
 	class IGraphicsCommandContext;
 	class Renderer;
 	class IDebugRenderer;
+	class ITextRenderer;
 
 	struct ApplicationDesc
 	{
@@ -72,6 +73,7 @@ namespace gm
 		IGraphicsCommandContext& GetGraphicsCommandContext() { return *_graphicsCommandContext; }
 		Renderer&			GetRenderer() { return *_renderer; }
 		IDebugRenderer&		GetDebugRenderer() { return *_debugRenderer; }
+		ITextRenderer&		GetTextRenderer() { return *_textRenderer; }
 
 		const Input&		GetInput() const { return *_input; }
 		const PhysicsSystem& GetPhysicsSystem() const { return *_physicsSystem; }
@@ -85,6 +87,7 @@ namespace gm
 		const IGraphicsCommandContext& GetGraphicsCommandContext() const { return *_graphicsCommandContext; }
 		const Renderer&		GetRenderer() const { return *_renderer; }
 		const IDebugRenderer& GetDebugRenderer() const { return *_debugRenderer; }
+		const ITextRenderer& GetTextRenderer() const { return *_textRenderer; }
 
 	private:
 		void				Loop();
@@ -108,5 +111,6 @@ namespace gm
 		std::unique_ptr<IGraphicsCommandContext>	_graphicsCommandContext;
 		std::unique_ptr<Renderer>					_renderer;
 		std::unique_ptr<IDebugRenderer>				_debugRenderer;
+		std::unique_ptr<ITextRenderer>				_textRenderer;
 	};
 }

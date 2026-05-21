@@ -9,6 +9,7 @@ namespace gm
 	class IGraphicsResourceFactory;
 	class IGraphicsCommandContext;
 	class IDebugRenderer;
+	class ITextRenderer;
 
 	struct GraphicsBackend
 	{
@@ -16,6 +17,7 @@ namespace gm
 		std::unique_ptr<IGraphicsResourceFactory>	resourceFactory;
 		std::unique_ptr<IGraphicsCommandContext>	commandContext;
 		std::unique_ptr<IDebugRenderer>				debugRenderer;
+		std::unique_ptr<ITextRenderer>				textRenderer;
 	};
 
 	struct GraphicsBackendDesc

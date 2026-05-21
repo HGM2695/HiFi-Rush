@@ -263,8 +263,14 @@
     <ClInclude Include="D3D11DebugRenderer.h">
       <Filter>Debugger\DebugRenderer</Filter>
     </ClInclude>
+    <ClInclude Include="D3D11TextRenderer.h">
+      <Filter>Graphics\D3D11</Filter>
+    </ClInclude>
     <ClInclude Include="DebugDraw.h">
       <Filter>Debugger\DebugRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="ITextRenderer.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -463,6 +469,9 @@
     </ClCompile>
     <ClCompile Include="D3D11DebugRenderer.cpp">
       <Filter>Debugger\DebugRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11TextRenderer.cpp">
+      <Filter>Graphics\D3D11</Filter>
     </ClCompile>
     <ClCompile Include="DebugDraw.cpp">
       <Filter>Debugger\DebugRenderer</Filter>
