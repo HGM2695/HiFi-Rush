@@ -25,11 +25,15 @@ namespace gm
 
 			GraphicsBackend backend{};
 			backend.resourceFactory = std::make_unique<D3D11GraphicsResourceFactory>(*d3d11Device);
+
 			backend.commandContext = std::make_unique<D3D11GraphicsCommandContext>(d3d11Device->GetImmediateContext());
-			backend.debugRenderer = std::make_unique<D3D11DebugRenderer>();
-			GM_ASSERT_RETURN_VAL(backend.debugRenderer->Initialize(*device), GraphicsBackend{}, "D3D11 DebugRenderer 초기화에 실패했습니다.");
+
 			backend.textRenderer = std::make_unique<D3D11TextRenderer>();
 			GM_ASSERT_RETURN_VAL(backend.textRenderer->Initialize(*device), GraphicsBackend{}, "D3D11 TextRenderer 초기화에 실패했습니다.");
+
+			backend.debugRenderer = std::make_unique<D3D11DebugRenderer>(static_cast<D3D11TextRenderer*>(backend.textRenderer.get()));
+			GM_ASSERT_RETURN_VAL(backend.debugRenderer->Initialize(*device), GraphicsBackend{}, "D3D11 DebugRenderer 초기화에 실패했습니다.");
+
 			backend.device = std::move(device);
 
 			return backend;

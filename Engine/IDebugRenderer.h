@@ -30,7 +30,7 @@ namespace gm
 		virtual void RequestDrawSphere(const BoundingSphere& sphere, Color color = Colors::Green) = 0;
 		virtual void RequestDrawRay(const Vector3& origin, const Vector3& direction, float length, Color color = Colors::Green) = 0;
 		virtual void RequestDrawRay(const Ray& ray, float length, Color color = Colors::Green) = 0;
-		virtual void RequestDrawText(const std::wstring& content, const Vector2& viewPosition, Color color = Colors::Black) = 0;
+		virtual void RequestDrawText(const std::wstring& content, const Vector2& viewPosition, float fontSize = 14.f, Color color = Colors::Black) = 0;
 
 		virtual void Clear() = 0;
 	};

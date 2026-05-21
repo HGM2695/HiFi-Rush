@@ -2,7 +2,8 @@
 #include "CameraViewInfo.h"
 #include "D3D11GraphicsDevice.h"
 #include "DebugDraw.h"
-#include <DirectXMath.h>
+#include "D3D11TextRenderer.h"
+
 #include <d3d11.h>
 #include <directxtk/DirectXHelpers.h>
 #include <directxtk/Effects.h>
@@ -20,7 +21,7 @@ namespace gm
 		ID3D11DeviceContext* context = nullptr;
 	};
 
-	D3D11DebugRenderer::D3D11DebugRenderer() = default;
+	D3D11DebugRenderer::D3D11DebugRenderer(D3D11TextRenderer* textRenderer) : _textRenderer(textRenderer) {}
 	D3D11DebugRenderer::~D3D11DebugRenderer() = default;
 
 	bool D3D11DebugRenderer::Initialize(IGraphicsDevice& graphicsDevice)
@@ -196,17 +197,19 @@ namespace gm
 
 	void D3D11DebugRenderer::RequestDrawRay(const Ray& ray, float length, Color color)
 	{
+#ifdef _DEBUG
 		if (ray.direction.LengthSquared() <= 0.f || length <= 0.f)
 			return;
 
-#ifdef _DEBUG
 		_rays.push_back({ ray, length, color });
 #endif
 	}
 
-	void D3D11DebugRenderer::RequestDrawText(const std::wstring&, const Vector2&, Color)
+	void D3D11DebugRenderer::RequestDrawText(const std::wstring& content, const Vector2& viewPosition, float fontSize, Color color)
 	{
-		// Text rendering will be handled by a dedicated text renderer later.
+#ifdef _DEBUG
+		_textRenderer->RequestDrawText(content, L"Engine.DefaultUI", viewPosition, fontSize, color);
+#endif
 	}
 
 	void D3D11DebugRenderer::Clear()

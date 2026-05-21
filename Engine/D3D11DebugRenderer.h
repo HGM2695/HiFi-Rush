@@ -5,10 +5,13 @@
 
 namespace gm
 {
+	class D3D11TextRenderer;
+
 	class D3D11DebugRenderer final : public IDebugRenderer
 	{
+
 	public:
-		D3D11DebugRenderer();
+		D3D11DebugRenderer(D3D11TextRenderer* textRenderer);
 		virtual ~D3D11DebugRenderer();
 
 		virtual bool Initialize(IGraphicsDevice& graphicsDevice) override;
@@ -29,7 +32,7 @@ namespace gm
 		virtual void RequestDrawSphere(const BoundingSphere& sphere, Color color = Colors::Green) override;
 		virtual void RequestDrawRay(const Vector3& origin, const Vector3& direction, float length, Color color = Colors::Green) override;
 		virtual void RequestDrawRay(const Ray& ray, float length, Color color = Colors::Green) override;
-		virtual void RequestDrawText(const std::wstring& content, const Vector2& viewPosition, Color color = Colors::Black) override;
+		virtual void RequestDrawText(const std::wstring& content, const Vector2& viewPosition, float fontSize = 14.f, Color color = Colors::Black) override;
 
 		virtual void Clear() override;
 
@@ -94,6 +97,8 @@ namespace gm
 		struct DirectXTKResources;
 
 	private:
+		D3D11TextRenderer*					_textRenderer;
+
 		std::unique_ptr<DirectXTKResources> _dxResources;
 		std::vector<DebugLine>				_lines;
 		std::vector<DebugTriangle>			_triangles;
