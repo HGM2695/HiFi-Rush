@@ -6,8 +6,13 @@ namespace gm
 {
 	void UIManager::Tick(float deltaTime)
 	{
-		for (const auto& widget : _userWidgetList)
+		for (const auto& widget : _viewportWidgetList)
 			widget->Tick(deltaTime);
+
+#ifdef _DEBUG
+		for (const auto& widget : _debugWidgetList)
+			widget->Tick(deltaTime);
+#endif
 	}
 
 	void UIManager::Render()
@@ -18,12 +23,30 @@ namespace gm
 			Vector2(static_cast<float>(APPLICATION.GetWidth()), static_cast<float>(APPLICATION.GetHeight()))
 		};
 
-		for (const auto& widget : _userWidgetList)
+		for (const auto& widget : _viewportWidgetList)
 			widget->Render(viewportGeometry);
+
+#ifdef _DEBUG
+		for (const auto& widget : _debugWidgetList)
+			widget->Render(viewportGeometry);
+#endif
 	}
 
 	void UIManager::ClearViewportWidgets()
 	{
-		_userWidgetList.clear();
+		_viewportWidgetList.clear();
+	}
+
+	void UIManager::ClearDebugWidgets()
+	{
+#ifdef _DEBUG
+		_debugWidgetList.clear();
+#endif
+	}
+
+	void UIManager::ClearAllWidgets()
+	{
+		ClearViewportWidgets();
+		ClearDebugWidgets();
 	}
 }
