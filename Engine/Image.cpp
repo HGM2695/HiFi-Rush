@@ -1,25 +1,50 @@
 #include "Image.h"
-#include "Resources.h"
-#include "Texture.h"
 #include "Application.h"
+#include "BuiltinGraphicsResources.h"
+#include "Renderer.h"
+#include "RenderTypes.h"
+#include "Resources.h"
+#include "Sampler.h"
+#include "Texture.h"
 
 namespace gm
 {
-	Image::Image() = default;
-	Image::Image(const std::wstring& textureName) { SetTextureByName(textureName); }
-	Image::~Image() = default;
-
-	void Image::SetTextureByName(const std::wstring& textureName)
+	Image::Image()
 	{
-		_texture = APPLICATION.GetResources().Find<Texture>(textureName);
-		GM_ASSERT(_texture, "등록되지 않은 텍스쳐 [%ls] 입니다.", textureName.c_str());
+		SetName(L"Image");
+		SetSampler(BuiltinResourceKey::PointSampler);
 	}
 
-	void Image::OnRender(const Vector2& absolutePosition)
+	Image::Image(const std::wstring& textureName) : Image()
 	{
-		if (_texture == nullptr)
+		SetTexture(textureName);
+	}
+
+	Image::~Image() = default;
+
+	void Image::SetTexture(const std::wstring& textureName)
+	{
+		_texture = APPLICATION.GetResources().Find<Texture>(textureName);
+		GM_ASSERT(_texture, "등록되지 않은 텍스처 [%ls] 입니다.", textureName.c_str());
+	}
+
+	void Image::SetSampler(const std::wstring& samplerName)
+	{
+		_sampler = APPLICATION.GetResources().Find<Sampler>(samplerName);
+		GM_ASSERT(_sampler, "등록되지 않은 샘플러 [%ls] 입니다.", samplerName.c_str());
+	}
+
+	void Image::OnRender(const WidgetGeometry& geometry)
+	{
+		if (_texture == nullptr || geometry.size.x <= 0.f || geometry.size.y <= 0.f)
 			return;
 
+		TextureQuadRenderItem item{};
+		item.screenCenter = geometry.center;
+		item.size = geometry.size;
+		item.texture = _texture;
+		item.sampler = _sampler;
 
+		APPLICATION.GetRenderer().SubmitTextureQuad(item);
 	}
 }

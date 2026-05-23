@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ITextRenderer.h"
+#include "Rect.h"
 #include <vector>
 #include <wrl/client.h>
 
@@ -22,10 +23,10 @@ namespace gm
 
 		virtual bool Initialize(IGraphicsDevice& graphicsDevice) override;
 		virtual bool RegisterFont(const std::wstring& fontKey, const std::wstring& fontFamilyName) override;
-		virtual void RequestDrawText(const std::wstring& text, const std::wstring& fontKey, const Vector2& position, float fontSize, Color color);
+		virtual void RequestDrawText(const std::wstring& text, const std::wstring& fontKey, const Vector2& position, float fontSize, Color color,
+			TextHorizontalAlignment horizontalAlignment, TextVerticalAlignment verticalAlignment) override;
 		virtual void Render() override;
 		virtual void Clear() override;
-
 
 	private:
 		struct TextFormatKey
@@ -56,11 +57,14 @@ namespace gm
 			std::wstring								text;
 			Vector2										position;
 			Color										color = Colors::White;
+			TextHorizontalAlignment						horizontalAlignment;
+			TextVerticalAlignment						verticalAlignment;
 		};
 
 		bool CreateTextFormat(const std::wstring& fontFamilyName, float fontSize);
 		TextFormatKey ToTextFormatKey(const std::wstring& fontFamilyName, float fontSize);
 		bool CreateDeviceResources(IGraphicsDevice& graphicsDevice);
+		Rect CalcDrawRect(const DrawItem& item);
 
 	private:
 		std::unordered_map<TextFormatKey, Microsoft::WRL::ComPtr<IDWriteTextFormat>, TextFormatKeyHasher>	_textFormatCache;

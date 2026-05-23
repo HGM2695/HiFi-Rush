@@ -32,6 +32,7 @@ namespace gm
 		// PixelShader
 		LoadPixelShader(FullScreenTexturePS, L"../Engine/Shaders/FullScreenTexturePS.hlsl", resources, factory);
 		LoadPixelShader(SpriteTexturePS, L"../Engine/Shaders/SpriteTexturePS.hlsl", resources, factory);
+		LoadPixelShader(SolidColorPS, L"../Engine/Shaders/SolidColorPS.hlsl", resources, factory);
 
 		// PSO
 		PipelineStateDesc psDesc{};
@@ -49,6 +50,9 @@ namespace gm
 		psDesc.blendDesc.destBlend = BlendFactor::InvSrcAlpha;
 		psDesc.blendDesc.blendOp = BlendOp::Add;
 		LoadPipelineState(SpriteTexturePSO, psDesc, resources, factory);
+
+		psDesc.pixelShader = resources.Find<Shader>(SolidColorPS);
+		LoadPipelineState(SolidColorPSO, psDesc, resources, factory);
 
 		// Sampler
 		SamplerDesc samplerDesc{};

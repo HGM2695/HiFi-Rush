@@ -205,10 +205,11 @@ namespace gm
 #endif
 	}
 
-	void D3D11DebugRenderer::RequestDrawText(const std::wstring& content, const Vector2& viewPosition, float fontSize, Color color)
+	void D3D11DebugRenderer::RequestDrawText(const std::wstring& content, const Vector2& viewPosition, float fontSize, Color color,
+		TextHorizontalAlignment horizontalAlignment, TextVerticalAlignment verticalAlignment)
 	{
 #ifdef _DEBUG
-		_textRenderer->RequestDrawText(content, L"Engine.DefaultUI", viewPosition, fontSize, color);
+		_textRenderer->RequestDrawText(content, L"Engine.DefaultUI", viewPosition, fontSize, color, horizontalAlignment, verticalAlignment);
 #endif
 	}
 

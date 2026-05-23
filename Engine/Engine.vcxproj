@@ -189,6 +189,7 @@
     <ClInclude Include="Resources.h" />
     <ClInclude Include="RenderTypes.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Rect.h" />
     <ClInclude Include="Rigidbody2D.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
@@ -203,9 +204,11 @@
     <ClInclude Include="SpriteAnimator.h" />
     <ClInclude Include="SpriteFrame.h" />
     <ClInclude Include="SpriteRenderPass.h" />
+    <ClInclude Include="UIRenderPass.h" />
     <ClInclude Include="SpriteRenderer.h" />
     <ClInclude Include="StringUtil.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextTypes.h" />
     <ClInclude Include="TickGroup.h" />
     <ClInclude Include="TickManager.h" />
     <ClInclude Include="TimeSystem.h" />
@@ -280,6 +283,7 @@
     <ClCompile Include="SpriteAnimationClip.cpp" />
     <ClCompile Include="SpriteAnimator.cpp" />
     <ClCompile Include="SpriteRenderPass.cpp" />
+    <ClCompile Include="UIRenderPass.cpp" />
     <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TickManager.cpp" />
@@ -313,6 +317,12 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Shaders\SpriteTexturePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\SolidColorPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>

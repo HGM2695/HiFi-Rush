@@ -12,7 +12,10 @@ namespace gm
 			return;
 
 		_rootWidget = BuildWidgetTree();
-		NativeConstruct();
+		GM_ASSERT_RETURN(_rootWidget, "Root Widget이 없습니다.");
+
+		OnInitialize();
+		_rootWidget->Initialize();
 		_isInitialized = true;
 	}
 
@@ -21,17 +24,17 @@ namespace gm
 		if (_isInitialized == false || _isVisible == false)
 			return;
 
-		NativeTick(deltaTime);
+		OnTick(deltaTime);
 
 		if (_rootWidget)
 			_rootWidget->Tick(deltaTime);
 	}
 
-	void UserWidget::Render(const Vector2& rootPosition)
+	void UserWidget::Render(const WidgetGeometry& rootGeometry)
 	{
 		if (_isInitialized == false || _isVisible == false || _rootWidget == nullptr)
 			return;
 
-		_rootWidget->Render(rootPosition);
+		_rootWidget->Render(rootGeometry);
 	}
 }

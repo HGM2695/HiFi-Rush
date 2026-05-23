@@ -177,7 +177,7 @@ namespace gm
 		_uiManager->Render();
 
 		const CameraViewInfo viewInfo = activeScene->GetCameraManager()->GetViewInfo();
-		_renderer->Render(viewInfo);
+		_renderer->Render(viewInfo, GetWidth(), GetHeight());
 		_debugRenderer->Render(viewInfo);
 		_textRenderer->Render();
 

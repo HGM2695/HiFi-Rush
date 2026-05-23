@@ -4,11 +4,16 @@
 
 namespace gm
 {
-	void TextBlock::OnRender(const Vector2& absolutePosition)
+	TextBlock::TextBlock()
+	{
+		SetName(L"TextBlock");
+	}
+
+	void TextBlock::OnRender(const WidgetGeometry& geometry)
 	{
 		if (_text.empty())
 			return;
 
-		APPLICATION.GetTextRenderer().RequestDrawText(_text, L"Engine.DefaultUI", absolutePosition, 24.f, _color);
+		APPLICATION.GetTextRenderer().RequestDrawText(_text, L"Engine.DefaultUI", geometry.center, _size, _color, _horizonAlign, _verticalAlign);
 	}
 }

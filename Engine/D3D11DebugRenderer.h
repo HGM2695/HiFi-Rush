@@ -32,7 +32,8 @@ namespace gm
 		virtual void RequestDrawSphere(const BoundingSphere& sphere, Color color = Colors::Green) override;
 		virtual void RequestDrawRay(const Vector3& origin, const Vector3& direction, float length, Color color = Colors::Green) override;
 		virtual void RequestDrawRay(const Ray& ray, float length, Color color = Colors::Green) override;
-		virtual void RequestDrawText(const std::wstring& content, const Vector2& viewPosition, float fontSize = 14.f, Color color = Colors::Black) override;
+		virtual void RequestDrawText(const std::wstring& content, const Vector2& viewPosition, float fontSize = 14.f, Color color = Colors::Black,
+			TextHorizontalAlignment horizontalAlignment = TextHorizontalAlignment::Left, TextVerticalAlignment verticalAlignment = TextVerticalAlignment::Top) override;
 
 		virtual void Clear() override;
 

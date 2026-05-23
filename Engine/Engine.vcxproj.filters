@@ -134,9 +134,6 @@
     <ClInclude Include="UserWidget.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="Widget.h">
-      <Filter>UI\Widgets</Filter>
-    </ClInclude>
     <ClInclude Include="Border.h">
       <Filter>UI\Widgets</Filter>
     </ClInclude>
@@ -180,6 +177,9 @@
       <Filter>Resource\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="MathTypes.h">
+      <Filter>Util\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Rect.h">
       <Filter>Util\Types</Filter>
     </ClInclude>
     <ClInclude Include="MathUtil.h">
@@ -239,6 +239,9 @@
     <ClInclude Include="SpriteRenderPass.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="UIRenderPass.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="D3D11Sampler.h">
       <Filter>Resource\Sampler</Filter>
     </ClInclude>
@@ -271,6 +274,10 @@
     </ClInclude>
     <ClInclude Include="ITextRenderer.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="TextTypes.h" />
+    <ClInclude Include="Widget.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -389,9 +396,6 @@
     <ClCompile Include="UserWidget.cpp">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="Widget.cpp">
-      <Filter>UI\Widgets</Filter>
-    </ClCompile>
     <ClCompile Include="Image.cpp">
       <Filter>UI\Widgets</Filter>
     </ClCompile>
@@ -455,6 +459,9 @@
     <ClCompile Include="SpriteRenderPass.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="UIRenderPass.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
     <ClCompile Include="D3D11Sampler.cpp">
       <Filter>Resource\Sampler</Filter>
     </ClCompile>
@@ -475,6 +482,9 @@
     </ClCompile>
     <ClCompile Include="DebugDraw.cpp">
       <Filter>Debugger\DebugRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Widget.cpp">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -565,6 +575,9 @@
       <Filter>Shaders\PS</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\SpriteTexturePS.hlsl">
+      <Filter>Shaders\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SolidColorPS.hlsl">
       <Filter>Shaders\PS</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\FullScreenTextureVS.hlsl">

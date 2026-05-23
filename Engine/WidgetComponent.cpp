@@ -36,6 +36,8 @@ namespace gm
 	void WidgetComponent::OnInitialize()
 	{
 		_ownerTransform = GetOwner().GetComponent<Transform>();
+
+		_widget->Initialize();
 	}
 
 	void WidgetComponent::OnTick(float deltaTime)
@@ -52,11 +54,17 @@ namespace gm
 			return;
 
 		Scene* scene = GetOwner().GetScene();
-		if (scene == nullptr || scene->GetCameraManager() == nullptr)
+		if (scene == nullptr)
 			return;
 
-		const Vector2 worldPosition = _ownerTransform->GetPosition2D() + _worldOffset;
-		const Vector2 screenPosition = scene->GetCameraManager()->WorldToScreen(worldPosition, APPLICATION.GetWidth(), APPLICATION.GetHeight());
-		_widget->Render(screenPosition);
+		CameraManager* cameraManager = scene->GetCameraManager();
+		if (cameraManager == nullptr)
+			return;
+
+		const Vector3 worldPosition = _ownerTransform->GetPosition();
+		const Vector2 screenPosition = cameraManager->WorldToScreen(worldPosition, APPLICATION.GetWidth(), APPLICATION.GetHeight());
+
+		const Widget* rootWidget = _widget->GetRootWidget();
+		_widget->Render(WidgetGeometry{ screenPosition, rootWidget ? rootWidget->GetSize() : Vector2{} });
 	}
 }

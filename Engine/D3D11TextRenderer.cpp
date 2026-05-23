@@ -9,9 +9,34 @@ namespace gm
 {
 	namespace
 	{
-		D2D1_COLOR_F ToD2DColor(Color color)
+		float CalculateTextLeft(float anchorX, float textWidth, TextHorizontalAlignment alignment)
 		{
-			return D2D1::ColorF(color.x, color.y, color.z, color.w);
+			switch (alignment)
+			{
+			case TextHorizontalAlignment::Left:
+				return anchorX;
+			case TextHorizontalAlignment::Center:
+				return anchorX - 0.5f * textWidth;
+			case TextHorizontalAlignment::Right:
+				return anchorX - 1.f * textWidth;
+			default:
+				GM_ASSERT_RETURN_VAL(false, 0.f, "지원하지 않는 가로 텍스트 정렬입니다.");
+			}
+		}
+
+		float CalculateTextTop(float anchorY, float textHeight, TextVerticalAlignment alignment)
+		{
+			switch (alignment)
+			{
+			case TextVerticalAlignment::Top:
+				return anchorY;
+			case TextVerticalAlignment::Center:
+				return anchorY - 0.5f * textHeight;
+			case TextVerticalAlignment::Bottom:
+				return anchorY - 1.f * textHeight;
+			default:
+				GM_ASSERT_RETURN_VAL(false, 0.f, "지원하지 않는 세로 텍스트 정렬입니다.");
+			}
 		}
 	}
 
@@ -34,7 +59,7 @@ namespace gm
 		return true;
 	}
 
-	void D3D11TextRenderer::RequestDrawText(const std::wstring& text, const std::wstring& fontKey, const Vector2& position, float fontSize, Color color)
+	void D3D11TextRenderer::RequestDrawText(const std::wstring& text, const std::wstring& fontKey, const Vector2& position, float fontSize, Color color, TextHorizontalAlignment horizontalAlignment, TextVerticalAlignment verticalAlignment)
 	{
 		GM_ASSERT_RETURN(_fontFamilyNameMapper.find(fontKey) != _fontFamilyNameMapper.end(), "해당 fontKey는 등록되지 않았습니다.");
 
@@ -44,7 +69,7 @@ namespace gm
 		if (_textFormatCache.find(textFormatKey) == _textFormatCache.end())
 			GM_ASSERT_RETURN(CreateTextFormat(familyName, fontSize), "TextFormat 생성 실패 %ls", familyName.c_str());
 
-		_drawList.push_back(DrawItem{ _textFormatCache[textFormatKey], text, position, color });
+		_drawList.push_back(DrawItem{ _textFormatCache[textFormatKey], text, position, color, horizontalAlignment, verticalAlignment });
 	}
 
 	void D3D11TextRenderer::Render()
@@ -56,15 +81,11 @@ namespace gm
 		_d2dContext->SetTransform(D2D1::Matrix3x2F::Identity());
 
 		for (const DrawItem& item : _drawList)
-		{
-			_brush->SetColor(ToD2DColor(item.color));
+		{	
+			_brush->SetColor(D2D1::ColorF(item.color.x, item.color.y, item.color.z, item.color.w));
 
-			const D2D1_RECT_F layoutRect = D2D1::RectF(
-				item.position.x,
-				item.position.y,
-				item.position.x + 4096.f,
-				item.position.y + 1024.f
-			);
+			Rect rect = CalcDrawRect(item);
+			const D2D1_RECT_F layoutRect = D2D1::RectF(rect.left, rect.top, rect.Right(), rect.Bottom());
 
 			_d2dContext->DrawTextW(
 				item.text.c_str(),
@@ -134,6 +155,27 @@ namespace gm
 		GM_ASSERT_RETURN_VAL(SUCCEEDED(hr), false, "D2D Text Brush 생성에 실패했습니다.");
 
 		return true;
+	}
+
+	Rect D3D11TextRenderer::CalcDrawRect(const DrawItem& item)
+	{
+		Microsoft::WRL::ComPtr<IDWriteTextLayout> layout;
+		_dwriteFactory->CreateTextLayout(
+			item.text.c_str(),
+			static_cast<UINT32>(item.text.length()),
+			item.textFormat.Get(),
+			4096.f,
+			1024.f,
+			layout.GetAddressOf()
+		);
+
+		DWRITE_TEXT_METRICS metrics{};
+		layout->GetMetrics(&metrics);
+
+		float left = CalculateTextLeft(item.position.x, metrics.width, item.horizontalAlignment);
+		float top = CalculateTextTop(item.position.y, metrics.height, item.verticalAlignment);
+
+		return Rect{ left, top, metrics.width, metrics.height };
 	}
 
 	D3D11TextRenderer::TextFormatKey D3D11TextRenderer::ToTextFormatKey(const std::wstring& fontFamilyName, float fontSize)
