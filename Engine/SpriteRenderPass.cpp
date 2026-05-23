@@ -39,10 +39,10 @@ namespace gm
 			if (item.useSourceRect == false || texture == nullptr || texture->GetWidth() == 0 || texture->GetHeight() == 0)
 				return constant;
 
-			constant.textureLeft = static_cast<float>(item.sourceFrame.left) / static_cast<float>(texture->GetWidth());
-			constant.textureTop = static_cast<float>(item.sourceFrame.top) / static_cast<float>(texture->GetHeight());
-			constant.textureWidth = static_cast<float>(item.sourceFrame.width) / static_cast<float>(texture->GetWidth());
-			constant.textureHeight = static_cast<float>(item.sourceFrame.height) / static_cast<float>(texture->GetHeight());
+			constant.textureLeft = static_cast<float>(item.sourceFrame.Left()) / static_cast<float>(texture->GetWidth());
+			constant.textureTop = static_cast<float>(item.sourceFrame.Top()) / static_cast<float>(texture->GetHeight());
+			constant.textureWidth = static_cast<float>(item.sourceFrame.Width()) / static_cast<float>(texture->GetWidth());
+			constant.textureHeight = static_cast<float>(item.sourceFrame.Height()) / static_cast<float>(texture->GetHeight());
 
 			return constant;
 		}
