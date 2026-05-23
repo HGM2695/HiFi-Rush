@@ -3,6 +3,7 @@
 #include "ITextRenderer.h"
 #include "SceneManager.h"
 #include "Input.h"
+#include "BuiltinGraphicsResources.h"
 
 namespace gm
 {
@@ -20,6 +21,6 @@ namespace gm
 
 	void CommonLoadingScene::OnRender()
 	{
-		APPLICATION.GetTextRenderer().RequestDrawText(L"Loading Scene...", L"Engine.DefaultUI", Vector2(APPLICATION.GetWidth() * 0.5f, APPLICATION.GetHeight() * 0.5f), 24.f, Colors::White);
+		APPLICATION.GetTextRenderer().RequestDrawText(L"Loading Scene...", BuiltinResourceKey::DefaultUIFont, Vector2(APPLICATION.GetWidth() * 0.5f, APPLICATION.GetHeight() * 0.5f), 24.f, Colors::White);
 	}
 }

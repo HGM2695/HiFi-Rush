@@ -4,6 +4,7 @@
 #include "ITextRenderer.h"
 #include "PhysicsSystem.h"
 #include "SceneManager.h"
+#include "BuiltinGraphicsResources.h"
 
 namespace gm
 {
@@ -20,7 +21,7 @@ namespace gm
 
 	void TitleScene::OnRender()
 	{
-		APPLICATION.GetTextRenderer().RequestDrawText(L"TitleScene", L"Engine.DefaultUI", { APPLICATION.GetWidth() * 0.5f, APPLICATION.GetHeight() * 0.5f }, 44.f, Colors::White);
+		APPLICATION.GetTextRenderer().RequestDrawText(L"TitleScene", BuiltinResourceKey::DefaultUIFont, { APPLICATION.GetWidth() * 0.5f, APPLICATION.GetHeight() * 0.5f }, 44.f, Colors::White);
 	}
 }
 

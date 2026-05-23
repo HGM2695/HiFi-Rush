@@ -3,6 +3,7 @@
 #include "D3D11GraphicsDevice.h"
 #include "DebugDraw.h"
 #include "D3D11TextRenderer.h"
+#include "BuiltinGraphicsResources.h"
 
 #include <d3d11.h>
 #include <directxtk/DirectXHelpers.h>
@@ -209,7 +210,7 @@ namespace gm
 		TextHorizontalAlignment horizontalAlignment, TextVerticalAlignment verticalAlignment)
 	{
 #ifdef _DEBUG
-		_textRenderer->RequestDrawText(content, L"Engine.DefaultUI", viewPosition, fontSize, color, horizontalAlignment, verticalAlignment);
+		_textRenderer->RequestDrawText(content, BuiltinResourceKey::DefaultUIFont, viewPosition, fontSize, color, horizontalAlignment, verticalAlignment);
 #endif
 	}
 

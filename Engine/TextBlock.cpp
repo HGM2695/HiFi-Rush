@@ -1,6 +1,7 @@
 #include "TextBlock.h"
 #include "Application.h"
 #include "ITextRenderer.h"
+#include "BuiltinGraphicsResources.h"
 
 namespace gm
 {
@@ -14,6 +15,6 @@ namespace gm
 		if (_text.empty())
 			return;
 
-		APPLICATION.GetTextRenderer().RequestDrawText(_text, L"Engine.DefaultUI", geometry.center, _size, _color, _horizonAlign, _verticalAlign);
+		APPLICATION.GetTextRenderer().RequestDrawText(_text, BuiltinResourceKey::DefaultUIFont, geometry.center, _size, _color, _horizonAlign, _verticalAlign);
 	}
 }

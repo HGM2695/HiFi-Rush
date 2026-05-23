@@ -1,5 +1,6 @@
 #include "D3D11TextRenderer.h"
 #include "D3D11GraphicsDevice.h"
+#include "BuiltinGraphicsResources.h"
 #include <d3d11.h>
 #include <d2d1_1.h>
 #include <dwrite.h>
@@ -46,7 +47,7 @@ namespace gm
 	bool D3D11TextRenderer::Initialize(IGraphicsDevice& graphicsDevice)
 	{
 		GM_ASSERT_RETURN_VAL(CreateDeviceResources(graphicsDevice), false, "D3D11TextRenderer 리소스 생성에 실패했습니다.");
-		GM_ASSERT_RETURN_VAL(RegisterFont(L"Engine.DefaultUI", L"Segoe UI"), false, "D3D11TextRenderer TextFormat 생성에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(RegisterFont(BuiltinResourceKey::DefaultUIFont, L"Segoe UI"), false, "D3D11TextRenderer TextFormat 생성에 실패했습니다.");
 
 		return true;
 	}

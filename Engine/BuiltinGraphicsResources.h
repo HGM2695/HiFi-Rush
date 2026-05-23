@@ -30,6 +30,9 @@ namespace gm
 		// Sampler
 		inline constexpr const wchar_t* PointSampler = L"Engine.PointSampler";
 		inline constexpr const wchar_t* LinearSampler = L"Engine.LinearSampler";
+
+		// Font
+		inline constexpr const wchar_t* DefaultUIFont = L"Engine.DefaultUIFont";
 	}
 
 	class BuiltinGraphicsResources
