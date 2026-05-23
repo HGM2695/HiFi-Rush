@@ -123,7 +123,7 @@ namespace gm
 		struct GameObjectSlot
 		{
 			std::unique_ptr<GameObject> gameObject;
-			uint32						generation = 1;
+			uint32						generation = 0;
 		};
 
 		void			Enter();
