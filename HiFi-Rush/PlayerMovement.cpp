@@ -34,7 +34,7 @@ namespace gm
 		velocity.x = moveAxisX * moveSpeed;
 		_ownerRigidbody->SetVelocity(velocity);
 
-		if (isGrounded && input.IsKeyRepeat(KeyCode::T))
+		if (isGrounded && input.IsKeyRepeat(KeyCode::C))
 			_ownerRigidbody->AddImpulse({ 0.f, _jumpImpulse });
 	}
 }

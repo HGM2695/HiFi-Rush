@@ -1,39 +1,40 @@
-﻿#include "MainHUDWidget.h"
+#include "MainHUDWidget.h"
 #include "Border.h"
 #include "CanvasPanel.h"
 #include "TextBlock.h"
+#include "Image.h"
 
 namespace gm
 {
 	std::unique_ptr<Widget> MainHUDWidget::BuildWidgetTree()
 	{
-		auto root = std::make_unique<CanvasPanel>();
+		auto root = CreateNamedRootWidget<CanvasPanel>(L"Root");
 
-		Border* panel = root->AddChild<Border>();
-		panel->SetPosition({ 20.f, 20.f });
-		panel->SetSize({ 320.f, 110.f });
-		panel->SetBackgroundColor(ColorFromRGBA(24, 24, 24, 220));
-		panel->SetOutlineColor(ColorFromRGBA(90, 180, 255));
+		Border* border = root->AddNamedChild<Border>(L"MainPanel");
+		border->SetPosition({ 0.f, -125.f });
+		border->SetSize({ 460.f, 110.f });
+		border->SetBackgroundColor(ColorFromRGBA(24, 24, 24, 220));
+		border->SetOutlineColor(Colors::Red);
+		border->SetBorderThickness(2.f);
 
-		/*
-		Image* panel = root->AddChild<Image>();
-		panel->SetPosition({ 20.f, 20.f });
-		panel->SetSize({ 320.f, 110.f });
-		panel->SetTextureByName(L"OrangeMushroom");
-		*/
-
-		TextBlock* titleText = panel->AddChild<TextBlock>();
-		titleText->SetPosition({ 16.f, 14.f });
+		TextBlock* titleText = border->AddNamedChild<TextBlock>(L"TitleText");
+		titleText->SetHorizonAlign(TextHorizontalAlignment::Center);
+		titleText->SetVerticalAlign(TextVerticalAlignment::Center);
+		titleText->SetPosition({ 0.f, -35.f });
 		titleText->SetText(L"Main HUD");
 		titleText->SetColor(Colors::Cyan);
 
-		TextBlock* bodyText = panel->AddChild<TextBlock>();
-		bodyText->SetPosition({ 16.f, 44.f });
-		bodyText->SetText(L"Move : Arrow Key  |  Jump : T");
+		TextBlock* bodyText = border->AddNamedChild<TextBlock>(L"BodyText");
+		bodyText->SetHorizonAlign(TextHorizontalAlignment::Center);
+		bodyText->SetVerticalAlign(TextVerticalAlignment::Center);
+		bodyText->SetPosition({ 0.f, -5.f });
+		bodyText->SetText(L"Move : Arrow Key  |  Jump : C");
 		bodyText->SetColor(Colors::White);
 
-		TextBlock* hintText = panel->AddChild<TextBlock>();
-		hintText->SetPosition({ 16.f, 72.f });
+		TextBlock* hintText = border->AddNamedChild<TextBlock>(L"HintText");
+		hintText->SetHorizonAlign(TextHorizontalAlignment::Center);
+		hintText->SetVerticalAlign(TextVerticalAlignment::Center);
+		hintText->SetPosition({ 0.f, 25.f });
 		hintText->SetText(L"Unreal-style UserWidget prototype");
 		hintText->SetColor(Colors::Yellow);
 

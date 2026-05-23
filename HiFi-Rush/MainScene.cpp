@@ -28,7 +28,6 @@ namespace gm
 	{
 		APPLICATION.GetPhysicsSystem().SetPhysicsMode(PhysicsMode::Physics2D);
 		APPLICATION.GetUIManager().ClearViewportWidgets();
-		APPLICATION.GetUIManager().AddWidget<MainHUDWidget>();
 	}
 
 	void MainScene::OnInitialize()
@@ -60,19 +59,17 @@ namespace gm
 		player->AddComponent<PlayerAnimationFSM>();
 		Rigidbody2D* rigidbody = player->AddComponent<Rigidbody2D>();
 		rigidbody->SetLinearDamping(1.f);
-		rigidbody->SetGravityScale(0.f);
 
 		BoxCollider2D* collider = player->AddComponent<BoxCollider2D>();
-		collider->SetSize({ 100.f, 100.f });
+		collider->SetSize({ 60.f, 70.f });
 
 		SocketComponent* socketComponent = player->AddComponent<SocketComponent>();
 		Socket socket{};
 		socket.position = Vector3{ 0.f, 0.f, -1.f };
 		socketComponent->AddSocket(L"Player.Camera", socket);
 
-		//WidgetComponent* userWidget = player->AddComponent<WidgetComponent>();
-		//userWidget->SetWorldOffset({ -175.f, 200.f });
-		//userWidget->CreateUserWidget<MainHUDWidget>();
+		WidgetComponent* userWidget = player->AddComponent<WidgetComponent>();
+		userWidget->SetUserWidget<MainHUDWidget>();
 
 		InitializeCamera(player);
 	}
@@ -99,9 +96,9 @@ namespace gm
 			transform->SetScale(Vector2{ static_cast<float>(texture->GetWidth()),static_cast<float>(texture->GetHeight()) });
 		}
 
-		//auto ground = SpawnGameObject<GameObject>({ 0, -250 });
-		//BoxCollider2D* groundCollider = ground->AddComponent<BoxCollider2D>();
-		//groundCollider->SetSize({ 120000.f, 100.f });
+		auto ground = SpawnGameObject<GameObject>({ 0, -250 });
+		BoxCollider2D* groundCollider = ground->AddComponent<BoxCollider2D>();
+		groundCollider->SetSize({ 120000.f, 100.f });
 	}
 
 	void MainScene::InitializeCamera(GameObject* player)
