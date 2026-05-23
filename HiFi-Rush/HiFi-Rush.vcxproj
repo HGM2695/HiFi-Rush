@@ -142,6 +142,8 @@
   <ItemGroup>
     <ClInclude Include="DebugInputHandler.h" />
     <ClInclude Include="CommonLoadingScene.h" />
+    <ClInclude Include="DebugTextWidget.h" />
+    <ClInclude Include="LoadDebugTools.h" />
     <ClInclude Include="LoadResources.h" />
     <ClInclude Include="LoadScenes.h" />
     <ClInclude Include="MainHUDWidget.h" />
@@ -156,6 +158,7 @@
   <ItemGroup>
     <ClCompile Include="DebugInputHandler.cpp" />
     <ClCompile Include="CommonLoadingScene.cpp" />
+    <ClCompile Include="DebugTextWidget.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainHUDWidget.cpp" />
     <ClCompile Include="MainScene.cpp" />

@@ -33,17 +33,11 @@
   <ItemGroup>
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="LoadScenes.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="MainScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="TitleScene.h">
       <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="LoadResources.h">
-      <Filter>Resource</Filter>
     </ClInclude>
     <ClInclude Include="PlayerAnimationFSM.h">
       <Filter>Component\01. Behavior</Filter>
@@ -61,6 +55,16 @@
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Paths.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugTextWidget.h" />
+    <ClInclude Include="LoadScenes.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadDebugTools.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadResources.h">
       <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>
@@ -100,5 +104,6 @@
     <ClCompile Include="CommonLoadingScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="DebugTextWidget.cpp" />
   </ItemGroup>
 </Project>

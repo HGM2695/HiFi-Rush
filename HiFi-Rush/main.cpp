@@ -1,6 +1,7 @@
 #include "WindowsCore.h"
 #include "LoadScenes.h"
 #include "LoadResources.h"
+#include "LoadDebugTools.h"
 #include "GraphicsTypes.h"
 
 #ifdef _DEBUG
@@ -28,6 +29,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
     gm::LoadResources();
     gm::SetupScenes();
+    gm::LoadDebugTools();
 
     APPLICATION.Run();
 
