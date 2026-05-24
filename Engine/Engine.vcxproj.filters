@@ -275,9 +275,11 @@
     <ClInclude Include="ITextRenderer.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="TextTypes.h" />
     <ClInclude Include="Widget.h">
       <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="TextTypes.h">
+      <Filter>Util\Types</Filter>
     </ClInclude>
     <ClInclude Include="AnimatedSpriteComponent.h">
       <Filter>Engine Component</Filter>

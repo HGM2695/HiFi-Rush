@@ -25,7 +25,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     desc.width = 1600;
     desc.height = 900;
     desc.showCommand = nCmdShow;
-    desc.isVSync = true;
+    desc.isVSync = false;
     desc.graphicsAPI = gm::GraphicsAPI::D3D11;
 
     GM_ASSERT_RETURN_VAL(APPLICATION.Initialize(desc), -1, "Application 초기화 실패");
