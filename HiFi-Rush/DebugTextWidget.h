@@ -2,6 +2,8 @@
 
 #include "UserWidget.h"
 
+#if GM_ENABLE_DEBUG_TOOLS
+
 namespace gm
 {
 	class DebugTextWidget : public UserWidget
@@ -18,3 +20,4 @@ namespace gm
 	};
 }
 
+#endif

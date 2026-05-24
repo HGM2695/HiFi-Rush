@@ -2,9 +2,12 @@
 #include "D3D11GraphicsDevice.h"
 #include "D3D11GraphicsResourceFactory.h"
 #include "D3D11GraphicsCommandContext.h"
-#include "D3D11DebugRenderer.h"
 #include "D3D11TextRenderer.h"
 #include <d3d11.h>
+
+#if GM_ENABLE_DEBUG_TOOLS
+#include "D3D11DebugRenderer.h"
+#endif
 
 namespace gm
 {
@@ -31,8 +34,10 @@ namespace gm
 			backend.textRenderer = std::make_unique<D3D11TextRenderer>();
 			GM_ASSERT_RETURN_VAL(backend.textRenderer->Initialize(*device), GraphicsBackend{}, "D3D11 TextRenderer 초기화에 실패했습니다.");
 
+#if GM_ENABLE_DEBUG_TOOLS
 			backend.debugRenderer = std::make_unique<D3D11DebugRenderer>(static_cast<D3D11TextRenderer*>(backend.textRenderer.get()));
 			GM_ASSERT_RETURN_VAL(backend.debugRenderer->Initialize(*device), GraphicsBackend{}, "D3D11 DebugRenderer 초기화에 실패했습니다.");
+#endif
 
 			backend.device = std::move(device);
 

@@ -1,4 +1,7 @@
 #include "DebugTextWidget.h"
+
+#if GM_ENABLE_DEBUG_TOOLS
+
 #include "TextBlock.h"
 
 namespace gm
@@ -26,3 +29,5 @@ namespace gm
 		static_cast<TextBlock*>(GetRootWidget())->SetText(L"FPS : " + std::to_wstring(_fps));
 	}
 }
+
+#endif

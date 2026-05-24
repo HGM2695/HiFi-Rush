@@ -57,7 +57,6 @@
     <ClInclude Include="Paths.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="DebugTextWidget.h" />
     <ClInclude Include="LoadScenes.h">
       <Filter>Util</Filter>
     </ClInclude>
@@ -66,6 +65,9 @@
     </ClInclude>
     <ClInclude Include="LoadResources.h">
       <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugTextWidget.h">
+      <Filter>Widget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -104,6 +106,8 @@
     <ClCompile Include="CommonLoadingScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="DebugTextWidget.cpp" />
+    <ClCompile Include="DebugTextWidget.cpp">
+      <Filter>Widget</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

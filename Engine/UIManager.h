@@ -24,7 +24,7 @@ namespace gm
 		template <typename T, typename... Args>
 		T* AddDebugUserWidget(Args&&... args)
 		{
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 			auto widget = CreateUserWidget<T>(std::forward<Args>(args)...);
 			T* raw = widget.get();
 
@@ -56,7 +56,7 @@ namespace gm
 	private:
 		std::vector<std::unique_ptr<UserWidget>> _viewportWidgetList{};
 
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 		std::vector<std::unique_ptr<UserWidget>> _debugWidgetList{};
 #endif
 	};

@@ -10,7 +10,6 @@
 #include "IGraphicsDevice.h"
 #include "IGraphicsResourceFactory.h"
 #include "IGraphicsCommandContext.h"
-#include "IDebugRenderer.h"
 #include "ITextRenderer.h"
 #include "UIManager.h"
 #include "Window.h"
@@ -20,6 +19,10 @@
 #include "GraphicsBackend.h"
 #include "CameraManager.h"
 #include "Renderer.h"
+
+#if GM_ENABLE_DEBUG_TOOLS
+#include "IDebugRenderer.h"
+#endif
 
 namespace gm
 {
@@ -66,13 +69,17 @@ namespace gm
 		GM_ASSERT_RETURN_VAL(graphicsBackend.device, false, "그래픽 디바이스 생성에 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(graphicsBackend.resourceFactory, false, "그래픽 리소스 팩토리 생성에 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(graphicsBackend.commandContext, false, "Graphics CommandContext 생성에 실패했습니다.");
+#if GM_ENABLE_DEBUG_TOOLS
 		GM_ASSERT_RETURN_VAL(graphicsBackend.debugRenderer, false, "DebugRenderer 생성에 실패했습니다.");
+#endif
 		GM_ASSERT_RETURN_VAL(graphicsBackend.textRenderer, false, "TextRenderer 생성에 실패했습니다.");
 
 		_graphicsDevice = std::move(graphicsBackend.device);
 		_graphicsResourceFactory = std::move(graphicsBackend.resourceFactory);
 		_graphicsCommandContext = std::move(graphicsBackend.commandContext);
+#if GM_ENABLE_DEBUG_TOOLS
 		_debugRenderer = std::move(graphicsBackend.debugRenderer);
+#endif
 		_textRenderer = std::move(graphicsBackend.textRenderer);
 
 		return true;
@@ -178,7 +185,9 @@ namespace gm
 
 		const CameraViewInfo viewInfo = activeScene->GetCameraManager()->GetViewInfo();
 		_renderer->Render(viewInfo, GetWidth(), GetHeight());
+#if GM_ENABLE_DEBUG_TOOLS
 		_debugRenderer->Render(viewInfo);
+#endif
 		_textRenderer->Render();
 
 		_graphicsDevice->EndFrame();

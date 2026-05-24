@@ -9,7 +9,7 @@ namespace gm
 		for (const auto& widget : _viewportWidgetList)
 			widget->Tick(deltaTime);
 
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 		for (const auto& widget : _debugWidgetList)
 			widget->Tick(deltaTime);
 #endif
@@ -26,7 +26,7 @@ namespace gm
 		for (const auto& widget : _viewportWidgetList)
 			widget->Render(viewportGeometry);
 
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 		for (const auto& widget : _debugWidgetList)
 			widget->Render(viewportGeometry);
 #endif
@@ -39,7 +39,7 @@ namespace gm
 
 	void UIManager::ClearDebugWidgets()
 	{
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 		_debugWidgetList.clear();
 #endif
 	}

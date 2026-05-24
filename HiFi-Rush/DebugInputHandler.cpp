@@ -5,7 +5,7 @@ namespace gm
 {
 	bool DebugInputHandler::IsTriggered(DebugType debugType, KeyCode keycode, KeyState keyState)
 	{
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 		if ((_types & debugType) == DebugType::None)
 			return false;
 

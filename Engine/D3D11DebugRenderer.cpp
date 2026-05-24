@@ -27,7 +27,7 @@ namespace gm
 
 	bool D3D11DebugRenderer::Initialize(IGraphicsDevice& graphicsDevice)
 	{
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 		D3D11GraphicsDevice& d3d11Device = static_cast<D3D11GraphicsDevice&>(graphicsDevice);
 		ID3D11Device* nativeDevice = d3d11Device.GetNativeDevice();
 		ID3D11DeviceContext* nativeContext = d3d11Device.GetImmediateContext();
@@ -52,7 +52,7 @@ namespace gm
 
 	void D3D11DebugRenderer::Render(const CameraViewInfo& viewInfo)
 	{
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 		if (_lines.empty() && _triangles.empty() && _quads.empty() && _rings.empty() && _boxes.empty() && _obbs.empty() && _spheres.empty() && _rays.empty())
 			return;
 
@@ -113,7 +113,7 @@ namespace gm
 
 	void D3D11DebugRenderer::RequestDrawLine(const Vector3& start, const Vector3& end, Color color)
 	{
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 		_lines.push_back({ start, end, color });
 #endif
 	}
@@ -131,14 +131,14 @@ namespace gm
 
 	void D3D11DebugRenderer::RequestDrawTriangle(const Vector3& a, const Vector3& b, const Vector3& c, Color color)
 	{
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 		_triangles.push_back({ a, b, c, color });
 #endif
 	}
 
 	void D3D11DebugRenderer::RequestDrawQuad(const Vector3& a, const Vector3& b, const Vector3& c, const Vector3& d, Color color)
 	{
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 		_quads.push_back({ a, b, c, d, color });
 #endif
 	}
@@ -150,7 +150,7 @@ namespace gm
 
 	void D3D11DebugRenderer::RequestDrawCircle(const Vector3& center, float radius, Color color, uint32 segments)
 	{
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 		_rings.push_back({ center, Vector3(radius, 0.f, 0.f), Vector3(0.f, radius, 0.f), color });
 #endif
 	}
@@ -162,7 +162,7 @@ namespace gm
 
 	void D3D11DebugRenderer::RequestDrawBox(const BoundingBox& box, Color color)
 	{
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 		_boxes.push_back({ box, color });
 #endif
 	}
@@ -174,7 +174,7 @@ namespace gm
 
 	void D3D11DebugRenderer::RequestDrawOBB(const BoundingOrientedBox& obb, Color color)
 	{
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 		_obbs.push_back({ obb, color });
 #endif
 	}
@@ -186,7 +186,7 @@ namespace gm
 
 	void D3D11DebugRenderer::RequestDrawSphere(const BoundingSphere& sphere, Color color)
 	{
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 		_spheres.push_back({ sphere, color });
 #endif
 	}
@@ -198,7 +198,7 @@ namespace gm
 
 	void D3D11DebugRenderer::RequestDrawRay(const Ray& ray, float length, Color color)
 	{
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 		if (ray.direction.LengthSquared() <= 0.f || length <= 0.f)
 			return;
 
@@ -209,14 +209,14 @@ namespace gm
 	void D3D11DebugRenderer::RequestDrawText(const std::wstring& content, const Vector2& viewPosition, float fontSize, Color color,
 		TextHorizontalAlignment horizontalAlignment, TextVerticalAlignment verticalAlignment)
 	{
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 		_textRenderer->RequestDrawText(content, BuiltinResourceKey::DefaultUIFont, viewPosition, fontSize, color, horizontalAlignment, verticalAlignment);
 #endif
 	}
 
 	void D3D11DebugRenderer::Clear()
 	{
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 		_lines.clear();
 		_triangles.clear();
 		_quads.clear();

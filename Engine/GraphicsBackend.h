@@ -8,16 +8,22 @@ namespace gm
 	class IGraphicsDevice;
 	class IGraphicsResourceFactory;
 	class IGraphicsCommandContext;
-	class IDebugRenderer;
 	class ITextRenderer;
+
+#if GM_ENABLE_DEBUG_TOOLS
+	class IDebugRenderer;
+#endif
 
 	struct GraphicsBackend
 	{
 		std::unique_ptr<IGraphicsDevice>			device;
 		std::unique_ptr<IGraphicsResourceFactory>	resourceFactory;
 		std::unique_ptr<IGraphicsCommandContext>	commandContext;
-		std::unique_ptr<IDebugRenderer>				debugRenderer;
 		std::unique_ptr<ITextRenderer>				textRenderer;
+
+#if GM_ENABLE_DEBUG_TOOLS
+		std::unique_ptr<IDebugRenderer>				debugRenderer;
+#endif
 	};
 
 	struct GraphicsBackendDesc

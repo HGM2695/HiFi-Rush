@@ -19,7 +19,7 @@ namespace gm
 	public:
 		static inline void Enable(DebugType type)
 		{
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 			_types |= type;
 #else
 			(void)type;
@@ -28,7 +28,7 @@ namespace gm
 
 		static inline void Disable(DebugType type)
 		{
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 			_types &= ~type;
 #else
 			(void)type;
@@ -37,7 +37,7 @@ namespace gm
 
 		static inline void Toggle(DebugType type)
 		{
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 			_types ^= type;
 #else
 			(void)type;
@@ -46,7 +46,7 @@ namespace gm
 
 		static inline void Clear()
 		{
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 			_types = 0;
 #endif
 		}
@@ -54,7 +54,7 @@ namespace gm
 		static bool IsTriggered(DebugType debugType, KeyCode keycode, KeyState keyState = KeyState::Down);
 
 	private:
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 		static inline uint32 _types = AudioTest | PhysicsTest;
 #endif
 	};

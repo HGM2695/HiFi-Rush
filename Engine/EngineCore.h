@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BuildConfig.h"
 #include "Types.h"
 #include "MathTypes.h"
 #include "GMAssert.h"
