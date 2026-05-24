@@ -1,13 +1,13 @@
-#pragma once
+﻿#pragma once
 
-#include "Collider2D.h"
+#include "Collider2DComponent.h"
 
 namespace gm
 {
-	class BoxCollider2D : public Collider2D
+	class BoxCollider2DComponent : public Collider2DComponent
 	{
 	public:
-		BoxCollider2D() : Collider2D(Collider2DType::Box) {}
+		BoxCollider2DComponent() : Collider2DComponent(Collider2DType::Box) {}
 
 		void					SetSize(const Vector2& size) { _size = size; }
 		const Vector2&			GetSize() const { return _size; }

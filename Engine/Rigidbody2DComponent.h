@@ -1,10 +1,10 @@
-#pragma once
+﻿#pragma once
 
 #include "Component.h"
 
 namespace gm
 {
-	class Rigidbody2D : public Component
+	class Rigidbody2DComponent : public Component
 	{
 	friend class PhysicsSystem2D;
 

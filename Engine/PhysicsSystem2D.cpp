@@ -1,10 +1,10 @@
-#include "PhysicsSystem2D.h"
-#include "BoxCollider2D.h"
-#include "CircleCollider2D.h"
+﻿#include "PhysicsSystem2D.h"
+#include "BoxCollider2DComponent.h"
+#include "CircleCollider2DComponent.h"
 #include "GameObject.h"
-#include "Rigidbody2D.h"
+#include "Rigidbody2DComponent.h"
 #include "Scene.h"
-#include "Transform.h"
+#include "TransformComponent.h"
 #include <algorithm>
 #include <cmath>
 
@@ -20,14 +20,14 @@ namespace gm
 			Vector2 max;
 		};
 
-		BoxBounds GetWorldBounds(const BoxCollider2D& collider, const GameObject& gameObject)
+		BoxBounds GetWorldBounds(const BoxCollider2DComponent& collider, const GameObject& gameObject)
 		{
 			const Vector2 center = gameObject.GetTransform()->GetPosition2D() + collider.GetOffset();
 			const Vector2 halfSize = collider.GetSize() * 0.5f;
 			return { center - halfSize, center + halfSize };
 		}
 
-		Vector2 GetWorldCenter(const CircleCollider2D& collider, const GameObject& gameObject)
+		Vector2 GetWorldCenter(const CircleCollider2DComponent& collider, const GameObject& gameObject)
 		{
 			return gameObject.GetTransform()->GetPosition2D() + collider.GetOffset();
 		}
@@ -44,7 +44,7 @@ namespace gm
 
 			scene.ForEachGameObject([this, &scene, curTime](GameObject& gameObject)
 				{
-					Rigidbody2D* rigidbody = gameObject.GetRigidbody2D();
+					Rigidbody2DComponent* rigidbody = gameObject.GetRigidbody2D();
 					if (rigidbody == nullptr || rigidbody->IsKinematic())
 						return;
 
@@ -58,7 +58,7 @@ namespace gm
 
 		scene.ForEachGameObject([](GameObject& gameObject)
 			{
-				Rigidbody2D* rigidbody = gameObject.GetRigidbody2D();
+				Rigidbody2DComponent* rigidbody = gameObject.GetRigidbody2D();
 				if (rigidbody == nullptr || rigidbody->IsKinematic())
 					return;
 
@@ -66,7 +66,7 @@ namespace gm
 			});
 	}
 
-	void PhysicsSystem2D::ApplyForces(Rigidbody2D& rigidbody, float deltaTime) const
+	void PhysicsSystem2D::ApplyForces(Rigidbody2DComponent& rigidbody, float deltaTime) const
 	{
 		GM_ASSERT_RETURN(rigidbody._mass > 0.f, "Rigidbody2D의 mass는 0보다 커야 합니다.");
 
@@ -74,7 +74,7 @@ namespace gm
 		rigidbody._velocity += acceleration * deltaTime;
 	}
 
-	void PhysicsSystem2D::ApplyGravity(Rigidbody2D& rigidbody, float deltaTime) const
+	void PhysicsSystem2D::ApplyGravity(Rigidbody2DComponent& rigidbody, float deltaTime) const
 	{
 		if (rigidbody._useGravity == false)
 			return;
@@ -82,7 +82,7 @@ namespace gm
 		rigidbody._velocity.y -= PHYSICS_GRAVITY * rigidbody._gravityScale * deltaTime;
 	}
 
-	void PhysicsSystem2D::ApplyLinearDamping(Rigidbody2D& rigidbody, float deltaTime) const
+	void PhysicsSystem2D::ApplyLinearDamping(Rigidbody2DComponent& rigidbody, float deltaTime) const
 	{
 		if (rigidbody._linearDamping <= 0.f)
 			return;
@@ -91,7 +91,7 @@ namespace gm
 		rigidbody._velocity *= dampingFactor;
 	}
 
-	void PhysicsSystem2D::ClampVelocity(Rigidbody2D& rigidbody) const
+	void PhysicsSystem2D::ClampVelocity(Rigidbody2DComponent& rigidbody) const
 	{
 		if (rigidbody._maxSpeed <= 0.f)
 			return;
@@ -104,7 +104,7 @@ namespace gm
 		}
 	}
 
-	void PhysicsSystem2D::SimulateRigidbody(Scene& scene, GameObject& gameObject, Rigidbody2D& rigidbody, float deltaTime) const
+	void PhysicsSystem2D::SimulateRigidbody(Scene& scene, GameObject& gameObject, Rigidbody2DComponent& rigidbody, float deltaTime) const
 	{
 		rigidbody._isGrounded = false;
 
@@ -113,9 +113,9 @@ namespace gm
 		ResolveYAxis(scene, gameObject, rigidbody, movement);
 	}
 
-	void PhysicsSystem2D::ResolveXAxis(Scene& scene, GameObject& gameObject, Rigidbody2D& rigidbody, const Vector2& movement) const
+	void PhysicsSystem2D::ResolveXAxis(Scene& scene, GameObject& gameObject, Rigidbody2DComponent& rigidbody, const Vector2& movement) const
 	{
-		Transform* transform = gameObject.GetTransform();
+		TransformComponent* transform = gameObject.GetTransform();
 		transform->TranslateX(movement.x);
 
 		scene.ForEachGameObject([this, &gameObject, &rigidbody, transform](GameObject& otherObject)
@@ -123,13 +123,13 @@ namespace gm
 			if (&gameObject == &otherObject)
 				return;
 
-			Rigidbody2D* otherRigidbody = otherObject.GetRigidbody2D();
+			Rigidbody2DComponent* otherRigidbody = otherObject.GetRigidbody2D();
 			if (otherRigidbody && otherRigidbody->IsKinematic() == false)
 				return;
 
-			for (const Collider2D* selfCollider : gameObject.GetColliders2D())
+			for (const Collider2DComponent* selfCollider : gameObject.GetColliders2D())
 			{
-				for (const Collider2D* otherCollider : otherObject.GetColliders2D())
+				for (const Collider2DComponent* otherCollider : otherObject.GetColliders2D())
 				{
 					const CollisionHit hit = CheckCollision(*selfCollider, gameObject, *otherCollider, otherObject);
 
@@ -143,9 +143,9 @@ namespace gm
 		});
 	}
 
-	void PhysicsSystem2D::ResolveYAxis(Scene& scene, GameObject& gameObject, Rigidbody2D& rigidbody, const Vector2& movement) const
+	void PhysicsSystem2D::ResolveYAxis(Scene& scene, GameObject& gameObject, Rigidbody2DComponent& rigidbody, const Vector2& movement) const
 	{
-		Transform* transform = gameObject.GetTransform();
+		TransformComponent* transform = gameObject.GetTransform();
 		transform->TranslateY(movement.y);
 
 		scene.ForEachGameObject([this, &gameObject, &rigidbody, transform](GameObject& otherObject)
@@ -153,13 +153,13 @@ namespace gm
 			if (&gameObject == &otherObject)
 				return;
 
-			Rigidbody2D* otherRigidbody = otherObject.GetRigidbody2D();
+			Rigidbody2DComponent* otherRigidbody = otherObject.GetRigidbody2D();
 			if (otherRigidbody && otherRigidbody->IsKinematic() == false)
 				return;
 
-			for (const Collider2D* selfCollider : gameObject.GetColliders2D())
+			for (const Collider2DComponent* selfCollider : gameObject.GetColliders2D())
 			{
-				for (const Collider2D* otherCollider : otherObject.GetColliders2D())
+				for (const Collider2DComponent* otherCollider : otherObject.GetColliders2D())
 				{
 					const CollisionHit hit = CheckCollision(*selfCollider, gameObject, *otherCollider, otherObject);
 
@@ -177,26 +177,26 @@ namespace gm
 		});
 	}
 
-	CollisionHit PhysicsSystem2D::CheckCollision(const Collider2D& lhs, const GameObject& lhsObject, const Collider2D& rhs, const GameObject& rhsObject) const
+	CollisionHit PhysicsSystem2D::CheckCollision(const Collider2DComponent& lhs, const GameObject& lhsObject, const Collider2DComponent& rhs, const GameObject& rhsObject) const
 	{
 		if (lhs.GetColliderType() == Collider2DType::Box && rhs.GetColliderType() == Collider2DType::Box)
-			return CheckBoxCollision(static_cast<const BoxCollider2D&>(lhs), lhsObject, static_cast<const BoxCollider2D&>(rhs), rhsObject);
+			return CheckBoxCollision(static_cast<const BoxCollider2DComponent&>(lhs), lhsObject, static_cast<const BoxCollider2DComponent&>(rhs), rhsObject);
 
 		if (lhs.GetColliderType() == Collider2DType::Circle && rhs.GetColliderType() == Collider2DType::Circle)
-			return CheckCircleCollision(static_cast<const CircleCollider2D&>(lhs), lhsObject, static_cast<const CircleCollider2D&>(rhs), rhsObject);
+			return CheckCircleCollision(static_cast<const CircleCollider2DComponent&>(lhs), lhsObject, static_cast<const CircleCollider2DComponent&>(rhs), rhsObject);
 
 		if (lhs.GetColliderType() == Collider2DType::Circle && rhs.GetColliderType() == Collider2DType::Box)
-			return CheckCircleBoxCollision(static_cast<const CircleCollider2D&>(lhs), lhsObject, static_cast<const BoxCollider2D&>(rhs), rhsObject);
+			return CheckCircleBoxCollision(static_cast<const CircleCollider2DComponent&>(lhs), lhsObject, static_cast<const BoxCollider2DComponent&>(rhs), rhsObject);
 
 		if (lhs.GetColliderType() == Collider2DType::Box && rhs.GetColliderType() == Collider2DType::Circle)
-			return CheckCircleBoxCollision(static_cast<const CircleCollider2D&>(rhs), rhsObject, static_cast<const BoxCollider2D&>(lhs), lhsObject);
+			return CheckCircleBoxCollision(static_cast<const CircleCollider2DComponent&>(rhs), rhsObject, static_cast<const BoxCollider2DComponent&>(lhs), lhsObject);
 
 		GM_ASSERT(false, "lhs, rhs 콜라이더 간의 타입 매칭이 존재하지 않습니다.");
 
 		return CollisionHit();
 	}
 
-	CollisionHit PhysicsSystem2D::CheckBoxCollision(const BoxCollider2D& lhs, const GameObject& lhsObject, const BoxCollider2D& rhs, const GameObject& rhsObject) const
+	CollisionHit PhysicsSystem2D::CheckBoxCollision(const BoxCollider2DComponent& lhs, const GameObject& lhsObject, const BoxCollider2DComponent& rhs, const GameObject& rhsObject) const
 	{
 		const BoxBounds lhsBounds = GetWorldBounds(lhs, lhsObject);
 		const BoxBounds rhsBounds = GetWorldBounds(rhs, rhsObject);
@@ -225,7 +225,7 @@ namespace gm
 		return hit;
 	}
 
-	CollisionHit PhysicsSystem2D::CheckCircleCollision(const CircleCollider2D& lhs, const GameObject& lhsObject, const CircleCollider2D& rhs, const GameObject& rhsObject) const
+	CollisionHit PhysicsSystem2D::CheckCircleCollision(const CircleCollider2DComponent& lhs, const GameObject& lhsObject, const CircleCollider2DComponent& rhs, const GameObject& rhsObject) const
 	{
 		const Vector2 lhsCenter = GetWorldCenter(lhs, lhsObject);
 		const Vector2 rhsCenter = GetWorldCenter(rhs, rhsObject);
@@ -254,7 +254,7 @@ namespace gm
 		return hit;
 	}
 
-	CollisionHit PhysicsSystem2D::CheckCircleBoxCollision(const CircleCollider2D& lhs, const GameObject& lhsObject, const BoxCollider2D& rhs, const GameObject& rhsObject) const
+	CollisionHit PhysicsSystem2D::CheckCircleBoxCollision(const CircleCollider2DComponent& lhs, const GameObject& lhsObject, const BoxCollider2DComponent& rhs, const GameObject& rhsObject) const
 	{
 		const Vector2 circleCenter = GetWorldCenter(lhs, lhsObject);
 		const BoxBounds boxBounds = GetWorldBounds(rhs, rhsObject);

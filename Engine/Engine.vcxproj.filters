@@ -11,7 +11,7 @@
     <ClInclude Include="AudioStatics.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="Transform.h">
+    <ClInclude Include="TransformComponent.h">
       <Filter>Engine Component</Filter>
     </ClInclude>
     <ClInclude Include="TimeSystem.h">
@@ -65,7 +65,7 @@
     <ClInclude Include="Resources.h">
       <Filter>SubSystem</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="CameraComponent.h">
       <Filter>Engine Component</Filter>
     </ClInclude>
     <ClInclude Include="CameraManager.h">
@@ -80,16 +80,16 @@
     <ClInclude Include="SocketFollowComponent.h">
       <Filter>Engine Component</Filter>
     </ClInclude>
-    <ClInclude Include="Collider2D.h">
+    <ClInclude Include="Collider2DComponent.h">
       <Filter>Engine Component\Physics</Filter>
     </ClInclude>
     <ClInclude Include="AnimationClip.h">
       <Filter>Resource\AnimationClip</Filter>
     </ClInclude>
-    <ClInclude Include="BoxCollider2D.h">
+    <ClInclude Include="BoxCollider2DComponent.h">
       <Filter>Engine Component\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="CircleCollider2D.h">
+    <ClInclude Include="CircleCollider2DComponent.h">
       <Filter>Engine Component\Physics</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
@@ -125,7 +125,7 @@
     <ClInclude Include="PhysicsSystem.h">
       <Filter>Engine Component\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="Rigidbody2D.h">
+    <ClInclude Include="Rigidbody2DComponent.h">
       <Filter>Engine Component\Physics</Filter>
     </ClInclude>
     <ClInclude Include="UIManager.h">
@@ -299,10 +299,10 @@
     <ClCompile Include="AudioStatics.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="BoxCollider2D.cpp">
+    <ClCompile Include="BoxCollider2DComponent.cpp">
       <Filter>Engine Component\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="Transform.cpp">
+    <ClCompile Include="TransformComponent.cpp">
       <Filter>Engine Component</Filter>
     </ClCompile>
     <ClCompile Include="Input.cpp">
@@ -350,7 +350,7 @@
     <ClCompile Include="Resources.cpp">
       <Filter>SubSystem</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="CameraComponent.cpp">
       <Filter>Engine Component</Filter>
     </ClCompile>
     <ClCompile Include="CameraManager.cpp">
@@ -362,10 +362,10 @@
     <ClCompile Include="SocketFollowComponent.cpp">
       <Filter>Engine Component</Filter>
     </ClCompile>
-    <ClCompile Include="CircleCollider2D.cpp">
+    <ClCompile Include="CircleCollider2DComponent.cpp">
       <Filter>Engine Component\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="Collider2D.cpp">
+    <ClCompile Include="Collider2DComponent.cpp">
       <Filter>Engine Component\Physics</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsSystem2D.cpp">

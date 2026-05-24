@@ -1,13 +1,13 @@
-#pragma once
+﻿#pragma once
 
-#include "Collider2D.h"
+#include "Collider2DComponent.h"
 
 namespace gm
 {
-	class CircleCollider2D : public Collider2D
+	class CircleCollider2DComponent : public Collider2DComponent
 	{
 	public:
-		CircleCollider2D() : Collider2D(Collider2DType::Circle) {}
+		CircleCollider2DComponent() : Collider2DComponent(Collider2DType::Circle) {}
 
 		void	SetRadius(float radius) { _radius = radius; }
 		float	GetRadius() const { return _radius; }

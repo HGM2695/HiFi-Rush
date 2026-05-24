@@ -1,13 +1,13 @@
-#pragma once
+﻿#pragma once
 #include "Component.h"
 
 namespace gm
 {
-    class Transform : public Component
+    class TransformComponent : public Component
     {
     public:
-        Transform();
-        virtual ~Transform();
+        TransformComponent();
+        virtual ~TransformComponent();
 
         void            SetPosition(const Vector3& position) { _position = position; }
         void            SetPosition(const Vector2& position) { _position = Vector3(position.x, position.y, _position.z); }

@@ -1,13 +1,13 @@
-#include "PlayerMovement.h"
+﻿#include "PlayerMovementComponent.h"
 #include "Application.h"
 #include "GameObject.h"
 #include "Input.h"
-#include "Rigidbody2D.h"
-#include "Transform.h"
+#include "Rigidbody2DComponent.h"
+#include "TransformComponent.h"
 
 namespace gm
 {
-	void PlayerMovement::OnInitialize()
+	void PlayerMovementComponent::OnInitialize()
 	{
 		_ownerTransform = GetOwner().GetTransform();
 		GM_ASSERT(_ownerTransform, "PlayerMovement는 Transform이 필요합니다.");
@@ -16,7 +16,7 @@ namespace gm
 		GM_ASSERT(_ownerRigidbody, "PlayerMovement는 Rigidbody2D가 필요합니다.");
 	}
 
-	void PlayerMovement::OnTick(float deltaTime)
+	void PlayerMovementComponent::OnTick(float deltaTime)
 	{
 		auto& input = APPLICATION.GetInput();
 		const float moveAxisX = input.GetMoveAxisX();

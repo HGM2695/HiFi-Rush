@@ -7,7 +7,7 @@
 
 namespace gm
 {
-	class Camera;
+	class CameraComponent;
 
 	struct CameraShakeDesc
 	{
@@ -25,11 +25,11 @@ namespace gm
 	{
 	public:
 		void				Tick(float deltaTime);
-		void				RegisterCamera(const std::wstring& cameraKey, Camera* camera);
+		void				RegisterCamera(const std::wstring& cameraKey, CameraComponent* camera);
 		void				UnregisterCamera(const std::wstring& cameraKey);
-		void				UnregisterCamera(Camera* camera);
+		void				UnregisterCamera(CameraComponent* camera);
 		void				SetActiveCamera(const std::wstring& cameraKey);
-		Camera*				GetActiveCamera() const;
+		CameraComponent*				GetActiveCamera() const;
 		CameraViewInfo		GetViewInfo() const { return _viewInfo; }
 		Vector2				WorldToScreen(const Vector3& worldPosition, uint32 screenWidth, uint32 screenHeight) const;
 		Vector2				WorldToScreen(const Vector2& worldPosition, uint32 screenWidth, uint32 screenHeight) const;
@@ -51,18 +51,18 @@ namespace gm
 		struct CameraEntry
 		{
 			WeakGameObjectPtr owner;
-			Camera* camera = nullptr;
+			CameraComponent* camera = nullptr;
 		};
 
 		std::unordered_map<std::wstring, CameraEntry>	_cameraList{};
-		Camera*										_activeCamera = nullptr;
-		WeakGameObjectPtr							_activeCameraOwner{};
-		CameraViewInfo								_viewInfo{};
+		CameraComponent*								_activeCamera = nullptr;
+		WeakGameObjectPtr								_activeCameraOwner{};
+		CameraViewInfo									_viewInfo{};
 
-		CameraShakeDesc								_defaultShakeDesc{};
-		CameraShakeDesc								_activeShakeDesc{};
-		float										_remainShakeTime = 0.f;
-		float										_shakePhase = 0.f;
-		bool										_isPixelSnapEnabled = false;
+		CameraShakeDesc									_defaultShakeDesc{};
+		CameraShakeDesc									_activeShakeDesc{};
+		float											_remainShakeTime = 0.f;
+		float											_shakePhase = 0.f;
+		bool											_isPixelSnapEnabled = false;
 	};
 }

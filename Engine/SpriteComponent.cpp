@@ -1,6 +1,6 @@
-#include "SpriteComponent.h"
+﻿#include "SpriteComponent.h"
 #include "GameObject.h"
-#include "Transform.h"
+#include "TransformComponent.h"
 
 namespace gm
 {
@@ -9,7 +9,7 @@ namespace gm
 
 	void SpriteComponent::OnInitialize()
 	{
-		_ownerTransform = GetOwner().GetComponent<Transform>();
+		_ownerTransform = GetOwner().GetComponent<TransformComponent>();
 		GM_ASSERT_RETURN(_ownerTransform, "SpriteComponent 소유자의 Transform이 존재하지 않습니다.");
 
 		_presenter.EnsureDefaultMaterial();

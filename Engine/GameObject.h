@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "EngineCore.h"
 #include "GameObjectHandle.h"
@@ -9,10 +9,10 @@
 
 namespace gm
 {
-	class Collider2D;
-	class Rigidbody2D;
+	class Collider2DComponent;
+	class Rigidbody2DComponent;
 	class Scene;
-	class Transform;
+	class TransformComponent;
 	class WeakGameObjectPtr;
 
 	enum class GameObjectLifeState
@@ -79,11 +79,11 @@ namespace gm
 			return nullptr;
 		}
 
-		const Transform*				GetTransform() const;
-		Transform*						GetTransform();
-		const Rigidbody2D*				GetRigidbody2D() const { return _rigidbody2D; }
-		Rigidbody2D*					GetRigidbody2D() { return _rigidbody2D; }
-		const std::vector<Collider2D*>& GetColliders2D() const { return _colliders2D; }
+		const TransformComponent*				GetTransform() const;
+		TransformComponent*						GetTransform();
+		const Rigidbody2DComponent*				GetRigidbody2D() const { return _rigidbody2D; }
+		Rigidbody2DComponent*					GetRigidbody2D() { return _rigidbody2D; }
+		const std::vector<Collider2DComponent*>& GetColliders2D() const { return _colliders2D; }
 
 		void			Initialize();
 		void			Tick(float deltaTime);
@@ -132,10 +132,10 @@ namespace gm
 		Scene*									_scene = nullptr;
 		GameObjectHandle						_handle{};
 
-		Transform*								_transform = nullptr;
+		TransformComponent*								_transform = nullptr;
 
-		Rigidbody2D*							_rigidbody2D = nullptr;
-		std::vector<Collider2D*>				_colliders2D{};
+		Rigidbody2DComponent*							_rigidbody2D = nullptr;
+		std::vector<Collider2DComponent*>				_colliders2D{};
 
 		GameObjectLifeState						_lifeState = GameObjectLifeState::Active;
 		bool									_isRender = true;
@@ -146,14 +146,14 @@ namespace gm
 namespace gm
 {
 	template <>
-	inline Transform* GameObject::GetComponent<Transform>() { return _transform; }
+	inline TransformComponent* GameObject::GetComponent<TransformComponent>() { return _transform; }
 
 	template <>
-	inline const Transform* GameObject::GetComponent<Transform>() const { return _transform; }
+	inline const TransformComponent* GameObject::GetComponent<TransformComponent>() const { return _transform; }
 
 	template <>
-	inline Rigidbody2D* GameObject::GetComponent<Rigidbody2D>() { return _rigidbody2D; }
+	inline Rigidbody2DComponent* GameObject::GetComponent<Rigidbody2DComponent>() { return _rigidbody2D; }
 
 	template <>
-	inline const Rigidbody2D* GameObject::GetComponent<Rigidbody2D>() const { return _rigidbody2D; }
+	inline const Rigidbody2DComponent* GameObject::GetComponent<Rigidbody2DComponent>() const { return _rigidbody2D; }
 }

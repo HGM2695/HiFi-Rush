@@ -1,7 +1,7 @@
-#include "SocketComponent.h"
+﻿#include "SocketComponent.h"
 #include "GameObject.h"
 #include "MathUtil.h"
-#include "Transform.h"
+#include "TransformComponent.h"
 
 namespace gm
 {

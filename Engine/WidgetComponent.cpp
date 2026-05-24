@@ -1,10 +1,10 @@
-#include "WidgetComponent.h"
+﻿#include "WidgetComponent.h"
 
 #include "Application.h"
 #include "CameraManager.h"
 #include "GameObject.h"
 #include "Scene.h"
-#include "Transform.h"
+#include "TransformComponent.h"
 #include "UserWidget.h"
 
 namespace gm
@@ -35,7 +35,7 @@ namespace gm
 
 	void WidgetComponent::OnInitialize()
 	{
-		_ownerTransform = GetOwner().GetComponent<Transform>();
+		_ownerTransform = GetOwner().GetComponent<TransformComponent>();
 
 		_widget->Initialize();
 	}

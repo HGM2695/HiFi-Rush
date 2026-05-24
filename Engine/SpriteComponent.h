@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "Component.h"
 #include "SpritePresenter.h"
 
 namespace gm
 {
-	class Transform;
+	class TransformComponent;
 	class Texture;
 
 	class SpriteComponent : public Component
@@ -30,6 +30,6 @@ namespace gm
 
 	private:
 		SpritePresenter				_presenter;
-		Transform*					_ownerTransform = nullptr;
+		TransformComponent*					_ownerTransform = nullptr;
 	};
 }

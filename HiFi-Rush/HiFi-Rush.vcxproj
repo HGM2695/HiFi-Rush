@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -187,8 +187,8 @@
     <ClInclude Include="MainHUDWidget.h" />
     <ClInclude Include="MainScene.h" />
     <ClInclude Include="Paths.h" />
-    <ClInclude Include="PlayerAnimationFSM.h" />
-    <ClInclude Include="PlayerMovement.h" />
+    <ClInclude Include="PlayerAnimationFSMComponent.h" />
+    <ClInclude Include="PlayerMovementComponent.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TitleScene.h" />
@@ -200,8 +200,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainHUDWidget.cpp" />
     <ClCompile Include="MainScene.cpp" />
-    <ClCompile Include="PlayerAnimationFSM.cpp" />
-    <ClCompile Include="PlayerMovement.cpp" />
+    <ClCompile Include="PlayerAnimationFSMComponent.cpp" />
+    <ClCompile Include="PlayerMovementComponent.cpp" />
     <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>

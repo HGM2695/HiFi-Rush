@@ -1,14 +1,14 @@
-#include "CircleCollider2D.h"
+﻿#include "CircleCollider2DComponent.h"
 #include "Application.h"
 #include "GameObject.h"
-#include "Transform.h"
+#include "TransformComponent.h"
 #if GM_ENABLE_DEBUG_TOOLS
 #include "IDebugRenderer.h"
 #endif
 
 namespace gm
 {
-	void CircleCollider2D::OnTick(float deltaTime)
+	void CircleCollider2DComponent::OnTick(float deltaTime)
 	{
 #if GM_ENABLE_DEBUG_TOOLS
 		const Vector2 worldCenter = GetOwner().GetTransform()->GetPosition2D() + GetOffset();

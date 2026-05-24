@@ -1,24 +1,24 @@
-#include "MainScene.h"
+﻿#include "MainScene.h"
 #include "MainHUDWidget.h"
-#include "PlayerMovement.h"
-#include "PlayerAnimationFSM.h"
+#include "PlayerMovementComponent.h"
+#include "PlayerAnimationFSMComponent.h"
 #include "Application.h"
 #include "Resources.h"
 #include "GameObject.h"
 #include "AnimatedSpriteComponent.h"
 #include "SpriteComponent.h"
 #include "Texture.h"
-#include "Camera.h"
+#include "CameraComponent.h"
 #include "PhysicsSystem.h"
 #include "SceneManager.h"
 #include "SpriteAnimationClip.h"
 #include "UIManager.h"
-#include "Rigidbody2D.h"
-#include "BoxCollider2D.h"
+#include "Rigidbody2DComponent.h"
+#include "BoxCollider2DComponent.h"
 #include "WidgetComponent.h"
 #include "CameraManager.h"
 #include "Material.h"
-#include "Transform.h"
+#include "TransformComponent.h"
 #include "SocketComponent.h"
 #include "SocketFollowComponent.h"
 
@@ -48,7 +48,7 @@ namespace gm
 		spriteComponent->SetTexture(texture);
 		transform->SetScale(Vector2{ 100.f , 100.f });
 
-		player->AddComponent<PlayerMovement>();
+		player->AddComponent<PlayerMovementComponent>();
 
 		SpriteAnimator& animator = spriteComponent->GetAnimator();
 		animator.AddClip(L"IdleLeft", L"Player_IdleLeft");
@@ -56,11 +56,11 @@ namespace gm
 		animator.AddClip(L"IdleRight", L"Player_IdleRight");
 		animator.AddClip(L"MoveRight", L"Player_MoveRight");
 
-		player->AddComponent<PlayerAnimationFSM>();
-		Rigidbody2D* rigidbody = player->AddComponent<Rigidbody2D>();
+		player->AddComponent<PlayerAnimationFSMComponent>();
+		Rigidbody2DComponent* rigidbody = player->AddComponent<Rigidbody2DComponent>();
 		rigidbody->SetLinearDamping(1.f);
 
-		BoxCollider2D* collider = player->AddComponent<BoxCollider2D>();
+		BoxCollider2DComponent* collider = player->AddComponent<BoxCollider2DComponent>();
 		collider->SetSize({ 60.f, 70.f });
 
 		SocketComponent* socketComponent = player->AddComponent<SocketComponent>();
@@ -97,7 +97,7 @@ namespace gm
 		}
 
 		auto ground = SpawnGameObject<GameObject>({ 0, -250 });
-		BoxCollider2D* groundCollider = ground->AddComponent<BoxCollider2D>();
+		BoxCollider2DComponent* groundCollider = ground->AddComponent<BoxCollider2DComponent>();
 		groundCollider->SetSize({ 120000.f, 100.f });
 	}
 
@@ -108,7 +108,7 @@ namespace gm
 		SocketFollowComponent* followComponent = cameraObject->AddComponent<SocketFollowComponent>();
 		followComponent->SetTarget(*player, L"Player.Camera");
 
-		auto cameraComponent = cameraObject->AddComponent<Camera>();
+		auto cameraComponent = cameraObject->AddComponent<CameraComponent>();
 		cameraComponent->SetOrthographic(static_cast<float>(APPLICATION.GetWidth()), static_cast<float>(APPLICATION.GetHeight()));
 		GetCameraManager()->RegisterCamera(L"PlayerCamera", cameraComponent);
 	}

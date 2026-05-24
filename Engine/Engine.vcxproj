@@ -175,10 +175,10 @@
     <ClInclude Include="AudioStatics.h" />
     <ClInclude Include="BuildConfig.h" />
     <ClInclude Include="BuiltinGraphicsResources.h" />
-    <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="CameraViewInfo.h" />
-    <ClInclude Include="Collider2D.h" />
+    <ClInclude Include="Collider2DComponent.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="D3D11ConstantBuffer.h" />
@@ -195,8 +195,8 @@
     <ClInclude Include="D3D11GraphicsDevice.h" />
     <ClInclude Include="EngineCore.h" />
     <ClInclude Include="Entity.h" />
-    <ClInclude Include="BoxCollider2D.h" />
-    <ClInclude Include="CircleCollider2D.h" />
+    <ClInclude Include="BoxCollider2DComponent.h" />
+    <ClInclude Include="CircleCollider2DComponent.h" />
     <ClInclude Include="GameObjectHandle.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GMAssert.h" />
@@ -224,7 +224,7 @@
     <ClInclude Include="RenderTypes.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Rect.h" />
-    <ClInclude Include="Rigidbody2D.h" />
+    <ClInclude Include="Rigidbody2DComponent.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Sampler.h" />
@@ -248,7 +248,7 @@
     <ClInclude Include="TickGroup.h" />
     <ClInclude Include="TickManager.h" />
     <ClInclude Include="TimeSystem.h" />
-    <ClInclude Include="Transform.h" />
+    <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="UIManager.h" />
     <ClInclude Include="UserWidget.h" />
@@ -271,12 +271,12 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="AudioComponent.cpp" />
     <ClCompile Include="AudioStatics.cpp" />
-    <ClCompile Include="BoxCollider2D.cpp" />
+    <ClCompile Include="BoxCollider2DComponent.cpp" />
     <ClCompile Include="BuiltinGraphicsResources.cpp" />
-    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="CameraManager.cpp" />
-    <ClCompile Include="CircleCollider2D.cpp" />
-    <ClCompile Include="Collider2D.cpp" />
+    <ClCompile Include="CircleCollider2DComponent.cpp" />
+    <ClCompile Include="Collider2DComponent.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="D3D11ConstantBuffer.cpp" />
@@ -326,7 +326,7 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TickManager.cpp" />
     <ClCompile Include="TimeSystem.cpp" />
-    <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="TransformComponent.cpp" />
     <ClCompile Include="UIManager.cpp" />
     <ClCompile Include="UserWidget.cpp" />
     <ClCompile Include="Widget.cpp" />

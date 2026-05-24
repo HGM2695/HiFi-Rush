@@ -5,7 +5,7 @@
 
 namespace gm
 {
-	class Transform;
+	class TransformComponent;
 
 	enum class CameraProjectionMode
 	{
@@ -13,11 +13,11 @@ namespace gm
 		Perspective,
 	};
 
-	class Camera : public Component
+	class CameraComponent : public Component
 	{
 	public:
-		Camera() = default;
-		virtual ~Camera() override;
+		CameraComponent() = default;
+		virtual ~CameraComponent() override;
 		virtual TickGroup		GetTickGroup() const override { return TickGroup::Camera; }
 
 		CameraViewInfo			GetViewInfo() const;
@@ -32,7 +32,7 @@ namespace gm
 		Matrix					CreateProjectionMatrix() const;
 
 	private:
-		Transform*				_ownerTransform = nullptr;
+		TransformComponent*		_ownerTransform = nullptr;
 
 		CameraProjectionMode	_projectionMode = CameraProjectionMode::Orthographic;
 		float					_orthographicWidth = 1280.f;

@@ -1,19 +1,19 @@
-#include "Camera.h"
-#include "Transform.h"
+﻿#include "CameraComponent.h"
+#include "TransformComponent.h"
 #include "GameObject.h"
 #include "MathUtil.h"
 
 namespace gm
 {
-	Camera::~Camera() = default;
+	CameraComponent::~CameraComponent() = default;
 
-	void Camera::OnInitialize()
+	void CameraComponent::OnInitialize()
 	{
-		_ownerTransform = GetOwner().GetComponent<Transform>();
+		_ownerTransform = GetOwner().GetComponent<TransformComponent>();
 		GM_ASSERT_RETURN(_ownerTransform, "Camera 소유자의 Transform이 존재하지 않습니다.");
 	}
 
-	CameraViewInfo Camera::GetViewInfo() const
+	CameraViewInfo CameraComponent::GetViewInfo() const
 	{
 		CameraViewInfo viewInfo{};
 		viewInfo.position = _ownerTransform->GetPosition();
@@ -24,7 +24,7 @@ namespace gm
 		return viewInfo;
 	}
 
-	void Camera::SetOrthographic(float width, float height, float nearZ, float farZ)
+	void CameraComponent::SetOrthographic(float width, float height, float nearZ, float farZ)
 	{
 		_projectionMode = CameraProjectionMode::Orthographic;
 		_orthographicWidth = width;
@@ -33,7 +33,7 @@ namespace gm
 		_farZ = farZ;
 	}
 
-	void Camera::SetPerspective(float fovYRadians, float aspectRatio, float nearZ, float farZ)
+	void CameraComponent::SetPerspective(float fovYRadians, float aspectRatio, float nearZ, float farZ)
 	{
 		_projectionMode = CameraProjectionMode::Perspective;
 		_fovYRadians = fovYRadians;
@@ -42,7 +42,7 @@ namespace gm
 		_farZ = farZ;
 	}
 
-	Matrix Camera::CreateProjectionMatrix() const
+	Matrix CameraComponent::CreateProjectionMatrix() const
 	{
 		switch (_projectionMode)
 		{

@@ -1,5 +1,5 @@
-#include "CameraManager.h"
-#include "Camera.h"
+﻿#include "CameraManager.h"
+#include "CameraComponent.h"
 #include "GameObject.h"
 #include "MathUtil.h"
 #include <cmath>
@@ -10,7 +10,7 @@ namespace gm
 	{
 		_viewInfo = CameraViewInfo();
 
-		Camera* activeCamera = GetActiveCamera();
+		CameraComponent* activeCamera = GetActiveCamera();
 		GM_ASSERT_RETURN(activeCamera, "활성 카메라가 없습니다.");
 
 		_viewInfo = activeCamera->GetViewInfo();
@@ -67,7 +67,7 @@ namespace gm
 		viewInfo.view = Math::CreateViewMatrix(viewInfo.position, viewInfo.rotation);
 	}
 
-	void CameraManager::RegisterCamera(const std::wstring& cameraKey, Camera* camera)
+	void CameraManager::RegisterCamera(const std::wstring& cameraKey, CameraComponent* camera)
 	{
 		GM_ASSERT_RETURN(camera, "카메라가 유효하지 않습니다.");
 		GM_ASSERT_RETURN(cameraKey.empty() == false, "Camera Key가 비어 있습니다.");
@@ -100,7 +100,7 @@ namespace gm
 		_cameraList.erase(cameraKey);
 	}
 
-	void CameraManager::UnregisterCamera(Camera* camera)
+	void CameraManager::UnregisterCamera(CameraComponent* camera)
 	{
 		if (camera == nullptr)
 			return;
@@ -133,7 +133,7 @@ namespace gm
 		_activeCameraOwner = iter->second.owner;
 	}
 
-	Camera* CameraManager::GetActiveCamera() const
+	CameraComponent* CameraManager::GetActiveCamera() const
 	{
 		if (_activeCamera == nullptr || _activeCameraOwner.IsValid() == false)
 			return nullptr;

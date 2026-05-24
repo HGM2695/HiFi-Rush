@@ -39,10 +39,10 @@
     <ClInclude Include="TitleScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerAnimationFSM.h">
+    <ClInclude Include="PlayerAnimationFSMComponent.h">
       <Filter>Component\01. Behavior</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerMovement.h">
+    <ClInclude Include="PlayerMovementComponent.h">
       <Filter>Component\01. Behavior</Filter>
     </ClInclude>
     <ClInclude Include="MainHUDWidget.h">
@@ -91,10 +91,10 @@
     <ClCompile Include="TitleScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerAnimationFSM.cpp">
+    <ClCompile Include="PlayerAnimationFSMComponent.cpp">
       <Filter>Component\01. Behavior</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerMovement.cpp">
+    <ClCompile Include="PlayerMovementComponent.cpp">
       <Filter>Component\01. Behavior</Filter>
     </ClCompile>
     <ClCompile Include="MainHUDWidget.cpp">

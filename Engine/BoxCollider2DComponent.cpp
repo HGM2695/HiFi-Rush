@@ -1,7 +1,7 @@
-#include "BoxCollider2D.h"
+﻿#include "BoxCollider2DComponent.h"
 #include "Application.h"
 #include "GameObject.h"
-#include "Transform.h"
+#include "TransformComponent.h"
 
 #if GM_ENABLE_DEBUG_TOOLS
 #include "IDebugRenderer.h"
@@ -9,7 +9,7 @@
 
 namespace gm
 {
-	void BoxCollider2D::OnTick(float deltaTime)
+	void BoxCollider2DComponent::OnTick(float deltaTime)
 	{
 #if GM_ENABLE_DEBUG_TOOLS
 		const Vector2 worldCenter = GetOwner().GetTransform()->GetPosition2D() + GetOffset();

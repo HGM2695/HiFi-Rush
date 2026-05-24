@@ -1,13 +1,13 @@
-#include "PlayerAnimationFSM.h"
+﻿#include "PlayerAnimationFSMComponent.h"
 #include "AnimatedSpriteComponent.h"
 #include "GameObject.h"
-#include "PlayerMovement.h"
+#include "PlayerMovementComponent.h"
 #include "SpriteAnimator.h"
 #include <windows.h>
 
 namespace gm
 {
-	void PlayerAnimationFSM::OnInitialize()
+	void PlayerAnimationFSMComponent::OnInitialize()
 	{
 		_animatedSpriteComponent = GetOwner().GetComponent<AnimatedSpriteComponent>();
 		GM_ASSERT(_animatedSpriteComponent, "PlayerAnimationFSM은 AnimatedSpriteComponent가 필요합니다.");
@@ -19,20 +19,20 @@ namespace gm
 				OnAnimationNotify(notifyName);
 			});
 
-		_playerMovement = GetOwner().GetComponent<PlayerMovement>();
+		_playerMovement = GetOwner().GetComponent<PlayerMovementComponent>();
 		GM_ASSERT(_playerMovement, "PlayerAnimationFSM은 PlayerMovement가 필요합니다.");
 		_lastFacingDirection = _playerMovement->GetFacingDirection();
 
 		ChangeState(PlayerAnimState::Idle);
 	}
 
-	void PlayerAnimationFSM::OnTick(float deltaTime)
+	void PlayerAnimationFSMComponent::OnTick(float deltaTime)
 	{
 		SyncDirection();
 		UpdateState();
 	}
 
-	void PlayerAnimationFSM::SyncDirection()
+	void PlayerAnimationFSMComponent::SyncDirection()
 	{
 		const Vector2 facingDirection = _playerMovement->GetFacingDirection();
 		if (_lastFacingDirection == facingDirection)
@@ -42,7 +42,7 @@ namespace gm
 		PlayCurrentAnimation({ _animatedSpriteComponent->GetAnimator().GetPlayTime() });
 	}
 
-	void PlayerAnimationFSM::UpdateState()
+	void PlayerAnimationFSMComponent::UpdateState()
 	{
 		if (_playerMovement->IsMoving())
 			ChangeState(PlayerAnimState::Move);
@@ -50,7 +50,7 @@ namespace gm
 			ChangeState(PlayerAnimState::Idle);
 	}
 
-	void PlayerAnimationFSM::ChangeState(PlayerAnimState nextState)
+	void PlayerAnimationFSMComponent::ChangeState(PlayerAnimState nextState)
 	{
 		if (_currentState == nextState)
 			return;
@@ -59,7 +59,7 @@ namespace gm
 		PlayCurrentAnimation();
 	}
 
-	void PlayerAnimationFSM::PlayCurrentAnimation(const AnimationPlayOption& playOption)
+	void PlayerAnimationFSMComponent::PlayCurrentAnimation(const AnimationPlayOption& playOption)
 	{
 		SpriteAnimator& animator = _animatedSpriteComponent->GetAnimator();
 
@@ -81,13 +81,13 @@ namespace gm
 		}
 	}
 
-	void PlayerAnimationFSM::OnAnimationNotify(const std::wstring& notifyName)
+	void PlayerAnimationFSMComponent::OnAnimationNotify(const std::wstring& notifyName)
 	{
 #ifdef _DEBUG
 		if (notifyName == L"MoveLeftStep")
-			OutputDebugStringW(L"[PlayerAnimationFSM] 문자열 기반 AnimationNotify: MoveLeftStep\n");
+			OutputDebugStringW(L"[PlayerAnimationFSMComponent] 문자열 기반 AnimationNotify: MoveLeftStep\n");
 		else if (notifyName == L"MoveRightStep")
-			OutputDebugStringW(L"[PlayerAnimationFSM] 문자열 기반 AnimationNotify: MoveRightStep\n");
+			OutputDebugStringW(L"[PlayerAnimationFSMComponent] 문자열 기반 AnimationNotify: MoveRightStep\n");
 #endif
 	}
 }

@@ -4,11 +4,11 @@
 
 namespace gm
 {
-	class Transform;
-	class Rigidbody2D;
+	class TransformComponent;
+	class Rigidbody2DComponent;
 	class Input;
 
-	class PlayerMovement : public Component
+	class PlayerMovementComponent : public Component
 	{
 	public:
 		virtual void	OnInitialize() override;
@@ -20,8 +20,8 @@ namespace gm
 		bool			IsFacingRight() const { return _facingDirection.x > 0.f; }
 
 	private:
-		Transform*		_ownerTransform = nullptr;
-		Rigidbody2D*	_ownerRigidbody = nullptr;
+		TransformComponent*		_ownerTransform = nullptr;
+		Rigidbody2DComponent*	_ownerRigidbody = nullptr;
 		Vector2			_facingDirection{ 1.f, 0.f };
 		float			_groundMoveSpeed = 400.f;
 		float			_airMoveSpeed = 250.f;

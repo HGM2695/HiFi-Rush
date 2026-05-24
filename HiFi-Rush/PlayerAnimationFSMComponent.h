@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "AnimationNotify.h"
 #include "AnimationTypes.h"
@@ -7,7 +7,7 @@
 namespace gm
 {
 	class AnimatedSpriteComponent;
-	class PlayerMovement;
+	class PlayerMovementComponent;
 
 	enum class PlayerAnimState
 	{
@@ -16,7 +16,7 @@ namespace gm
 		Move,
 	};
 
-	class PlayerAnimationFSM : public Component
+	class PlayerAnimationFSMComponent : public Component
 	{
 	public:
 		virtual TickGroup GetTickGroup() const override { return TickGroup::PostPhysics; }
@@ -38,6 +38,6 @@ namespace gm
 
 		NotifyConnection			_notifyConnection{};
 		AnimatedSpriteComponent*	_animatedSpriteComponent = nullptr;
-		PlayerMovement*				_playerMovement = nullptr;
+		PlayerMovementComponent*				_playerMovement = nullptr;
 	};
 }

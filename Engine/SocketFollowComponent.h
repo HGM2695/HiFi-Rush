@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Component.h"
 #include "WeakGameObjectPtr.h"
@@ -7,7 +7,7 @@ namespace gm
 {
 	class GameObject;
 	class SocketComponent;
-	class Transform;
+	class TransformComponent;
 
 	class SocketFollowComponent : public Component
 	{
@@ -25,7 +25,7 @@ namespace gm
 		virtual void				OnTick(float deltaTime) override;
 
 	private:
-		Transform*				_ownerTransform = nullptr;
+		TransformComponent*				_ownerTransform = nullptr;
 		WeakGameObjectPtr		_target;
 		const SocketComponent*	_targetSocketComponent = nullptr;
 		std::wstring			_followSocketName;

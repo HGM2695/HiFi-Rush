@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Component.h"
 
@@ -10,10 +10,10 @@ namespace gm
 		Circle,
 	};
 
-	class Collider2D : public Component
+	class Collider2DComponent : public Component
 	{
 	public:
-		virtual ~Collider2D() = default;
+		virtual ~Collider2DComponent() = default;
 
 		Collider2DType				GetColliderType() const { return _colliderType; }
 		void						SetOffset(const Vector2& offset) { _offset = offset; }
@@ -24,7 +24,7 @@ namespace gm
 		virtual TickGroup			GetTickGroup() const override { return TickGroup::RenderSubmit; }
 
 	protected:
-		explicit Collider2D(Collider2DType colliderType) : _colliderType(colliderType) {}
+		explicit Collider2DComponent(Collider2DType colliderType) : _colliderType(colliderType) {}
 
 		void						OnTick(float deltaTime) override;
 

@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "Component.h"
 #include <unordered_map>
 
 namespace gm
 {
-	class Transform;
+	class TransformComponent;
 
 	struct Socket
 	{
@@ -32,6 +32,6 @@ namespace gm
 
 	private:
 		std::unordered_map<std::wstring, Socket>	_sockets;
-		Transform*									_ownerTransform = nullptr;
+		TransformComponent*									_ownerTransform = nullptr;
 	};
 }

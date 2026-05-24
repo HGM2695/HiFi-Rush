@@ -1,15 +1,15 @@
-#include "GameObject.h"
-#include "Collider2D.h"
-#include "Rigidbody2D.h"
+﻿#include "GameObject.h"
+#include "Collider2DComponent.h"
+#include "Rigidbody2DComponent.h"
 #include "Scene.h"
-#include "Transform.h"
+#include "TransformComponent.h"
 #include "WeakGameObjectPtr.h"
 
 namespace gm
 {
 	GameObject::GameObject()
 	{
-		AddComponent<Transform>();
+		AddComponent<TransformComponent>();
 	}
 
 	GameObject::GameObject(const Vector2& position) : GameObject()
@@ -58,21 +58,21 @@ namespace gm
 
 	bool GameObject::RegisterComponent(Component* component)
 	{
-		if (auto transform = dynamic_cast<Transform*>(component))
+		if (auto transform = dynamic_cast<TransformComponent*>(component))
 		{
 			GM_ASSERT_RETURN_VAL(_transform == nullptr, false, "GameObject에는 Transform이 중복으로 추가될 수 없습니다.");
 			_transform = transform;
 			return true;
 		}
 
-		if (auto rigidbody2D = dynamic_cast<Rigidbody2D*>(component))
+		if (auto rigidbody2D = dynamic_cast<Rigidbody2DComponent*>(component))
 		{
 			GM_ASSERT_RETURN_VAL(_rigidbody2D == nullptr, false, "GameObject에는 Rigidbody2D가 중복으로 추가될 수 없습니다.");
 			_rigidbody2D = rigidbody2D;
 			return true;
 		}
 
-		if (auto collider2D = dynamic_cast<Collider2D*>(component))
+		if (auto collider2D = dynamic_cast<Collider2DComponent*>(component))
 		{
 			_colliders2D.push_back(collider2D);
 			return true;
@@ -100,15 +100,15 @@ namespace gm
 		return WeakGameObjectPtr(_scene, const_cast<GameObject*>(this), _handle);
 	}
 
-	Transform* GameObject::GetTransform()
+	TransformComponent* GameObject::GetTransform()
 	{
-		GM_ASSERT(_transform, "GameObject는 반드시 Transform 컴포넌트를 가져야 합니다.");
+		GM_ASSERT(_transform, "GameObject는 반드시 TransformComponent 컴포넌트를 가져야 합니다.");
 		return _transform;
 	}
 
-	const Transform* GameObject::GetTransform() const
+	const TransformComponent* GameObject::GetTransform() const
 	{
-		GM_ASSERT(_transform, "GameObject는 반드시 Transform 컴포넌트를 가져야 합니다.");
+		GM_ASSERT(_transform, "GameObject는 반드시 TransformComponent 컴포넌트를 가져야 합니다.");
 		return _transform;
 	}
 }

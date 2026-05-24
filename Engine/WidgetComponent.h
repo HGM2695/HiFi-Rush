@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Component.h"
 #include <type_traits>
@@ -6,7 +6,7 @@
 
 namespace gm
 {
-	class Transform;
+	class TransformComponent;
 	class UserWidget;
 
 	class WidgetComponent : public Component
@@ -42,7 +42,7 @@ namespace gm
 		void					OnRender() override;
 
 	private:
-		Transform*					_ownerTransform = nullptr;
+		TransformComponent*					_ownerTransform = nullptr;
 		std::unique_ptr<UserWidget> _widget{};
 	};
 }
