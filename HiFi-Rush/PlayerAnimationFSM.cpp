@@ -1,4 +1,5 @@
 #include "PlayerAnimationFSM.h"
+#include "AnimatedSpriteComponent.h"
 #include "GameObject.h"
 #include "PlayerMovement.h"
 #include "SpriteAnimator.h"
@@ -8,9 +9,11 @@ namespace gm
 {
 	void PlayerAnimationFSM::OnInitialize()
 	{
-		_spriteAnimator = GetOwner().GetComponent<SpriteAnimator>();
-		GM_ASSERT(_spriteAnimator, "PlayerAnimationFSM은 SpriteAnimator가 필요합니다.");
-		_notifyConnection = _spriteAnimator->BindNotifyListener(
+		_animatedSpriteComponent = GetOwner().GetComponent<AnimatedSpriteComponent>();
+		GM_ASSERT(_animatedSpriteComponent, "PlayerAnimationFSM은 AnimatedSpriteComponent가 필요합니다.");
+
+		SpriteAnimator& animator = _animatedSpriteComponent->GetAnimator();
+		_notifyConnection = animator.BindNotifyListener(
 			[this](const std::wstring& notifyName)
 			{
 				OnAnimationNotify(notifyName);
@@ -36,7 +39,7 @@ namespace gm
 			return;
 
 		_lastFacingDirection = facingDirection;
-		PlayCurrentAnimation({ _spriteAnimator->GetPlayTime() });
+		PlayCurrentAnimation({ _animatedSpriteComponent->GetAnimator().GetPlayTime() });
 	}
 
 	void PlayerAnimationFSM::UpdateState()
@@ -58,20 +61,22 @@ namespace gm
 
 	void PlayerAnimationFSM::PlayCurrentAnimation(const AnimationPlayOption& playOption)
 	{
+		SpriteAnimator& animator = _animatedSpriteComponent->GetAnimator();
+
 		switch (_currentState)
 		{
 		case PlayerAnimState::Idle:
 			if (_playerMovement->IsFacingLeft())
-				_spriteAnimator->Play(L"IdleLeft", playOption);
+				animator.Play(L"IdleLeft", playOption);
 			else
-				_spriteAnimator->Play(L"IdleRight", playOption);
+				animator.Play(L"IdleRight", playOption);
 			break;
 
 		case PlayerAnimState::Move:
 			if (_playerMovement->IsFacingLeft())
-				_spriteAnimator->Play(L"MoveLeft", playOption);
+				animator.Play(L"MoveLeft", playOption);
 			else
-				_spriteAnimator->Play(L"MoveRight", playOption);
+				animator.Play(L"MoveRight", playOption);
 			break;
 		}
 	}

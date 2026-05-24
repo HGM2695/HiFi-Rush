@@ -1,7 +1,7 @@
 #pragma once
 
 #include "AnimationNotify.h"
-#include "Component.h"
+#include "AnimationTypes.h"
 #include "IAnimator.h"
 #include <memory>
 
@@ -11,9 +11,9 @@ namespace gm
 	class AnimationClipSet;
 	class AnimationNotifyDispatcher;
 	class SpriteAnimationClip;
-	class SpriteRenderer;
+	class SpritePresenter;
 
-	class SpriteAnimator : public Component, public IAnimator
+	class SpriteAnimator : public IAnimator
 	{
 	public:
 		SpriteAnimator();
@@ -21,35 +21,29 @@ namespace gm
 
 		bool									AddClip(const std::wstring& name, const std::wstring& clipKey);
 		bool									AddClip(const std::wstring& name, const std::shared_ptr<SpriteAnimationClip>& clip);
-		std::shared_ptr<SpriteAnimationClip>	FindClip(const std::wstring& name) const;
-		std::shared_ptr<SpriteAnimationClip>	GetCurrentClip() const { return _currentClip; }
+		std::shared_ptr<SpriteAnimationClip>		FindClip(const std::wstring& name) const;
+		std::shared_ptr<SpriteAnimationClip>		GetCurrentClip() const { return _currentClip; }
 
-		[[nodiscard]] 
 		NotifyConnection						BindNotifyListener(const AnimationNotifyListener& notifyListener);
 		void									ClearNotifyListeners();
+		void									Tick(float deltaTime, SpritePresenter& presenter);
 
-		// IAnimator
 		bool									HasClip(const std::wstring& name) const override;
 		bool									Play(const std::wstring& name, const AnimationPlayOption& option = {}) override;
-		virtual void							Reset() override;
-		virtual void							Pause() override;
-		virtual void							Resume() override;
-		virtual AnimationState					GetState() const override;
-		virtual float							GetPlayTime() const override;
-		virtual bool							IsLoop() const override;
-
-	protected:
-		virtual void							OnInitialize() override;
-		virtual void							OnTick(float deltaTime) override;
+		void									Reset() override;
+		void									Pause() override;
+		void									Resume() override;
+		AnimationState							GetState() const override;
+		float									GetPlayTime() const override;
+		bool									IsLoop() const override;
 
 	private:
-		void									UpdateRenderInfo();
+		void									UpdateRenderInfo(SpritePresenter& presenter);
 
-	private:		
+	private:
 		std::unique_ptr<AnimationClipSet>			_animationClipSet;
-		std::shared_ptr<SpriteAnimationClip>		_currentClip{};
-		std::unique_ptr<AnimationController>		_animationController;
+		std::shared_ptr<SpriteAnimationClip>			_currentClip{};
+		std::unique_ptr<AnimationController>			_animationController;
 		std::unique_ptr<AnimationNotifyDispatcher>	_animationNotifyDispatcher;
-		SpriteRenderer*								_spriteRenderer = nullptr;
 	};
 }

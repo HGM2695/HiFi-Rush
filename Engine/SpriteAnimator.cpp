@@ -3,18 +3,16 @@
 #include "AnimationClipSet.h"
 #include "AnimationNotify.h"
 #include "Application.h"
-#include "GameObject.h"
-#include "SpriteAnimationClip.h"
-#include "SpriteRenderer.h"
-#include "TimeSystem.h"
 #include "Resources.h"
+#include "SpriteAnimationClip.h"
+#include "SpritePresenter.h"
 
 namespace gm
 {
 	SpriteAnimator::SpriteAnimator()
 		: _animationController(std::make_unique<AnimationController>())
 		, _animationClipSet(std::make_unique<AnimationClipSet>())
-		, _animationNotifyDispatcher(std::make_unique<AnimationNotifyDispatcher>()) { }
+		, _animationNotifyDispatcher(std::make_unique<AnimationNotifyDispatcher>()) {}
 
 	SpriteAnimator::~SpriteAnimator() = default;
 
@@ -40,7 +38,6 @@ namespace gm
 
 	std::shared_ptr<SpriteAnimationClip> SpriteAnimator::FindClip(const std::wstring& name) const
 	{
-		// SpriteAnimator는 AddClip()을 통해서 SpriteAnimationClip만 등록한다는 전제.
 		return _animationClipSet->FindClip<SpriteAnimationClip>(name);
 	}
 
@@ -64,7 +61,6 @@ namespace gm
 	{
 		_animationController->Reset();
 		_animationNotifyDispatcher->Reset();
-		UpdateRenderInfo();
 	}
 
 	void SpriteAnimator::Pause()
@@ -92,15 +88,7 @@ namespace gm
 		return _animationController->IsLoop();
 	}
 
-	void SpriteAnimator::OnInitialize()
-	{
-		_spriteRenderer = GetOwner().GetComponent<SpriteRenderer>();
-		GM_ASSERT(_spriteRenderer, "SpriteAnimator는 SpriteRenderer가 필요합니다.");
-
-		UpdateRenderInfo();
-	}
-
-	void SpriteAnimator::OnTick(float deltaTime)
+	void SpriteAnimator::Tick(float deltaTime, SpritePresenter& presenter)
 	{
 		if (_currentClip == nullptr)
 			return;
@@ -111,17 +99,15 @@ namespace gm
 			_animationNotifyDispatcher->Dispatch(_currentClip->GetNotifyEvents(), _animationController->GetPlayTime(), _currentClip->GetLength());
 		}
 
-		UpdateRenderInfo();
+		UpdateRenderInfo(presenter);
 	}
 
-	void SpriteAnimator::UpdateRenderInfo()
+	void SpriteAnimator::UpdateRenderInfo(SpritePresenter& presenter)
 	{
 		if (_currentClip == nullptr)
 			return;
 
-		GM_ASSERT_RETURN(_spriteRenderer, "OnInitialize()가 먼저 호출되어야 합니다.");
-
-		_spriteRenderer->SetTexture(_currentClip->GetTexture());
-		_spriteRenderer->SetSourceRect(_currentClip->GetFrameByTime(GetPlayTime()));
+		presenter.SetTexture(_currentClip->GetTexture(), MaterialSlot::BaseColor);
+		presenter.SetSourceRect(_currentClip->GetFrameByTime(GetPlayTime()));
 	}
 }

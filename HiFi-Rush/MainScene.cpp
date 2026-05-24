@@ -5,12 +5,12 @@
 #include "Application.h"
 #include "Resources.h"
 #include "GameObject.h"
-#include "SpriteRenderer.h"
+#include "AnimatedSpriteComponent.h"
+#include "SpriteComponent.h"
 #include "Texture.h"
 #include "Camera.h"
 #include "PhysicsSystem.h"
 #include "SceneManager.h"
-#include "SpriteAnimator.h"
 #include "SpriteAnimationClip.h"
 #include "UIManager.h"
 #include "Rigidbody2D.h"
@@ -43,18 +43,18 @@ namespace gm
 
 		auto transform = player->GetTransform();
 
-		auto spriteRenderer = player->AddComponent<SpriteRenderer>();
+		auto spriteComponent = player->AddComponent<AnimatedSpriteComponent>();
 		auto texture = APPLICATION.GetResources().Find<Texture>(L"PlayerRight");
-		spriteRenderer->SetTexture(texture);
+		spriteComponent->SetTexture(texture);
 		transform->SetScale(Vector2{ 100.f , 100.f });
 
 		player->AddComponent<PlayerMovement>();
 
-		auto spriteAnimator = player->AddComponent<SpriteAnimator>();
-		spriteAnimator->AddClip(L"IdleLeft", L"Player_IdleLeft");
-		spriteAnimator->AddClip(L"MoveLeft", L"Player_MoveLeft");
-		spriteAnimator->AddClip(L"IdleRight", L"Player_IdleRight");
-		spriteAnimator->AddClip(L"MoveRight", L"Player_MoveRight");
+		SpriteAnimator& animator = spriteComponent->GetAnimator();
+		animator.AddClip(L"IdleLeft", L"Player_IdleLeft");
+		animator.AddClip(L"MoveLeft", L"Player_MoveLeft");
+		animator.AddClip(L"IdleRight", L"Player_IdleRight");
+		animator.AddClip(L"MoveRight", L"Player_MoveRight");
 
 		player->AddComponent<PlayerAnimationFSM>();
 		Rigidbody2D* rigidbody = player->AddComponent<Rigidbody2D>();
@@ -78,9 +78,9 @@ namespace gm
 	{
 		// BackGround
 		auto BackGround = SpawnGameObject<GameObject>({ 0, 0 });
-		auto spriteRenderer = BackGround->AddComponent<SpriteRenderer>();
+		auto spriteComponent = BackGround->AddComponent<SpriteComponent>();
 		auto texture = APPLICATION.GetResources().Find<Texture>(L"Xanadu");
-		spriteRenderer->SetTexture(texture);
+		spriteComponent->SetTexture(texture);
 		auto transform = BackGround->GetTransform();
 		transform->SetScale(Vector2{ static_cast<float>(texture->GetWidth()),static_cast<float>(texture->GetHeight()) });
 
@@ -88,9 +88,9 @@ namespace gm
 		for (int i = 0; i < 20; ++i)
 		{
 			auto monster = SpawnGameObject<GameObject>({ (float)200 * i, 300 });
-			auto spriteRenderer = monster->AddComponent<SpriteRenderer>();
+			auto spriteComponent = monster->AddComponent<SpriteComponent>();
 			auto texture = APPLICATION.GetResources().Find<Texture>(L"OrangeMushroom");
-			spriteRenderer->SetTexture(texture);
+			spriteComponent->SetTexture(texture);
 
 			auto transform = monster->GetTransform();
 			transform->SetScale(Vector2{ static_cast<float>(texture->GetWidth()),static_cast<float>(texture->GetHeight()) });

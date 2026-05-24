@@ -1,13 +1,13 @@
 #pragma once
 
 #include "AnimationNotify.h"
-#include "Component.h"
 #include "AnimationTypes.h"
+#include "Component.h"
 
 namespace gm
 {
+	class AnimatedSpriteComponent;
 	class PlayerMovement;
-	class SpriteAnimator;
 
 	enum class PlayerAnimState
 	{
@@ -33,11 +33,11 @@ namespace gm
 		void			PlayCurrentAnimation(const AnimationPlayOption& playOption = {});
 
 	private:
-		PlayerAnimState		_currentState = PlayerAnimState::None;
-		Vector2				_lastFacingDirection{ 1.f, 0.f };
+		PlayerAnimState				_currentState = PlayerAnimState::None;
+		Vector2						_lastFacingDirection{ 1.f, 0.f };
 
-		NotifyConnection	_notifyConnection{};
-		SpriteAnimator*		_spriteAnimator = nullptr;
-		PlayerMovement*		_playerMovement = nullptr;
+		NotifyConnection			_notifyConnection{};
+		AnimatedSpriteComponent*	_animatedSpriteComponent = nullptr;
+		PlayerMovement*				_playerMovement = nullptr;
 	};
 }

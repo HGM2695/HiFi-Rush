@@ -34,15 +34,15 @@ namespace gm
 		SpriteConstantPS CreateSpriteConstantPS(const SpriteRenderItem& item)
 		{
 			SpriteConstantPS constant{};
-			const std::shared_ptr<Texture> texture = item.material->GetTexture(0);
+			const std::shared_ptr<Texture> texture = item.material->GetTexture(MaterialSlot::BaseColor);
 
-			if (item.useSourceRect == false || texture == nullptr || texture->GetWidth() == 0 || texture->GetHeight() == 0)
+			if (texture == nullptr || texture->GetWidth() == 0 || texture->GetHeight() == 0)
 				return constant;
 
-			constant.textureLeft = static_cast<float>(item.sourceFrame.Left()) / static_cast<float>(texture->GetWidth());
-			constant.textureTop = static_cast<float>(item.sourceFrame.Top()) / static_cast<float>(texture->GetHeight());
-			constant.textureWidth = static_cast<float>(item.sourceFrame.Width()) / static_cast<float>(texture->GetWidth());
-			constant.textureHeight = static_cast<float>(item.sourceFrame.Height()) / static_cast<float>(texture->GetHeight());
+			constant.textureLeft = item.uvRect.left;
+			constant.textureTop = item.uvRect.top;
+			constant.textureWidth = item.uvRect.width;
+			constant.textureHeight = item.uvRect.height;
 
 			return constant;
 		}
@@ -81,7 +81,9 @@ namespace gm
 
 		for (const SpriteRenderItem& item : _items)
 		{
-			if (item.material->GetPipelineState() == nullptr || item.material->GetTexture(0) == nullptr || item.material->GetSampler(0) == nullptr)
+			if (item.material->GetPipelineState() == nullptr
+				|| item.material->GetTexture(MaterialSlot::BaseColor) == nullptr
+				|| item.material->GetSampler(MaterialSlot::BaseColor) == nullptr)
 				continue;
 
 			ObjectConstantVS objectConstantVS{};

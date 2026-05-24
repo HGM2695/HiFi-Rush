@@ -202,10 +202,12 @@
     <ClInclude Include="SocketFollowComponent.h" />
     <ClInclude Include="SpriteAnimationClip.h" />
     <ClInclude Include="SpriteAnimator.h" />
+    <ClInclude Include="AnimatedSpriteComponent.h" />
     <ClInclude Include="SpriteFrame.h" />
+    <ClInclude Include="SpriteComponent.h" />
+    <ClInclude Include="SpritePresenter.h" />
     <ClInclude Include="SpriteRenderPass.h" />
     <ClInclude Include="UIRenderPass.h" />
-    <ClInclude Include="SpriteRenderer.h" />
     <ClInclude Include="StringUtil.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextTypes.h" />
@@ -282,9 +284,11 @@
     <ClCompile Include="SocketFollowComponent.cpp" />
     <ClCompile Include="SpriteAnimationClip.cpp" />
     <ClCompile Include="SpriteAnimator.cpp" />
+    <ClCompile Include="AnimatedSpriteComponent.cpp" />
+    <ClCompile Include="SpriteComponent.cpp" />
+    <ClCompile Include="SpritePresenter.cpp" />
     <ClCompile Include="SpriteRenderPass.cpp" />
     <ClCompile Include="UIRenderPass.cpp" />
-    <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TickManager.cpp" />
     <ClCompile Include="TimeSystem.cpp" />

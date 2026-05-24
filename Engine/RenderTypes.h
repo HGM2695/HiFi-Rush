@@ -14,8 +14,7 @@ namespace gm
 	{
 		Matrix			world = Matrix::CreateScale(1.f);
 		const Material* material = nullptr;
-		bool			useSourceRect = false;
-		SpriteFrame		sourceFrame{};
+		Rect			uvRect{};
 	};
 
 	struct ColorQuadRenderItem

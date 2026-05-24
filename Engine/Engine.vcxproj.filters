@@ -8,9 +8,6 @@
     <ClInclude Include="AudioStatics.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteRenderer.h">
-      <Filter>Engine Component</Filter>
-    </ClInclude>
     <ClInclude Include="Transform.h">
       <Filter>Engine Component</Filter>
     </ClInclude>
@@ -279,6 +276,15 @@
     <ClInclude Include="Widget.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="AnimatedSpriteComponent.h">
+      <Filter>Engine Component</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteComponent.h">
+      <Filter>Engine Component</Filter>
+    </ClInclude>
+    <ClInclude Include="SpritePresenter.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -290,9 +296,6 @@
     </ClCompile>
     <ClCompile Include="BoxCollider2D.cpp">
       <Filter>Engine Component\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="SpriteRenderer.cpp">
-      <Filter>Engine Component</Filter>
     </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>Engine Component</Filter>
@@ -485,6 +488,15 @@
     </ClCompile>
     <ClCompile Include="Widget.cpp">
       <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimatedSpriteComponent.cpp">
+      <Filter>Engine Component</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteComponent.cpp">
+      <Filter>Engine Component</Filter>
+    </ClCompile>
+    <ClCompile Include="SpritePresenter.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
