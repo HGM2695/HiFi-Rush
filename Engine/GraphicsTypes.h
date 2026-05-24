@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Types.h"
 #include <memory>
 
 namespace gm
@@ -111,4 +112,24 @@ namespace gm
         BlendFactor destBlend = BlendFactor::InvSrcAlpha;
         BlendOp     blendOp = BlendOp::Add;
     };
+
+    enum class MaterialSlot
+    {
+        BaseColor,
+        Normal,
+        Roughness,
+        Metallic,
+        AmbientOcclusion,
+        Emissive,
+
+        Custom0,
+        Custom1,
+        Custom2,
+
+        Count
+    };
+
+    inline constexpr uint32 ToMaterialSlotIndex(MaterialSlot slot) { return static_cast<uint32>(slot); }
+    inline constexpr MaterialSlot ToMaterialSlot(uint32 index) { return static_cast<MaterialSlot>(index); }
+    inline constexpr uint32 MaterialSlotCount = ToMaterialSlotIndex(MaterialSlot::Count);
 }
