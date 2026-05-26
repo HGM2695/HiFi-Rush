@@ -1,10 +1,10 @@
 #include "Image.h"
 #include "Application.h"
 #include "BuiltinGraphicsResources.h"
+#include "Material.h"
 #include "Renderer.h"
 #include "RenderTypes.h"
 #include "Resources.h"
-#include "Sampler.h"
 #include "Texture.h"
 
 namespace gm
@@ -12,7 +12,8 @@ namespace gm
 	Image::Image()
 	{
 		SetName(L"Image");
-		SetSampler(BuiltinResourceKey::PointSampler);
+		_samplerDesc.filter = TextureFilter::Point;
+		CreateMaterial();
 	}
 
 	Image::Image(const std::wstring& textureName) : Image()
@@ -22,16 +23,24 @@ namespace gm
 
 	Image::~Image() = default;
 
+	void Image::SetTexture(const std::shared_ptr<Texture>& texture)
+	{
+		_texture = texture;
+		UpdateMaterial();
+	}
+
 	void Image::SetTexture(const std::wstring& textureName)
 	{
 		_texture = APPLICATION.GetResources().Find<Texture>(textureName);
-		GM_ASSERT(_texture, "등록되지 않은 텍스처 [%ls] 입니다.", textureName.c_str());
+		GM_ASSERT(_texture, "등록되지 않은 Texture입니다. key = %ls", textureName.c_str());
+
+		UpdateMaterial();
 	}
 
-	void Image::SetSampler(const std::wstring& samplerName)
+	void Image::SetSamplerDesc(const SamplerDesc& desc)
 	{
-		_sampler = APPLICATION.GetResources().Find<Sampler>(samplerName);
-		GM_ASSERT(_sampler, "등록되지 않은 샘플러 [%ls] 입니다.", samplerName.c_str());
+		_samplerDesc = desc;
+		UpdateMaterial();
 	}
 
 	void Image::OnRender(const WidgetGeometry& geometry)
@@ -39,12 +48,46 @@ namespace gm
 		if (_texture == nullptr || geometry.size.x <= 0.f || geometry.size.y <= 0.f)
 			return;
 
-		TextureQuadRenderItem item{};
+		if (_material == nullptr)
+			return;
+
+		UIRenderItem item{};
 		item.screenCenter = geometry.center;
 		item.size = geometry.size;
-		item.texture = _texture;
-		item.sampler = _sampler;
+		item.material = _material.get();
 
-		APPLICATION.GetRenderer().SubmitTextureQuad(item);
+		APPLICATION.GetRenderer().SubmitUI(item);
+	}
+
+	void Image::CreateMaterial()
+	{
+		if (_material)
+			return;
+
+		_material = std::make_unique<Material>(
+			Material::MaterialBuilder(APPLICATION.GetResources())
+				.SetCullMode(CullMode::None)
+				.SetDepthEnable(false)
+				.SetDepthWriteEnable(false)
+				.SetBlendEnable(true)
+				.SetVertexShader(BuiltinResourceKey::QuadVS)
+				.SetPixelShader(BuiltinResourceKey::SpriteTexturePS)
+				.SetSampler(TextureSlot::BaseColor, _samplerDesc)
+				.Build()
+		);
+
+		UpdateMaterial();
+	}
+
+	void Image::UpdateMaterial()
+	{
+		if (_material == nullptr)
+			return;
+
+		_material->SetTexture(TextureSlot::BaseColor, _texture);
+		_material->SetSamplerDesc(TextureSlot::BaseColor, _samplerDesc);
+
+		SpriteConstantPS constant{};
+		_material->SetConstantData(ShaderStage::Pixel, 0, constant);
 	}
 }

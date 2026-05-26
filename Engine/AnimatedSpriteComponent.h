@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Component.h"
 #include "SpriteAnimator.h"
@@ -7,6 +7,7 @@
 namespace gm
 {
 	class TransformComponent;
+	class Material;
 	class Texture;
 
 	class AnimatedSpriteComponent : public Component
@@ -17,7 +18,8 @@ namespace gm
 
 		virtual TickGroup GetTickGroup() const override { return TickGroup::RenderSubmit; }
 
-		void								SetTexture(const std::shared_ptr<Texture>& texture, MaterialSlot slot = MaterialSlot::BaseColor);
+		void								SetMaterial(const Material& material) { _presenter.SetMaterial(material); }
+		void								SetTexture(const std::shared_ptr<Texture>& texture, TextureSlot slot = TextureSlot::BaseColor);
 		void								SetSourceRect(const Rect& rect);
 		void								SetSourceRect(const SpriteFrame& frame);
 		void								DisableSourceRect();
@@ -35,6 +37,6 @@ namespace gm
 	private:
 		SpritePresenter						_presenter;
 		SpriteAnimator						_animator;
-		TransformComponent*							_ownerTransform = nullptr;
+		TransformComponent*					_ownerTransform = nullptr;
 	};
 }

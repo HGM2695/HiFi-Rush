@@ -2,83 +2,84 @@
 #include "Application.h"
 #include "BuiltinGraphicsResources.h"
 #include "Material.h"
-#include "PipelineState.h"
 #include "Renderer.h"
 #include "RenderTypes.h"
 #include "Resources.h"
-#include "Sampler.h"
+#include "Shader.h"
 #include "SpriteFrame.h"
 #include "Texture.h"
 
 namespace gm
 {
-	SpritePresenter::SpritePresenter() : _material(std::make_unique<Material>()) {}
+	SpritePresenter::SpritePresenter() = default;
 	SpritePresenter::~SpritePresenter() = default;
 
 	void SpritePresenter::EnsureDefaultMaterial()
 	{
-		if (_material->GetPipelineState() == nullptr)
-		{
-			auto pso = APPLICATION.GetResources().Find<PipelineState>(BuiltinResourceKey::SpriteTexturePSO);
-			GM_ASSERT_RETURN(pso, "%ls가 로드되지 않았습니다. BuiltinGraphics를 확인해주세요.", BuiltinResourceKey::SpriteTexturePSO);
-			_material->SetPipelineState(pso);
-		}
+		if (_material)
+			return;
 
-		if (_material->GetSampler(MaterialSlot::BaseColor) == nullptr)
-		{
-			auto sampler = APPLICATION.GetResources().Find<Sampler>(BuiltinResourceKey::PointSampler);
-			GM_ASSERT_RETURN(sampler, "%ls가 로드되지 않았습니다. BuiltinGraphics를 확인해주세요.", BuiltinResourceKey::PointSampler);
-			_material->SetSampler(MaterialSlot::BaseColor, sampler);
-		}
+		Resources& resources = APPLICATION.GetResources();
+
+		_material = std::make_unique<Material>(
+			Material::MaterialBuilder(resources)
+				.SetVertexShader(BuiltinResourceKey::QuadVS)
+				.SetPixelShader(BuiltinResourceKey::SpriteTexturePS)
+				.SetSamplerFilter(TextureSlot::BaseColor, TextureFilter::Point)
+				.SetCullMode(CullMode::None)
+				.SetDepthEnable(false)
+				.SetDepthWriteEnable(false)
+				.SetBlendEnable(true)
+				.Build()
+		);
+
+		GM_ASSERT_RETURN(_material->GetVertexShader(), "Sprite 기본 VertexShader가 로드되지 않았습니다.");
+		GM_ASSERT_RETURN(_material->GetPixelShader(), "Sprite 기본 PixelShader가 로드되지 않았습니다.");
+
+		UpdateSpriteConstantData();
 	}
 
 	void SpritePresenter::Submit(const Matrix& world) const
 	{
-		if (_material->GetPipelineState() == nullptr
-			|| _material->GetTexture(MaterialSlot::BaseColor) == nullptr
-			|| _material->GetSampler(MaterialSlot::BaseColor) == nullptr)
+		if (_material == nullptr || _material->GetVertexShader() == nullptr || _material->GetPixelShader() == nullptr
+			|| _material->GetTexture(TextureSlot::BaseColor) == nullptr)
 			return;
 
 		SpriteRenderItem item{};
 		item.world = world;
 		item.material = _material.get();
-		item.uvRect = CreateUVRect();
 
 		APPLICATION.GetRenderer().SubmitSprite(item);
 	}
 
-	void SpritePresenter::SetTexture(const std::shared_ptr<Texture>& texture, MaterialSlot slot)
+	void SpritePresenter::SetTexture(const std::shared_ptr<Texture>& texture, TextureSlot slot)
 	{
 		GM_ASSERT_RETURN(texture, "texture가 nullptr입니다.");
+
+		EnsureDefaultMaterial();
 		_material->SetTexture(slot, texture);
+
+		if (slot == TextureSlot::BaseColor)
+			UpdateSpriteConstantData();
 	}
 
-	void SpritePresenter::SetSampler(const std::shared_ptr<Sampler>& sampler, MaterialSlot slot)
+	void SpritePresenter::SetSamplerDesc(const SamplerDesc& desc, TextureSlot slot)
 	{
-		GM_ASSERT_RETURN(sampler, "sampler가 nullptr입니다.");
-		_material->SetSampler(slot, sampler);
-	}
-
-	void SpritePresenter::SetPipelineState(const std::shared_ptr<PipelineState>& pipelineState)
-	{
-		GM_ASSERT_RETURN(pipelineState, "pipelineState가 nullptr입니다.");
-		_material->SetPipelineState(pipelineState);
-	}
-
-	void SpritePresenter::SetMaterial(const MaterialDesc& desc)
-	{
-		_material = std::make_unique<Material>(desc);
+		EnsureDefaultMaterial();
+		_material->SetSamplerDesc(slot, desc);
 	}
 
 	void SpritePresenter::SetMaterial(const Material& material)
 	{
 		_material = std::make_unique<Material>(material);
+		UpdateSpriteConstantData();
 	}
 
 	void SpritePresenter::SetSourceRect(const Rect& rect)
 	{
 		_sourceRect = rect;
 		_useSourceRect = true;
+		UpdateSpriteConstantData();
 	}
 
 	void SpritePresenter::SetSourceRect(const SpriteFrame& frame)
@@ -95,21 +96,46 @@ namespace gm
 	void SpritePresenter::DisableSourceRect()
 	{
 		_useSourceRect = false;
+		UpdateSpriteConstantData();
 	}
 
-	std::shared_ptr<Texture> SpritePresenter::GetTexture(MaterialSlot slot) const
+	std::shared_ptr<Texture> SpritePresenter::GetTexture(TextureSlot slot) const
 	{
+		if (_material == nullptr)
+			return nullptr;
+
 		return _material->GetTexture(slot);
 	}
 
-	std::shared_ptr<Sampler> SpritePresenter::GetSampler(MaterialSlot slot) const
+	const SamplerDesc& SpritePresenter::GetSamplerDesc(TextureSlot slot) const
 	{
-		return _material->GetSampler(slot);
+		static const SamplerDesc defaultDesc{};
+
+		if (_material == nullptr)
+			return defaultDesc;
+
+		return _material->GetSamplerDesc(slot);
 	}
 
-	std::shared_ptr<PipelineState> SpritePresenter::GetPipelineState() const
+	Material* SpritePresenter::GetMaterial()
 	{
-		return _material->GetPipelineState();
+		EnsureDefaultMaterial();
+		return _material.get();
+	}
+
+	void SpritePresenter::UpdateSpriteConstantData()
+	{
+		if (_material == nullptr)
+			return;
+
+		const Rect uvRect = CreateUVRect();
+		SpriteConstantPS constant{};
+		constant.textureLeft = uvRect.left;
+		constant.textureTop = uvRect.top;
+		constant.textureWidth = uvRect.width;
+		constant.textureHeight = uvRect.height;
+
+		_material->SetConstantData(ShaderStage::Pixel, 0, constant);
 	}
 
 	Rect SpritePresenter::CreateUVRect() const
@@ -117,7 +143,7 @@ namespace gm
 		if (_useSourceRect == false)
 			return Rect{ 0.f, 0.f, 1.f, 1.f };
 
-		const std::shared_ptr<Texture> texture = _material->GetTexture(MaterialSlot::BaseColor);
+		const std::shared_ptr<Texture> texture = _material ? _material->GetTexture(TextureSlot::BaseColor) : nullptr;
 		if (texture == nullptr || texture->GetWidth() == 0 || texture->GetHeight() == 0)
 			return Rect{ 0.f, 0.f, 1.f, 1.f };
 

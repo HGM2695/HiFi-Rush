@@ -23,12 +23,12 @@ namespace gm
 		_spriteRenderPass->Submit(item);
 	}
 
-	void Renderer::SubmitColorQuad(const ColorQuadRenderItem& item)
+	void Renderer::SubmitStaticMesh(const StaticMeshRenderItem& item)
 	{
-		_uiRenderPass->Submit(item);
+		// StaticMesh 전용 RenderPass가 도입되면 이 경로에서 전달합니다.
 	}
 
-	void Renderer::SubmitTextureQuad(const TextureQuadRenderItem& item)
+	void Renderer::SubmitUI(const UIRenderItem& item)
 	{
 		_uiRenderPass->Submit(item);
 	}

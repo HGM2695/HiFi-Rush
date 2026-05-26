@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ConstantBufferPool.h"
 #include "RenderTypes.h"
 #include <memory>
 #include <vector>
@@ -9,8 +10,8 @@ namespace gm
 	class ConstantBuffer;
 	class IGraphicsCommandContext;
 	class IGraphicsResourceFactory;
+	class Material;
 	class Mesh;
-	class PipelineState;
 	class Resources;
 
 	class UIRenderPass
@@ -20,27 +21,18 @@ namespace gm
 		~UIRenderPass();
 
 		bool Initialize();
-		void Submit(const ColorQuadRenderItem& item);
-		void Submit(const TextureQuadRenderItem& item);
+		void Submit(const UIRenderItem& item);
 		void Render(uint32 width, uint32 height);
 		void Clear();
-
-	private:
-		bool CreateConstantBuffers();
 
 	private:
 		Resources&							_resources;
 		IGraphicsCommandContext&			_commandContext;
 		IGraphicsResourceFactory&			_resourceFactory;
-		std::shared_ptr<Mesh>				_unitQuadMesh;
-		std::shared_ptr<PipelineState>		_solidColorPSO;
-		std::shared_ptr<PipelineState>		_texturePSO;
-		std::vector<ColorQuadRenderItem>	_colorItems;
-		std::vector<TextureQuadRenderItem>	_textureItems;
 
-		std::unique_ptr<ConstantBuffer>		_objectConstantVS;
-		std::unique_ptr<ConstantBuffer>		_cameraConstantVS;
-		std::unique_ptr<ConstantBuffer>		_colorConstantPS;
-		std::unique_ptr<ConstantBuffer>		_textureConstantPS;
+		std::shared_ptr<Mesh>				_unitQuadMesh;
+
+		std::vector<UIRenderItem>			_items;
+		ConstantBufferPool					_constantBufferPool;
 	};
 }

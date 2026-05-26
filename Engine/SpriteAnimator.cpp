@@ -107,7 +107,7 @@ namespace gm
 		if (_currentClip == nullptr)
 			return;
 
-		presenter.SetTexture(_currentClip->GetTexture(), MaterialSlot::BaseColor);
+		presenter.SetTexture(_currentClip->GetTexture(), TextureSlot::BaseColor);
 		presenter.SetSourceRect(_currentClip->GetFrameByTime(GetPlayTime()));
 	}
 }

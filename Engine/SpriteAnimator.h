@@ -42,8 +42,8 @@ namespace gm
 
 	private:
 		std::unique_ptr<AnimationClipSet>			_animationClipSet;
-		std::shared_ptr<SpriteAnimationClip>			_currentClip{};
-		std::unique_ptr<AnimationController>			_animationController;
+		std::shared_ptr<SpriteAnimationClip>		_currentClip{};
+		std::unique_ptr<AnimationController>		_animationController;
 		std::unique_ptr<AnimationNotifyDispatcher>	_animationNotifyDispatcher;
 	};
 }

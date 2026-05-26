@@ -3,11 +3,10 @@
 #include "ConstantBuffer.h"
 #include "IGraphicsCommandContext.h"
 #include "IGraphicsResourceFactory.h"
+#include "Material.h"
 #include "MathUtil.h"
 #include "Mesh.h"
-#include "PipelineState.h"
 #include "Resources.h"
-#include "Sampler.h"
 #include "Texture.h"
 
 namespace gm
@@ -24,34 +23,6 @@ namespace gm
 			Matrix view;
 			Matrix proj;
 		};
-
-		struct ColorConstantPS
-		{
-			Color color;
-		};
-
-		struct TextureConstantPS
-		{
-			float textureLeft = 0.f;
-			float textureTop = 0.f;
-			float textureWidth = 1.f;
-			float textureHeight = 1.f;
-		};
-
-		TextureConstantPS CreateTextureConstantPS(const TextureQuadRenderItem& item)
-		{
-			TextureConstantPS constant{};
-
-			if (item.useSourceRect == false || item.texture == nullptr || item.texture->GetWidth() == 0 || item.texture->GetHeight() == 0)
-				return constant;
-
-			constant.textureLeft = static_cast<float>(item.sourceFrame.Left()) / static_cast<float>(item.texture->GetWidth());
-			constant.textureTop = static_cast<float>(item.sourceFrame.Top()) / static_cast<float>(item.texture->GetHeight());
-			constant.textureWidth = static_cast<float>(item.sourceFrame.Width()) / static_cast<float>(item.texture->GetWidth());
-			constant.textureHeight = static_cast<float>(item.sourceFrame.Height()) / static_cast<float>(item.texture->GetHeight());
-
-			return constant;
-		}
 
 		Vector2 ScreenToOrthoCenter(const Vector2& screenPosition, uint32 width, uint32 height)
 		{
@@ -75,7 +46,10 @@ namespace gm
 	UIRenderPass::UIRenderPass(Resources& resources, IGraphicsCommandContext& commandContext, IGraphicsResourceFactory& resourceFactory)
 		: _resources(resources)
 		, _commandContext(commandContext)
-		, _resourceFactory(resourceFactory) {}
+		, _resourceFactory(resourceFactory)
+		, _constantBufferPool(resourceFactory)
+	{
+	}
 
 	UIRenderPass::~UIRenderPass() = default;
 
@@ -84,107 +58,76 @@ namespace gm
 		_unitQuadMesh = _resources.Find<Mesh>(BuiltinResourceKey::UnitQuadMesh);
 		GM_ASSERT_RETURN_VAL(_unitQuadMesh, false, "%ls 로드에 실패했습니다. BuiltinGraphics를 확인해주세요.", BuiltinResourceKey::UnitQuadMesh);
 
-		_solidColorPSO = _resources.Find<PipelineState>(BuiltinResourceKey::SolidColorPSO);
-		GM_ASSERT_RETURN_VAL(_solidColorPSO, false, "%ls 로드에 실패했습니다. BuiltinGraphics를 확인해주세요.", BuiltinResourceKey::SolidColorPSO);
-
-		_texturePSO = _resources.Find<PipelineState>(BuiltinResourceKey::SpriteTexturePSO);
-		GM_ASSERT_RETURN_VAL(_texturePSO, false, "%ls 로드에 실패했습니다. BuiltinGraphics를 확인해주세요.", BuiltinResourceKey::SpriteTexturePSO);
-
-		return CreateConstantBuffers();
+		return true;
 	}
 
-	void UIRenderPass::Submit(const ColorQuadRenderItem& item)
+	void UIRenderPass::Submit(const UIRenderItem& item)
 	{
-		_colorItems.push_back(item);
-	}
-
-	void UIRenderPass::Submit(const TextureQuadRenderItem& item)
-	{
-		if (item.texture == nullptr)
+		if (item.material == nullptr)
 			return;
 
-		_textureItems.push_back(item);
+		_items.push_back(item);
 	}
 
 	void UIRenderPass::Render(uint32 width, uint32 height)
 	{
-		if (_colorItems.empty() && _textureItems.empty())
+		if (_items.empty())
 			return;
+
+		_constantBufferPool.ResetUsage();
 
 		CameraConstantVS cameraConstantVS{};
 		cameraConstantVS.view = Math::IdentityMatrix();
 		cameraConstantVS.proj = Math::CreateOrthographicLH(static_cast<float>(width), static_cast<float>(height), 0.f, 1.f);
-		_commandContext.UpdateConstantBuffer(*_cameraConstantVS, &cameraConstantVS, sizeof(CameraConstantVS));
-		_commandContext.SetConstantBuffer(ShaderStage::Vertex, 1, _cameraConstantVS.get());
 
-		_commandContext.SetPipelineState(*_solidColorPSO);
-		_commandContext.SetMesh(*_unitQuadMesh);
+		ConstantBuffer* cameraBuffer = _constantBufferPool.Acquire(sizeof(CameraConstantVS));
+		_commandContext.UpdateConstantBuffer(*cameraBuffer, &cameraConstantVS, sizeof(CameraConstantVS));
+		_commandContext.BindConstantBuffer(ShaderStage::Vertex, 1, cameraBuffer);
 
-		for (const ColorQuadRenderItem& item : _colorItems)
+		_commandContext.BindMesh(*_unitQuadMesh);
+
+		for (const UIRenderItem& item : _items)
 		{
+			if (item.material->GetVertexShader() == nullptr || item.material->GetPixelShader() == nullptr)
+				continue;
+
 			ObjectConstantVS objectConstantVS{};
 			objectConstantVS.world = CreateUIWorldMatrix(item.screenCenter, item.size, width, height);
 
-			ColorConstantPS colorConstantPS{};
-			colorConstantPS.color = item.color;
+			ConstantBuffer* objectBuffer = _constantBufferPool.Acquire(sizeof(ObjectConstantVS));
+			GM_ASSERT_RETURN(objectBuffer, "UI ObjectConstantVS ConstantBuffer를 가져오지 못했습니다.");
 
-			_commandContext.UpdateConstantBuffer(*_objectConstantVS, &objectConstantVS, sizeof(ObjectConstantVS));
-			_commandContext.UpdateConstantBuffer(*_colorConstantPS, &colorConstantPS, sizeof(ColorConstantPS));
-			_commandContext.SetConstantBuffer(ShaderStage::Vertex, 0, _objectConstantVS.get());
-			_commandContext.SetConstantBuffer(ShaderStage::Pixel, 0, _colorConstantPS.get());
+			_commandContext.UpdateConstantBuffer(*objectBuffer, &objectConstantVS, sizeof(ObjectConstantVS));
+			_commandContext.BindMaterial(*item.material);
+			_commandContext.BindConstantBuffer(ShaderStage::Vertex, 0, objectBuffer);
+
+			for (uint32 stageIndex = 0; stageIndex < ShaderStageCount; ++stageIndex)
+			{
+				const ShaderStage stage = static_cast<ShaderStage>(stageIndex);
+				const Material::ConstantSlots& constantSlots = item.material->GetConstantSlots(stage);
+
+				for (uint32 slot = 0; slot < MaxConstantBufferSlots; ++slot)
+				{
+					const Material::ConstantSlot& constantSlot = constantSlots[slot];
+					if (constantSlot.IsValid() == false)
+						continue;
+
+					ConstantBuffer* buffer = _constantBufferPool.Acquire(constantSlot.Size());
+					GM_ASSERT_RETURN(buffer, "UI Material ConstantBuffer를 가져오지 못했습니다.");
+
+					_commandContext.UpdateConstantBuffer(*buffer, constantSlot.Data(), constantSlot.Size());
+					_commandContext.BindConstantBuffer(stage, slot, buffer);
+				}
+			}
+
 			_commandContext.DrawIndexed(_unitQuadMesh->GetIndexCount());
 		}
-
-		_commandContext.SetPipelineState(*_texturePSO);
-		_commandContext.SetMesh(*_unitQuadMesh);
-
-		for (const TextureQuadRenderItem& item : _textureItems)
-		{
-			ObjectConstantVS objectConstantVS{};
-			objectConstantVS.world = CreateUIWorldMatrix(item.screenCenter, item.size, width, height);
-
-			TextureConstantPS textureConstantPS = CreateTextureConstantPS(item);
-
-			_commandContext.UpdateConstantBuffer(*_objectConstantVS, &objectConstantVS, sizeof(ObjectConstantVS));
-			_commandContext.UpdateConstantBuffer(*_textureConstantPS, &textureConstantPS, sizeof(TextureConstantPS));
-			_commandContext.SetTexture(0, item.texture.get());
-			_commandContext.SetSampler(0, item.sampler.get());
-			_commandContext.SetConstantBuffer(ShaderStage::Vertex, 0, _objectConstantVS.get());
-			_commandContext.SetConstantBuffer(ShaderStage::Pixel, 0, _textureConstantPS.get());
-			_commandContext.DrawIndexed(_unitQuadMesh->GetIndexCount());
-		}
-
-		_commandContext.SetTexture(0, nullptr);
-		_commandContext.SetSampler(0, nullptr);
 
 		Clear();
 	}
 
 	void UIRenderPass::Clear()
 	{
-		_colorItems.clear();
-		_textureItems.clear();
-	}
-
-	bool UIRenderPass::CreateConstantBuffers()
-	{
-		ConstantBufferDesc desc{};
-		desc.size = sizeof(ObjectConstantVS);
-		_objectConstantVS = _resourceFactory.CreateConstantBuffer(desc);
-		GM_ASSERT_RETURN_VAL(_objectConstantVS, false, "_objectConstantVS 생성 실패");
-
-		desc.size = sizeof(CameraConstantVS);
-		_cameraConstantVS = _resourceFactory.CreateConstantBuffer(desc);
-		GM_ASSERT_RETURN_VAL(_cameraConstantVS, false, "_cameraConstantVS 생성 실패");
-
-		desc.size = sizeof(ColorConstantPS);
-		_colorConstantPS = _resourceFactory.CreateConstantBuffer(desc);
-		GM_ASSERT_RETURN_VAL(_colorConstantPS, false, "_colorConstantPS 생성 실패");
-
-		desc.size = sizeof(TextureConstantPS);
-		_textureConstantPS = _resourceFactory.CreateConstantBuffer(desc);
-		GM_ASSERT_RETURN_VAL(_textureConstantPS, false, "_textureConstantPS 생성 실패");
-
-		return true;
+		_items.clear();
 	}
 }

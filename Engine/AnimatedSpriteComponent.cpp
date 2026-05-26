@@ -1,4 +1,4 @@
-﻿#include "AnimatedSpriteComponent.h"
+#include "AnimatedSpriteComponent.h"
 #include "GameObject.h"
 #include "TransformComponent.h"
 
@@ -26,7 +26,7 @@ namespace gm
 		_presenter.Submit(_ownerTransform->GetWorldMatrix());
 	}
 
-	void AnimatedSpriteComponent::SetTexture(const std::shared_ptr<Texture>& texture, MaterialSlot slot)
+	void AnimatedSpriteComponent::SetTexture(const std::shared_ptr<Texture>& texture, TextureSlot slot)
 	{
 		_presenter.SetTexture(texture, slot);
 	}

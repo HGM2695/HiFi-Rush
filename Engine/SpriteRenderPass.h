@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CameraViewInfo.h"
+#include "ConstantBufferPool.h"
 #include "RenderTypes.h"
 #include <vector>
 
@@ -10,6 +11,7 @@ namespace gm
 	class IGraphicsResourceFactory;
 	class Resources;
 	class ConstantBuffer;
+	class Material;
 
 	class SpriteRenderPass
 	{
@@ -23,17 +25,17 @@ namespace gm
 		void Clear();
 
 	private:
-		bool CreateConstantBuffers();
+		void BindMaterialConstantData(const Material& material);
 
 	private:
 		Resources&							_resources;
 		IGraphicsCommandContext&			_commandContext;
 		IGraphicsResourceFactory&			_resourceFactory;
-		std::shared_ptr<class Mesh>			_unitQuadMesh;
-		std::vector<SpriteRenderItem>		_items;
 
-		std::unique_ptr<ConstantBuffer>		_objectConstantVS;
-		std::unique_ptr<ConstantBuffer>		_cameraConstantVS;
-		std::unique_ptr<ConstantBuffer>		_objectConstantPS;
+		std::shared_ptr<class Mesh>			_unitQuadMesh;
+
+		std::vector<SpriteRenderItem>		_items;
+		ConstantBufferPool					_constantBufferPool;
+
 	};
 }

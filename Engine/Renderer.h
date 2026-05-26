@@ -11,8 +11,8 @@ namespace gm
 	class UIRenderPass;
 
 	struct SpriteRenderItem;
-	struct ColorQuadRenderItem;
-	struct TextureQuadRenderItem;
+	struct StaticMeshRenderItem;
+	struct UIRenderItem;
 	struct CameraViewInfo;
 
 	class Renderer
@@ -23,15 +23,15 @@ namespace gm
 
 		bool Initialize();
 		void SubmitSprite(const SpriteRenderItem& item);
-		void SubmitColorQuad(const ColorQuadRenderItem& item);
-		void SubmitTextureQuad(const TextureQuadRenderItem& item);
+		void SubmitStaticMesh(const StaticMeshRenderItem& item);
+		void SubmitUI(const UIRenderItem& item);
 
 		void Render(const CameraViewInfo& viewInfo, uint32 width, uint32 height);
 
 		void Clear();
 
 	private:
-		std::unique_ptr<SpriteRenderPass> _spriteRenderPass;
-		std::unique_ptr<UIRenderPass> _uiRenderPass;
+		std::unique_ptr<SpriteRenderPass>	_spriteRenderPass;
+		std::unique_ptr<UIRenderPass>		_uiRenderPass;
 	};
 }
