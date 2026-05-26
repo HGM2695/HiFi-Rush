@@ -1,11 +1,9 @@
 #include "BuiltinGraphicsResources.h"
 #include "IGraphicsResourceFactory.h"
-#include "VertexTypes.h"
-#include "Resources.h"
 #include "Mesh.h"
+#include "Resources.h"
 #include "Shader.h"
-#include "PipelineState.h"
-#include "Sampler.h"
+#include "VertexTypes.h"
 
 namespace gm
 {
@@ -14,8 +12,6 @@ namespace gm
 		bool LoadQuadMesh(const wchar_t* key, float halfWidth, Resources& resources, IGraphicsResourceFactory& factory);
 		bool LoadVertexShader(const wchar_t* key, const wchar_t* path, const VertexLayoutDesc& layout, Resources& resources, IGraphicsResourceFactory& factory);
 		bool LoadPixelShader(const wchar_t* key, const wchar_t* path, Resources& resources, IGraphicsResourceFactory& factory);
-		bool LoadPipelineState(const wchar_t* key, const PipelineStateDesc& desc, Resources& resources, IGraphicsResourceFactory& factory);
-		bool LoadSampler(const wchar_t* key, const SamplerDesc& desc, Resources& resources, IGraphicsResourceFactory& factory);
 	}
 
 	bool BuiltinGraphicsResources::Load(Resources& resources, IGraphicsResourceFactory& factory)
@@ -25,42 +21,12 @@ namespace gm
 		GM_ASSERT_RETURN_VAL(LoadQuadMesh(UnitQuadMesh, 0.5f, resources, factory), false, "UnitQuadMesh 로드 실패");
 		GM_ASSERT_RETURN_VAL(LoadQuadMesh(FullScreenMesh, 1.f, resources, factory), false, "FullScreenMesh 로드 실패");
 
-		// VertexShader
 		LoadVertexShader(QuadVS, L"../Engine/Shaders/QuadVS.hlsl", VertexPosTex::GetLayout(), resources, factory);
 		LoadVertexShader(FullScreenTextureVS, L"../Engine/Shaders/FullScreenTextureVS.hlsl", VertexPosTex::GetLayout(), resources, factory);
 
-		// PixelShader
 		LoadPixelShader(FullScreenTexturePS, L"../Engine/Shaders/FullScreenTexturePS.hlsl", resources, factory);
 		LoadPixelShader(SpriteTexturePS, L"../Engine/Shaders/SpriteTexturePS.hlsl", resources, factory);
 		LoadPixelShader(SolidColorPS, L"../Engine/Shaders/SolidColorPS.hlsl", resources, factory);
-
-		// PSO
-		PipelineStateDesc psDesc{};
-		psDesc.vertexShader = resources.Find<Shader>(FullScreenTextureVS);
-		psDesc.pixelShader = resources.Find<Shader>(FullScreenTexturePS);
-		LoadPipelineState(FullScreenTexturePSO, psDesc, resources, factory);
-
-		psDesc.vertexShader = resources.Find<Shader>(QuadVS);
-		psDesc.pixelShader = resources.Find<Shader>(SpriteTexturePS);
-		psDesc.rasterizerDesc.cullMode = CullMode::None;
-		psDesc.depthStencilDesc.depthEnable = false;
-		psDesc.depthStencilDesc.depthWriteEnable = false;
-		psDesc.blendDesc.blendEnable = true;
-		psDesc.blendDesc.srcBlend = BlendFactor::SrcAlpha;
-		psDesc.blendDesc.destBlend = BlendFactor::InvSrcAlpha;
-		psDesc.blendDesc.blendOp = BlendOp::Add;
-		LoadPipelineState(SpriteTexturePSO, psDesc, resources, factory);
-
-		psDesc.pixelShader = resources.Find<Shader>(SolidColorPS);
-		LoadPipelineState(SolidColorPSO, psDesc, resources, factory);
-
-		// Sampler
-		SamplerDesc samplerDesc{};
-		samplerDesc.filter = TextureFilter::Point;
-		LoadSampler(PointSampler, samplerDesc, resources, factory);
-
-		samplerDesc.filter = TextureFilter::Linear;
-		LoadSampler(LinearSampler, samplerDesc, resources, factory);
 
 		return true;
 	}
@@ -119,27 +85,7 @@ namespace gm
 
 			auto pixelShader = factory.CreatePixelShader(desc);
 			GM_ASSERT_RETURN_VAL(resources.Add(key, pixelShader), false, "Resources에 %ls Add 실패", key);
-
 			return true;
-		}
-
-		bool LoadPipelineState(const wchar_t* key, const PipelineStateDesc& desc, Resources& resources, IGraphicsResourceFactory& factory)
-		{
-			GM_ASSERT_RETURN_VAL(desc.vertexShader, false, "PSO desc vertexShader가 nullptr");
-			GM_ASSERT_RETURN_VAL(desc.pixelShader, false, "PSO desc에 pixelShader가 nullptr");
-
-			auto pipelinestate = factory.CraetePipelineState(desc);
-			GM_ASSERT_RETURN_VAL(resources.Add(key, pipelinestate), false, "Resources에 %ls Add 실패", key);
-			return true;
-		}
-	
-		bool LoadSampler(const wchar_t* key, const SamplerDesc& desc, Resources& resources, IGraphicsResourceFactory& factory)
-		{
-			auto sampler = factory.CreateSampler(desc);
-			GM_ASSERT_RETURN_VAL(resources.Add(key, sampler), false, "Resources에 %ls Add 실패", key);
-
-			return true;
-
 		}
 	}
 }

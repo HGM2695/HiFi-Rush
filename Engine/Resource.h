@@ -10,11 +10,10 @@ namespace gm
 		Texture,
 		Audio,
 		Mesh,
+		StaticMesh,
 		Skeleton,
 		SpriteAnimationClip,
 		Shader,
-		PipelineState,
-		Sampler,
 
 		Count
 	};

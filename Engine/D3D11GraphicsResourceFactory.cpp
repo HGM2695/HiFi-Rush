@@ -3,9 +3,7 @@
 #include "D3D11Mesh.h"
 #include "D3D11Shader.h"
 #include "D3D11TypeConverter.h"
-#include "D3D11PipelineState.h"
 #include "D3D11Texture.h"
-#include "D3D11Sampler.h"
 #include "D3D11ConstantBuffer.h"
 
 namespace gm
@@ -52,20 +50,6 @@ namespace gm
 		return D3D11Mesh::Create(desc);
 	}
 
-	std::shared_ptr<PipelineState> D3D11GraphicsResourceFactory::CraetePipelineState(const PipelineStateDesc& pipelineStateDesc)
-	{
-		D3D11PipelineStateDesc desc{};
-		desc.vertexShader = pipelineStateDesc.vertexShader;
-		desc.pixelShader = pipelineStateDesc.pixelShader;
-		desc.topology = pipelineStateDesc.topology;
-		desc.rasterizerDesc = pipelineStateDesc.rasterizerDesc;
-		desc.depthStencilDesc = pipelineStateDesc.depthStencilDesc;
-		desc.blendDesc = pipelineStateDesc.blendDesc;
-		desc.device = _graphicsDevice.GetNativeDevice();
-
-		return D3D11PipelineState::Create(desc);
-	}
-
 	std::shared_ptr<Texture> D3D11GraphicsResourceFactory::CreateTexture(const TextureDesc& textureDesc)
 	{
 		D3D11TextureDesc desc{};
@@ -73,18 +57,6 @@ namespace gm
 		desc.device = _graphicsDevice.GetNativeDevice();
 
 		return D3D11Texture::Create(desc);
-	}
-
-	std::shared_ptr<Sampler> D3D11GraphicsResourceFactory::CreateSampler(const SamplerDesc& samplerDesc)
-	{
-		D3D11SamplerDesc desc{};
-		desc.filter = samplerDesc.filter;
-		desc.addressU = samplerDesc.addressU;
-		desc.addressV = samplerDesc.addressV;
-		desc.addressW = samplerDesc.addressW;
-		desc.device = _graphicsDevice.GetNativeDevice();
-
-		return D3D11Sampler::Create(desc);
 	}
 
 	std::unique_ptr<ConstantBuffer> D3D11GraphicsResourceFactory::CreateConstantBuffer(const ConstantBufferDesc& constantBufferDesc)

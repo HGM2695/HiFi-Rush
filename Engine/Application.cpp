@@ -15,7 +15,6 @@
 #include "Window.h"
 #include "BuiltinGraphicsResources.h"
 #include "Mesh.h"
-#include "PipelineState.h"
 #include "GraphicsBackend.h"
 #include "CameraManager.h"
 #include "Renderer.h"

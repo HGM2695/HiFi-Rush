@@ -22,15 +22,6 @@ namespace gm
 		inline constexpr const wchar_t* SpriteTexturePS = L"Engine.SpriteTexturePS";
 		inline constexpr const wchar_t* SolidColorPS = L"Engine.SolidColorPS";
 
-		// PSO
-		inline constexpr const wchar_t* FullScreenTexturePSO = L"Engine.FullScreenTexturePSO";
-		inline constexpr const wchar_t* SpriteTexturePSO = L"Engine.SpriteTexturePSO";
-		inline constexpr const wchar_t* SolidColorPSO = L"Engine.SolidColorPSO";
-
-		// Sampler
-		inline constexpr const wchar_t* PointSampler = L"Engine.PointSampler";
-		inline constexpr const wchar_t* LinearSampler = L"Engine.LinearSampler";
-
 		// Font
 		inline constexpr const wchar_t* DefaultUIFont = L"Engine.DefaultUIFont";
 	}
