@@ -1,5 +1,6 @@
 #pragma once
 
+#include "HashUtil.h"
 #include "ITextRenderer.h"
 #include "Rect.h"
 #include <vector>
@@ -44,10 +45,10 @@ namespace gm
 		{
 			size_t operator()(const TextFormatKey& key) const
 			{
-				const std::size_t h1 = std::hash<std::wstring>{}(key.fontFamilyName);
-				const std::size_t h2 = std::hash<uint32>{}(key.scaledFontSize);
-
-				return h1 ^ (h2 << 1);
+				size_t seed = 0;
+				HashValue(seed, key.fontFamilyName);
+				HashValue(seed, key.scaledFontSize);
+				return seed;
 			}
 		};
 

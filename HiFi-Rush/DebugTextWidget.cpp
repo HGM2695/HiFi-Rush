@@ -10,6 +10,7 @@ namespace gm
 	{
 		auto textBlock = CreateRootWidget<TextBlock>();
 		textBlock->SetPosition(Vector2{ 0.f, 0.f });
+		textBlock->SetColor(Colors::Green);
 
 		return textBlock;
 	}
