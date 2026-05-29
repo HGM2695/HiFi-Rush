@@ -133,7 +133,12 @@ namespace gm
 
 	void D3D11GraphicsCommandContext::DrawIndexed(uint32 indexCount)
 	{
-		_context->DrawIndexed(indexCount, 0, 0);
+		DrawIndexed(indexCount, 0, 0);
+	}
+
+	void D3D11GraphicsCommandContext::DrawIndexed(uint32 indexCount, uint32 startIndexLocation, int32 baseVertexLocation)
+	{
+		_context->DrawIndexed(indexCount, startIndexLocation, baseVertexLocation);
 	}
 
 	void D3D11GraphicsCommandContext::BindNativeVertexShader(ID3D11VertexShader* vertexShader, ID3D11InputLayout* inputLayout)

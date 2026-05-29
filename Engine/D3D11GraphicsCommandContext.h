@@ -41,6 +41,7 @@ namespace gm
 		virtual void		UpdateConstantBuffer(ConstantBuffer& buffer, const void* data, uint32 size) override;
 
 		virtual void		DrawIndexed(uint32 indexCount) override;
+		virtual void		DrawIndexed(uint32 indexCount, uint32 startIndexLocation, int32 baseVertexLocation) override;
 
 	private:
 		void				BindNativeVertexShader(ID3D11VertexShader* vertexShader, ID3D11InputLayout* inputLayout);

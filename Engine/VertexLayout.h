@@ -1,6 +1,6 @@
 #pragma once
 
-#include "EngineCore.h"
+#include "Types.h"
 #include <vector>
 
 // 정점에 속하는 원소의 형식 그리고 정점 그 자체의 형식을 나타내는 구조체.
@@ -12,6 +12,9 @@ namespace gm
 		Normal,
 		TexCoord,
 		Color,
+		Tangent,
+		BlendIndex,
+		BlendWeight,
 
 		Count
 	};
@@ -21,6 +24,7 @@ namespace gm
 		Float2,
 		Float3,
 		Float4,
+		UInt4,
 
 		Count
 	};

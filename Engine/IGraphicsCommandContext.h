@@ -35,5 +35,6 @@ namespace gm
 		virtual void		UpdateConstantBuffer(ConstantBuffer& buffer, const void* data, uint32 size) = 0;
 
 		virtual void		DrawIndexed(uint32 indexCount) = 0;
+		virtual void		DrawIndexed(uint32 indexCount, uint32 startIndexLocation, int32 baseVertexLocation) = 0;
 	};
 }

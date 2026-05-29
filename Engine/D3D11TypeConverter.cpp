@@ -156,11 +156,13 @@ namespace gm
 			return DXGI_FORMAT_R32G32B32_FLOAT;
 		case VertexElementFormat::Float4:
 			return DXGI_FORMAT_R32G32B32A32_FLOAT;
+		case VertexElementFormat::UInt4:
+			return DXGI_FORMAT_R32G32B32A32_UINT;
 		default:
 			GM_ASSERT_RETURN_VAL(false, DXGI_FORMAT_UNKNOWN, "지원하지 않는 VertexElementFormat입니다.");
 		}
 
-		static_assert(static_cast<uint32>(VertexElementFormat::Count) == 3, "VertexElementFormat을 추가했다면, D3D11로의 변환도 고려");
+		static_assert(static_cast<uint32>(VertexElementFormat::Count) == 4, "VertexElementFormat을 추가했다면, D3D11로의 변환도 고려");
 	}
 
 	const char* ToD3D11SemanticName(VertexElementSemantic semantic)
@@ -175,11 +177,17 @@ namespace gm
 			return "TEXCOORD";
 		case VertexElementSemantic::Color:
 			return "COLOR";
+		case VertexElementSemantic::Tangent:
+			return "TANGENT";
+		case VertexElementSemantic::BlendIndex:
+			return "BLENDINDEX";
+		case VertexElementSemantic::BlendWeight:
+			return "BLENDWEIGHT";
 		default:
 			GM_ASSERT_RETURN_VAL(false, "", "지원하지 않는 VertexElementSemant,.ic입니다.");
 		}
 
-		static_assert(static_cast<uint32>(VertexElementSemantic::Count) == 4, "VertexElementSemantic을 추가했다면, D3D11로의 변환도 고려");
+		static_assert(static_cast<uint32>(VertexElementSemantic::Count) == 7, "VertexElementSemantic을 추가했다면, D3D11로의 변환도 고려");
 	}
 
 	std::vector<D3D11_INPUT_ELEMENT_DESC> ToD3D11InputElements(const VertexLayoutDesc& layoutDesc)
