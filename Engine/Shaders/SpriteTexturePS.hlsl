@@ -17,5 +17,9 @@ struct PSInput
 
 float4 main(PSInput input) : SV_TARGET
 {   
-    return g_texture.Sample(g_sampler, float2(leftNorm + input.texcoord.x * widthNorm, topNorm + input.texcoord.y * heightNorm));
+    float2 uv = float2(leftNorm + input.texcoord.x * widthNorm, topNorm + input.texcoord.y * heightNorm);
+    float4 color = g_texture.Sample(g_sampler, uv);
+    clip(color.a - 0.001f);
+
+    return color;
 }

@@ -27,8 +27,8 @@ namespace gm
 				.SetPixelShader(BuiltinResourceKey::SpriteTexturePS)
 				.SetSamplerFilter(TextureSlot::BaseColor, TextureFilter::Point)
 				.SetCullMode(CullMode::None)
-				.SetDepthEnable(false)
-				.SetDepthWriteEnable(false)
+				.SetDepthEnable(true)
+				.SetDepthWriteEnable(true)
 				.SetBlendEnable(true)
 				.Build()
 		);

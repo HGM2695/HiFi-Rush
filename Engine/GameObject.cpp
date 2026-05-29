@@ -1,4 +1,4 @@
-﻿#include "GameObject.h"
+#include "GameObject.h"
 #include "Collider2DComponent.h"
 #include "Rigidbody2DComponent.h"
 #include "Scene.h"
@@ -12,7 +12,7 @@ namespace gm
 		AddComponent<TransformComponent>();
 	}
 
-	GameObject::GameObject(const Vector2& position) : GameObject()
+	GameObject::GameObject(const Vector3& position) : GameObject()
 	{
 		GetTransform()->SetPosition(position);
 	}

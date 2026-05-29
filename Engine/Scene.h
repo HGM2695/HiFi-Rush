@@ -31,7 +31,7 @@ namespace gm
 		}
 
 		template<typename T, typename... Args>
-		T* SpawnGameObject(const Vector2& position, Args&&... args)
+		T* SpawnGameObject(const Vector3& position, Args&&... args)
 		{
 			return SpawnGameObjectInternal<T>(position, std::forward<Args>(args)...);
 		}

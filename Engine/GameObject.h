@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "EngineCore.h"
 #include "GameObjectHandle.h"
@@ -25,7 +25,7 @@ namespace gm
 	{
 	public:
 		GameObject();
-		GameObject(const Vector2& position);
+		GameObject(const Vector3& position);
 		virtual ~GameObject();
 
 		template <typename T, typename... Args>
@@ -132,10 +132,10 @@ namespace gm
 		Scene*									_scene = nullptr;
 		GameObjectHandle						_handle{};
 
-		TransformComponent*								_transform = nullptr;
+		TransformComponent*						_transform = nullptr;
 
-		Rigidbody2DComponent*							_rigidbody2D = nullptr;
-		std::vector<Collider2DComponent*>				_colliders2D{};
+		Rigidbody2DComponent*					_rigidbody2D = nullptr;
+		std::vector<Collider2DComponent*>		_colliders2D{};
 
 		GameObjectLifeState						_lifeState = GameObjectLifeState::Active;
 		bool									_isRender = true;
