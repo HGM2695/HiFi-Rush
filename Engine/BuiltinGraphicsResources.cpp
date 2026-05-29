@@ -23,10 +23,12 @@ namespace gm
 
 		LoadVertexShader(QuadVS, L"../Engine/Shaders/QuadVS.hlsl", VertexPosTex::GetLayout(), resources, factory);
 		LoadVertexShader(FullScreenTextureVS, L"../Engine/Shaders/FullScreenTextureVS.hlsl", VertexPosTex::GetLayout(), resources, factory);
+		LoadVertexShader(StaticMeshVS, L"../Engine/Shaders/StaticMeshVS.hlsl", VertexMesh::GetLayout(), resources, factory);
 
 		LoadPixelShader(FullScreenTexturePS, L"../Engine/Shaders/FullScreenTexturePS.hlsl", resources, factory);
 		LoadPixelShader(SpriteTexturePS, L"../Engine/Shaders/SpriteTexturePS.hlsl", resources, factory);
 		LoadPixelShader(SolidColorPS, L"../Engine/Shaders/SolidColorPS.hlsl", resources, factory);
+		LoadPixelShader(StaticMeshPS, L"../Engine/Shaders/StaticMeshPS.hlsl", resources, factory);
 
 		return true;
 	}

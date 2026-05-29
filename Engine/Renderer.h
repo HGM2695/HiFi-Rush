@@ -8,6 +8,7 @@ namespace gm
 	class IGraphicsResourceFactory;
 	class Resources;
 	class SpriteRenderPass;
+	class StaticMeshRenderPass;
 	class UIRenderPass;
 
 	struct SpriteRenderItem;
@@ -32,6 +33,7 @@ namespace gm
 
 	private:
 		std::unique_ptr<SpriteRenderPass>	_spriteRenderPass;
+		std::unique_ptr<StaticMeshRenderPass>	_staticMeshRenderPass;
 		std::unique_ptr<UIRenderPass>		_uiRenderPass;
 	};
 }

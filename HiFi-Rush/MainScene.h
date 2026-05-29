@@ -15,6 +15,7 @@ namespace gm
 	private:
 		void			InitializePlayer();
 		void			InitializeSubObject();
+		void			InitializeStaticMeshTest();
 		void			InitializeCamera(GameObject* player);
 	};
 }

@@ -1,4 +1,4 @@
-﻿#include "MainScene.h"
+#include "MainScene.h"
 #include "MainHUDWidget.h"
 #include "PlayerMovementComponent.h"
 #include "PlayerAnimationFSMComponent.h"
@@ -17,10 +17,11 @@
 #include "BoxCollider2DComponent.h"
 #include "WidgetComponent.h"
 #include "CameraManager.h"
-#include "Material.h"
 #include "TransformComponent.h"
 #include "SocketComponent.h"
 #include "SocketFollowComponent.h"
+#include "StaticMesh.h"
+#include "StaticMeshComponent.h"
 
 namespace gm
 {
@@ -33,13 +34,14 @@ namespace gm
 	void MainScene::OnInitialize()
 	{
 		InitializeSubObject();
+		InitializeStaticMeshTest();
 		InitializePlayer();
 		GetCameraManager()->SetPixelSnapEnabled(true);
 	}
 
 	void MainScene::InitializePlayer()
 	{
-		auto player = SpawnGameObject<GameObject>({ 0, 200 });
+		auto player = SpawnGameObject<GameObject>({ 0.f, 0.f, 0.f });
 
 		auto transform = player->GetTransform();
 
@@ -77,7 +79,7 @@ namespace gm
 	void MainScene::InitializeSubObject()
 	{
 		// BackGround
-		auto BackGround = SpawnGameObject<GameObject>({ 0, 0 });
+		auto BackGround = SpawnGameObject<GameObject>({ 0.f, 0.f, 500.f });
 		auto spriteComponent = BackGround->AddComponent<SpriteComponent>();
 		auto texture = APPLICATION.GetResources().Find<Texture>(L"Xanadu");
 		spriteComponent->SetTexture(texture);
@@ -87,7 +89,7 @@ namespace gm
 		// Monster
 		for (int i = 0; i < 20; ++i)
 		{
-			auto monster = SpawnGameObject<GameObject>({ (float)200 * i, 300 });
+			auto monster = SpawnGameObject<GameObject>({ 200.f * i, 300.f, 0.f});
 			auto spriteComponent = monster->AddComponent<SpriteComponent>();
 			auto texture = APPLICATION.GetResources().Find<Texture>(L"OrangeMushroom");
 			spriteComponent->SetTexture(texture);
@@ -96,14 +98,28 @@ namespace gm
 			transform->SetScale(Vector2{ static_cast<float>(texture->GetWidth()),static_cast<float>(texture->GetHeight()) });
 		}
 
-		auto ground = SpawnGameObject<GameObject>({ 0, -250 });
+		auto ground = SpawnGameObject<GameObject>({ 0.f, -100.f, 0.f });
 		BoxCollider2DComponent* groundCollider = ground->AddComponent<BoxCollider2DComponent>();
 		groundCollider->SetSize({ 120000.f, 100.f });
 	}
 
+	void MainScene::InitializeStaticMeshTest()
+	{
+		std::shared_ptr<StaticMesh> staticMesh = APPLICATION.GetResources().Find<StaticMesh>(L"Environment97");
+		GM_ASSERT_RETURN(staticMesh, "Environment97 StaticMesh가 로드되지 않았습니다.");
+
+		GameObject* testObject = SpawnGameObject<GameObject>({ 350.f, 0.f, 10.f });
+		TransformComponent* transform = testObject->GetTransform();
+		transform->SetPosition(Vector3{ 350.f, -200.f, 10.f });
+		transform->SetScale(Vector3{ 1000.f, 1000.f, 1000.f });
+
+		StaticMeshComponent* staticMeshComponent = testObject->AddComponent<StaticMeshComponent>();
+		staticMeshComponent->SetStaticMesh(staticMesh);
+	}
+
 	void MainScene::InitializeCamera(GameObject* player)
 	{
-		auto cameraObject = SpawnGameObject<GameObject>({ 0, 0 });
+		auto cameraObject = SpawnGameObject<GameObject>({ 0.f, 0.f, 0.f });
 
 		SocketFollowComponent* followComponent = cameraObject->AddComponent<SocketFollowComponent>();
 		followComponent->SetTarget(*player, L"Player.Camera");

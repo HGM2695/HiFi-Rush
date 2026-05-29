@@ -11,7 +11,8 @@ namespace gm
 	class Material;
 	class StaticMesh;
 	class Texture;
-
+	
+	/// Sprite ////////////////////////////////////////////////////////////////////////////////////////////////
 	struct SpriteRenderItem
 	{
 		Matrix			world = Matrix::CreateScale(1.f);
@@ -31,6 +32,7 @@ namespace gm
 		Color	color = Colors::White;
 	};
 
+	/// UI ////////////////////////////////////////////////////////////////////////////////////////////////
 	struct UIRenderItem
 	{
 		Vector2			screenCenter{};
@@ -38,6 +40,7 @@ namespace gm
 		const Material*	material = nullptr;
 	};
 
+	/// StaticMesh ////////////////////////////////////////////////////////////////////////////////////////////////
 	struct StaticMeshRenderItem
 	{
 		Matrix							world = Matrix::CreateScale(1.f);

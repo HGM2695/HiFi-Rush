@@ -16,11 +16,13 @@ namespace gm
 		// VS
 		inline constexpr const wchar_t* FullScreenTextureVS = L"Engine.FullScreenTextureVS";
 		inline constexpr const wchar_t* QuadVS = L"Engine.QuadVS";
+		inline constexpr const wchar_t* StaticMeshVS = L"Engine.StaticMeshVS";
 
 		// PS
 		inline constexpr const wchar_t* FullScreenTexturePS = L"Engine.FullScreenTexturePS";
 		inline constexpr const wchar_t* SpriteTexturePS = L"Engine.SpriteTexturePS";
 		inline constexpr const wchar_t* SolidColorPS = L"Engine.SolidColorPS";
+		inline constexpr const wchar_t* StaticMeshPS = L"Engine.StaticMeshPS";
 
 		// Font
 		inline constexpr const wchar_t* DefaultUIFont = L"Engine.DefaultUIFont";

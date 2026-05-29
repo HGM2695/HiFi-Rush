@@ -6,13 +6,19 @@
 #include "SpriteAnimationClip.h"
 #include "SoundWave.h"
 #include "Paths.h"
+#include "PathUtil.h"
 #include "VertexTypes.h"
 #include "IGraphicsResourceFactory.h"
+#include "BinaryModelLoader.h"
+#include "StaticMesh.h"
+#include <filesystem>
 #include <vector>
 
 namespace gm
 {
 	void LoadTexture(Resources& resources);
+	void LoadMeshTexture(Resources& resources);
+	void LoadStaticMesh(Resources& resources);
 	void LoadTempAnimationClip(Resources& resources);
 	void LoadAudio(Resources& resources);
 
@@ -21,6 +27,8 @@ namespace gm
 		Resources& resources = APPLICATION.GetResources();
 
 		LoadTexture(resources);
+		LoadMeshTexture(resources);
+		LoadStaticMesh(resources);
 		LoadTempAnimationClip(resources);
 		LoadAudio(resources);
 	}
@@ -42,6 +50,39 @@ namespace gm
 		LoadTextureResource(L"Xanadu", GetTexturePath(L"Test/Xanadu.png"));
 		LoadTextureResource(L"PlayerLeft", GetTexturePath(L"Test/NewPlayer_Left.bmp"));
 		LoadTextureResource(L"PlayerRight", GetTexturePath(L"Test/NewPlayer_Right.bmp"));
+	}
+
+	void LoadMeshTexture(Resources& resources)
+	{
+		IGraphicsResourceFactory& factory = APPLICATION.GetGraphicsResourceFactory();
+		const std::filesystem::path meshTexturePath = GetTexturePath(L"Mesh");
+
+		for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator(meshTexturePath))
+		{
+			if (entry.is_regular_file() == false)
+				continue;
+
+			const std::wstring key = GetFileNameWithoutExtension(entry.path().wstring());
+			if (key.empty())
+				continue;
+
+			TextureDesc desc{};
+			desc.path = entry.path().wstring();
+
+			std::shared_ptr<Texture> texture = factory.CreateTexture(desc);
+			resources.Add(key, texture);
+		}
+	}
+
+	void LoadStaticMesh(Resources& resources)
+	{
+		BinaryModelLoader loader;
+		ModelData environment97Data = loader.Load(GetModelPath(L"Binary/Environment/Environment97.txt"));
+
+		std::shared_ptr<StaticMesh> environment97 = StaticMesh::Create(environment97Data, APPLICATION.GetGraphicsResourceFactory());
+		GM_ASSERT_RETURN(environment97, "Environment97 StaticMesh 생성에 실패했습니다.");
+
+		resources.Add(L"Environment97", environment97);
 	}
 
 	void LoadTempAnimationClip(Resources& resources)

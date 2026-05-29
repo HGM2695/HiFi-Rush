@@ -37,6 +37,11 @@ namespace gm
 		return CombinePath(L"Resources/Texture", relativePath);
 	}
 
+	inline std::wstring GetModelPath(const std::wstring& relativePath)
+	{
+		return CombinePath(L"Resources/Model", relativePath);
+	}
+
 	inline std::wstring GetAnimationPath(const std::wstring& relativePath)
 	{
 		return CombinePath(L"Resources/Animation", relativePath);

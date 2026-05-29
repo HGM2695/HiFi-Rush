@@ -1,1 +1,642 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">  <ItemGroup>    <ClInclude Include="Application.h" />    <ClInclude Include="BuildConfig.h">      <Filter>Core</Filter>    </ClInclude>    <ClInclude Include="AudioComponent.h">      <Filter>Engine Component\Audio</Filter>    </ClInclude>    <ClInclude Include="AudioStatics.h">      <Filter>Util</Filter>    </ClInclude>    <ClInclude Include="TransformComponent.h">      <Filter>Engine Component</Filter>    </ClInclude>    <ClInclude Include="TimeSystem.h">      <Filter>SubSystem</Filter>    </ClInclude>    <ClInclude Include="Input.h">      <Filter>SubSystem</Filter>    </ClInclude>    <ClInclude Include="SceneManager.h">      <Filter>SubSystem</Filter>    </ClInclude>    <ClInclude Include="AudioSystem.h">      <Filter>SubSystem</Filter>    </ClInclude>    <ClInclude Include="SoundWave.h">      <Filter>Resource\Audio</Filter>    </ClInclude>    <ClInclude Include="Entity.h">      <Filter>Base</Filter>    </ClInclude>    <ClInclude Include="GameObject.h">      <Filter>Base</Filter>    </ClInclude>    <ClInclude Include="GameObjectHandle.h">      <Filter>Base</Filter>    </ClInclude>    <ClInclude Include="WeakGameObjectPtr.h">      <Filter>Base</Filter>    </ClInclude>    <ClInclude Include="Scene.h">      <Filter>Base</Filter>    </ClInclude>    <ClInclude Include="Component.h">      <Filter>Base</Filter>    </ClInclude>    <ClInclude Include="StringUtil.h">      <Filter>Util</Filter>    </ClInclude>    <ClInclude Include="GMAssert.h">      <Filter>Util</Filter>    </ClInclude>    <ClInclude Include="GMLog.h">      <Filter>Util</Filter>    </ClInclude>    <ClInclude Include="IAnimator.h">      <Filter>Engine Component\Animator</Filter>    </ClInclude>    <ClInclude Include="Resource.h">      <Filter>Resource</Filter>    </ClInclude>    <ClInclude Include="Resources.h">      <Filter>SubSystem</Filter>    </ClInclude>    <ClInclude Include="CameraComponent.h">      <Filter>Engine Component</Filter>    </ClInclude>    <ClInclude Include="CameraManager.h">      <Filter>Engine Component</Filter>    </ClInclude>    <ClInclude Include="CameraViewInfo.h">      <Filter>Engine Component</Filter>    </ClInclude>    <ClInclude Include="SocketComponent.h">      <Filter>Engine Component</Filter>    </ClInclude>    <ClInclude Include="SocketFollowComponent.h">      <Filter>Engine Component</Filter>    </ClInclude>    <ClInclude Include="Collider2DComponent.h">      <Filter>Engine Component\Physics</Filter>    </ClInclude>    <ClInclude Include="AnimationClip.h">      <Filter>Resource\AnimationClip</Filter>    </ClInclude>    <ClInclude Include="BoxCollider2DComponent.h">      <Filter>Engine Component\Physics</Filter>    </ClInclude>    <ClInclude Include="CircleCollider2DComponent.h">      <Filter>Engine Component\Physics</Filter>    </ClInclude>    <ClInclude Include="Texture.h">      <Filter>Resource\Texture</Filter>    </ClInclude>    <ClInclude Include="AnimationTypes.h">      <Filter>Engine Component\Animator</Filter>    </ClInclude>    <ClInclude Include="AnimationController.h">      <Filter>Engine Component\Animator</Filter>    </ClInclude>    <ClInclude Include="SpriteAnimator.h">      <Filter>Engine Component\Animator</Filter>    </ClInclude>    <ClInclude Include="SpriteFrame.h">      <Filter>Resource\AnimationClip\Sprite</Filter>    </ClInclude>    <ClInclude Include="SpriteAnimationClip.h">      <Filter>Resource\AnimationClip\Sprite</Filter>    </ClInclude>    <ClInclude Include="AnimationClipSet.h">      <Filter>Engine Component\Animator</Filter>    </ClInclude>    <ClInclude Include="AnimationNotify.h">      <Filter>Engine Component\Animator</Filter>    </ClInclude>    <ClInclude Include="PhysicsSystem2D.h">      <Filter>Engine Component\Physics</Filter>    </ClInclude>    <ClInclude Include="PhysicsSystem3D.h">      <Filter>Engine Component\Physics</Filter>    </ClInclude>    <ClInclude Include="PhysicsSystem.h">      <Filter>Engine Component\Physics</Filter>    </ClInclude>    <ClInclude Include="Rigidbody2DComponent.h">      <Filter>Engine Component\Physics</Filter>    </ClInclude>    <ClInclude Include="UIManager.h">      <Filter>SubSystem</Filter>    </ClInclude>    <ClInclude Include="UserWidget.h">      <Filter>UI</Filter>    </ClInclude>    <ClInclude Include="Border.h">      <Filter>UI\Widgets</Filter>    </ClInclude>    <ClInclude Include="CanvasPanel.h">      <Filter>UI\Widgets</Filter>    </ClInclude>    <ClInclude Include="Image.h">      <Filter>UI\Widgets</Filter>    </ClInclude>    <ClInclude Include="TextBlock.h">      <Filter>UI\Widgets</Filter>    </ClInclude>    <ClInclude Include="WidgetComponent.h">      <Filter>Engine Component</Filter>    </ClInclude>    <ClInclude Include="WindowsCore.h">      <Filter>Core</Filter>    </ClInclude>    <ClInclude Include="Types.h">      <Filter>Core</Filter>    </ClInclude>    <ClInclude Include="EngineCore.h">      <Filter>Core</Filter>    </ClInclude>    <ClInclude Include="IGraphicsResourceFactory.h">      <Filter>Graphics</Filter>    </ClInclude>    <ClInclude Include="GraphicsBackend.h">      <Filter>Graphics</Filter>    </ClInclude>    <ClInclude Include="Shader.h">      <Filter>Resource\Shader</Filter>    </ClInclude>    <ClInclude Include="D3D11Shader.h">      <Filter>Resource\Shader</Filter>    </ClInclude>    <ClInclude Include="Mesh.h">      <Filter>Resource\Mesh</Filter>    </ClInclude>    <ClInclude Include="D3D11Mesh.h">      <Filter>Resource\Mesh</Filter>    </ClInclude>    <ClInclude Include="MathTypes.h">      <Filter>Util\Types</Filter>    </ClInclude>    <ClInclude Include="Rect.h">      <Filter>Util\Types</Filter>    </ClInclude>    <ClInclude Include="MathUtil.h">      <Filter>Util</Filter>    </ClInclude>    <ClInclude Include="VertexTypes.h">      <Filter>Util\Types</Filter>    </ClInclude>    <ClInclude Include="VertexLayout.h">      <Filter>Util\Types</Filter>    </ClInclude>    <ClInclude Include="IGraphicsDevice.h">      <Filter>Graphics</Filter>    </ClInclude>    <ClInclude Include="D3D11GraphicsDevice.h">      <Filter>Graphics\D3D11</Filter>    </ClInclude>    <ClInclude Include="D3D11GraphicsResourceFactory.h">      <Filter>Graphics\D3D11</Filter>    </ClInclude>    <ClInclude Include="IGraphicsCommandContext.h">      <Filter>Graphics</Filter>    </ClInclude>    <ClInclude Include="BuiltinGraphicsResources.h">      <Filter>Graphics</Filter>    </ClInclude>    <ClInclude Include="GraphicsTypes.h">      <Filter>Util</Filter>    </ClInclude>    <ClInclude Include="Window.h">      <Filter>SubSystem</Filter>    </ClInclude>    <ClInclude Include="D3D11TypeConverter.h">      <Filter>Graphics\D3D11</Filter>    </ClInclude>    <ClInclude Include="PipelineState.h">      <Filter>Resource\PSO</Filter>    </ClInclude>    <ClInclude Include="D3D11PipelineState.h">      <Filter>Resource\PSO</Filter>    </ClInclude>    <ClInclude Include="D3D11GraphicsCommandContext.h">      <Filter>Graphics\D3D11</Filter>    </ClInclude>    <ClInclude Include="D3D11Texture.h">      <Filter>Resource\Texture</Filter>    </ClInclude>    <ClInclude Include="Material.h">      <Filter>Graphics</Filter>    </ClInclude>    <ClInclude Include="Renderer.h">      <Filter>Graphics</Filter>    </ClInclude>    <ClInclude Include="RenderTypes.h">      <Filter>Graphics</Filter>    </ClInclude>    <ClInclude Include="SpriteRenderPass.h">      <Filter>Graphics</Filter>    </ClInclude>    <ClInclude Include="UIRenderPass.h">      <Filter>Graphics</Filter>    </ClInclude>    <ClInclude Include="D3D11Sampler.h">      <Filter>Resource\Sampler</Filter>    </ClInclude>    <ClInclude Include="Sampler.h">      <Filter>Resource\Sampler</Filter>    </ClInclude>    <ClInclude Include="TickManager.h">      <Filter>Base</Filter>    </ClInclude>    <ClInclude Include="D3D11ConstantBuffer.h">      <Filter>Graphics\D3D11</Filter>    </ClInclude>    <ClInclude Include="ConstantBuffer.h">      <Filter>Graphics</Filter>    </ClInclude>    <ClInclude Include="TickGroup.h">      <Filter>Util</Filter>    </ClInclude>    <ClInclude Include="IDebugRenderer.h">      <Filter>Debugger\DebugRenderer</Filter>    </ClInclude>    <ClInclude Include="D3D11DebugRenderer.h">      <Filter>Debugger\DebugRenderer</Filter>    </ClInclude>    <ClInclude Include="D3D11TextRenderer.h">      <Filter>Graphics\D3D11</Filter>    </ClInclude>    <ClInclude Include="DebugDraw.h">      <Filter>Debugger\DebugRenderer</Filter>    </ClInclude>    <ClInclude Include="ITextRenderer.h">      <Filter>Graphics</Filter>    </ClInclude>    <ClInclude Include="Widget.h">      <Filter>UI</Filter>    </ClInclude>    <ClInclude Include="TextTypes.h">      <Filter>Util\Types</Filter>    </ClInclude>    <ClInclude Include="AnimatedSpriteComponent.h">      <Filter>Engine Component</Filter>    </ClInclude>    <ClInclude Include="SpriteComponent.h">      <Filter>Engine Component</Filter>    </ClInclude>    <ClInclude Include="SpritePresenter.h">      <Filter>Graphics</Filter>    </ClInclude>  </ItemGroup>  <ItemGroup>    <ClCompile Include="Application.cpp" />    <ClCompile Include="AudioComponent.cpp">      <Filter>Engine Component\Audio</Filter>    </ClCompile>    <ClCompile Include="AudioStatics.cpp">      <Filter>Util</Filter>    </ClCompile>    <ClCompile Include="BoxCollider2DComponent.cpp">      <Filter>Engine Component\Physics</Filter>    </ClCompile>    <ClCompile Include="TransformComponent.cpp">      <Filter>Engine Component</Filter>    </ClCompile>    <ClCompile Include="Input.cpp">      <Filter>SubSystem</Filter>    </ClCompile>    <ClCompile Include="SceneManager.cpp">      <Filter>SubSystem</Filter>    </ClCompile>    <ClCompile Include="AudioSystem.cpp">      <Filter>SubSystem</Filter>    </ClCompile>    <ClCompile Include="SoundWave.cpp">      <Filter>Resource\Audio</Filter>    </ClCompile>    <ClCompile Include="TimeSystem.cpp">      <Filter>SubSystem</Filter>    </ClCompile>    <ClCompile Include="Entity.cpp">      <Filter>Base</Filter>    </ClCompile>    <ClCompile Include="GameObject.cpp">      <Filter>Base</Filter>    </ClCompile>    <ClCompile Include="WeakGameObjectPtr.cpp">      <Filter>Base</Filter>    </ClCompile>    <ClCompile Include="Scene.cpp">      <Filter>Base</Filter>    </ClCompile>    <ClCompile Include="TickManager.cpp">      <Filter>Base</Filter>    </ClCompile>    <ClCompile Include="Component.cpp">      <Filter>Base</Filter>    </ClCompile>    <ClCompile Include="GMAssert.cpp">      <Filter>Util</Filter>    </ClCompile>    <ClCompile Include="GMLog.cpp">      <Filter>Util</Filter>    </ClCompile>    <ClCompile Include="Resource.cpp">      <Filter>Resource</Filter>    </ClCompile>    <ClCompile Include="Resources.cpp">      <Filter>SubSystem</Filter>    </ClCompile>    <ClCompile Include="CameraComponent.cpp">      <Filter>Engine Component</Filter>    </ClCompile>    <ClCompile Include="CameraManager.cpp">      <Filter>Engine Component</Filter>    </ClCompile>    <ClCompile Include="SocketComponent.cpp">      <Filter>Engine Component</Filter>    </ClCompile>    <ClCompile Include="SocketFollowComponent.cpp">      <Filter>Engine Component</Filter>    </ClCompile>    <ClCompile Include="CircleCollider2DComponent.cpp">      <Filter>Engine Component\Physics</Filter>    </ClCompile>    <ClCompile Include="Collider2DComponent.cpp">      <Filter>Engine Component\Physics</Filter>    </ClCompile>    <ClCompile Include="PhysicsSystem2D.cpp">      <Filter>Engine Component\Physics</Filter>    </ClCompile>    <ClCompile Include="PhysicsSystem3D.cpp">      <Filter>Engine Component\Physics</Filter>    </ClCompile>    <ClCompile Include="PhysicsSystem.cpp">      <Filter>Engine Component\Physics</Filter>    </ClCompile>    <ClCompile Include="AnimationClip.cpp">      <Filter>Resource\AnimationClip</Filter>    </ClCompile>    <ClCompile Include="Texture.cpp">      <Filter>Resource\Texture</Filter>    </ClCompile>    <ClCompile Include="AnimationController.cpp">      <Filter>Engine Component\Animator</Filter>    </ClCompile>    <ClCompile Include="SpriteAnimator.cpp">      <Filter>Engine Component\Animator</Filter>    </ClCompile>    <ClCompile Include="SpriteAnimationClip.cpp">      <Filter>Resource\AnimationClip\Sprite</Filter>    </ClCompile>    <ClCompile Include="AnimationClipSet.cpp">      <Filter>Engine Component\Animator</Filter>    </ClCompile>    <ClCompile Include="AnimationNotify.cpp">      <Filter>Engine Component\Animator</Filter>    </ClCompile>    <ClCompile Include="UIManager.cpp">      <Filter>SubSystem</Filter>    </ClCompile>    <ClCompile Include="UserWidget.cpp">      <Filter>UI</Filter>    </ClCompile>    <ClCompile Include="Image.cpp">      <Filter>UI\Widgets</Filter>    </ClCompile>    <ClCompile Include="TextBlock.cpp">      <Filter>UI\Widgets</Filter>    </ClCompile>    <ClCompile Include="Border.cpp">      <Filter>UI\Widgets</Filter>    </ClCompile>    <ClCompile Include="WidgetComponent.cpp">      <Filter>Engine Component</Filter>    </ClCompile>    <ClCompile Include="GraphicsBackend.cpp">      <Filter>Graphics</Filter>    </ClCompile>    <ClCompile Include="Shader.cpp">      <Filter>Resource\Shader</Filter>    </ClCompile>    <ClCompile Include="D3D11Shader.cpp">      <Filter>Resource\Shader</Filter>    </ClCompile>    <ClCompile Include="Mesh.cpp">      <Filter>Resource\Mesh</Filter>    </ClCompile>    <ClCompile Include="D3D11Mesh.cpp">      <Filter>Resource\Mesh</Filter>    </ClCompile>    <ClCompile Include="D3D11GraphicsDevice.cpp">      <Filter>Graphics\D3D11</Filter>    </ClCompile>    <ClCompile Include="D3D11GraphicsResourceFactory.cpp">      <Filter>Graphics\D3D11</Filter>    </ClCompile>    <ClCompile Include="BuiltinGraphicsResources.cpp">      <Filter>Graphics</Filter>    </ClCompile>    <ClCompile Include="Window.cpp">      <Filter>SubSystem</Filter>    </ClCompile>    <ClCompile Include="D3D11TypeConverter.cpp">      <Filter>Graphics\D3D11</Filter>    </ClCompile>    <ClCompile Include="PipelineState.cpp">      <Filter>Resource\PSO</Filter>    </ClCompile>    <ClCompile Include="D3D11PipelineState.cpp">      <Filter>Resource\PSO</Filter>    </ClCompile>    <ClCompile Include="D3D11GraphicsCommandContext.cpp">      <Filter>Graphics\D3D11</Filter>    </ClCompile>    <ClCompile Include="D3D11Texture.cpp">      <Filter>Resource\Texture</Filter>    </ClCompile>    <ClCompile Include="Material.cpp">      <Filter>Graphics</Filter>    </ClCompile>    <ClCompile Include="Renderer.cpp">      <Filter>Graphics</Filter>    </ClCompile>    <ClCompile Include="SpriteRenderPass.cpp">      <Filter>Graphics</Filter>    </ClCompile>    <ClCompile Include="UIRenderPass.cpp">      <Filter>Graphics</Filter>    </ClCompile>    <ClCompile Include="D3D11Sampler.cpp">      <Filter>Resource\Sampler</Filter>    </ClCompile>    <ClCompile Include="Sampler.cpp">      <Filter>Resource\Sampler</Filter>    </ClCompile>    <ClCompile Include="D3D11ConstantBuffer.cpp">      <Filter>Graphics\D3D11</Filter>    </ClCompile>    <ClCompile Include="ConstantBuffer.cpp">      <Filter>Graphics</Filter>    </ClCompile>    <ClCompile Include="D3D11DebugRenderer.cpp">      <Filter>Debugger\DebugRenderer</Filter>    </ClCompile>    <ClCompile Include="D3D11TextRenderer.cpp">      <Filter>Graphics\D3D11</Filter>    </ClCompile>    <ClCompile Include="DebugDraw.cpp">      <Filter>Debugger\DebugRenderer</Filter>    </ClCompile>    <ClCompile Include="Widget.cpp">      <Filter>UI</Filter>    </ClCompile>    <ClCompile Include="AnimatedSpriteComponent.cpp">      <Filter>Engine Component</Filter>    </ClCompile>    <ClCompile Include="SpriteComponent.cpp">      <Filter>Engine Component</Filter>    </ClCompile>    <ClCompile Include="SpritePresenter.cpp">      <Filter>Graphics</Filter>    </ClCompile>  </ItemGroup>  <ItemGroup>    <Filter Include="Util">      <UniqueIdentifier>{6c5e1ef7-4946-4f2b-8527-e61816d0455d}</UniqueIdentifier>    </Filter>    <Filter Include="SubSystem">      <UniqueIdentifier>{c05a0ef3-a255-4456-86d9-7ca4267cf1c2}</UniqueIdentifier>    </Filter>    <Filter Include="Base">      <UniqueIdentifier>{434aedff-6f0e-403c-b024-687feef0c1b1}</UniqueIdentifier>    </Filter>    <Filter Include="Engine Component">      <UniqueIdentifier>{ec99db76-1296-4889-9f1d-bdebfc9b0aea}</UniqueIdentifier>    </Filter>    <Filter Include="Resource">      <UniqueIdentifier>{41d7a4d9-43b8-4be9-9baa-16650015719b}</UniqueIdentifier>    </Filter>    <Filter Include="Debugger">      <UniqueIdentifier>{6cafcfdf-c330-498d-b8dd-a773b82a2e4a}</UniqueIdentifier>    </Filter>    <Filter Include="Resource\AnimationClip">      <UniqueIdentifier>{b1e51c32-3921-4947-b739-32ff8e03c820}</UniqueIdentifier>    </Filter>    <Filter Include="Resource\Texture">      <UniqueIdentifier>{b0fb520d-bc46-471d-8b48-475823bb3314}</UniqueIdentifier>    </Filter>    <Filter Include="Engine Component\Animator">      <UniqueIdentifier>{40eb6569-d2d1-40ac-9cf1-2e5dd1547278}</UniqueIdentifier>    </Filter>    <Filter Include="Resource\AnimationClip\Sprite">      <UniqueIdentifier>{b8e56446-bc85-4a57-b1ab-d6750796bde6}</UniqueIdentifier>    </Filter>    <Filter Include="Engine Component\Physics">      <UniqueIdentifier>{99a58ece-17e2-4b4f-b0f9-ece6522650e0}</UniqueIdentifier>    </Filter>    <Filter Include="UI">      <UniqueIdentifier>{3b42907e-2a58-43f2-a774-873fb65b0a9e}</UniqueIdentifier>    </Filter>    <Filter Include="Engine Component\Audio">      <UniqueIdentifier>{17e1465b-c6b4-4d26-a609-28487e7bb6e6}</UniqueIdentifier>    </Filter>    <Filter Include="Resource\Audio">      <UniqueIdentifier>{5c9774d5-1c88-4d2f-aa00-8ae2d23eb7d5}</UniqueIdentifier>    </Filter>    <Filter Include="UI\Widgets">      <UniqueIdentifier>{a9251714-1459-4bde-a5e5-bea2186e4e24}</UniqueIdentifier>    </Filter>    <Filter Include="Core">      <UniqueIdentifier>{134d4855-c312-4be8-8fc2-f7540de04a0c}</UniqueIdentifier>    </Filter>    <Filter Include="Graphics">      <UniqueIdentifier>{d217ae0a-0c6e-4ff9-824d-e91acd9d3921}</UniqueIdentifier>    </Filter>    <Filter Include="Resource\Shader">      <UniqueIdentifier>{9297e9cd-82a6-4668-9439-bc7459a93e71}</UniqueIdentifier>    </Filter>    <Filter Include="Resource\Mesh">      <UniqueIdentifier>{eb196191-5cfb-44d3-9435-30bee7b63668}</UniqueIdentifier>    </Filter>    <Filter Include="Util\Types">      <UniqueIdentifier>{1cfa3622-071c-458c-9aec-df890e36d650}</UniqueIdentifier>    </Filter>    <Filter Include="Shaders">      <UniqueIdentifier>{b819c7ba-4aed-42f5-9d76-3414e4aff449}</UniqueIdentifier>    </Filter>    <Filter Include="Graphics\D3D11">      <UniqueIdentifier>{c6772289-3abf-4939-bb06-5a9ed43a9411}</UniqueIdentifier>    </Filter>    <Filter Include="Resource\PSO">      <UniqueIdentifier>{5cc0a678-0a9b-403a-b1be-0959fb7c0ee1}</UniqueIdentifier>    </Filter>    <Filter Include="Shaders\PS">      <UniqueIdentifier>{1d1c9ebf-fcf7-4b33-a237-3eaca86077ea}</UniqueIdentifier>    </Filter>    <Filter Include="Shaders\VS">      <UniqueIdentifier>{c0c8fdc4-74e9-4e86-a72c-207b7ce6ee6d}</UniqueIdentifier>    </Filter>    <Filter Include="Resource\Sampler">      <UniqueIdentifier>{a5f31706-4c0c-4a8a-a078-65845563392c}</UniqueIdentifier>    </Filter>    <Filter Include="Debugger\DebugRenderer">      <UniqueIdentifier>{bba3dd43-26b9-4ef8-b316-a6025ce417da}</UniqueIdentifier>    </Filter>  </ItemGroup>  <ItemGroup>    <FxCompile Include="Shaders\FullScreenTexturePS.hlsl">      <Filter>Shaders\PS</Filter>    </FxCompile>    <FxCompile Include="Shaders\SpriteTexturePS.hlsl">      <Filter>Shaders\PS</Filter>    </FxCompile>    <FxCompile Include="Shaders\SolidColorPS.hlsl">      <Filter>Shaders\PS</Filter>    </FxCompile>    <FxCompile Include="Shaders\FullScreenTextureVS.hlsl">      <Filter>Shaders\VS</Filter>    </FxCompile>    <FxCompile Include="Shaders\QuadVS.hlsl">      <Filter>Shaders\VS</Filter>    </FxCompile>  </ItemGroup></Project>
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="BuildConfig.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioComponent.h">
+      <Filter>Engine Component\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioStatics.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComponent.h">
+      <Filter>Engine Component</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeSystem.h">
+      <Filter>SubSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>SubSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>SubSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSystem.h">
+      <Filter>SubSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundWave.h">
+      <Filter>Resource\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectHandle.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="WeakGameObjectPtr.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="StringUtil.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="PathUtil.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="GMAssert.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="GMLog.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="IAnimator.h">
+      <Filter>Engine Component\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources.h">
+      <Filter>SubSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraComponent.h">
+      <Filter>Engine Component</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraManager.h">
+      <Filter>Engine Component</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraViewInfo.h">
+      <Filter>Engine Component</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketComponent.h">
+      <Filter>Engine Component</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketFollowComponent.h">
+      <Filter>Engine Component</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMeshComponent.h">
+      <Filter>Engine Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider2DComponent.h">
+      <Filter>Engine Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationClip.h">
+      <Filter>Resource\AnimationClip</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxCollider2DComponent.h">
+      <Filter>Engine Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="CircleCollider2DComponent.h">
+      <Filter>Engine Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Resource\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationTypes.h">
+      <Filter>Engine Component\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationController.h">
+      <Filter>Engine Component\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteAnimator.h">
+      <Filter>Engine Component\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteFrame.h">
+      <Filter>Resource\AnimationClip\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteAnimationClip.h">
+      <Filter>Resource\AnimationClip\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationClipSet.h">
+      <Filter>Engine Component\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationNotify.h">
+      <Filter>Engine Component\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsSystem2D.h">
+      <Filter>Engine Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsSystem3D.h">
+      <Filter>Engine Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsSystem.h">
+      <Filter>Engine Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Rigidbody2DComponent.h">
+      <Filter>Engine Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="UIManager.h">
+      <Filter>SubSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="UserWidget.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Border.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="CanvasPanel.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="TextBlock.h">
+      <Filter>UI\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetComponent.h">
+      <Filter>Engine Component</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsCore.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Types.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineCore.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="IGraphicsResourceFactory.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsBackend.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Resource\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11Shader.h">
+      <Filter>Resource\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Resource\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMesh.h">
+      <Filter>Resource\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11Mesh.h">
+      <Filter>Resource\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="MathTypes.h">
+      <Filter>Util\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Rect.h">
+      <Filter>Util\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="MathUtil.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexTypes.h">
+      <Filter>Util\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexLayout.h">
+      <Filter>Util\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="IGraphicsDevice.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11GraphicsDevice.h">
+      <Filter>Graphics\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11GraphicsResourceFactory.h">
+      <Filter>Graphics\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="IGraphicsCommandContext.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="BuiltinGraphicsResources.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="HashUtil.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>SubSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11TypeConverter.h">
+      <Filter>Graphics\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11GraphicsCommandContext.h">
+      <Filter>Graphics\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11RenderStateManager.h">
+      <Filter>Graphics\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11Texture.h">
+      <Filter>Resource\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="TickManager.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11ConstantBuffer.h">
+      <Filter>Graphics\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBuffer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBufferPool.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="TickGroup.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="IDebugRenderer.h">
+      <Filter>Debugger\DebugRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11DebugRenderer.h">
+      <Filter>Debugger\DebugRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11TextRenderer.h">
+      <Filter>Graphics\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugDraw.h">
+      <Filter>Debugger\DebugRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="ITextRenderer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Widget.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="TextTypes.h">
+      <Filter>Util\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimatedSpriteComponent.h">
+      <Filter>Engine Component</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteComponent.h">
+      <Filter>Engine Component</Filter>
+    </ClInclude>
+    <ClInclude Include="SpritePresenter.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsUtils.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryModelLoader.h">
+      <Filter>Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelTypes.h">
+      <Filter>Util\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshTypes.h">
+      <Filter>Util\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsTypes.h">
+      <Filter>Util\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryIO.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteRenderPass.h">
+      <Filter>Graphics\Renderpass</Filter>
+    </ClInclude>
+    <ClInclude Include="UIRenderPass.h">
+      <Filter>Graphics\Renderpass</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>SubSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTypes.h">
+      <Filter>Util\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMeshRenderPass.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="AudioComponent.cpp">
+      <Filter>Engine Component\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioStatics.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxCollider2DComponent.cpp">
+      <Filter>Engine Component\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformComponent.cpp">
+      <Filter>Engine Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>SubSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>SubSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSystem.cpp">
+      <Filter>SubSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundWave.cpp">
+      <Filter>Resource\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeSystem.cpp">
+      <Filter>SubSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="WeakGameObjectPtr.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="TickManager.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="GMAssert.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="GMLog.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources.cpp">
+      <Filter>SubSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraComponent.cpp">
+      <Filter>Engine Component</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraManager.cpp">
+      <Filter>Engine Component</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketComponent.cpp">
+      <Filter>Engine Component</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketFollowComponent.cpp">
+      <Filter>Engine Component</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMeshComponent.cpp">
+      <Filter>Engine Component</Filter>
+    </ClCompile>
+    <ClCompile Include="CircleCollider2DComponent.cpp">
+      <Filter>Engine Component\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider2DComponent.cpp">
+      <Filter>Engine Component\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsSystem2D.cpp">
+      <Filter>Engine Component\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsSystem3D.cpp">
+      <Filter>Engine Component\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsSystem.cpp">
+      <Filter>Engine Component\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationClip.cpp">
+      <Filter>Resource\AnimationClip</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Resource\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationController.cpp">
+      <Filter>Engine Component\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteAnimator.cpp">
+      <Filter>Engine Component\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteAnimationClip.cpp">
+      <Filter>Resource\AnimationClip\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationClipSet.cpp">
+      <Filter>Engine Component\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationNotify.cpp">
+      <Filter>Engine Component\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="UIManager.cpp">
+      <Filter>SubSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="UserWidget.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="TextBlock.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="Border.cpp">
+      <Filter>UI\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="WidgetComponent.cpp">
+      <Filter>Engine Component</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsBackend.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Resource\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11Shader.cpp">
+      <Filter>Resource\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Resource\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMesh.cpp">
+      <Filter>Resource\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11Mesh.cpp">
+      <Filter>Resource\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11GraphicsDevice.cpp">
+      <Filter>Graphics\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11GraphicsResourceFactory.cpp">
+      <Filter>Graphics\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="BuiltinGraphicsResources.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>SubSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11TypeConverter.cpp">
+      <Filter>Graphics\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11GraphicsCommandContext.cpp">
+      <Filter>Graphics\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11RenderStateManager.cpp">
+      <Filter>Graphics\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11Texture.cpp">
+      <Filter>Resource\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11ConstantBuffer.cpp">
+      <Filter>Graphics\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstantBuffer.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstantBufferPool.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11DebugRenderer.cpp">
+      <Filter>Debugger\DebugRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D11TextRenderer.cpp">
+      <Filter>Graphics\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugDraw.cpp">
+      <Filter>Debugger\DebugRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Widget.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimatedSpriteComponent.cpp">
+      <Filter>Engine Component</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteComponent.cpp">
+      <Filter>Engine Component</Filter>
+    </ClCompile>
+    <ClCompile Include="SpritePresenter.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="BinaryModelLoader.cpp">
+      <Filter>Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteRenderPass.cpp">
+      <Filter>Graphics\Renderpass</Filter>
+    </ClCompile>
+    <ClCompile Include="UIRenderPass.cpp">
+      <Filter>Graphics\Renderpass</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>SubSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMeshRenderPass.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Util">
+      <UniqueIdentifier>{6c5e1ef7-4946-4f2b-8527-e61816d0455d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SubSystem">
+      <UniqueIdentifier>{c05a0ef3-a255-4456-86d9-7ca4267cf1c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{434aedff-6f0e-403c-b024-687feef0c1b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Component">
+      <UniqueIdentifier>{ec99db76-1296-4889-9f1d-bdebfc9b0aea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{41d7a4d9-43b8-4be9-9baa-16650015719b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debugger">
+      <UniqueIdentifier>{6cafcfdf-c330-498d-b8dd-a773b82a2e4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\AnimationClip">
+      <UniqueIdentifier>{b1e51c32-3921-4947-b739-32ff8e03c820}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Texture">
+      <UniqueIdentifier>{b0fb520d-bc46-471d-8b48-475823bb3314}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Component\Animator">
+      <UniqueIdentifier>{40eb6569-d2d1-40ac-9cf1-2e5dd1547278}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\AnimationClip\Sprite">
+      <UniqueIdentifier>{b8e56446-bc85-4a57-b1ab-d6750796bde6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Component\Physics">
+      <UniqueIdentifier>{99a58ece-17e2-4b4f-b0f9-ece6522650e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{3b42907e-2a58-43f2-a774-873fb65b0a9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Component\Audio">
+      <UniqueIdentifier>{17e1465b-c6b4-4d26-a609-28487e7bb6e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Audio">
+      <UniqueIdentifier>{5c9774d5-1c88-4d2f-aa00-8ae2d23eb7d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Widgets">
+      <UniqueIdentifier>{a9251714-1459-4bde-a5e5-bea2186e4e24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{134d4855-c312-4be8-8fc2-f7540de04a0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{d217ae0a-0c6e-4ff9-824d-e91acd9d3921}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Shader">
+      <UniqueIdentifier>{9297e9cd-82a6-4668-9439-bc7459a93e71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Mesh">
+      <UniqueIdentifier>{eb196191-5cfb-44d3-9435-30bee7b63668}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\Types">
+      <UniqueIdentifier>{1cfa3622-071c-458c-9aec-df890e36d650}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{b819c7ba-4aed-42f5-9d76-3414e4aff449}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\D3D11">
+      <UniqueIdentifier>{c6772289-3abf-4939-bb06-5a9ed43a9411}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\PSO">
+      <UniqueIdentifier>{5cc0a678-0a9b-403a-b1be-0959fb7c0ee1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\PS">
+      <UniqueIdentifier>{1d1c9ebf-fcf7-4b33-a237-3eaca86077ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\VS">
+      <UniqueIdentifier>{c0c8fdc4-74e9-4e86-a72c-207b7ce6ee6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debugger\DebugRenderer">
+      <UniqueIdentifier>{bba3dd43-26b9-4ef8-b316-a6025ce417da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loader">
+      <UniqueIdentifier>{5c6e6e66-9479-4620-8dd3-c31118dea290}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Renderpass">
+      <UniqueIdentifier>{88007aeb-fde8-4abf-ac8d-dfeb232c06bc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\FullScreenTexturePS.hlsl">
+      <Filter>Shaders\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SpriteTexturePS.hlsl">
+      <Filter>Shaders\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SolidColorPS.hlsl">
+      <Filter>Shaders\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\StaticMeshPS.hlsl">
+      <Filter>Shaders\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\FullScreenTextureVS.hlsl">
+      <Filter>Shaders\VS</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\QuadVS.hlsl">
+      <Filter>Shaders\VS</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\StaticMeshVS.hlsl">
+      <Filter>Shaders\VS</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
