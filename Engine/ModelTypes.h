@@ -1,0 +1,28 @@
+#pragma once
+
+#include "MathTypes.h"
+#include "MeshTypes.h"
+#include "Types.h"
+#include "VertexTypes.h"
+
+#include <vector>
+
+namespace gm
+{
+	enum class ModelType
+	{
+		Static,
+		Skeletal
+	};
+
+	struct ModelData
+	{
+		ModelType type = ModelType::Static;
+		Matrix preTransform = Matrix::CreateScale(1.f);
+
+		std::vector<VertexMesh>			vertices;
+		std::vector<uint32>				indices;
+		std::vector<MeshSection>		sections;
+		std::vector<MeshTextureSlot>	textureSlots;
+	};
+}
