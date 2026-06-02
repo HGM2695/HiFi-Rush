@@ -5,6 +5,17 @@
 
 namespace gm
 {
+	void TickManager::Tick(TickGroup group, float deltaTime)
+	{
+		for (Component* component : _componentsByTickGroup[TickGroupToIndex(group)])
+		{
+			if (component->IsEnabled() == false || component->GetOwner().IsPendingDestroy())
+				continue;
+
+			component->Tick(deltaTime);
+		}
+	}
+
 	void TickManager::Register(Component& component)
 	{
 		auto& components = _componentsByTickGroup[TickGroupToIndex(component.GetTickGroup())];
@@ -42,16 +53,5 @@ namespace gm
 				Unregister(component);
 			}
 		);
-	}
-
-	void TickManager::Tick(TickGroup group, float deltaTime)
-	{
-		for (Component* component : _componentsByTickGroup[TickGroupToIndex(group)])
-		{
-			if (component->IsEnabled() == false || component->GetOwner().IsPendingDestroy())
-				continue;
-
-			component->Tick(deltaTime);
-		}
 	}
 }

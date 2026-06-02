@@ -8,7 +8,7 @@
 
 namespace gm
 {
-	void CircleCollider2DComponent::OnTick(float deltaTime)
+	void CircleCollider2DComponent::OnRender()
 	{
 #if GM_ENABLE_DEBUG_TOOLS
 		const Vector2 worldCenter = GetOwner().GetTransform()->GetPosition2D() + GetOffset();

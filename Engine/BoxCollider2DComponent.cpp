@@ -9,7 +9,7 @@
 
 namespace gm
 {
-	void BoxCollider2DComponent::OnTick(float deltaTime)
+	void BoxCollider2DComponent::OnRender()
 	{
 #if GM_ENABLE_DEBUG_TOOLS
 		const Vector2 worldCenter = GetOwner().GetTransform()->GetPosition2D() + GetOffset();

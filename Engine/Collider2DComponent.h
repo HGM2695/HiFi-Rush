@@ -21,7 +21,6 @@ namespace gm
 
 		void						SetTrigger(bool isTrigger) { _isTrigger = isTrigger; }
 		bool						IsTrigger() const { return _isTrigger; }
-		virtual TickGroup			GetTickGroup() const override { return TickGroup::RenderSubmit; }
 
 	protected:
 		explicit Collider2DComponent(Collider2DType colliderType) : _colliderType(colliderType) {}

@@ -13,12 +13,12 @@ namespace gm
 	class TickManager
 	{
 	public:
+		void	Tick(TickGroup group, float deltaTime);
+
 		void	Register(Component& component);
 		void	Unregister(Component& component);
 		void	RegisterGameObject(GameObject& gameObject);
 		void	UnregisterGameObject(GameObject& gameObject);
-
-		void	Tick(TickGroup group, float deltaTime);
 
 	private:
 		std::array<std::vector<Component*>, TickGroupCount>		_componentsByTickGroup{};

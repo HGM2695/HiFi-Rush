@@ -16,8 +16,6 @@ namespace gm
 		AnimatedSpriteComponent();
 		virtual ~AnimatedSpriteComponent();
 
-		virtual TickGroup GetTickGroup() const override { return TickGroup::RenderSubmit; }
-
 		void								SetMaterial(const Material& material) { _presenter.SetMaterial(material); }
 		void								SetTexture(const std::shared_ptr<Texture>& texture, TextureSlot slot = TextureSlot::BaseColor);
 		void								SetSourceRect(const Rect& rect);
@@ -35,8 +33,9 @@ namespace gm
 		virtual void						OnRender() override;
 
 	private:
+		TransformComponent*					_ownerTransform = nullptr;
+
 		SpritePresenter						_presenter;
 		SpriteAnimator						_animator;
-		TransformComponent*					_ownerTransform = nullptr;
 	};
 }

@@ -17,8 +17,6 @@ namespace gm
 		StaticMeshComponent();
 		virtual ~StaticMeshComponent();
 
-		virtual TickGroup GetTickGroup() const override { return TickGroup::RenderSubmit; }
-
 		void								SetStaticMesh(const std::shared_ptr<StaticMesh>& staticMesh);
 		const std::shared_ptr<StaticMesh>&	GetStaticMesh() const { return _staticMesh; }
 
@@ -34,9 +32,9 @@ namespace gm
 
 	private:
 		TransformComponent*						_ownerTransform = nullptr;
+		Matrix									_preTransform = Matrix::CreateScale(1.f);
 
 		std::shared_ptr<StaticMesh>				_staticMesh;
 		std::vector<std::unique_ptr<Material>>	_materials;
-		Matrix									_preTransform = Matrix::CreateScale(1.f);
 	};
 }

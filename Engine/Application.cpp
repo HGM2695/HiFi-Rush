@@ -145,7 +145,6 @@ namespace gm
 		_sceneManager->Tick(TickGroup::PostPhysics, deltaTime);
 		_sceneManager->Tick(TickGroup::Attachment, deltaTime);
 		_sceneManager->Tick(TickGroup::Camera, deltaTime);
-		_sceneManager->Tick(TickGroup::RenderSubmit, deltaTime);
 		Render();
 		EndFrame();
 	}

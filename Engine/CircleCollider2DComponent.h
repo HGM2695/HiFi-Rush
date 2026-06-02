@@ -13,7 +13,7 @@ namespace gm
 		float	GetRadius() const { return _radius; }
 
 	protected:
-		void	OnTick(float deltaTime) override;
+		void	OnRender() override;
 
 	private:
 		float	_radius = 50.f;

@@ -15,8 +15,6 @@ namespace gm
 		SpriteComponent();
 		virtual ~SpriteComponent();
 
-		virtual TickGroup GetTickGroup() const override { return TickGroup::RenderSubmit; }
-
 		void						SetMaterial(const Material& material) { _presenter.SetMaterial(material); }
 		void						SetTexture(const std::shared_ptr<Texture>& texture, TextureSlot slot = TextureSlot::BaseColor);
 		void						SetTexture(const std::wstring& textureKey, TextureSlot slot = TextureSlot::BaseColor);
