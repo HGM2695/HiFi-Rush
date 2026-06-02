@@ -10,6 +10,7 @@ namespace gm
 {
 	class Material;
 	class StaticMesh;
+	class SkeletalMesh;
 	class Texture;
 	
 	/// Sprite ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,5 +47,14 @@ namespace gm
 		Matrix							world = Matrix::CreateScale(1.f);
 		const StaticMesh*				staticMesh = nullptr;
 		std::vector<const Material*>	materials;
+	};
+
+	/// SkeletalMesh ////////////////////////////////////////////////////////////////////////////////////////////////
+	struct SkeletalMeshRenderItem
+	{
+		Matrix								world = Matrix::CreateScale(1.f);
+		const SkeletalMesh*					skeletalMesh = nullptr;
+		const std::vector<Matrix>*			boneModelMatrices = nullptr;
+		std::vector<const Material*>		materials;
 	};
 }

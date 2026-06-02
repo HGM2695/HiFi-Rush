@@ -220,6 +220,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshTypes.h" />
     <ClInclude Include="StaticMesh.h" />
+    <ClInclude Include="SkeletalMesh.h" />
     <ClInclude Include="PhysicsSystem2D.h" />
     <ClInclude Include="PhysicsSystem3D.h" />
     <ClInclude Include="PhysicsSystem.h" />
@@ -239,7 +240,11 @@
     <ClInclude Include="SocketComponent.h" />
     <ClInclude Include="SocketFollowComponent.h" />
     <ClInclude Include="StaticMeshComponent.h" />
+    <ClInclude Include="SkeletalAnimator.h" />
+    <ClInclude Include="SkeletalMeshComponent.h" />
+    <ClInclude Include="SkeletalPose.h" />
     <ClInclude Include="SpriteAnimationClip.h" />
+    <ClInclude Include="SkeletalAnimationClip.h" />
     <ClInclude Include="SpriteAnimator.h" />
     <ClInclude Include="AnimatedSpriteComponent.h" />
     <ClInclude Include="SpriteFrame.h" />
@@ -247,6 +252,7 @@
     <ClInclude Include="SpritePresenter.h" />
     <ClInclude Include="SpriteRenderPass.h" />
     <ClInclude Include="StaticMeshRenderPass.h" />
+    <ClInclude Include="SkeletalMeshRenderPass.h" />
     <ClInclude Include="UIRenderPass.h" />
     <ClInclude Include="StringUtil.h" />
     <ClInclude Include="Texture.h" />
@@ -309,6 +315,7 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="StaticMesh.cpp" />
+    <ClCompile Include="SkeletalMesh.cpp" />
     <ClCompile Include="PhysicsSystem2D.cpp" />
     <ClCompile Include="PhysicsSystem3D.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
@@ -324,13 +331,18 @@
     <ClCompile Include="SocketComponent.cpp" />
     <ClCompile Include="SocketFollowComponent.cpp" />
     <ClCompile Include="StaticMeshComponent.cpp" />
+    <ClCompile Include="SkeletalAnimator.cpp" />
+    <ClCompile Include="SkeletalMeshComponent.cpp" />
+    <ClCompile Include="SkeletalPose.cpp" />
     <ClCompile Include="SpriteAnimationClip.cpp" />
+    <ClCompile Include="SkeletalAnimationClip.cpp" />
     <ClCompile Include="SpriteAnimator.cpp" />
     <ClCompile Include="AnimatedSpriteComponent.cpp" />
     <ClCompile Include="SpriteComponent.cpp" />
     <ClCompile Include="SpritePresenter.cpp" />
     <ClCompile Include="SpriteRenderPass.cpp" />
     <ClCompile Include="StaticMeshRenderPass.cpp" />
+    <ClCompile Include="SkeletalMeshRenderPass.cpp" />
     <ClCompile Include="UIRenderPass.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TickManager.cpp" />
@@ -371,6 +383,14 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='DevRelease|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='DevRelease|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\SkeletalMeshVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='DevRelease|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>

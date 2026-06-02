@@ -83,6 +83,9 @@
     <ClInclude Include="StaticMeshComponent.h">
       <Filter>Engine Component</Filter>
     </ClInclude>
+    <ClInclude Include="SkeletalMeshComponent.h">
+      <Filter>Engine Component</Filter>
+    </ClInclude>
     <ClInclude Include="Collider2DComponent.h">
       <Filter>Engine Component\Physics</Filter>
     </ClInclude>
@@ -107,11 +110,20 @@
     <ClInclude Include="SpriteAnimator.h">
       <Filter>Engine Component\Animator</Filter>
     </ClInclude>
+    <ClInclude Include="SkeletalAnimator.h">
+      <Filter>Engine Component\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalPose.h">
+      <Filter>Engine Component\Animator</Filter>
+    </ClInclude>
     <ClInclude Include="SpriteFrame.h">
       <Filter>Resource\AnimationClip\Sprite</Filter>
     </ClInclude>
     <ClInclude Include="SpriteAnimationClip.h">
       <Filter>Resource\AnimationClip\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalAnimationClip.h">
+      <Filter>Resource\AnimationClip</Filter>
     </ClInclude>
     <ClInclude Include="AnimationClipSet.h">
       <Filter>Engine Component\Animator</Filter>
@@ -177,6 +189,9 @@
       <Filter>Resource\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="StaticMesh.h">
+      <Filter>Resource\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalMesh.h">
       <Filter>Resource\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="D3D11Mesh.h">
@@ -308,7 +323,12 @@
     <ClInclude Include="RenderTypes.h">
       <Filter>Util\Types</Filter>
     </ClInclude>
-    <ClInclude Include="StaticMeshRenderPass.h" />
+    <ClInclude Include="StaticMeshRenderPass.h">
+      <Filter>Graphics\Renderpass</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalMeshRenderPass.h">
+      <Filter>Graphics\Renderpass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -384,6 +404,9 @@
     <ClCompile Include="StaticMeshComponent.cpp">
       <Filter>Engine Component</Filter>
     </ClCompile>
+    <ClCompile Include="SkeletalMeshComponent.cpp">
+      <Filter>Engine Component</Filter>
+    </ClCompile>
     <ClCompile Include="CircleCollider2DComponent.cpp">
       <Filter>Engine Component\Physics</Filter>
     </ClCompile>
@@ -411,8 +434,17 @@
     <ClCompile Include="SpriteAnimator.cpp">
       <Filter>Engine Component\Animator</Filter>
     </ClCompile>
+    <ClCompile Include="SkeletalAnimator.cpp">
+      <Filter>Engine Component\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalPose.cpp">
+      <Filter>Engine Component\Animator</Filter>
+    </ClCompile>
     <ClCompile Include="SpriteAnimationClip.cpp">
       <Filter>Resource\AnimationClip\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalAnimationClip.cpp">
+      <Filter>Resource\AnimationClip</Filter>
     </ClCompile>
     <ClCompile Include="AnimationClipSet.cpp">
       <Filter>Engine Component\Animator</Filter>
@@ -451,6 +483,9 @@
       <Filter>Resource\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="StaticMesh.cpp">
+      <Filter>Resource\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalMesh.cpp">
       <Filter>Resource\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="D3D11Mesh.cpp">
@@ -525,7 +560,12 @@
     <ClCompile Include="Renderer.cpp">
       <Filter>SubSystem</Filter>
     </ClCompile>
-    <ClCompile Include="StaticMeshRenderPass.cpp" />
+    <ClCompile Include="StaticMeshRenderPass.cpp">
+      <Filter>Graphics\Renderpass</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalMeshRenderPass.cpp">
+      <Filter>Graphics\Renderpass</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
@@ -633,6 +673,9 @@
       <Filter>Shaders\VS</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\StaticMeshVS.hlsl">
+      <Filter>Shaders\VS</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SkeletalMeshVS.hlsl">
       <Filter>Shaders\VS</Filter>
     </FxCompile>
   </ItemGroup>

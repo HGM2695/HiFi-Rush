@@ -17,6 +17,7 @@ namespace gm
 		inline constexpr const wchar_t* FullScreenTextureVS = L"Engine.FullScreenTextureVS";
 		inline constexpr const wchar_t* QuadVS = L"Engine.QuadVS";
 		inline constexpr const wchar_t* StaticMeshVS = L"Engine.StaticMeshVS";
+		inline constexpr const wchar_t* SkeletalMeshVS = L"Engine.SkeletalMeshVS";
 
 		// PS
 		inline constexpr const wchar_t* FullScreenTexturePS = L"Engine.FullScreenTexturePS";

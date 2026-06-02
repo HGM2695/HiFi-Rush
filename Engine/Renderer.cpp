@@ -1,6 +1,7 @@
 #include "Renderer.h"
 #include "SpriteRenderPass.h"
 #include "StaticMeshRenderPass.h"
+#include "SkeletalMeshRenderPass.h"
 #include "UIRenderPass.h"
 
 namespace gm
@@ -8,7 +9,10 @@ namespace gm
 	Renderer::Renderer(Resources& resources, IGraphicsCommandContext& commandContext, IGraphicsResourceFactory& resourceFactory)
 		: _spriteRenderPass(std::make_unique<SpriteRenderPass>(resources, commandContext, resourceFactory))
 		, _staticMeshRenderPass(std::make_unique<StaticMeshRenderPass>(resources, commandContext, resourceFactory))
-		, _uiRenderPass(std::make_unique<UIRenderPass>(resources, commandContext, resourceFactory)) {}
+		, _skeletalMeshRenderPass(std::make_unique<SkeletalMeshRenderPass>(resources, commandContext, resourceFactory))
+		, _uiRenderPass(std::make_unique<UIRenderPass>(resources, commandContext, resourceFactory))
+	{
+	}
 
 	Renderer::~Renderer() = default;
 
@@ -16,6 +20,7 @@ namespace gm
 	{
 		GM_ASSERT_RETURN_VAL(_spriteRenderPass->Initialize(), false, "SpriteRenderPass 초기화에 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(_staticMeshRenderPass->Initialize(), false, "StaticMeshRenderPass 초기화에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(_skeletalMeshRenderPass->Initialize(), false, "SkeletalMeshRenderPass 초기화에 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(_uiRenderPass->Initialize(), false, "UIRenderPass 초기화에 실패했습니다.");
 
 		return true;
@@ -31,6 +36,11 @@ namespace gm
 		_staticMeshRenderPass->Submit(item);
 	}
 
+	void Renderer::SubmitSkeletalMesh(const SkeletalMeshRenderItem& item)
+	{
+		_skeletalMeshRenderPass->Submit(item);
+	}
+
 	void Renderer::SubmitUI(const UIRenderItem& item)
 	{
 		_uiRenderPass->Submit(item);
@@ -40,6 +50,7 @@ namespace gm
 	{
 		_spriteRenderPass->Render(viewInfo);
 		_staticMeshRenderPass->Render(viewInfo);
+		_skeletalMeshRenderPass->Render(viewInfo);
 		_uiRenderPass->Render(width, height);
 	}
 
@@ -47,6 +58,7 @@ namespace gm
 	{
 		_spriteRenderPass->Clear();
 		_staticMeshRenderPass->Clear();
+		_skeletalMeshRenderPass->Clear();
 		_uiRenderPass->Clear();
 	}
 }

@@ -9,10 +9,12 @@ namespace gm
 	class Resources;
 	class SpriteRenderPass;
 	class StaticMeshRenderPass;
+	class SkeletalMeshRenderPass;
 	class UIRenderPass;
 
 	struct SpriteRenderItem;
 	struct StaticMeshRenderItem;
+	struct SkeletalMeshRenderItem;
 	struct UIRenderItem;
 	struct CameraViewInfo;
 
@@ -25,6 +27,7 @@ namespace gm
 		bool Initialize();
 		void SubmitSprite(const SpriteRenderItem& item);
 		void SubmitStaticMesh(const StaticMeshRenderItem& item);
+		void SubmitSkeletalMesh(const SkeletalMeshRenderItem& item);
 		void SubmitUI(const UIRenderItem& item);
 
 		void Render(const CameraViewInfo& viewInfo, uint32 width, uint32 height);
@@ -34,6 +37,7 @@ namespace gm
 	private:
 		std::unique_ptr<SpriteRenderPass>	_spriteRenderPass;
 		std::unique_ptr<StaticMeshRenderPass>	_staticMeshRenderPass;
+		std::unique_ptr<SkeletalMeshRenderPass>	_skeletalMeshRenderPass;
 		std::unique_ptr<UIRenderPass>		_uiRenderPass;
 	};
 }
