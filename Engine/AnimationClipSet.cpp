@@ -1,4 +1,4 @@
-﻿#include "AnimationClipSet.h"
+#include "AnimationClipSet.h"
 #include "AnimationClip.h"
 #include "GMAssert.h"
 
@@ -7,8 +7,8 @@ namespace gm
 	bool AnimationClipSet::AddClip(const std::wstring& name, const std::shared_ptr<AnimationClip>& clip)
 	{
 		GM_ASSERT_RETURN_VAL(name.empty() == false, false, "클립 이름이 비어 있습니다.");
-		GM_ASSERT_RETURN_VAL(clip, false, "SpriteAnimationClip이 nullptr입니다.");
-		GM_ASSERT_RETURN_VAL(clip->GetFrameCount() > 0, false, "SpriteAnimationClip에 프레임이 없습니다.");
+		GM_ASSERT_RETURN_VAL(clip, false, "AnimationClip이 nullptr입니다.");
+		GM_ASSERT_RETURN_VAL(clip->GetFrameCount() > 0, false, "AnimationClip에 프레임 데이터가 없습니다.");
 
 		_clipSet[name] = clip;
 		return true;

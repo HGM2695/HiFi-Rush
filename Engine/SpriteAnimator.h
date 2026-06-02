@@ -2,7 +2,6 @@
 
 #include "AnimationNotify.h"
 #include "AnimationTypes.h"
-#include "IAnimator.h"
 #include <memory>
 
 namespace gm
@@ -13,29 +12,31 @@ namespace gm
 	class SpriteAnimationClip;
 	class SpritePresenter;
 
-	class SpriteAnimator : public IAnimator
+	class SpriteAnimator
 	{
 	public:
 		SpriteAnimator();
-		virtual ~SpriteAnimator();
+		~SpriteAnimator();
 
 		bool									AddClip(const std::wstring& name, const std::wstring& clipKey);
 		bool									AddClip(const std::wstring& name, const std::shared_ptr<SpriteAnimationClip>& clip);
-		std::shared_ptr<SpriteAnimationClip>		FindClip(const std::wstring& name) const;
-		std::shared_ptr<SpriteAnimationClip>		GetCurrentClip() const { return _currentClip; }
+		std::shared_ptr<SpriteAnimationClip>	FindClip(const std::wstring& name) const;
+		std::shared_ptr<SpriteAnimationClip>	GetCurrentClip() const { return _currentClip; }
 
 		NotifyConnection						BindNotifyListener(const AnimationNotifyListener& notifyListener);
 		void									ClearNotifyListeners();
 		void									Tick(float deltaTime, SpritePresenter& presenter);
 
-		bool									HasClip(const std::wstring& name) const override;
-		bool									Play(const std::wstring& name, const AnimationPlayOption& option = {}) override;
-		void									Reset() override;
-		void									Pause() override;
-		void									Resume() override;
-		AnimationState							GetState() const override;
-		float									GetPlayTime() const override;
-		bool									IsLoop() const override;
+		bool									HasClip(const std::wstring& name) const;
+		bool									Play(const std::wstring& name, const AnimationPlayOption& option = {});
+		void									Reset();
+		void									Pause();
+		void									Resume();
+		void									SetPlayRate(float playRate);
+		AnimationState							GetState() const;
+		float									GetPlayTime() const;
+		float									GetPlayRate() const;
+		bool									IsLoop() const;
 
 	private:
 		void									UpdateRenderInfo(SpritePresenter& presenter);

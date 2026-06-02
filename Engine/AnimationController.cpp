@@ -10,6 +10,9 @@ namespace gm
     {
         _clipLength = clip.GetLength();
         _isLoop = option.loopOverride.value_or(clip.IsLoop());
+        if (option.playRateOverride.has_value())
+            SetPlayRate(option.playRateOverride.value());
+
         _state = AnimationState::Playing;
         _currentTime = std::max(0.0f, option.startTime);
 
@@ -39,7 +42,7 @@ namespace gm
         if (_state != AnimationState::Playing)
             return;
 
-        _currentTime += deltaTime;
+        _currentTime += deltaTime * _playRate;
 
         if (_currentTime < _clipLength)
             return;
@@ -52,5 +55,11 @@ namespace gm
 
         _currentTime = std::nextafter(_clipLength, 0.0f);
         _state = AnimationState::Completed;
+    }
+
+    void AnimationController::SetPlayRate(float playRate)
+    {
+        GM_ASSERT_RETURN(playRate >= 0.f, "Animation 재생 속도는 0 이상이어야 합니다.");
+        _playRate = playRate;
     }
 }

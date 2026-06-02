@@ -73,6 +73,11 @@ namespace gm
 		_animationController->Resume();
 	}
 
+	void SpriteAnimator::SetPlayRate(float playRate)
+	{
+		_animationController->SetPlayRate(playRate);
+	}
+
 	AnimationState SpriteAnimator::GetState() const
 	{
 		return _animationController->GetState();
@@ -81,6 +86,11 @@ namespace gm
 	float SpriteAnimator::GetPlayTime() const
 	{
 		return _animationController->GetPlayTime();
+	}
+
+	float SpriteAnimator::GetPlayRate() const
+	{
+		return _animationController->GetPlayRate();
 	}
 
 	bool SpriteAnimator::IsLoop() const

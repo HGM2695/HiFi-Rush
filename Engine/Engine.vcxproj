@@ -207,7 +207,6 @@
     <ClInclude Include="GraphicsTypes.h" />
     <ClInclude Include="GraphicsUtils.h" />
     <ClInclude Include="HashUtil.h" />
-    <ClInclude Include="IAnimator.h" />
     <ClInclude Include="IGraphicsCommandContext.h" />
     <ClInclude Include="IGraphicsDevice.h" />
     <ClInclude Include="IGraphicsResourceFactory.h" />
