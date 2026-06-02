@@ -1,4 +1,4 @@
-﻿#include "TransformComponent.h"
+#include "TransformComponent.h"
 
 namespace gm
 {
@@ -10,9 +10,9 @@ namespace gm
 		_rotation = Quaternion::CreateFromYawPitchRoll(eulerRadians.y, eulerRadians.x, eulerRadians.z);
 	}
 
-	void TransformComponent::SetRotationZ(float radians)
+	void TransformComponent::SetRotationY(float radians)
 	{
-		_rotation = Quaternion::CreateFromAxisAngle(Vector3(0.f, 0.f, 1.f), radians);
+		_rotation = Quaternion::CreateFromAxisAngle(Vector3(0.f, 1.f, 0.f), radians);
 	}
 
 	void TransformComponent::SetWorldMatrix(const Matrix& worldMatrix)

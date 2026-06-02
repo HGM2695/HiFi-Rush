@@ -16,6 +16,7 @@ namespace gm
 		void			InitializePlayer();
 		void			InitializeSubObject();
 		void			InitializeStaticMeshTest();
+		void			InitializeSkeletalMeshTest();
 		void			InitializeCamera(GameObject* player);
 	};
 }

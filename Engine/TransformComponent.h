@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Component.h"
 
 namespace gm
@@ -17,7 +17,7 @@ namespace gm
         void            SetZ(float z) { _position.z = z; }
         void            SetRotation(const Quaternion& rotation) { _rotation = rotation; }
         void            SetRotationEuler(const Vector3& eulerRadians);
-        void            SetRotationZ(float radians);
+        void            SetRotationY(float radians);
         void            SetScale(const Vector3& scale) { _scale = scale; }
         void            SetScale(const Vector2& scale) { _scale = Vector3(scale.x, scale.y, _scale.z); }
         void            SetWorldMatrix(const Matrix& worldMatrix);

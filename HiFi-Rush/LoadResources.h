@@ -11,6 +11,9 @@
 #include "IGraphicsResourceFactory.h"
 #include "BinaryModelLoader.h"
 #include "StaticMesh.h"
+#include "SkeletalMesh.h"
+#include "SkeletalAnimationClip.h"
+#include "StringUtil.h"
 #include <filesystem>
 #include <vector>
 
@@ -19,6 +22,7 @@ namespace gm
 	void LoadTexture(Resources& resources);
 	void LoadMeshTexture(Resources& resources);
 	void LoadStaticMesh(Resources& resources);
+	void LoadSkeletalMesh(Resources& resources);
 	void LoadTempAnimationClip(Resources& resources);
 	void LoadAudio(Resources& resources);
 
@@ -29,6 +33,7 @@ namespace gm
 		LoadTexture(resources);
 		LoadMeshTexture(resources);
 		LoadStaticMesh(resources);
+		LoadSkeletalMesh(resources);
 		LoadTempAnimationClip(resources);
 		LoadAudio(resources);
 	}
@@ -77,12 +82,41 @@ namespace gm
 	void LoadStaticMesh(Resources& resources)
 	{
 		BinaryModelLoader loader;
-		ModelData environment97Data = loader.Load(GetModelPath(L"Binary/Environment/Environment97.txt"));
+		ModelData environment97Data = loader.Load(GetModelPath(L"Binary/Environment/Environment97.bin"));
 
 		std::shared_ptr<StaticMesh> environment97 = StaticMesh::Create(environment97Data, APPLICATION.GetGraphicsResourceFactory());
 		GM_ASSERT_RETURN(environment97, "Environment97 StaticMesh 생성에 실패했습니다.");
 
 		resources.Add(L"Environment97", environment97);
+	}
+
+	void LoadSkeletalMesh(Resources& resources)
+	{
+		BinaryModelLoader loader;
+		ModelData chiModelData = loader.Load(GetModelPath(L"Binary/Characters/Chi.bin"));
+
+		 std::shared_ptr<SkeletalMesh> chi = SkeletalMesh::Create(chiModelData, APPLICATION.GetGraphicsResourceFactory());
+		 GM_ASSERT_RETURN(chi, "chi SkeletalMesh 생성에 실패했습니다.");
+
+		 resources.Add(L"chi", chi);
+
+		for (uint32 animationIndex = 0; animationIndex < chiModelData.animations.size(); ++animationIndex)
+		{
+			const SkeletalAnimationClipData& clipData = chiModelData.animations[animationIndex];
+
+			SkeletalAnimationClipDesc desc{};
+			desc.data = clipData;
+
+			std::shared_ptr<SkeletalAnimationClip> clip = SkeletalAnimationClip::Create(desc);
+			GM_ASSERT_RETURN(clip, "chi SkeletalAnimationClip 생성에 실패했습니다.");
+
+			const std::wstring clipName = clipData.name.empty() ? L"Animation" + std::to_wstring(animationIndex) : clipData.name;
+			resources.Add(L"chi." + clipName, clip);
+			if (animationIndex == 27)
+				resources.Add(L"chi.DefaultAnimation", clip);
+
+			GM_LOG("Skeletal Animation Clip Load : chi.%s", WideToUtf8(clipName).c_str());
+		}
 	}
 
 	void LoadTempAnimationClip(Resources& resources)

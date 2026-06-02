@@ -22,6 +22,9 @@
 #include "SocketFollowComponent.h"
 #include "StaticMesh.h"
 #include "StaticMeshComponent.h"
+#include "SkeletalMesh.h"
+#include "SkeletalMeshComponent.h"
+#include "SkeletalAnimationClip.h"
 
 namespace gm
 {
@@ -35,6 +38,7 @@ namespace gm
 	{
 		InitializeSubObject();
 		InitializeStaticMeshTest();
+		InitializeSkeletalMeshTest();
 		InitializePlayer();
 		GetCameraManager()->SetPixelSnapEnabled(true);
 	}
@@ -108,13 +112,33 @@ namespace gm
 		std::shared_ptr<StaticMesh> staticMesh = APPLICATION.GetResources().Find<StaticMesh>(L"Environment97");
 		GM_ASSERT_RETURN(staticMesh, "Environment97 StaticMesh가 로드되지 않았습니다.");
 
-		GameObject* testObject = SpawnGameObject<GameObject>({ 350.f, 0.f, 10.f });
+		GameObject* testObject = SpawnGameObject<GameObject>({ 350.f, 0.f, 100.f });
 		TransformComponent* transform = testObject->GetTransform();
 		transform->SetPosition(Vector3{ 350.f, -200.f, 10.f });
 		transform->SetScale(Vector3{ 1000.f, 1000.f, 1000.f });
 
 		StaticMeshComponent* staticMeshComponent = testObject->AddComponent<StaticMeshComponent>();
 		staticMeshComponent->SetStaticMesh(staticMesh);
+	}
+
+	void MainScene::InitializeSkeletalMeshTest()
+	{
+		std::shared_ptr<SkeletalMesh> skeletalMesh = APPLICATION.GetResources().Find<SkeletalMesh>(L"chi");
+		GM_ASSERT_RETURN(skeletalMesh, "chi skeletalMesh가 로드되지 않았습니다.");
+
+		GameObject* testObject = SpawnGameObject<GameObject>({ -350.f, -200.f, 200.f });
+		TransformComponent* transform = testObject->GetTransform();
+		transform->SetScale(Vector3{ 250.f, 250.f, 250.f });
+		transform->SetRotationY(Math::GM_PI);
+
+		SkeletalMeshComponent* skeletalmeshComponent = testObject->AddComponent<SkeletalMeshComponent>();
+		skeletalmeshComponent->SetSkeletalMesh(skeletalMesh);
+
+		std::shared_ptr<SkeletalAnimationClip> animationClip = APPLICATION.GetResources().Find<SkeletalAnimationClip>(L"chi.DefaultAnimation");
+		GM_ASSERT_RETURN(animationClip, "chi.DefaultAnimation SkeletalAnimationClip이 로드되지 않았습니다.");
+		skeletalmeshComponent->GetAnimator().AddClip(L"Default", animationClip);
+		skeletalmeshComponent->GetAnimator().Play(L"Default");
+		//skeletalmeshComponent->GetAnimator().SetPlayRate(0.f);
 	}
 
 	void MainScene::InitializeCamera(GameObject* player)
