@@ -1,4 +1,4 @@
-﻿#include "CameraComponent.h"
+#include "CameraComponent.h"
 #include "TransformComponent.h"
 #include "GameObject.h"
 #include "MathUtil.h"
@@ -18,7 +18,7 @@ namespace gm
 		CameraViewInfo viewInfo{};
 		viewInfo.position = _ownerTransform->GetPosition();
 		viewInfo.rotation = _ownerTransform->GetRotation();
-		viewInfo.view = Math::CreateViewMatrix(viewInfo.position, viewInfo.rotation);
+		viewInfo.view = Math::CreateInverseTransformMatrix(viewInfo.position, viewInfo.rotation);
 		viewInfo.projection = CreateProjectionMatrix();
 
 		return viewInfo;

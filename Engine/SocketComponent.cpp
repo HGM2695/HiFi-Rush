@@ -1,4 +1,4 @@
-﻿#include "SocketComponent.h"
+#include "SocketComponent.h"
 #include "GameObject.h"
 #include "MathUtil.h"
 #include "TransformComponent.h"
@@ -7,7 +7,7 @@ namespace gm
 {
 	Matrix Socket::GetLocalMatrix() const
 	{
-		return Math::CreateWorldMatrix(position, rotation, scale);
+		return Math::CreateTransformMatrix(position, rotation, scale);
 	}
 
 	void SocketComponent::AddSocket(const std::wstring& socketName, const Socket& socket)

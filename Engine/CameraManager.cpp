@@ -1,4 +1,4 @@
-﻿#include "CameraManager.h"
+#include "CameraManager.h"
 #include "CameraComponent.h"
 #include "GameObject.h"
 #include "MathUtil.h"
@@ -19,7 +19,7 @@ namespace gm
 		{
 			_viewInfo.position.x = std::round(_viewInfo.position.x);
 			_viewInfo.position.y = std::round(_viewInfo.position.y);
-			_viewInfo.view = Math::CreateViewMatrix(_viewInfo.position, _viewInfo.rotation);
+			_viewInfo.view = Math::CreateInverseTransformMatrix(_viewInfo.position, _viewInfo.rotation);
 		}
 
 		TickShake(deltaTime);
@@ -64,7 +64,7 @@ namespace gm
 
 		viewInfo.position += localOffset * strength;
 		viewInfo.rotation = viewInfo.rotation * rotationOffset;
-		viewInfo.view = Math::CreateViewMatrix(viewInfo.position, viewInfo.rotation);
+		viewInfo.view = Math::CreateInverseTransformMatrix(viewInfo.position, viewInfo.rotation);
 	}
 
 	void CameraManager::RegisterCamera(const std::wstring& cameraKey, CameraComponent* camera)

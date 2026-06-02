@@ -35,7 +35,7 @@ namespace gm
 		Matrix CreateUIWorldMatrix(const Vector2& screenCenter, const Vector2& size, uint32 width, uint32 height)
 		{
 			const Vector2 orthoCenter = ScreenToOrthoCenter(screenCenter, width, height);
-			return Math::CreateWorldMatrix(
+			return Math::CreateTransformMatrix(
 				Vector3(orthoCenter.x, orthoCenter.y, 0.f),
 				Math::IdentityQuaternion(),
 				Vector3(size.x, size.y, 1.f)

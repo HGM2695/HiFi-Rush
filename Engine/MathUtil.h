@@ -5,6 +5,8 @@
 
 namespace gm::Math
 {
+	inline constexpr float GM_PI = 3.141592654f;
+
 	inline Matrix IdentityMatrix()
 	{
 		return Matrix::CreateScale(1.f);
@@ -25,14 +27,14 @@ namespace gm::Math
 		return Vector3::Transform(Vector3(0.f, 0.f, 1.f), rotation);
 	}
 
-	inline Matrix CreateWorldMatrix(const Vector3& position, const Quaternion& rotation, const Vector3& scale = Vector3(1.f, 1.f, 1.f))
+	inline Matrix CreateTransformMatrix(const Vector3& position, const Quaternion& rotation, const Vector3& scale = Vector3(1.f, 1.f, 1.f))
 	{
 		return Matrix::CreateScale(scale) * Matrix::CreateFromQuaternion(rotation) * Matrix::CreateTranslation(position);
 	}
 
-	inline Matrix CreateViewMatrix(const Vector3& position, const Quaternion& rotation)
+	inline Matrix CreateInverseTransformMatrix(const Vector3& position, const Quaternion& rotation)
 	{
-		return CreateWorldMatrix(position, rotation).Invert();
+		return CreateTransformMatrix(position, rotation).Invert();
 	}
 
 	inline Matrix CreateOrthographicLH(float width, float height, float nearZ, float farZ)
