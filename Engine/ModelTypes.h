@@ -20,9 +20,13 @@ namespace gm
 		ModelType type = ModelType::Static;
 		Matrix preTransform = Matrix::CreateScale(1.f);
 
-		std::vector<VertexMesh>			vertices;
-		std::vector<uint32>				indices;
-		std::vector<MeshSection>		sections;
-		std::vector<MeshTextureSlot>	textureSlots;
+		std::vector<VertexMesh>				vertices;
+		std::vector<uint32>					indices;
+		std::vector<MeshSection>			sections;
+		std::vector<MeshTextureSet>			textureSets;
+
+		std::vector<VertexAnimationMesh>		skinnedVertices;
+		std::vector<BoneData>					bones;
+		std::vector<SkeletalAnimationClipData>	animations;
 	};
 }

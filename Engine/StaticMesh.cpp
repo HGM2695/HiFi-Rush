@@ -30,18 +30,9 @@ namespace gm
 	StaticMesh::StaticMesh(std::shared_ptr<Mesh> mesh, const ModelData& modelData)
 		: _mesh(std::move(mesh))
 		, _sections(modelData.sections)
-		, _textureSlots(modelData.textureSlots)
+		, _textureSets(modelData.textureSets)
 		, _preTransform(modelData.preTransform)
-	{
-		if (_sections.empty() && _mesh)
-		{
-			MeshSection section{};
-			section.indexStart = 0;
-			section.indexCount = _mesh->GetIndexCount();
-			section.textureSlotIndex = 0;
-			_sections.push_back(section);
-		}
-	}
+	{}
 
 	const MeshSection* StaticMesh::GetSection(uint32 index) const
 	{
@@ -51,11 +42,11 @@ namespace gm
 		return &_sections[index];
 	}
 
-	const MeshTextureSlot* StaticMesh::GettextureSlot(uint32 index) const
+	const MeshTextureSet* StaticMesh::GetTextureSet(uint32 index) const
 	{
-		if (index >= _textureSlots.size())
+		if (index >= _textureSets.size())
 			return nullptr;
 
-		return &_textureSlots[index];
+		return &_textureSets[index];
 	}
 }

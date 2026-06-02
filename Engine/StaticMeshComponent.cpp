@@ -21,15 +21,15 @@ namespace gm
 		_staticMesh = staticMesh;
 		_preTransform = _staticMesh->GetPreTransform();
 
-		const uint32 slotCount = _staticMesh->GettextureSlotCount();
+		const uint32 slotCount = _staticMesh->GetTextureSetCount();
 		_materials.clear();
 		_materials.reserve(slotCount);
 
 		Resources& resources = APPLICATION.GetResources();
 		for (uint32 slotIndex = 0; slotIndex < slotCount; ++slotIndex)
 		{
-			const MeshTextureSlot* textureSlot = _staticMesh->GettextureSlot(slotIndex);
-			if (textureSlot == nullptr)
+			const MeshTextureSet* textureSet = _staticMesh->GetTextureSet(slotIndex);
+			if (textureSet == nullptr)
 			{
 				_materials.push_back(nullptr);
 				continue;
@@ -41,13 +41,13 @@ namespace gm
 				.SetSamplerAddressMode(TextureSlot::BaseColor, TextureAddressMode::Wrap)
 				.SetCullMode(CullMode::None);
 
-			for (uint32 textureSlotIndex = 0; textureSlotIndex < TextureSlotCount; ++textureSlotIndex)
+			for (uint32 textureSetIndex = 0; textureSetIndex < TextureSlotCount; ++textureSetIndex)
 			{
-				const std::wstring& textureKey = textureSlot->textureKeys[textureSlotIndex];
+				const std::wstring& textureKey = textureSet->textureKeys[textureSetIndex];
 				if (textureKey.empty())
 					continue;
 
-				builder.SetTexture(ToTextureSlot(textureSlotIndex), textureKey);
+				builder.SetTexture(ToTextureSlot(textureSetIndex), textureKey);
 			}
 
 			_materials.push_back(std::make_unique<Material>(builder.Build()));
@@ -84,9 +84,9 @@ namespace gm
 		StaticMeshRenderItem item{};
 		item.world = _preTransform * _ownerTransform->GetWorldMatrix();
 		item.staticMesh = _staticMesh.get();
-		item.materials.reserve(_staticMesh->GettextureSlotCount());
+		item.materials.reserve(_staticMesh->GetTextureSetCount());
 
-		for (uint32 i = 0; i < _staticMesh->GettextureSlotCount(); ++i)
+		for (uint32 i = 0; i < _staticMesh->GetTextureSetCount(); ++i)
 		{
 			item.materials.push_back(GetMaterial(i));
 		}

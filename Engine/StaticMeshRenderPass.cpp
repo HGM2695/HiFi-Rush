@@ -80,10 +80,10 @@ namespace gm
 				if (section.indexCount == 0)
 					continue;
 
-				if (section.textureSlotIndex >= item.materials.size())
+				if (section.textureSetIndex >= item.materials.size())
 					continue;
 
-				const Material* material = item.materials[section.textureSlotIndex];
+				const Material* material = item.materials[section.textureSetIndex];
 				if (material == nullptr || material->GetVertexShader() == nullptr || material->GetPixelShader() == nullptr)
 					continue;
 

@@ -2,6 +2,7 @@
 
 #include "MathTypes.h"
 #include "VertexLayout.h"
+#include <array>
 #include <cstddef>
 
 namespace gm
@@ -87,8 +88,8 @@ namespace gm
 		Vector2 texcoord;
 		Vector3 tangent;
 
-		uint32	blendIndex;
-		Vector4	blendWeight;
+		std::array<uint32, 4>	blendIndex{};
+		Vector4					blendWeight;
 
 		static VertexLayoutDesc GetLayout()
 		{

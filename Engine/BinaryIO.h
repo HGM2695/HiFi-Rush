@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Types.h"
+#include "StringUtil.h"
 
 #include <istream>
 #include <string>
@@ -39,5 +40,15 @@ namespace gm
 
 		stream.read(out.data(), length);
 		return stream.good();
+	}
+
+	inline bool ReadWideString(std::istream& inputStream, std::wstring& out)
+	{
+		std::string text;
+		if (ReadBinaryString(inputStream, text) == false)
+			return false;
+
+		out = Utf8ToWide(text.c_str());
+		return true;
 	}
 }

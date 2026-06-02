@@ -11,8 +11,10 @@ namespace gm
 		Audio,
 		Mesh,
 		StaticMesh,
+		SkeletalMesh,
 		Skeleton,
 		SpriteAnimationClip,
+		SkeletalAnimationClip,
 		Shader,
 
 		Count
