@@ -6,6 +6,15 @@
 namespace gm::Math
 {
 	inline constexpr float GM_PI = 3.141592654f;
+	inline constexpr float DegreesToRadians(float degrees)
+	{
+		return degrees * (GM_PI / 180.f);
+	}
+
+	inline Vector3 EulerDegreesToRadians(const Vector3& eulerDegrees)
+	{
+		return Vector3(DegreesToRadians(eulerDegrees.x), DegreesToRadians(eulerDegrees.y), DegreesToRadians(eulerDegrees.z));
+	}
 
 	inline Matrix IdentityMatrix()
 	{
@@ -48,6 +57,13 @@ namespace gm::Math
 	{
 		Matrix result;
 		DirectX::XMStoreFloat4x4(&result, DirectX::XMMatrixPerspectiveFovLH(fovYRadians, aspectRatio, nearZ, farZ));
+		return result;
+	}
+
+	inline Matrix CreateLookAtLH(const Vector3& eye, const Vector3& target, const Vector3& up)
+	{
+		Matrix result;
+		XMStoreFloat4x4(&result, DirectX::XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up)));
 		return result;
 	}
 

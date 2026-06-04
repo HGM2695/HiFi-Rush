@@ -68,6 +68,9 @@
     <ClInclude Include="CameraComponent.h">
       <Filter>Engine Component</Filter>
     </ClInclude>
+    <ClInclude Include="CameraFollowComponent.h">
+      <Filter>Engine Component</Filter>
+    </ClInclude>
     <ClInclude Include="CameraManager.h">
       <Filter>Engine Component</Filter>
     </ClInclude>
@@ -110,7 +113,10 @@
     <ClInclude Include="SpriteAnimator.h">
       <Filter>Engine Component\Animator</Filter>
     </ClInclude>
-    <ClInclude Include="SkeletalAnimator.h">
+    <ClInclude Include="SkeletalAnimationBlender.h">
+      <Filter>Engine Component\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletalAnimatorComponent.h">
       <Filter>Engine Component\Animator</Filter>
     </ClInclude>
     <ClInclude Include="SkeletalPose.h">
@@ -392,6 +398,9 @@
     <ClCompile Include="CameraComponent.cpp">
       <Filter>Engine Component</Filter>
     </ClCompile>
+    <ClCompile Include="CameraFollowComponent.cpp">
+      <Filter>Engine Component</Filter>
+    </ClCompile>
     <ClCompile Include="CameraManager.cpp">
       <Filter>Engine Component</Filter>
     </ClCompile>
@@ -434,7 +443,10 @@
     <ClCompile Include="SpriteAnimator.cpp">
       <Filter>Engine Component\Animator</Filter>
     </ClCompile>
-    <ClCompile Include="SkeletalAnimator.cpp">
+    <ClCompile Include="SkeletalAnimationBlender.cpp">
+      <Filter>Engine Component\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletalAnimatorComponent.cpp">
       <Filter>Engine Component\Animator</Filter>
     </ClCompile>
     <ClCompile Include="SkeletalPose.cpp">

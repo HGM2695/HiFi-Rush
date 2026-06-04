@@ -178,6 +178,7 @@
     <ClInclude Include="BuildConfig.h" />
     <ClInclude Include="BuiltinGraphicsResources.h" />
     <ClInclude Include="CameraComponent.h" />
+    <ClInclude Include="CameraFollowComponent.h" />
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="CameraViewInfo.h" />
     <ClInclude Include="Collider2DComponent.h" />
@@ -240,7 +241,8 @@
     <ClInclude Include="SocketComponent.h" />
     <ClInclude Include="SocketFollowComponent.h" />
     <ClInclude Include="StaticMeshComponent.h" />
-    <ClInclude Include="SkeletalAnimator.h" />
+    <ClInclude Include="SkeletalAnimationBlender.h" />
+    <ClInclude Include="SkeletalAnimatorComponent.h" />
     <ClInclude Include="SkeletalMeshComponent.h" />
     <ClInclude Include="SkeletalPose.h" />
     <ClInclude Include="SpriteAnimationClip.h" />
@@ -288,6 +290,7 @@
     <ClCompile Include="BoxCollider2DComponent.cpp" />
     <ClCompile Include="BuiltinGraphicsResources.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
+    <ClCompile Include="CameraFollowComponent.cpp" />
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="CircleCollider2DComponent.cpp" />
     <ClCompile Include="Collider2DComponent.cpp" />
@@ -331,7 +334,8 @@
     <ClCompile Include="SocketComponent.cpp" />
     <ClCompile Include="SocketFollowComponent.cpp" />
     <ClCompile Include="StaticMeshComponent.cpp" />
-    <ClCompile Include="SkeletalAnimator.cpp" />
+    <ClCompile Include="SkeletalAnimationBlender.cpp" />
+    <ClCompile Include="SkeletalAnimatorComponent.cpp" />
     <ClCompile Include="SkeletalMeshComponent.cpp" />
     <ClCompile Include="SkeletalPose.cpp" />
     <ClCompile Include="SpriteAnimationClip.cpp" />
