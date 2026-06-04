@@ -1,4 +1,4 @@
-﻿#include "WidgetComponent.h"
+#include "WidgetComponent.h"
 
 #include "Application.h"
 #include "CameraManager.h"
@@ -62,7 +62,7 @@ namespace gm
 			return;
 
 		const Vector3 worldPosition = _ownerTransform->GetPosition();
-		const Vector2 screenPosition = cameraManager->WorldToScreen(worldPosition, APPLICATION.GetWidth(), APPLICATION.GetHeight());
+		const Vector2 screenPosition = cameraManager->WorldToScreen(worldPosition, APPLICATION.GetWidth(), APPLICATION.GetHeight()) + _screenOffset;
 
 		const Widget* rootWidget = _widget->GetRootWidget();
 		_widget->Render(WidgetGeometry{ screenPosition, rootWidget ? rootWidget->GetSize() : Vector2{} });

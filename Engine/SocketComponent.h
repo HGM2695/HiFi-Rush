@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Component.h"
 #include <unordered_map>
@@ -32,6 +32,6 @@ namespace gm
 
 	private:
 		std::unordered_map<std::wstring, Socket>	_sockets;
-		TransformComponent*									_ownerTransform = nullptr;
+		TransformComponent*							_ownerTransform = nullptr;
 	};
 }

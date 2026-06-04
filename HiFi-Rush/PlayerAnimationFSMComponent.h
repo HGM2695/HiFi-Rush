@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "AnimationNotify.h"
 #include "AnimationTypes.h"
@@ -38,6 +38,6 @@ namespace gm
 
 		NotifyConnection			_notifyConnection{};
 		AnimatedSpriteComponent*	_animatedSpriteComponent = nullptr;
-		PlayerMovementComponent*				_playerMovement = nullptr;
+		PlayerMovementComponent*	_playerMovement = nullptr;
 	};
 }

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Component.h"
 #include <type_traits>
@@ -32,9 +32,11 @@ namespace gm
 		void					SetWidgetVisible(bool isVisible);
 		bool					IsWidgetVisible() const;
 		void					ToggleWidgetVisibility();
+		void					SetScreenOffset(const Vector2& offset) { _screenOffset = offset; }
 
 		UserWidget*				GetUserWidget() { return _widget.get(); }
 		const UserWidget*		GetUserWidget() const { return _widget.get(); }
+		const Vector2&			GetScreenOffset() const { return _screenOffset; }
 
 	protected:
 		void					OnInitialize() override;
@@ -42,7 +44,8 @@ namespace gm
 		void					OnRender() override;
 
 	private:
-		TransformComponent*					_ownerTransform = nullptr;
+		TransformComponent*			_ownerTransform = nullptr;
 		std::unique_ptr<UserWidget> _widget{};
+		Vector2						_screenOffset{};
 	};
 }

@@ -14,6 +14,7 @@
 #include "SkeletalMesh.h"
 #include "SkeletalAnimationClip.h"
 #include "StringUtil.h"
+#include "ChiAnimationTypes.h"
 #include <filesystem>
 #include <vector>
 
@@ -34,7 +35,7 @@ namespace gm
 		LoadMeshTexture(resources);
 		LoadStaticMesh(resources);
 		LoadSkeletalMesh(resources);
-		LoadTempAnimationClip(resources);
+		//LoadTempAnimationClip(resources);
 		LoadAudio(resources);
 	}
 
@@ -104,18 +105,16 @@ namespace gm
 		{
 			const SkeletalAnimationClipData& clipData = chiModelData.animations[animationIndex];
 
-			SkeletalAnimationClipDesc desc{};
-			desc.data = clipData;
-
-			std::shared_ptr<SkeletalAnimationClip> clip = SkeletalAnimationClip::Create(desc);
+			std::shared_ptr<SkeletalAnimationClip> clip = SkeletalAnimationClip::Create(clipData);
 			GM_ASSERT_RETURN(clip, "chi SkeletalAnimationClip 생성에 실패했습니다.");
 
-			const std::wstring clipName = clipData.name.empty() ? L"Animation" + std::to_wstring(animationIndex) : clipData.name;
-			resources.Add(L"chi." + clipName, clip);
+			const std::wstring animationKey = GetChiAnimationKey(static_cast<ChiAnimationId>(animationIndex));
+			resources.Add(animationKey, clip);
+
 			if (animationIndex == 27)
 				resources.Add(L"chi.DefaultAnimation", clip);
 
-			GM_LOG("Skeletal Animation Clip Load : chi.%s", WideToUtf8(clipName).c_str());
+			GM_LOG("Skeletal Animation Clip Load. Key: %s", WideToUtf8(animationKey).c_str());
 		}
 	}
 
