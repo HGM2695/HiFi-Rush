@@ -14,14 +14,6 @@ namespace gm
 	SkeletalMeshComponent::SkeletalMeshComponent() = default;
 	SkeletalMeshComponent::~SkeletalMeshComponent() = default;
 
-	void SkeletalMeshComponent::OnTick(float deltaTime)
-	{
-		if (_skeletalMesh == nullptr)
-			return;
-
-		_animator.Tick(deltaTime, *_skeletalMesh, _pose);
-	}
-
 	void SkeletalMeshComponent::OnRender()
 	{
 		if (_skeletalMesh == nullptr || _ownerTransform == nullptr || _pose.IsValid() == false)

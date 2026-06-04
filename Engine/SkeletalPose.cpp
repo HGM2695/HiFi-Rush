@@ -9,6 +9,27 @@ namespace gm
 {
 	namespace
 	{
+		Matrix BlendMatrix(const Matrix& from, const Matrix& to, float ratio)
+		{
+			Matrix fromMatrix = from;
+			Vector3 fromScale{};
+			Quaternion fromRotation{};
+			Vector3 fromPosition{};
+			fromMatrix.Decompose(fromScale, fromRotation, fromPosition);
+
+			Matrix toMatrix = to;
+			Vector3 toScale{};
+			Quaternion toRotation{};
+			Vector3 toPosition{};
+			toMatrix.Decompose(toScale, toRotation, toPosition);
+
+			const Vector3 scale = Vector3::Lerp(fromScale, toScale, ratio);
+			const Quaternion rotation = Quaternion::Slerp(fromRotation, toRotation, ratio);
+			const Vector3 position = Vector3::Lerp(fromPosition, toPosition, ratio);
+
+			return Math::CreateTransformMatrix(position, rotation, scale);
+		}
+
 		uint32 FindKeyFrameIndex(const std::vector<KeyFrameData>& keyFrames, float trackPosition)
 		{
 			for (uint32 i = 0; i + 1 < keyFrames.size(); ++i)
@@ -47,13 +68,14 @@ namespace gm
 		}
 	}
 
-	void SkeletalPose::ApplyAnimation(const SkeletalMesh& skeletalMesh, const SkeletalAnimationClip& clip, float playTime)
+	SkeletalPoseApplyResult SkeletalPose::ApplyAnimation(const SkeletalMesh& skeletalMesh, const SkeletalAnimationClip& clip, float playTime, int32 rootMotionBoneIndex)
 	{
+		SkeletalPoseApplyResult result{};
 		const std::vector<BoneData>& bones = skeletalMesh.GetBones();
 		if (bones.empty())
 		{
 			_boneModelMatrices.clear();
-			return;
+			return result;
 		}
 
 		const float ticksPerSecond = clip.GetTicksPerSecond();
@@ -68,6 +90,14 @@ namespace gm
 		for (const AnimationChannelData& channel : clip.GetChannels())
 		{
 			KeyFrameData keyFrame = SampleKeyFrame(channel, trackPosition);
+
+			if (static_cast<int32>(channel.boneIndex) == rootMotionBoneIndex)
+			{
+				result.rootMotionPosition = keyFrame.position;
+				result.hasRootMotion = true;
+				keyFrame.position = Vector3{};
+			}
+
 			localMatrices[channel.boneIndex] = Math::CreateTransformMatrix(keyFrame.position, keyFrame.rotation, keyFrame.scale);
 		}
 
@@ -80,6 +110,8 @@ namespace gm
 			else
 				_boneModelMatrices[boneIndex] = localMatrices[boneIndex];
 		}
+
+		return result;
 	}
 
 	void SkeletalPose::RebuildBindPose(const SkeletalMesh& skeletalMesh)
@@ -95,5 +127,12 @@ namespace gm
 			else
 				_boneModelMatrices[boneIndex] = bone.transform;
 		}
+	}
+
+	void SkeletalPose::BlendFrom(const std::vector<Matrix>& fromBoneModelMatrices, float ratio)
+	{
+		const float blendRatio = std::clamp(ratio, 0.f, 1.f);
+		for (uint32 boneIndex = 0; boneIndex < _boneModelMatrices.size(); ++boneIndex)
+			_boneModelMatrices[boneIndex] = BlendMatrix(fromBoneModelMatrices[boneIndex], _boneModelMatrices[boneIndex], blendRatio);
 	}
 }
