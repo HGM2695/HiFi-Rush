@@ -5,15 +5,10 @@
 
 namespace gm
 {
-	struct SkeletalAnimationClipDesc
-	{
-		SkeletalAnimationClipData data;
-	};
-
 	class SkeletalAnimationClip : public AnimationClip
 	{
 	public:
-		static std::shared_ptr<SkeletalAnimationClip> Create(const SkeletalAnimationClipDesc& desc);
+		static std::shared_ptr<SkeletalAnimationClip> Create(const SkeletalAnimationClipData& desc);
 		virtual ~SkeletalAnimationClip();
 
 		static constexpr ResourceType Type = ResourceType::SkeletalAnimationClip;

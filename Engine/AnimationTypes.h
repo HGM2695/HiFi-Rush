@@ -16,9 +16,10 @@ namespace gm
 
     struct AnimationPlayOption
     {
-        float startTime = 0.f;
-        std::optional<bool> loopOverride;
-        std::optional<float> playRateOverride;
+        float                   startTime = 0.f;
+        float                   blendDuration = 0.f;
+        std::optional<bool>     loopOverride;
+        std::optional<float>    playRateOverride;
     };
 
     using AnimationNotifyListener = std::function<void(const std::wstring&)>;

@@ -1,6 +1,7 @@
 #include "AnimationController.h"
-#include "SpriteAnimationClip.h"
+#include "AnimationClip.h"
 #include "GMAssert.h"
+
 #include <algorithm>
 #include <cmath>
 

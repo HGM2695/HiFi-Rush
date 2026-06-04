@@ -4,16 +4,16 @@
 
 namespace gm
 {
-	std::shared_ptr<SkeletalAnimationClip> SkeletalAnimationClip::Create(const SkeletalAnimationClipDesc& desc)
+	std::shared_ptr<SkeletalAnimationClip> SkeletalAnimationClip::Create(const SkeletalAnimationClipData& data)
 	{
-		GM_ASSERT_RETURN_VAL(desc.data.channels.empty() == false, nullptr, "SkeletalAnimationClip Channel 데이터가 비어 있습니다.");
+		GM_ASSERT_RETURN_VAL(data.channels.empty() == false, nullptr, "SkeletalAnimationClip Channel 데이터가 비어 있습니다.");
 
 		std::shared_ptr<SkeletalAnimationClip> clip(new SkeletalAnimationClip());
-		clip->_name = desc.data.name;
-		clip->_durationTicks = desc.data.duration;
-		clip->_ticksPerSecond = desc.data.ticksPerSecond;
-		clip->_channels = desc.data.channels;
-		clip->_length = desc.data.ticksPerSecond > 0.f ? desc.data.duration / desc.data.ticksPerSecond : desc.data.duration;
+		clip->_name = data.name;
+		clip->_durationTicks = data.duration;
+		clip->_ticksPerSecond = data.ticksPerSecond;
+		clip->_channels = data.channels;
+		clip->_length = data.ticksPerSecond > 0.f ? data.duration / data.ticksPerSecond : data.duration;
 		clip->_frameCount = 0;
 
 		for (const AnimationChannelData& channel : clip->_channels)
