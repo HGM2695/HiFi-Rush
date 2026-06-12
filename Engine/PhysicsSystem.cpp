@@ -1,11 +1,17 @@
 #include "PhysicsSystem.h"
+#include "NavMeshSystem.h"
 #include "PhysicsSystem2D.h"
 #include "PhysicsSystem3D.h"
+
+#if GM_ENABLE_DEBUG_TOOLS
+#include "IDebugRenderer.h"
+#endif
 
 namespace gm
 {
 	PhysicsSystem::PhysicsSystem()
-		: _physicsSystem2D(std::make_unique<PhysicsSystem2D>()),
+		: _navMeshSystem(std::make_unique<NavMeshSystem>()),
+		_physicsSystem2D(std::make_unique<PhysicsSystem2D>()),
 		_physicsSystem3D(std::make_unique<PhysicsSystem3D>())
 	{
 	}
@@ -26,4 +32,11 @@ namespace gm
 			return;
 		}
 	}
+
+#if GM_ENABLE_DEBUG_TOOLS
+	void PhysicsSystem::DebugRender(IDebugRenderer& debugRenderer) const
+	{
+		_navMeshSystem->DebugDraw(debugRenderer);
+	}
+#endif
 }
