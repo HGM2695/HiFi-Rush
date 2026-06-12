@@ -256,7 +256,7 @@ void XM_CALLCONV gm::debug_draw::DrawTriangle(PrimitiveBatch<VertexPositionColor
 	for (VertexPositionColor& vert : verts)
 		XMStoreFloat4(&vert.color, color);
 
-	batch->Draw(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP, verts, CountOf(verts));
+	batch->Draw(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, verts, CountOf(verts));
 }
 
 void XM_CALLCONV gm::debug_draw::DrawQuad(PrimitiveBatch<VertexPositionColor>* batch,

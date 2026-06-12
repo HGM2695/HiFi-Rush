@@ -68,13 +68,6 @@ namespace gm
 
 		_dxResources->primitiveBatch->Begin();
 
-		for (const DebugLine& line : _lines)
-		{
-			const DirectX::VertexPositionColor start(line.start, line.color);
-			const DirectX::VertexPositionColor end(line.end, line.color);
-			_dxResources->primitiveBatch->DrawLine(start, end);
-		}
-
 		for (const DebugTriangle& triangle : _triangles)
 			debug_draw::DrawTriangle(_dxResources->primitiveBatch.get(), triangle.a, triangle.b, triangle.c, triangle.color);
 
@@ -92,6 +85,14 @@ namespace gm
 
 		for (const DebugSphere& sphere : _spheres)
 			debug_draw::Draw(_dxResources->primitiveBatch.get(), sphere.sphere, sphere.color);
+
+		for (const DebugLine& line : _lines)
+		{
+			const DirectX::VertexPositionColor start(line.start, line.color);
+			const DirectX::VertexPositionColor end(line.end, line.color);
+			_dxResources->primitiveBatch->DrawLine(start, end);
+		}
+
 
 		for (const DebugRay& ray : _rays)
 		{
