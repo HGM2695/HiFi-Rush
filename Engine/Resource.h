@@ -16,6 +16,7 @@ namespace gm
 		SpriteAnimationClip,
 		SkeletalAnimationClip,
 		Shader,
+		NavigationMesh,
 
 		Count
 	};
