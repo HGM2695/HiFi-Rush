@@ -1,13 +1,12 @@
-﻿#pragma once
+#pragma once
 
-#include "Component.h"
+#include "MovementComponent.h"
 
 namespace gm
 {
 	class SkeletalAnimatorComponent;
-	class TransformComponent;
 
-	class ChiMoveComponent : public Component
+	class ChiMoveComponent : public MovementComponent
 	{
 	public:
 		virtual void	OnInitialize() override;
@@ -37,7 +36,6 @@ namespace gm
 		Quaternion		CreateRotationByDirection(const Vector3& direction) const;
 
 	private:
-		TransformComponent*			_ownerTransform = nullptr;
 		SkeletalAnimatorComponent*	_animatorComponent = nullptr;
 
 		bool				_isMoving = false;

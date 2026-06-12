@@ -10,9 +10,11 @@
 #include "VertexTypes.h"
 #include "IGraphicsResourceFactory.h"
 #include "BinaryModelLoader.h"
+#include "BinaryNavigationMeshLoader.h"
 #include "StaticMesh.h"
 #include "SkeletalMesh.h"
 #include "SkeletalAnimationClip.h"
+#include "NavigationMesh.h"
 #include "StringUtil.h"
 #include "ChiAnimationTypes.h"
 #include <filesystem>
@@ -24,6 +26,8 @@ namespace gm
 	void LoadMeshTexture(Resources& resources);
 	void LoadStaticMesh(Resources& resources);
 	void LoadSkeletalMesh(Resources& resources);
+	void LoadNavigationMeshResource(Resources& resources, const std::wstring& key, const std::wstring& fileName);
+	void LoadNavigationMesh(Resources& resources);
 	void LoadTempAnimationClip(Resources& resources);
 	void LoadAudio(Resources& resources);
 
@@ -35,6 +39,7 @@ namespace gm
 		LoadMeshTexture(resources);
 		LoadStaticMesh(resources);
 		LoadSkeletalMesh(resources);
+		LoadNavigationMesh(resources);
 		//LoadTempAnimationClip(resources);
 		LoadAudio(resources);
 	}
@@ -116,6 +121,25 @@ namespace gm
 
 			GM_LOG("Skeletal Animation Clip Load. Key: %s", WideToUtf8(animationKey).c_str());
 		}
+	}
+
+	void LoadNavigationMeshResource(Resources& resources, const std::wstring& key, const std::wstring& fileName)
+	{
+		NavigationMeshData navigationMeshData{};
+		GM_ASSERT_RETURN(BinaryNavigationMeshLoader::Load(GetResourcePath(L"NavigationMesh/" + fileName), navigationMeshData),
+			"%ls NavigationMesh 로드에 실패했습니다.", key.c_str());
+
+		std::shared_ptr<NavigationMesh> navigationMesh = NavigationMesh::Create(NavigationMeshDesc{ navigationMeshData });
+		GM_ASSERT_RETURN(navigationMesh, "%ls NavigationMesh 생성에 실패했습니다.", key.c_str());
+
+		resources.Add(key, navigationMesh);
+	}
+
+	void LoadNavigationMesh(Resources& resources)
+	{
+		LoadNavigationMeshResource(resources, L"tutorial", L"tutorial.bin");
+		LoadNavigationMeshResource(resources, L"qamil", L"qamil.bin");
+		LoadNavigationMeshResource(resources, L"jump_outside", L"jump_outside.bin");
 	}
 
 	void LoadTempAnimationClip(Resources& resources)

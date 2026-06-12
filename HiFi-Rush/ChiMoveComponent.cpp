@@ -13,8 +13,8 @@ namespace gm
 {
 	void ChiMoveComponent::OnInitialize()
 	{
-		_ownerTransform = GetOwner().GetTransform();
-		GM_ASSERT_RETURN(_ownerTransform, "ChiMoveComponent는 TransformComponent가 필요합니다.");
+		MovementComponent::OnInitialize();
+		EnableNavigationMovement(true);
 
 		_animatorComponent = GetOwner().GetComponent<SkeletalAnimatorComponent>();
 		GM_ASSERT_RETURN(_animatorComponent, "ChiMoveComponent는 SkeletalAnimatorComponent가 필요합니다.");
@@ -24,7 +24,7 @@ namespace gm
 	{
 		ApplyPendingRootMotion();
 
-		if (_ownerTransform == nullptr || _moveEnabled == false)
+		if (GetOwnerTransform() == nullptr || _moveEnabled == false)
 		{
 			_isMoving = false;
 			_moveDirection = Vector3{};
@@ -38,12 +38,13 @@ namespace gm
 			return;
 
 		UpdateRotationByMoveDirection(deltaTime);
-		_ownerTransform->Translate(_moveDirection * _moveSpeed * deltaTime);
+		const Vector3 desiredDelta = _moveDirection * _moveSpeed * deltaTime;
+		Move(desiredDelta);
 	}
 
 	void ChiMoveComponent::MoveAlong(const Vector3& direction, float speed, float deltaTime, bool updateRotation)
 	{
-		if (_ownerTransform == nullptr)
+		if (GetOwnerTransform() == nullptr)
 			return;
 
 		_moveDirection = direction;
@@ -57,7 +58,8 @@ namespace gm
 		if (updateRotation)
 			UpdateRotationByMoveDirection(deltaTime);
 
-		_ownerTransform->Translate(_moveDirection * speed * deltaTime);
+		const Vector3 desiredDelta = _moveDirection * speed * deltaTime;
+		Move(desiredDelta);
 	}
 
 	void ChiMoveComponent::ApplyPendingRootMotion()
@@ -67,23 +69,23 @@ namespace gm
 
 		// 사용하지 않는 상태에서도 매 프레임 소비해 이전 상태의 delta가 남지 않게 합니다.
 		Vector3 rootMotionDelta = _animatorComponent->ConsumeRootMotionDelta();
-		if (_rootMotionEnabled == false || _ownerTransform == nullptr)
+		if (_rootMotionEnabled == false || GetOwnerTransform() == nullptr)
 			return;
 
 		if (_rootMotionYEnabled == false)
 			rootMotionDelta.y = 0.f;
 
 		rootMotionDelta *= _rootMotionWeight;
-		const Vector3 worldDelta = Vector3::Transform(rootMotionDelta, _ownerTransform->GetRotation());
-		_ownerTransform->Translate(worldDelta);
+		const Vector3 worldDelta = Vector3::Transform(rootMotionDelta, GetOwnerTransform()->GetRotation());
+		Move(worldDelta);
 	}
 
 	void ChiMoveComponent::FaceDirectionImmediate(const Vector3& direction)
 	{
-		if (_ownerTransform == nullptr || direction.LengthSquared() <= 0.f)
+		if (GetOwnerTransform() == nullptr || direction.LengthSquared() <= 0.f)
 			return;
 
-		_ownerTransform->SetRotation(CreateRotationByDirection(direction));
+		GetOwnerTransform()->SetRotation(CreateRotationByDirection(direction));
 	}
 
 	Vector3 ChiMoveComponent::GetInputMoveDirection() const
@@ -99,10 +101,10 @@ namespace gm
 
 	Vector3 ChiMoveComponent::GetForwardDirection() const
 	{
-		if (_ownerTransform == nullptr)
+		if (GetOwnerTransform() == nullptr)
 			return Vector3{ 0.f, 0.f, 1.f };
 
-		Vector3 direction = Math::GetLookVector(_ownerTransform->GetRotation());
+		Vector3 direction = Math::GetLookVector(GetOwnerTransform()->GetRotation());
 		direction.y = 0.f;
 		direction.Normalize();
 		return direction;
@@ -110,10 +112,10 @@ namespace gm
 
 	Vector3 ChiMoveComponent::GetRightDirection() const
 	{
-		if (_ownerTransform == nullptr)
+		if (GetOwnerTransform() == nullptr)
 			return Vector3{ 1.f, 0.f, 0.f };
 
-		Vector3 direction = Math::GetRightVector(_ownerTransform->GetRotation());
+		Vector3 direction = Math::GetRightVector(GetOwnerTransform()->GetRotation());
 		direction.y = 0.f;
 		direction.Normalize();
 		return direction;
@@ -124,7 +126,9 @@ namespace gm
 		const Quaternion targetRotation = CreateRotationByDirection(_moveDirection);
 		const float ratio = std::clamp(deltaTime * _rotationInterpSpeed, 0.f, 1.f);
 
-		_ownerTransform->SetRotation(Quaternion::Slerp(_ownerTransform->GetRotation(), targetRotation, ratio));
+		TransformComponent* ownerTransform = GetOwnerTransform();
+		GM_ASSERT_RETURN(ownerTransform, "ChiMoveComponent는 TransformComponent가 필요합니다.");
+		ownerTransform->SetRotation(Quaternion::Slerp(ownerTransform->GetRotation(), targetRotation, ratio));
 	}
 
 	Quaternion ChiMoveComponent::CreateRotationByDirection(const Vector3& direction) const

@@ -9,6 +9,7 @@
 #include "Texture.h"
 #include "CameraComponent.h"
 #include "PhysicsSystem.h"
+#include "NavMeshSystem.h"
 #include "SceneManager.h"
 #include "UIManager.h"
 #include "BoxCollider2DComponent.h"
@@ -23,18 +24,23 @@
 #include "SkeletalMesh.h"
 #include "SkeletalMeshComponent.h"
 #include "SkeletalAnimationClip.h"
+#include "NavigationMesh.h"
 
 namespace gm
 {
 	void MainScene::OnEnter()
 	{
-		APPLICATION.GetPhysicsSystem().SetPhysicsMode(PhysicsMode::Physics2D);
+		APPLICATION.GetPhysicsSystem().SetPhysicsMode(PhysicsMode::Physics3D);
 		APPLICATION.GetUIManager().ClearViewportWidgets();
+
+		std::shared_ptr<NavigationMesh> navigationMesh = APPLICATION.GetResources().Find<NavigationMesh>(L"tutorial");
+		GM_ASSERT_RETURN(navigationMesh, "jump_outside NavigationMesh가 로드되지 않았습니다.");
+		APPLICATION.GetPhysicsSystem().GetNavMeshSystem().SetActiveNavigationMesh(navigationMesh);
 	}
 
 	void MainScene::OnInitialize()
 	{
-		InitializeSubObject();
+		//InitializeSubObject();
 		InitializeStaticMeshTest();
 		InitializePlayer();
 		GetCameraManager()->SetPixelSnapEnabled(false);
@@ -45,7 +51,7 @@ namespace gm
 		std::shared_ptr<SkeletalMesh> skeletalMesh = APPLICATION.GetResources().Find<SkeletalMesh>(L"chi");
 		GM_ASSERT_RETURN(skeletalMesh, "chi SkeletalMesh가 로드되지 않았습니다.");
 
-		GameObject* player = SpawnGameObject<GameObject>({ 0.f, 0.f, 0.f });
+		GameObject* player = SpawnGameObject<GameObject>(Vector3{3.f, 0.f, 0.f});
 		TransformComponent* transform = player->GetTransform();
 		transform->SetScale(Vector3{ 1.f, 1.f, 1.f });
 		transform->SetRotationY(Math::GM_PI);
