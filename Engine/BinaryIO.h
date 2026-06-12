@@ -3,6 +3,7 @@
 #include "Types.h"
 #include "StringUtil.h"
 
+#include <array>
 #include <istream>
 #include <string>
 #include <type_traits>
@@ -11,14 +12,14 @@
 namespace gm
 {
 	template <typename T>
-	bool ReadBinary(std::istream& stream, T& out)
+	bool ReadBinary(std::istream& stream, _Out_ T& out)
 	{
 		stream.read(reinterpret_cast<char*>(&out), sizeof(T));
 		return stream.good();
 	}
 
 	template <typename T>
-	bool ReadBinaryVector(std::istream& stream, std::vector<T>& out, uint32 count)
+	bool ReadBinaryVector(std::istream& stream, _Out_ std::vector<T>& out, uint32 count)
 	{
 		out.resize(count);
 		if (count == 0)
@@ -28,7 +29,14 @@ namespace gm
 		return stream.good();
 	}
 
-	inline bool ReadBinaryString(std::istream& stream, std::string& out)
+	template <typename T, size_t Size>
+	bool ReadBinaryArray(std::istream& stream, _Out_ std::array<T, Size>& out)
+	{
+		stream.read(reinterpret_cast<char*>(out.data()), sizeof(T) * Size);
+		return stream.good();
+	}
+
+	inline bool ReadBinaryString(std::istream& stream, _Out_ std::string& out)
 	{
 		uint32 length = 0;
 		if (ReadBinary(stream, length) == false)
@@ -42,7 +50,7 @@ namespace gm
 		return stream.good();
 	}
 
-	inline bool ReadWideString(std::istream& inputStream, std::wstring& out)
+	inline bool ReadBinaryWideString(std::istream& inputStream, _Out_ std::wstring& out)
 	{
 		std::string text;
 		if (ReadBinaryString(inputStream, text) == false)

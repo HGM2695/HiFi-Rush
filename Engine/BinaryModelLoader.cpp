@@ -76,12 +76,14 @@ namespace gm
 		int i = 0;
 		for (BoneData& bone : modelData.bones)
 		{
-			GM_ASSERT_RETURN_VAL(ReadWideString(inputStream, bone.name), false, "Bone 이름 읽기에 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, bone.name), false, "Bone 이름 읽기에 실패했습니다.");
 			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, bone.transform), false, "Bone Transform 읽기에 실패했습니다.");
 			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, bone.parentBoneIndex), false, "Bone 부모 인덱스 읽기에 실패했습니다.");
 
 			GM_ASSERT(bone.parentBoneIndex < i, "Bone Idx %d, Parent Idx : %d Parent idx가 항상 작다는 전제를 어기는 케이스가 존재합니다.", i, bone.parentBoneIndex);
+			GM_LOG("%d : BoneName : %ls", i, bone.name.c_str());
 			++i;
+
 		}
 
 		return true;
@@ -95,7 +97,7 @@ namespace gm
 		modelData.animations.resize(animationCount);
 		for (SkeletalAnimationClipData& animationClip : modelData.animations)
 		{
-			GM_ASSERT_RETURN_VAL(ReadWideString(inputStream, animationClip.name), false, "Animation 이름 읽기에 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, animationClip.name), false, "Animation 이름 읽기에 실패했습니다.");
 			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, animationClip.duration), false, "Animation Duration 읽기에 실패했습니다.");
 			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, animationClip.ticksPerSecond), false, "Animation TicksPerSecond 읽기에 실패했습니다.");
 
@@ -105,7 +107,7 @@ namespace gm
 			animationClip.channels.resize(channelCount);
 			for (AnimationChannelData& channel : animationClip.channels)
 			{
-				GM_ASSERT_RETURN_VAL(ReadWideString(inputStream, channel.name), false, "Animation Channel 이름 읽기에 실패했습니다.");
+				GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, channel.name), false, "Animation Channel 이름 읽기에 실패했습니다.");
 				GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, channel.boneIndex), false, "Animation Channel Bone 인덱스 읽기에 실패했습니다.");
 
 				uint32 keyFrameCount = 0;
@@ -120,7 +122,7 @@ namespace gm
 	bool BinaryModelLoader::ReadMesh(std::istream& inputStream, ModelData& modelData)
 	{
 		std::wstring meshName;
-		GM_ASSERT_RETURN_VAL(ReadWideString(inputStream, meshName), false, "Mesh 이름 읽기에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, meshName), false, "Mesh 이름 읽기에 실패했습니다.");
 
 		uint32 materialIndex = 0;
 		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, materialIndex), false, "Mesh Material 인덱스 읽기에 실패했습니다.");
