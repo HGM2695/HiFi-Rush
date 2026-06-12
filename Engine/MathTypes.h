@@ -4,6 +4,8 @@
 #include <DirectXCollision.h>
 #include <directxtk/SimpleMath.h>
 
+#include <cmath>
+
 namespace gm
 {
     using Vector2 = DirectX::SimpleMath::Vector2;
@@ -17,6 +19,20 @@ namespace gm
     using BoundingOrientedBox = DirectX::BoundingOrientedBox;
     using BoundingSphere = DirectX::BoundingSphere;
     using BoundingFrustum = DirectX::BoundingFrustum;
+
+    struct Plane
+    {
+        Vector3 normal{};
+        float   d = 0.f;
+
+        float CalcY(float x, float z, float fallbackY = 0.f) const
+        {
+            if (std::abs(normal.y) <= 0.0001f)
+                return fallbackY;
+
+            return -(normal.x * x + normal.z * z + d) / normal.y;
+        }
+    };
 
     constexpr Color ColorFromRGBA(uint8 r, uint8 g, uint8 b, uint8 a = 255)
     {
