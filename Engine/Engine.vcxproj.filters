@@ -203,6 +203,21 @@
     <ClInclude Include="D3D11Mesh.h">
       <Filter>Resource\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="NavigationMesh.h">
+      <Filter>Resource\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="MovementComponent.h">
+      <Filter>Engine Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="NavMeshSystem.h">
+      <Filter>Engine Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="NavMeshMoveController.h">
+      <Filter>Engine Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="NavigationTypes.h">
+      <Filter>Util\Types</Filter>
+    </ClInclude>
     <ClInclude Include="MathTypes.h">
       <Filter>Util\Types</Filter>
     </ClInclude>
@@ -334,6 +349,9 @@
     </ClInclude>
     <ClInclude Include="SkeletalMeshRenderPass.h">
       <Filter>Graphics\Renderpass</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryNavigationMeshLoader.h">
+      <Filter>Loader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -503,6 +521,18 @@
     <ClCompile Include="D3D11Mesh.cpp">
       <Filter>Resource\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="NavigationMesh.cpp">
+      <Filter>Resource\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="MovementComponent.cpp">
+      <Filter>Engine Component\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="NavMeshSystem.cpp">
+      <Filter>Engine Component\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="NavMeshMoveController.cpp">
+      <Filter>Engine Component\Physics</Filter>
+    </ClCompile>
     <ClCompile Include="D3D11GraphicsDevice.cpp">
       <Filter>Graphics\D3D11</Filter>
     </ClCompile>
@@ -561,6 +591,9 @@
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="BinaryModelLoader.cpp">
+      <Filter>Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="BinaryNavigationMeshLoader.cpp">
       <Filter>Loader</Filter>
     </ClCompile>
     <ClCompile Include="SpriteRenderPass.cpp">
@@ -636,6 +669,9 @@
     </Filter>
     <Filter Include="Resource\Mesh">
       <UniqueIdentifier>{eb196191-5cfb-44d3-9435-30bee7b63668}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Navigation">
+      <UniqueIdentifier>{8e65465c-8fa6-465d-80e8-77062f64d28a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Util\Types">
       <UniqueIdentifier>{1cfa3622-071c-458c-9aec-df890e36d650}</UniqueIdentifier>

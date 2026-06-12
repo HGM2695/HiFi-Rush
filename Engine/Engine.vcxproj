@@ -175,6 +175,7 @@
     <ClInclude Include="AudioStatics.h" />
     <ClInclude Include="BinaryIO.h" />
     <ClInclude Include="BinaryModelLoader.h" />
+    <ClInclude Include="BinaryNavigationMeshLoader.h" />
     <ClInclude Include="BuildConfig.h" />
     <ClInclude Include="BuiltinGraphicsResources.h" />
     <ClInclude Include="CameraComponent.h" />
@@ -220,6 +221,11 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshTypes.h" />
+    <ClInclude Include="NavMeshMoveController.h" />
+    <ClInclude Include="NavMeshSystem.h" />
+    <ClInclude Include="MovementComponent.h" />
+    <ClInclude Include="NavigationMesh.h" />
+    <ClInclude Include="NavigationTypes.h" />
     <ClInclude Include="StaticMesh.h" />
     <ClInclude Include="SkeletalMesh.h" />
     <ClInclude Include="PhysicsSystem2D.h" />
@@ -287,6 +293,7 @@
     <ClCompile Include="AudioComponent.cpp" />
     <ClCompile Include="AudioStatics.cpp" />
     <ClCompile Include="BinaryModelLoader.cpp" />
+    <ClCompile Include="BinaryNavigationMeshLoader.cpp" />
     <ClCompile Include="BoxCollider2DComponent.cpp" />
     <ClCompile Include="BuiltinGraphicsResources.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
@@ -317,6 +324,10 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="NavMeshMoveController.cpp" />
+    <ClCompile Include="NavMeshSystem.cpp" />
+    <ClCompile Include="MovementComponent.cpp" />
+    <ClCompile Include="NavigationMesh.cpp" />
     <ClCompile Include="StaticMesh.cpp" />
     <ClCompile Include="SkeletalMesh.cpp" />
     <ClCompile Include="PhysicsSystem2D.cpp" />

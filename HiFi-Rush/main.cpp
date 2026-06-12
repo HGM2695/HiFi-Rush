@@ -2,10 +2,7 @@
 #include "LoadScenes.h"
 #include "LoadResources.h"
 #include "GraphicsTypes.h"
-
-#if GM_ENABLE_DEBUG_TOOLS
 #include "LoadDebugTools.h"
-#endif
 
 #ifdef _DEBUG
 #include <crtdbg.h>
@@ -15,7 +12,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 {
 #ifdef _DEBUG
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    //_CrtSetBreakAlloc();
 #endif
 
     gm::ApplicationDesc desc;
@@ -27,14 +23,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     desc.showCommand = nCmdShow;
     desc.isVSync = false;
     desc.graphicsAPI = gm::GraphicsAPI::D3D11;
+    desc.backBufferColor = gm::Colors::Black;
 
     GM_ASSERT_RETURN_VAL(APPLICATION.Initialize(desc), -1, "Application 초기화 실패");
 
     gm::LoadResources();
     gm::SetupScenes();
-#if GM_ENABLE_DEBUG_TOOLS
     gm::LoadDebugTools();
-#endif
 
     APPLICATION.Run();
 
