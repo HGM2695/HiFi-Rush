@@ -35,6 +35,7 @@ namespace gm
 		int				showCommand = 0;
 		bool			isVSync = true;
 		GraphicsAPI		graphicsAPI = GraphicsAPI::D3D11;
+		Color			backBufferColor = Colors::Gray;
 	};
 
 	class Application
@@ -125,5 +126,8 @@ namespace gm
 		std::unique_ptr<PhysicsSystem>               _physicsSystem;
 		std::unique_ptr<Input>                       _input;
 		std::unique_ptr<TimeSystem>                  _time;
+
+	private:
+		Color										_backbufferColor = Colors::Gray;
 	};
 }

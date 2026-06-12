@@ -36,6 +36,8 @@ namespace gm
 		GM_ASSERT_RETURN_VAL(initializeBuiltinResources(), false, "Builtin Resource 초기화 실패");
 		GM_ASSERT_RETURN_VAL(initializeRenderer(), false, "Renderer 초기화 실패");
 
+		_backbufferColor = desc.backBufferColor;
+
 		return true;
 	}
 
@@ -171,8 +173,7 @@ namespace gm
 
 	void Application::Render()
 	{
-		static const Color backBufferColor = Colors::Magenta;
-		_graphicsDevice->BeginFrame(backBufferColor);
+		_graphicsDevice->BeginFrame(_backbufferColor);
 
 		_sceneManager->Render();
 		Scene* activeScene = _sceneManager->GetActiveScene();
@@ -184,6 +185,7 @@ namespace gm
 		const CameraViewInfo viewInfo = activeScene->GetCameraManager()->GetViewInfo();
 		_renderer->Render(viewInfo, GetWidth(), GetHeight());
 #if GM_ENABLE_DEBUG_TOOLS
+		_physicsSystem->DebugRender(*_debugRenderer);
 		_debugRenderer->Render(viewInfo);
 #endif
 		_textRenderer->Render();
