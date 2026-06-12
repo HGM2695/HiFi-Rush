@@ -122,6 +122,8 @@ namespace gm
 	private:
 		// Keyboard
 		const Key&		getKey(KeyCode code) const { return _keyList[static_cast<size_t>(code)]; }
+		bool			isWindowFocused() const;
+		void			clearInputState();
 		void			updateKeyState();
 
 		// Mouse

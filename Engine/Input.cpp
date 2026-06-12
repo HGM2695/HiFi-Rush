@@ -86,6 +86,12 @@ namespace gm
 
 	void Input::Tick()
 	{
+		if (isWindowFocused() == false)
+		{
+			clearInputState();
+			return;
+		}
+
 		updateKeyState();
 		updateMouseState();
 		updateMousePosition();
@@ -103,6 +109,29 @@ namespace gm
 			v.Normalize();
 
 		return v;
+	}
+
+	bool Input::isWindowFocused() const
+	{
+		const HWND foregroundWindow = GetForegroundWindow();
+		return foregroundWindow == _hWnd || IsChild(_hWnd, foregroundWindow);
+	}
+
+	void Input::clearInputState()
+	{
+		for (Key& key : _keyList)
+		{
+			key._keyState = KeyState::None;
+			key._pressed = false;
+		}
+
+		for (Mouse& mouse : _mouseList)
+		{
+			mouse._keyState = KeyState::None;
+			mouse._pressed = false;
+		}
+
+		_mouseDelta = {};
 	}
 
 	void Input::updateKeyState()
