@@ -183,11 +183,12 @@ namespace gm
 		_uiManager->Render();
 
 		const CameraViewInfo viewInfo = activeScene->GetCameraManager()->GetViewInfo();
-		_renderer->Render(viewInfo, GetWidth(), GetHeight());
 #if GM_ENABLE_DEBUG_TOOLS
 		_physicsSystem->DebugRender(*_debugRenderer);
 		_debugRenderer->Render(viewInfo);
 #endif
+
+		_renderer->Render(viewInfo, GetWidth(), GetHeight());
 		_textRenderer->Render();
 
 		_graphicsDevice->EndFrame();
