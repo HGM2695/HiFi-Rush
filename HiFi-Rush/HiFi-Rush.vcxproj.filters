@@ -84,6 +84,24 @@
     <ClInclude Include="ChiState.h">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClInclude>
+    <ClInclude Include="ChiAttackState.h">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiDamageState.h">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiDashState.h">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiIdleRunState.h">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiJumpState.h">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiSpecialState.h">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClInclude>
     <ClInclude Include="ChiStateContext.h">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClInclude>
@@ -134,6 +152,24 @@
       <Filter>Widget</Filter>
     </ClCompile>
     <ClCompile Include="ChiState.cpp">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiAttackState.cpp">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiDamageState.cpp">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiDashState.cpp">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiIdleRunState.cpp">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiJumpState.cpp">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiSpecialState.cpp">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClCompile>
     <ClCompile Include="ChiStateMachineComponent.cpp">

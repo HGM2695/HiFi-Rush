@@ -189,6 +189,12 @@
     <ClInclude Include="Paths.h" />
     <ClInclude Include="ChiAnimationTypes.h" />
     <ClInclude Include="PlayerAnimationFSMComponent.h" />
+    <ClInclude Include="ChiAttackState.h" />
+    <ClInclude Include="ChiDamageState.h" />
+    <ClInclude Include="ChiDashState.h" />
+    <ClInclude Include="ChiIdleRunState.h" />
+    <ClInclude Include="ChiJumpState.h" />
+    <ClInclude Include="ChiSpecialState.h" />
     <ClInclude Include="ChiMoveComponent.h" />
     <ClInclude Include="ChiState.h" />
     <ClInclude Include="ChiStateContext.h" />
@@ -207,6 +213,12 @@
     <ClCompile Include="MainHUDWidget.cpp" />
     <ClCompile Include="MainScene.cpp" />
     <ClCompile Include="PlayerAnimationFSMComponent.cpp" />
+    <ClCompile Include="ChiAttackState.cpp" />
+    <ClCompile Include="ChiDamageState.cpp" />
+    <ClCompile Include="ChiDashState.cpp" />
+    <ClCompile Include="ChiIdleRunState.cpp" />
+    <ClCompile Include="ChiJumpState.cpp" />
+    <ClCompile Include="ChiSpecialState.cpp" />
     <ClCompile Include="ChiMoveComponent.cpp" />
     <ClCompile Include="ChiState.cpp" />
     <ClCompile Include="ChiStateMachineComponent.cpp" />
