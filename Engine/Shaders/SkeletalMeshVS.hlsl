@@ -1,4 +1,4 @@
-static const uint MaxSkinningBoneCount = 256;
+static const uint MaxSkinningBoneCount = 512;
 
 cbuffer ObjectConstants : register(b0)
 {
