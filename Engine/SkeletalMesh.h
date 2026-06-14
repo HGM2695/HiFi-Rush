@@ -36,7 +36,6 @@ namespace gm
 		Matrix									_preTransform = Matrix::CreateScale(1.f);
 
 		std::shared_ptr<Mesh>					_mesh;
-
 		std::vector<MeshSection>				_sections;
 		std::vector<MeshTextureSet>				_textureSets;
 

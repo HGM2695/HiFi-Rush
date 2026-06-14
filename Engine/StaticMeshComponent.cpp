@@ -38,8 +38,7 @@ namespace gm
 			Material::MaterialBuilder builder(resources);
 			builder.SetVertexShader(BuiltinResourceKey::StaticMeshVS)
 				.SetPixelShader(BuiltinResourceKey::StaticMeshPS)
-				.SetSamplerAddressMode(TextureSlot::BaseColor, TextureAddressMode::Wrap)
-				.SetCullMode(CullMode::None);
+				.SetSamplerAddressMode(TextureSlot::BaseColor, TextureAddressMode::Wrap);
 
 			for (uint32 textureSetIndex = 0; textureSetIndex < TextureSlotCount; ++textureSetIndex)
 			{

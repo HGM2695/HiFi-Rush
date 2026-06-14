@@ -41,6 +41,9 @@
     <Filter Include="Component\01. Behavior\2D">
       <UniqueIdentifier>{41916a20-ac1b-4d9a-bb53-6bdd668078a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\01. Behavior\3D\State">
+      <UniqueIdentifier>{1fbc4598-ecac-4e3a-88fe-18ab9a71aa4a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h" />
@@ -81,27 +84,6 @@
     <ClInclude Include="ChiAnimationTypes.h">
       <Filter>Util\Types\Player</Filter>
     </ClInclude>
-    <ClInclude Include="ChiState.h">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="ChiAttackState.h">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="ChiDamageState.h">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="ChiDashState.h">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="ChiIdleRunState.h">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="ChiJumpState.h">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="ChiSpecialState.h">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClInclude>
     <ClInclude Include="ChiStateContext.h">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClInclude>
@@ -116,6 +98,27 @@
     </ClInclude>
     <ClInclude Include="PlayerMovementComponent.h">
       <Filter>Component\01. Behavior\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiAttackState.h">
+      <Filter>Component\01. Behavior\3D\State</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiDamageState.h">
+      <Filter>Component\01. Behavior\3D\State</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiDashState.h">
+      <Filter>Component\01. Behavior\3D\State</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiJumpState.h">
+      <Filter>Component\01. Behavior\3D\State</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiIdleRunState.h">
+      <Filter>Component\01. Behavior\3D\State</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiSpecialState.h">
+      <Filter>Component\01. Behavior\3D\State</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiState.h">
+      <Filter>Component\01. Behavior\3D\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -151,27 +154,6 @@
     <ClCompile Include="DebugTextWidget.cpp">
       <Filter>Widget</Filter>
     </ClCompile>
-    <ClCompile Include="ChiState.cpp">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="ChiAttackState.cpp">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="ChiDamageState.cpp">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="ChiDashState.cpp">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="ChiIdleRunState.cpp">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="ChiJumpState.cpp">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="ChiSpecialState.cpp">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClCompile>
     <ClCompile Include="ChiStateMachineComponent.cpp">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClCompile>
@@ -183,6 +165,27 @@
     </ClCompile>
     <ClCompile Include="PlayerMovementComponent.cpp">
       <Filter>Component\01. Behavior\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiAttackState.cpp">
+      <Filter>Component\01. Behavior\3D\State</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiDamageState.cpp">
+      <Filter>Component\01. Behavior\3D\State</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiDashState.cpp">
+      <Filter>Component\01. Behavior\3D\State</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiIdleRunState.cpp">
+      <Filter>Component\01. Behavior\3D\State</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiJumpState.cpp">
+      <Filter>Component\01. Behavior\3D\State</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiSpecialState.cpp">
+      <Filter>Component\01. Behavior\3D\State</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiState.cpp">
+      <Filter>Component\01. Behavior\3D\State</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

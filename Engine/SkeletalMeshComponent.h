@@ -38,8 +38,10 @@ namespace gm
 	private:
 		TransformComponent*						_ownerTransform = nullptr;
 		Matrix									_preTransform = Matrix::CreateScale(1.f);
+
 		std::shared_ptr<SkeletalMesh>			_skeletalMesh;
-		SkeletalPose							_pose;
 		std::vector<std::unique_ptr<Material>>	_materials;
+
+		SkeletalPose							_pose;
 	};
 }
