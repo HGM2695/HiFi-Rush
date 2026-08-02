@@ -3,10 +3,8 @@ SamplerState    g_sampler : register(s0);
 
 cbuffer sprite : register(b0)
 {
-    float leftNorm;
-    float topNorm;
-    float widthNorm;
-    float heightNorm;
+    float2 uvOffset;
+    float2 uvScale;
 }
 
 struct PSInput
@@ -17,7 +15,7 @@ struct PSInput
 
 float4 main(PSInput input) : SV_TARGET
 {   
-    float2 uv = float2(leftNorm + input.texcoord.x * widthNorm, topNorm + input.texcoord.y * heightNorm);
+    float2 uv = uvOffset + input.texcoord * uvScale;
     float4 color = g_texture.Sample(g_sampler, uv);
     clip(color.a - 0.001f);
 

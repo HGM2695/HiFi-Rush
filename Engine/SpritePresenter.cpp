@@ -130,10 +130,8 @@ namespace gm
 
 		const Rect uvRect = CreateUVRect();
 		SpriteConstantPS constant{};
-		constant.textureLeft = uvRect.left;
-		constant.textureTop = uvRect.top;
-		constant.textureWidth = uvRect.width;
-		constant.textureHeight = uvRect.height;
+		constant.uvOffset = Vector2{ uvRect.left, uvRect.top };
+		constant.uvScale = Vector2{ uvRect.width, uvRect.height };
 
 		_material->SetConstantData(ShaderStage::Pixel, 0, constant);
 	}
