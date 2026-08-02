@@ -4,6 +4,7 @@
 
 namespace gm
 {
+	class CameraComponent;
 	class GameObject;
 
 	class TutorialScene : public Scene
@@ -20,7 +21,7 @@ namespace gm
 		void			InitializeSubObject();
 		void			InitializeStaticMeshTest();
 		void			InitializeSkeletalMeshTest();
-		void			InitializeCamera(GameObject* player);
+		CameraComponent*	InitializeCamera(GameObject* player);
 	};
 }
 

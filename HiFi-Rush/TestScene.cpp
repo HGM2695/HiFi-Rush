@@ -97,7 +97,7 @@ namespace gm
 		skeletalMeshComponent->SetSkeletalMesh(skeletalMesh);
 		player->AddComponent<SkeletalAnimatorComponent>();
 
-		player->AddComponent<ChiMoveComponent>();
+		ChiMoveComponent* moveComponent = player->AddComponent<ChiMoveComponent>();
 
 		SocketComponent* socketComponent = player->AddComponent<SocketComponent>();
 		Socket socket{};
@@ -110,7 +110,8 @@ namespace gm
 		userWidget->SetUserWidget<MainHUDWidget>();
 		userWidget->SetScreenOffset(Vector2{ 0.f, -300.f });
 
-		InitializeCamera(player);
+		CameraComponent* playerCamera = InitializeCamera(player);
+		moveComponent->SetMovementCamera(*playerCamera);
 	}
 
 	void TestScene::InitializeSubObject()
@@ -172,7 +173,7 @@ namespace gm
 		animatorComponent->Play(L"Default");
 	}
 
-	void TestScene::InitializeCamera(GameObject* player)
+	CameraComponent* TestScene::InitializeCamera(GameObject* player)
 	{
 		auto cameraObject = SpawnGameObject<GameObject>({ 0.f, 0.f, 0.f });
 
@@ -186,6 +187,7 @@ namespace gm
 		const float aspectRatio = static_cast<float>(APPLICATION.GetWidth()) / static_cast<float>(APPLICATION.GetHeight());
 		cameraComponent->SetPerspective(Math::GM_PI / 3.f, aspectRatio, 0.1f, 5000.f);
 		GetCameraManager()->RegisterCamera(L"PlayerCamera", cameraComponent);
+		return cameraComponent;
 	}
 
 #if GM_ENABLE_DEBUG_TOOLS

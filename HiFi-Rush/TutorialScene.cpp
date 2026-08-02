@@ -101,7 +101,8 @@ namespace gm
 		userWidget->SetUserWidget<MainHUDWidget>();
 		userWidget->SetScreenOffset(Vector2{ 0.f, -300.f });
 
-		InitializeCamera(player);
+		CameraComponent* playerCamera = InitializeCamera(player);
+		moveComponent->SetMovementCamera(*playerCamera);
 	}
 
 	void TutorialScene::InitializeSubObject()
@@ -163,7 +164,7 @@ namespace gm
 		animatorComponent->Play(L"Default");
 	}
 
-	void TutorialScene::InitializeCamera(GameObject* player)
+	CameraComponent* TutorialScene::InitializeCamera(GameObject* player)
 	{
 		auto cameraObject = SpawnGameObject<GameObject>({ 0.f, 0.f, 0.f });
 
@@ -177,5 +178,6 @@ namespace gm
 		const float aspectRatio = static_cast<float>(APPLICATION.GetWidth()) / static_cast<float>(APPLICATION.GetHeight());
 		cameraComponent->SetPerspective(Math::GM_PI / 3.f, aspectRatio, 0.1f, 5000.f);
 		GetCameraManager()->RegisterCamera(L"PlayerCamera", cameraComponent);
+		return cameraComponent;
 	}
 }

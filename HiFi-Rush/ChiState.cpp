@@ -137,13 +137,15 @@ namespace gm
 			return;
 		}
 
-		if (std::abs(inputDirection.x) > std::abs(inputDirection.z))
+		const float forwardAmount = inputDirection.Dot(context.moveComponent->GetForwardDirection());
+		const float rightAmount = inputDirection.Dot(context.moveComponent->GetRightDirection());
+		if (std::abs(rightAmount) > std::abs(forwardAmount))
 		{
-			context.stateMachine->ChangeState(inputDirection.x > 0.f ? ChiStateId::DashRight : ChiStateId::DashLeft);
+			context.stateMachine->ChangeState(rightAmount > 0.f ? ChiStateId::DashRight : ChiStateId::DashLeft);
 			return;
 		}
 
-		context.stateMachine->ChangeState(inputDirection.z < 0.f ? ChiStateId::DashBack : ChiStateId::DashFront);
+		context.stateMachine->ChangeState(forwardAmount < 0.f ? ChiStateId::DashBack : ChiStateId::DashFront);
 	}
 
 	bool ChiState::TryChangeAirAction(ChiStateContext& context, bool canDoubleJump) const

@@ -1,5 +1,6 @@
 ﻿#include "ChiMoveComponent.h"
 #include "Application.h"
+#include "CameraComponent.h"
 #include "GameObject.h"
 #include "Input.h"
 #include "MathUtil.h"
@@ -40,6 +41,12 @@ namespace gm
 		UpdateRotationByMoveDirection(deltaTime);
 		const Vector3 desiredDelta = _moveDirection * _moveSpeed * deltaTime;
 		Move(desiredDelta);
+	}
+
+	void ChiMoveComponent::SetMovementCamera(const CameraComponent& camera)
+	{
+		_movementCameraOwner = camera.GetOwner().GetWeakPtr();
+		_movementCamera = &camera;
 	}
 
 	void ChiMoveComponent::MoveAlong(const Vector3& direction, float speed, float deltaTime, bool updateRotation)
@@ -90,13 +97,20 @@ namespace gm
 
 	Vector3 ChiMoveComponent::GetInputMoveDirection() const
 	{
-		const Vector2 inputDirection = APPLICATION.GetInput().GetAxis2D(KeyCode::D, KeyCode::A, KeyCode::W, KeyCode::S);
-		Vector3 direction{ inputDirection.x, 0.f, inputDirection.y };
+		const Vector2 inputDirection = GetMoveInputAxis();
+		if (inputDirection.LengthSquared() <= 0.f)
+			return Vector3{};
 
-		if (direction.LengthSquared() > 0.f)
-			direction.Normalize();
-
+		const Vector3 cameraForward = GetCameraForwardDirection();
+		const Vector3 cameraRight = GetCameraRightDirection();
+		Vector3 direction = cameraRight * inputDirection.x + cameraForward * inputDirection.y;
+		direction.Normalize();
 		return direction;
+	}
+
+	Vector2 ChiMoveComponent::GetMoveInputAxis() const
+	{
+		return APPLICATION.GetInput().GetAxis2D(KeyCode::D, KeyCode::A, KeyCode::W, KeyCode::S);
 	}
 
 	Vector3 ChiMoveComponent::GetForwardDirection() const
@@ -119,6 +133,32 @@ namespace gm
 		direction.y = 0.f;
 		direction.Normalize();
 		return direction;
+	}
+
+	Vector3 ChiMoveComponent::GetCameraForwardDirection() const
+	{
+		Vector3 direction{ 0.f, 0.f, 1.f };
+		if (_movementCameraOwner.IsValid() && _movementCamera)
+		{
+			const TransformComponent* cameraTransform = _movementCamera->GetOwner().GetTransform();
+			GM_ASSERT_RETURN_VAL(cameraTransform, Vector3{}, "이동 기준 Camera의 TransformComponent가 존재하지 않습니다.");
+
+			direction = Math::GetLookVector(cameraTransform->GetRotation());
+			direction.y = 0.f;
+
+			if (direction.LengthSquared() <= 0.000001f)
+				direction = Vector3{ 0.f, 0.f, 1.f };
+			else
+				direction.Normalize();
+		}
+
+		return direction;
+	}
+
+	Vector3 ChiMoveComponent::GetCameraRightDirection() const
+	{
+		const Vector3 cameraForward = GetCameraForwardDirection();
+		return Vector3{ cameraForward.z, 0.f, -cameraForward.x };
 	}
 
 	void ChiMoveComponent::UpdateRotationByMoveDirection(float deltaTime)

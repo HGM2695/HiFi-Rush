@@ -4,6 +4,7 @@
 
 namespace gm
 {
+	class CameraComponent;
 	class GameObject;
 
 	class TestScene : public Scene
@@ -19,7 +20,7 @@ namespace gm
 		void			InitializeSubObject();
 		void			InitializeStaticMeshTest();
 		void			InitializeSkeletalMeshTest();
-		void			InitializeCamera(GameObject* player);
+		CameraComponent*	InitializeCamera(GameObject* player);
 
 #if GM_ENABLE_DEBUG_TOOLS
 		void			TickCameraProjectionDebug(float deltaTime);
