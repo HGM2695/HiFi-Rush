@@ -1,4 +1,4 @@
-﻿#include "SkeletalAnimatorComponent.h"
+#include "SkeletalAnimatorComponent.h"
 #include "AnimationClipSet.h"
 #include "AnimationController.h"
 #include "AnimationNotify.h"
@@ -53,12 +53,11 @@ namespace gm
 
 	bool SkeletalAnimatorComponent::Play(const std::wstring& name, const AnimationPlayOption& option)
 	{
-		GM_ASSERT_RETURN_VAL(_skeletalMeshComponent, false, "SkeletalAnimatorComponent가 SkeletalMeshComponent와 연결되지 않았습니다.");
-
 		std::shared_ptr<SkeletalAnimationClip> clip = FindClip(name);
 		GM_ASSERT_RETURN_VAL(clip, false, "요청한 이름의 SkeletalAnimationClip이 없습니다.");
 
-		if (_currentClip && option.blendDuration > 0.f)
+		// Pending 초기화 중에는 첫 클립만 선택하고, 컴포넌트 연결 이후부터 포즈를 계산합니다.
+		if (_skeletalMeshComponent && _currentClip && option.blendDuration > 0.f)
 			_animationBlender.BeginBlend(_skeletalMeshComponent->GetPose(), option.blendDuration);
 		else
 			_animationBlender.Reset();
@@ -161,10 +160,21 @@ namespace gm
 		}
 
 		if (_hasPreviousRootMotionPosition)
-			_rootMotionDelta += (result.rootMotionPosition - _previousRootMotionPosition) * _rootMotionScale;
+		{
+			const Vector3 rawDelta = result.rootMotionPosition - _previousRootMotionPosition;
+			_rootMotionDelta += ApplyPreTransformToRootMotionDelta(rawDelta);
+		}
 
 		_previousRootMotionPosition = result.rootMotionPosition;
 		_hasPreviousRootMotionPosition = true;
+	}
+
+	Vector3 SkeletalAnimatorComponent::ApplyPreTransformToRootMotionDelta(const Vector3& delta) const
+	{
+		if (_skeletalMeshComponent == nullptr)
+			return delta;
+
+		return Vector3::Transform(delta, _skeletalMeshComponent->GetPreTransform());
 	}
 
 	void SkeletalAnimatorComponent::ResetRootMotion()

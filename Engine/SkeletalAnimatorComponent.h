@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "AnimationNotify.h"
 #include "AnimationTypes.h"
@@ -40,7 +40,6 @@ namespace gm
 		void									Resume();
 		void									SetPlayRate(float playRate);
 		void									SetRootMotionBoneName(const std::wstring& boneName);
-		void									SetRootMotionScale(float scale) { _rootMotionScale = scale; }
 		Vector3									ConsumeRootMotionDelta();
 		AnimationState							GetState() const;
 		float									GetPlayTime() const;
@@ -54,6 +53,7 @@ namespace gm
 	private:
 		void									ResolveRootMotionBoneIndex(const SkeletalMesh& skeletalMesh);
 		void									UpdateRootMotion(const SkeletalPoseApplyResult& result);
+		Vector3									ApplyPreTransformToRootMotionDelta(const Vector3& delta) const;
 		void									ResetRootMotion();
 
 	private:
@@ -68,7 +68,6 @@ namespace gm
 		int32										_rootMotionBoneIndex = -1;
 		Vector3										_previousRootMotionPosition{};
 		Vector3										_rootMotionDelta{};
-		float										_rootMotionScale = 0.01f;
 		bool										_hasPreviousRootMotionPosition = false;
 	};
 }
