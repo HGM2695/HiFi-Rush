@@ -26,7 +26,7 @@ namespace gm
 
 		bool			IsInitialized() const { return _system != nullptr; }
 
-		bool			CreateSound(const std::wstring& path, _Out_ FMOD::Sound** outSound, bool isLooping = false);
+		bool			CreateSound(const std::wstring& path, _Out_ FMOD::Sound** outSound);
 		FMOD::Channel*	PlaySound2D(const SoundWave& sound, float volume = 1.f, bool isLooping = false, bool startPaused = false);
 		FMOD::Channel*	PlayBGM(const SoundWave& sound, float volume = 1.f, bool startPaused = false);
 		void			StopChannel(FMOD::Channel* channel);

@@ -72,7 +72,7 @@ namespace gm
 		_system = nullptr;
 	}
 
-	bool AudioSystem::CreateSound(const std::wstring& path, _Out_ FMOD::Sound** outSound, bool isLooping)
+	bool AudioSystem::CreateSound(const std::wstring& path, _Out_ FMOD::Sound** outSound)
 	{
 		GM_ASSERT_RETURN_VAL(outSound, false, "outSound는 nullptr일 수 없습니다.");
 		*outSound = nullptr;
@@ -86,8 +86,7 @@ namespace gm
 		const std::string utf8Path = gm::WideToUtf8(path);
 		GM_ASSERT_RETURN_VAL(utf8Path.empty() == false, false, "오디오 경로 UTF-8 변환에 실패했습니다.");
 
-		const FMOD_MODE mode = FMOD_DEFAULT | (isLooping ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF);
-		const FMOD_RESULT result = _system->createSound(utf8Path.c_str(), mode, nullptr, outSound);
+		const FMOD_RESULT result = _system->createSound(utf8Path.c_str(), FMOD_DEFAULT, nullptr, outSound);
 		if (result != FMOD_OK)
 		{
 			LogFMODError("FMOD::System::createSound", result);
@@ -152,7 +151,7 @@ namespace gm
 		_activeChannels.clear();
 
 		if (includeBGM)
-			_bgmChannel = nullptr;
+			StopBGM();
 	}
 
 	FMOD::Channel* AudioSystem::PlaySound2DInternal(const SoundWave& sound, float volume, bool isLooping, bool startPaused)

@@ -10,7 +10,7 @@ namespace gm
 	void PlaySound2D(const std::wstring& soundKey, float volume)
 	{
 		const std::shared_ptr<SoundWave> sound = APPLICATION.GetResources().Find<SoundWave>(soundKey);
-		GM_ASSERT(sound, "키에 해당하는 사운드 웨이브 리소스가 존재하지 않습니다.");
+		GM_ASSERT_RETURN(sound, "키에 해당하는 사운드 웨이브 리소스가 존재하지 않습니다.");
 
 		APPLICATION.GetAudioSystem().PlaySound2D(*sound, volume, false);
 	}
@@ -18,7 +18,7 @@ namespace gm
 	void PlayBGM(const std::wstring& soundKey, float volume)
 	{
 		const std::shared_ptr<SoundWave> sound = APPLICATION.GetResources().Find<SoundWave>(soundKey);
-		GM_ASSERT(sound, "키에 해당하는 사운드 웨이브 리소스가 존재하지 않습니다.");
+		GM_ASSERT_RETURN(sound, "키에 해당하는 사운드 웨이브 리소스가 존재하지 않습니다.");
 
 		APPLICATION.GetAudioSystem().PlayBGM(*sound, volume, false);
 	}

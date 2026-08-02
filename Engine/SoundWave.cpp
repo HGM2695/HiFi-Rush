@@ -8,13 +8,13 @@ namespace gm
 	std::shared_ptr<SoundWave> SoundWave::Create(const SoundWaveDesc& desc)
 	{
 		FMOD::Sound* sound = nullptr;
-		if (APPLICATION.GetAudioSystem().CreateSound(desc.path, &sound, desc.isLooping) == false)
+		if (APPLICATION.GetAudioSystem().CreateSound(desc.path, &sound) == false)
 			return nullptr;
 
-		return std::shared_ptr<SoundWave>(new SoundWave(sound, desc.isLooping));
+		return std::shared_ptr<SoundWave>(new SoundWave(sound));
 	}
 
-	SoundWave::SoundWave(FMOD::Sound* sound, bool isLooping) : _sound(sound), _isLooping(isLooping) {}
+	SoundWave::SoundWave(FMOD::Sound* sound) : _sound(sound) {}
 
 	SoundWave::~SoundWave()
 	{
@@ -24,16 +24,4 @@ namespace gm
 			_sound = nullptr;
 		}
 	}
-
-	void SoundWave::SetLooping(bool isLooping)
-	{
-		_isLooping = isLooping;
-
-		if (_sound)
-		{
-			const FMOD_MODE mode = _isLooping ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF;
-			_sound->setMode(mode);
-		}
-	}
-
 }
