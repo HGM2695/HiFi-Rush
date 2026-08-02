@@ -14,8 +14,8 @@ namespace gm
 
 		void Resize(uint32 width, uint32 height)
 		{
-			width = width;
-			height = height;
+			_width = width;
+			_height = height;
 			OnResize();
 		}
 
