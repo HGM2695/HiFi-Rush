@@ -238,6 +238,7 @@ namespace gm
 
 		GM_ASSERT_RETURN_VAL(IsValidCellIndex(cellIndex), result, "currentPosition이 NavigationMesh 위에 있지 않습니다.");
 
+		const int32 startCellIndex = cellIndex;
 		Vector3 targetPosition = currentPosition + desiredDelta;
 		for (uint32 retryCount = 0; retryCount < MaxMoveRetryCount; ++retryCount)
 		{
@@ -280,8 +281,8 @@ namespace gm
 			targetPosition.x, targetPosition.y, targetPosition.z
 		);
 
-		result.position = targetPosition;
-		result.cellIndex = cellIndex;
+		result.position = currentPosition;
+		result.cellIndex = startCellIndex;
 		result.isOnMesh = true;
 		return result;
 	}
