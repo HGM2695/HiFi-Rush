@@ -57,7 +57,13 @@
     <ClInclude Include="EnvironmentSpawner.h">
       <Filter>GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="MainScene.h">
+    <ClInclude Include="TutorialScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="OutsideScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="QamilScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="TestScene.h">
@@ -78,17 +84,17 @@
     <ClInclude Include="LoadScenes.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="LoadResources.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
     <ClInclude Include="LoadingScreenWidget.h">
       <Filter>Widget</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneDebugTools.h">
-      <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="LoadDebugTools.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="LoadResources.h">
-      <Filter>Resource</Filter>
+    <ClInclude Include="SceneDebugTools.h">
+      <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="DebugTextWidget.h">
       <Filter>Widget</Filter>
@@ -163,7 +169,13 @@
     <ClCompile Include="LoadingScreenWidget.cpp">
       <Filter>Widget</Filter>
     </ClCompile>
-    <ClCompile Include="MainScene.cpp">
+    <ClCompile Include="TutorialScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="OutsideScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="QamilScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="SceneDebugTools.cpp">

@@ -1,4 +1,4 @@
-#include "MainScene.h"
+#include "TutorialScene.h"
 #include "MainHUDWidget.h"
 #include "ChiStateMachineComponent.h"
 #include "ChiMoveComponent.h"
@@ -25,33 +25,53 @@
 #include "SkeletalMeshComponent.h"
 #include "SkeletalAnimationClip.h"
 #include "NavigationMesh.h"
+#include "BinaryEnvironmentMapLoader.h"
+#include "EnvironmentMapTypes.h"
+#include "EnvironmentSpawner.h"
+#include "Paths.h"
+#include "SceneDebugTools.h"
 
 namespace gm
 {
-	void MainScene::OnEnter()
+	void TutorialScene::OnEnter()
 	{
 		APPLICATION.GetPhysicsSystem().SetPhysicsMode(PhysicsMode::Physics3D);
 		APPLICATION.GetUIManager().ClearViewportWidgets();
 
 		std::shared_ptr<NavigationMesh> navigationMesh = APPLICATION.GetResources().Find<NavigationMesh>(L"tutorial");
-		GM_ASSERT_RETURN(navigationMesh, "jump_outside NavigationMesh가 로드되지 않았습니다.");
+		GM_ASSERT_RETURN(navigationMesh, "tutorial NavigationMesh가 로드되지 않았습니다.");
 		APPLICATION.GetPhysicsSystem().GetNavMeshSystem().SetActiveNavigationMesh(navigationMesh);
+		GetCameraManager()->SetActiveCamera(L"PlayerCamera");
 	}
 
-	void MainScene::OnInitialize()
+	void TutorialScene::OnInitialize()
 	{
 		//InitializeSubObject();
-		InitializeStaticMeshTest();
+		InitializeEnvironment();
 		InitializePlayer();
 		GetCameraManager()->SetPixelSnapEnabled(false);
 	}
 
-	void MainScene::InitializePlayer()
+	void TutorialScene::OnTick(float deltaTime)
+	{
+		TickSceneTransitionDebug();
+	}
+
+	void TutorialScene::InitializeEnvironment()
+	{
+		EnvironmentMapData mapData{};
+		GM_ASSERT_RETURN(BinaryEnvironmentMapLoader::Load(GetMapPath(L"TutorialEnvironmentMap.bin"), mapData), "Tutorial 환경 맵을 로드하지 못했습니다.");
+
+		EnvironmentSpawner spawner(APPLICATION.GetResources());
+		GM_ASSERT_RETURN(spawner.Spawn(*this, mapData), "Tutorial 환경 오브젝트 생성에 실패했습니다.");
+	}
+
+	void TutorialScene::InitializePlayer()
 	{
 		std::shared_ptr<SkeletalMesh> skeletalMesh = APPLICATION.GetResources().Find<SkeletalMesh>(L"chi");
 		GM_ASSERT_RETURN(skeletalMesh, "chi SkeletalMesh가 로드되지 않았습니다.");
 
-		GameObject* player = SpawnGameObject<GameObject>(Vector3{3.f, 0.f, 0.f});
+		GameObject* player = SpawnGameObject<GameObject>(Vector3{ 3.f, 0.f, 0.f });
 		TransformComponent* transform = player->GetTransform();
 		transform->SetScale(Vector3{ 1.f, 1.f, 1.f });
 		transform->SetRotationY(Math::GM_PI);
@@ -77,26 +97,24 @@ namespace gm
 		InitializeCamera(player);
 	}
 
-	void MainScene::InitializeSubObject()
+	void TutorialScene::InitializeSubObject()
 	{
-		// BackGround
-		auto BackGround = SpawnGameObject<GameObject>({ 0.f, 0.f, 500.f });
-		auto spriteComponent = BackGround->AddComponent<SpriteComponent>();
+		auto background = SpawnGameObject<GameObject>({ 0.f, 0.f, 500.f });
+		auto spriteComponent = background->AddComponent<SpriteComponent>();
 		auto texture = APPLICATION.GetResources().Find<Texture>(L"Xanadu");
 		spriteComponent->SetTexture(texture);
-		auto transform = BackGround->GetTransform();
-		transform->SetScale(Vector2{ static_cast<float>(texture->GetWidth()),static_cast<float>(texture->GetHeight()) });
+		auto transform = background->GetTransform();
+		transform->SetScale(Vector2{ static_cast<float>(texture->GetWidth()), static_cast<float>(texture->GetHeight()) });
 
-		// Monster
 		for (int i = 0; i < 20; ++i)
 		{
-			auto monster = SpawnGameObject<GameObject>({ 200.f * i, 300.f, 0.f});
-			auto spriteComponent = monster->AddComponent<SpriteComponent>();
-			auto texture = APPLICATION.GetResources().Find<Texture>(L"OrangeMushroom");
-			spriteComponent->SetTexture(texture);
+			auto monster = SpawnGameObject<GameObject>({ 200.f * i, 300.f, 0.f });
+			auto monsterSprite = monster->AddComponent<SpriteComponent>();
+			auto monsterTexture = APPLICATION.GetResources().Find<Texture>(L"OrangeMushroom");
+			monsterSprite->SetTexture(monsterTexture);
 
-			auto transform = monster->GetTransform();
-			transform->SetScale(Vector2{ static_cast<float>(texture->GetWidth()),static_cast<float>(texture->GetHeight()) });
+			auto monsterTransform = monster->GetTransform();
+			monsterTransform->SetScale(Vector2{ static_cast<float>(monsterTexture->GetWidth()), static_cast<float>(monsterTexture->GetHeight()) });
 		}
 
 		auto ground = SpawnGameObject<GameObject>({ 0.f, -100.f, 0.f });
@@ -104,7 +122,7 @@ namespace gm
 		groundCollider->SetSize({ 120000.f, 100.f });
 	}
 
-	void MainScene::InitializeStaticMeshTest()
+	void TutorialScene::InitializeStaticMeshTest()
 	{
 		std::shared_ptr<StaticMesh> staticMesh = APPLICATION.GetResources().Find<StaticMesh>(L"Environment97");
 		GM_ASSERT_RETURN(staticMesh, "Environment97 StaticMesh가 로드되지 않았습니다.");
@@ -118,28 +136,27 @@ namespace gm
 		staticMeshComponent->SetStaticMesh(staticMesh);
 	}
 
-	void MainScene::InitializeSkeletalMeshTest()
+	void TutorialScene::InitializeSkeletalMeshTest()
 	{
 		std::shared_ptr<SkeletalMesh> skeletalMesh = APPLICATION.GetResources().Find<SkeletalMesh>(L"chi");
-		GM_ASSERT_RETURN(skeletalMesh, "chi skeletalMesh가 로드되지 않았습니다.");
+		GM_ASSERT_RETURN(skeletalMesh, "chi SkeletalMesh가 로드되지 않았습니다.");
 
 		GameObject* testObject = SpawnGameObject<GameObject>({ -350.f, -200.f, 200.f });
 		TransformComponent* transform = testObject->GetTransform();
 		transform->SetScale(Vector3{ 250.f, 250.f, 250.f });
 		transform->SetRotationY(Math::GM_PI);
 
-		SkeletalMeshComponent* skeletalmeshComponent = testObject->AddComponent<SkeletalMeshComponent>();
-		skeletalmeshComponent->SetSkeletalMesh(skeletalMesh);
+		SkeletalMeshComponent* skeletalMeshComponent = testObject->AddComponent<SkeletalMeshComponent>();
+		skeletalMeshComponent->SetSkeletalMesh(skeletalMesh);
 		SkeletalAnimatorComponent* animatorComponent = testObject->AddComponent<SkeletalAnimatorComponent>();
 
 		std::shared_ptr<SkeletalAnimationClip> animationClip = APPLICATION.GetResources().Find<SkeletalAnimationClip>(L"chi.DefaultAnimation");
 		GM_ASSERT_RETURN(animationClip, "chi.DefaultAnimation SkeletalAnimationClip이 로드되지 않았습니다.");
 		animatorComponent->AddClip(L"Default", animationClip);
 		animatorComponent->Play(L"Default");
-		//animatorComponent->SetPlayRate(0.f);
 	}
 
-	void MainScene::InitializeCamera(GameObject* player)
+	void TutorialScene::InitializeCamera(GameObject* player)
 	{
 		auto cameraObject = SpawnGameObject<GameObject>({ 0.f, 0.f, 0.f });
 

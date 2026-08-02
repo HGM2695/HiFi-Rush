@@ -5,9 +5,20 @@
 #include "PhysicsSystem.h"
 #include "SceneManager.h"
 #include "BuiltinGraphicsResources.h"
+#include "CameraComponent.h"
+#include "CameraManager.h"
+#include "GameObject.h"
+#include "SceneDebugTools.h"
 
 namespace gm
 {
+	void TitleScene::OnInitialize()
+	{
+		GameObject* cameraObject = SpawnGameObject<GameObject>();
+		CameraComponent* camera = cameraObject->AddComponent<CameraComponent>();
+		GetCameraManager()->RegisterCamera(L"TitleCamera", camera);
+	}
+
 	void TitleScene::OnEnter()
 	{
 		APPLICATION.GetPhysicsSystem().SetPhysicsMode(PhysicsMode::None);
@@ -15,8 +26,10 @@ namespace gm
 
 	void TitleScene::OnTick(float deltaTime)
 	{
+		TickSceneTransitionDebug();
+
 		if (APPLICATION.GetInput().IsKeyDown(KeyCode::M))
-			APPLICATION.GetSceneManager().RequestSceneChange(L"MainScene");
+			APPLICATION.GetSceneManager().RequestSceneChange(L"TutorialScene", L"CommonLoadingScene");
 	}
 
 	void TitleScene::OnRender()

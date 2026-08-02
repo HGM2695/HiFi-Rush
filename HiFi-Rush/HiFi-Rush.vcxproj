@@ -188,8 +188,10 @@
     <ClInclude Include="LoadScenes.h" />
     <ClInclude Include="LoadingScreenWidget.h" />
     <ClInclude Include="MainHUDWidget.h" />
-    <ClInclude Include="MainScene.h" />
+    <ClInclude Include="OutsideScene.h" />
+    <ClInclude Include="QamilScene.h" />
     <ClInclude Include="SceneDebugTools.h" />
+    <ClInclude Include="TutorialScene.h" />
     <ClInclude Include="TestScene.h" />
     <ClInclude Include="Paths.h" />
     <ClInclude Include="ChiAnimationTypes.h" />
@@ -219,8 +221,10 @@
     <ClCompile Include="LoadingScreenWidget.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainHUDWidget.cpp" />
-    <ClCompile Include="MainScene.cpp" />
+    <ClCompile Include="OutsideScene.cpp" />
+    <ClCompile Include="QamilScene.cpp" />
     <ClCompile Include="SceneDebugTools.cpp" />
+    <ClCompile Include="TutorialScene.cpp" />
     <ClCompile Include="TestScene.cpp" />
     <ClCompile Include="PlayerAnimationFSMComponent.cpp" />
     <ClCompile Include="ChiAttackState.cpp" />
