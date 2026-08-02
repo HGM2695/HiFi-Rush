@@ -48,6 +48,15 @@
   <ItemGroup>
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="BinaryEnvironmentMapLoader.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironmentMapTypes.h">
+      <Filter>Util\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironmentSpawner.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
     <ClInclude Include="MainScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
@@ -139,6 +148,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="BinaryEnvironmentMapLoader.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentSpawner.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
     <ClCompile Include="MainScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>

@@ -179,7 +179,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CommonLoadingScene.h" />
+    <ClInclude Include="BinaryEnvironmentMapLoader.h" />
     <ClInclude Include="DebugTextWidget.h" />
+    <ClInclude Include="EnvironmentMapTypes.h" />
+    <ClInclude Include="EnvironmentSpawner.h" />
     <ClInclude Include="LoadDebugTools.h" />
     <ClInclude Include="LoadResources.h" />
     <ClInclude Include="LoadScenes.h" />
@@ -208,7 +211,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CommonLoadingScene.cpp" />
+    <ClCompile Include="BinaryEnvironmentMapLoader.cpp" />
     <ClCompile Include="DebugTextWidget.cpp" />
+    <ClCompile Include="EnvironmentSpawner.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainHUDWidget.cpp" />
     <ClCompile Include="MainScene.cpp" />
