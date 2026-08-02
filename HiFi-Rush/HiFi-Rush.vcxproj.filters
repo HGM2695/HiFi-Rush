@@ -78,6 +78,9 @@
     <ClInclude Include="LoadScenes.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="LoadingScreenWidget.h">
+      <Filter>Widget</Filter>
+    </ClInclude>
     <ClInclude Include="SceneDebugTools.h">
       <Filter>Util</Filter>
     </ClInclude>
@@ -85,7 +88,7 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="LoadResources.h">
-      <Filter>Util</Filter>
+      <Filter>Resource</Filter>
     </ClInclude>
     <ClInclude Include="DebugTextWidget.h">
       <Filter>Widget</Filter>
@@ -153,6 +156,12 @@
     </ClCompile>
     <ClCompile Include="EnvironmentSpawner.cpp">
       <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadResources.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadingScreenWidget.cpp">
+      <Filter>Widget</Filter>
     </ClCompile>
     <ClCompile Include="MainScene.cpp">
       <Filter>Scene</Filter>

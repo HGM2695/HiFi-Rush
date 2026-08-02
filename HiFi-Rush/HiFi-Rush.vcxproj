@@ -186,6 +186,7 @@
     <ClInclude Include="LoadDebugTools.h" />
     <ClInclude Include="LoadResources.h" />
     <ClInclude Include="LoadScenes.h" />
+    <ClInclude Include="LoadingScreenWidget.h" />
     <ClInclude Include="MainHUDWidget.h" />
     <ClInclude Include="MainScene.h" />
     <ClInclude Include="SceneDebugTools.h" />
@@ -214,6 +215,8 @@
     <ClCompile Include="BinaryEnvironmentMapLoader.cpp" />
     <ClCompile Include="DebugTextWidget.cpp" />
     <ClCompile Include="EnvironmentSpawner.cpp" />
+    <ClCompile Include="LoadResources.cpp" />
+    <ClCompile Include="LoadingScreenWidget.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainHUDWidget.cpp" />
     <ClCompile Include="MainScene.cpp" />
