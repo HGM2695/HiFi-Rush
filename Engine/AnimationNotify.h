@@ -55,6 +55,8 @@ namespace gm
 		NotifyConnection(const NotifyConnection&) = delete;
 		NotifyConnection& operator=(const NotifyConnection&) = delete;
 
+		// 이동은 BindNotifyListener()의 임시 반환값을 리스너 멤버에 보관하기 위해 허용합니다.
+		// [this]를 캡처한 리스너의 Connection을 다른 객체로 이전하면 콜백의 this가 댕글링될 수 있습니다.
 		NotifyConnection(NotifyConnection&& other) noexcept
 			: _dispatcher(other._dispatcher), _lifetimeToken(std::move(other._lifetimeToken)), _id(other._id)
 		{
