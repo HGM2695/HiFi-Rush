@@ -6,10 +6,10 @@ namespace gm
 {
     enum class TickGroup
     {
-        PrePhysics,
-        Physics,
-        PostPhysics,
         GameLogic,
+        Animation,
+        Movement,
+        PostPhysics,
         Attachment,
         Camera,
         Count

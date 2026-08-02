@@ -15,6 +15,7 @@ namespace gm
 	public:
 		AnimatedSpriteComponent();
 		virtual ~AnimatedSpriteComponent();
+		virtual TickGroup						GetTickGroup() const override { return TickGroup::Animation; }
 
 		void								SetMaterial(const Material& material) { _presenter.SetMaterial(material); }
 		void								SetTexture(const std::shared_ptr<Texture>& texture, TextureSlot slot = TextureSlot::BaseColor);

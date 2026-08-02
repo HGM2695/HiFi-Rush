@@ -23,7 +23,7 @@ namespace gm
 		SkeletalAnimatorComponent();
 		virtual ~SkeletalAnimatorComponent();
 
-		virtual TickGroup GetTickGroup() const override { return TickGroup::Attachment; }
+		virtual TickGroup GetTickGroup() const override { return TickGroup::Animation; }
 
 		bool									AddClip(const std::wstring& name, const std::wstring& clipKey);
 		bool									AddClip(const std::wstring& name, const std::shared_ptr<SkeletalAnimationClip>& clip);

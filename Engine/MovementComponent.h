@@ -14,6 +14,7 @@ namespace gm
 	public:
 		MovementComponent();
 		virtual ~MovementComponent();
+		virtual TickGroup	GetTickGroup() const override { return TickGroup::Movement; }
 
 		void				EnableNavigationMovement(bool enabled);
 		bool				IsNavigationMovementEnabled() const;

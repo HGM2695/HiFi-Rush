@@ -55,7 +55,7 @@ namespace gm
 		bool				Initialize(const ApplicationDesc& desc);
 		void				Run();
 
-		float				TickSystems();
+		void				TickSystems();
 		void				SimulatePhysics(float deltaTime);
 		void				Render();
 		void				EndFrame();

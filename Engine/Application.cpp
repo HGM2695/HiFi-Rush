@@ -138,11 +138,13 @@ namespace gm
 
 	void Application::Loop()
 	{
-		const float deltaTime = TickSystems();
+		TickSystems();
 
+		const float deltaTime = _time->GetDeltaTime();
 		_sceneManager->BeginFrame();
-		_sceneManager->Tick(TickGroup::PrePhysics, deltaTime);
 		_sceneManager->Tick(TickGroup::GameLogic, deltaTime);
+		_sceneManager->Tick(TickGroup::Animation, deltaTime);
+		_sceneManager->Tick(TickGroup::Movement, deltaTime);
 		SimulatePhysics(deltaTime);
 		_sceneManager->Tick(TickGroup::PostPhysics, deltaTime);
 		_sceneManager->Tick(TickGroup::Attachment, deltaTime);
@@ -151,7 +153,7 @@ namespace gm
 		EndFrame();
 	}
 
-	float Application::TickSystems()
+	void Application::TickSystems()
 	{
 		_input->Tick();
 		_time->Tick();
@@ -159,8 +161,6 @@ namespace gm
 
 		const float deltaTime = _time->GetDeltaTime();
 		_uiManager->Tick(deltaTime);
-
-		return deltaTime;
 	}
 
 	void Application::SimulatePhysics(float deltaTime)

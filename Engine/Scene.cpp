@@ -71,7 +71,7 @@ namespace gm
 			}
 		}
 
-		// GameLogic Tick 시점에 Scene과 GameObject에 대해 OnTick 호출.
+		// Camera Tick 시점에 CameraManager를 갱신합니다.
 		if (group == TickGroup::Camera)
 			_cameraManager->Tick(deltaTime);
 	}
@@ -106,7 +106,7 @@ namespace gm
 				continue;
 
 			gameObject->Initialize();
-			RegisterGameObjectComponents(*gameObject);
+			_tickManager->RegisterGameObject(*gameObject);
 		}
 
 		_pendingInitializeGameObjects.clear();
@@ -125,11 +125,6 @@ namespace gm
 			++slot.generation;
 			_freeGameObjectSlotIndices.push_back(i);
 		}
-	}
-
-	void Scene::RegisterGameObjectComponents(GameObject& gameObject)
-	{
-		_tickManager->RegisterGameObject(gameObject);
 	}
 
 	void Scene::NotifyComponentAdded(Component& component)

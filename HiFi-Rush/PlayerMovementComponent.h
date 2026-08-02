@@ -11,6 +11,7 @@ namespace gm
 	class PlayerMovementComponent : public Component
 	{
 	public:
+		virtual TickGroup GetTickGroup() const override { return TickGroup::Movement; }
 		virtual void	OnInitialize() override;
 		virtual void	OnTick(float deltaTime) override;
 
