@@ -196,6 +196,7 @@
     <ClInclude Include="D3D11DebugRenderer.h" />
     <ClInclude Include="D3D11TextRenderer.h" />
     <ClInclude Include="DebugDraw.h" />
+    <ClInclude Include="DebugInputHandler.h" />
     <ClInclude Include="D3D11GraphicsDevice.h" />
     <ClInclude Include="EngineCore.h" />
     <ClInclude Include="Entity.h" />
@@ -315,6 +316,7 @@
     <ClCompile Include="D3D11DebugRenderer.cpp" />
     <ClCompile Include="D3D11TextRenderer.cpp" />
     <ClCompile Include="DebugDraw.cpp" />
+    <ClCompile Include="DebugInputHandler.cpp" />
     <ClCompile Include="D3D11GraphicsDevice.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GameObject.cpp" />

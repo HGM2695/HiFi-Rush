@@ -25,6 +25,12 @@ namespace gm
 		void					SetOrthographic(float width, float height, float nearZ = 0.f, float farZ = 1000.f);
 		void					SetPerspective(float fovYRadians, float aspectRatio, float nearZ = 0.1f, float farZ = 1000.f);
 
+		CameraProjectionMode	GetProjectionMode() const { return _projectionMode; }
+		float					GetFovYRadians() const { return _fovYRadians; }
+		float					GetAspectRatio() const { return _aspectRatio; }
+		float					GetNearZ() const { return _nearZ; }
+		float					GetFarZ() const { return _farZ; }
+
 	protected:
 		virtual void			OnInitialize() override;
 

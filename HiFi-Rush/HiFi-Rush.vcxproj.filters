@@ -51,14 +51,14 @@
     <ClInclude Include="MainScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
+    <ClInclude Include="TestScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
     <ClInclude Include="TitleScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="MainHUDWidget.h">
       <Filter>Widget</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugInputHandler.h">
-      <Filter>Debug</Filter>
     </ClInclude>
     <ClInclude Include="CommonLoadingScene.h">
       <Filter>Scene</Filter>
@@ -67,6 +67,9 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="LoadScenes.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneDebugTools.h">
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="LoadDebugTools.h">
@@ -139,14 +142,17 @@
     <ClCompile Include="MainScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="SceneDebugTools.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="TestScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
     <ClCompile Include="TitleScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="MainHUDWidget.cpp">
       <Filter>Widget</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugInputHandler.cpp">
-      <Filter>Debug</Filter>
     </ClCompile>
     <ClCompile Include="CommonLoadingScene.cpp">
       <Filter>Scene</Filter>

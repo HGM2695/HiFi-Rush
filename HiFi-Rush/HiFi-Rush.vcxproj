@@ -178,7 +178,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="DebugInputHandler.h" />
     <ClInclude Include="CommonLoadingScene.h" />
     <ClInclude Include="DebugTextWidget.h" />
     <ClInclude Include="LoadDebugTools.h" />
@@ -186,6 +185,8 @@
     <ClInclude Include="LoadScenes.h" />
     <ClInclude Include="MainHUDWidget.h" />
     <ClInclude Include="MainScene.h" />
+    <ClInclude Include="SceneDebugTools.h" />
+    <ClInclude Include="TestScene.h" />
     <ClInclude Include="Paths.h" />
     <ClInclude Include="ChiAnimationTypes.h" />
     <ClInclude Include="PlayerAnimationFSMComponent.h" />
@@ -206,12 +207,13 @@
     <ClInclude Include="TitleScene.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DebugInputHandler.cpp" />
     <ClCompile Include="CommonLoadingScene.cpp" />
     <ClCompile Include="DebugTextWidget.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainHUDWidget.cpp" />
     <ClCompile Include="MainScene.cpp" />
+    <ClCompile Include="SceneDebugTools.cpp" />
+    <ClCompile Include="TestScene.cpp" />
     <ClCompile Include="PlayerAnimationFSMComponent.cpp" />
     <ClCompile Include="ChiAttackState.cpp" />
     <ClCompile Include="ChiDamageState.cpp" />

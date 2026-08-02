@@ -5,6 +5,7 @@
 
 #if GM_ENABLE_DEBUG_TOOLS
 #include "DebugTextWidget.h"
+#include "SceneDebugTools.h"
 #endif
 
 namespace gm
@@ -12,6 +13,7 @@ namespace gm
 	inline void LoadDebugTools()
 	{
 #if GM_ENABLE_DEBUG_TOOLS
+		RegisterSceneDebugTools();
 		APPLICATION.GetUIManager().AddDebugUserWidget<DebugTextWidget>();
 #endif
 	}

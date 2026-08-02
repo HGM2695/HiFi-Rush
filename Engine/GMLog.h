@@ -1,11 +1,13 @@
-﻿#pragma once
+#pragma once
+
+#include "BuildConfig.h"
 
 namespace gm
 {
 	void LogDebugOutput(const char* level, const char* format, ...);
 }
 
-#ifdef _DEBUG
+#if GM_ENABLE_DEBUG_TOOLS
 #define GM_LOG_IMPL(level, ...) ::gm::LogDebugOutput((level), __VA_ARGS__)
 #else
 #define GM_LOG_IMPL(level, ...) ((void)0)
