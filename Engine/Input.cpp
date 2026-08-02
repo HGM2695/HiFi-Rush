@@ -88,13 +88,48 @@ namespace gm
 	{
 		if (isWindowFocused() == false)
 		{
+			setCursorVisible(true);
 			clearInputState();
 			return;
+		}
+
+		const bool restoreCursorLock = _cursorLocked && _cursorVisible;
+		setCursorVisible(_cursorLocked == false);
+		if (restoreCursorLock)
+		{
+			const Vector2 center = getClientCenter();
+			_mousePosition = center;
+			_previousMousePosition = center;
+			_mouseDelta = {};
+			moveCursorToClientPosition(center);
 		}
 
 		updateKeyState();
 		updateMouseState();
 		updateMousePosition();
+	}
+
+	void Input::SetCursorLocked(bool locked)
+	{
+		if (_cursorLocked == locked)
+			return;
+
+		_cursorLocked = locked;
+		_mouseDelta = {};
+		setCursorVisible(locked == false || isWindowFocused() == false);
+
+		if (_cursorLocked)
+		{
+			const Vector2 center = getClientCenter();
+			_mousePosition = center;
+			_previousMousePosition = center;
+			moveCursorToClientPosition(center);
+			return;
+		}
+
+		updateMousePosition();
+		_previousMousePosition = _mousePosition;
+		_mouseDelta = {};
 	}
 
 	Vector2 Input::GetAxis2D(KeyCode right, KeyCode left, KeyCode up, KeyCode down) const
@@ -193,7 +228,57 @@ namespace gm
 		ScreenToClient(_hWnd, &pt);
 
 		_mousePosition = { static_cast<float>(pt.x), static_cast<float>(pt.y) };
+
+		if (_cursorLocked)
+		{
+			const Vector2 center = getClientCenter();
+			_mouseDelta = _mousePosition - center;
+			_mousePosition = center;
+			_previousMousePosition = center;
+			moveCursorToClientPosition(center);
+			return;
+		}
+
 		_mouseDelta = _mousePosition - _previousMousePosition;
 		_previousMousePosition = _mousePosition;
+	}
+
+	void Input::setCursorVisible(bool visible)
+	{
+		if (_cursorVisible == visible)
+			return;
+
+		if (visible)
+		{
+			while (ShowCursor(TRUE) < 0)
+			{
+			}
+		}
+		else
+		{
+			while (ShowCursor(FALSE) >= 0)
+			{
+			}
+		}
+
+		_cursorVisible = visible;
+	}
+
+	Vector2 Input::getClientCenter() const
+	{
+		RECT clientRect{};
+		GetClientRect(_hWnd, &clientRect);
+		return Vector2
+		{
+			static_cast<float>(clientRect.right - clientRect.left) * 0.5f,
+			static_cast<float>(clientRect.bottom - clientRect.top) * 0.5f,
+		};
+	}
+
+	void Input::moveCursorToClientPosition(const Vector2& position) const
+	{
+		POINT screenPosition{ static_cast<LONG>(position.x), static_cast<LONG>(position.y) };
+		ClientToScreen(_hWnd, &screenPosition);
+		SetCursorPos(screenPosition.x, screenPosition.y);
 	}
 }

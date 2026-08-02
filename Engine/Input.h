@@ -118,6 +118,8 @@ namespace gm
 
 		Vector2			GetMousePosition() const { return _mousePosition; }
 		Vector2			GetMouseDelta() const { return _mouseDelta; }
+		void			SetCursorLocked(bool locked);
+		bool			IsCursorLocked() const { return _cursorLocked; }
 
 	private:
 		// Keyboard
@@ -130,6 +132,9 @@ namespace gm
 		const Mouse&	getMouse(MouseButton button) const { return _mouseList[static_cast<size_t>(button)]; }
 		void			updateMouseState();
 		void			updateMousePosition();
+		void			setCursorVisible(bool visible);
+		Vector2			getClientCenter() const;
+		void			moveCursorToClientPosition(const Vector2& position) const;
 
 	private:
 		std::vector<Key>	_keyList;
@@ -139,5 +144,7 @@ namespace gm
 		Vector2				_mousePosition{};
 		Vector2				_previousMousePosition{};
 		Vector2				_mouseDelta{};
+		bool				_cursorLocked = false;
+		bool				_cursorVisible = true;
 	};
 }

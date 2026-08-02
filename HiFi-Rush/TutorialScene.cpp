@@ -3,6 +3,7 @@
 #include "ChiStateMachineComponent.h"
 #include "ChiMoveComponent.h"
 #include "Application.h"
+#include "Input.h"
 #include "Resources.h"
 #include "GameObject.h"
 #include "SpriteComponent.h"
@@ -37,11 +38,17 @@ namespace gm
 	{
 		APPLICATION.GetPhysicsSystem().SetPhysicsMode(PhysicsMode::Physics3D);
 		APPLICATION.GetUIManager().ClearViewportWidgets();
+		APPLICATION.GetInput().SetCursorLocked(true);
 
 		std::shared_ptr<NavigationMesh> navigationMesh = APPLICATION.GetResources().Find<NavigationMesh>(L"tutorial");
 		GM_ASSERT_RETURN(navigationMesh, "tutorial NavigationMesh가 로드되지 않았습니다.");
 		APPLICATION.GetPhysicsSystem().GetNavMeshSystem().SetActiveNavigationMesh(navigationMesh);
 		GetCameraManager()->SetActiveCamera(L"PlayerCamera");
+	}
+
+	void TutorialScene::OnExit()
+	{
+		APPLICATION.GetInput().SetCursorLocked(false);
 	}
 
 	void TutorialScene::OnInitialize()
@@ -164,6 +171,7 @@ namespace gm
 		followComponent->SetTarget(*player, L"Player.Camera");
 		followComponent->SetDistance(3.5f);
 		followComponent->SetPitch(Math::DegreesToRadians(15.f));
+		followComponent->SetBottomDistanceLimit(-0.9f);
 
 		auto cameraComponent = cameraObject->AddComponent<CameraComponent>();
 		const float aspectRatio = static_cast<float>(APPLICATION.GetWidth()) / static_cast<float>(APPLICATION.GetHeight());
