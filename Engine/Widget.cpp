@@ -1,7 +1,13 @@
 #include "Widget.h"
+#include "WidgetTween.h"
+
+#include <algorithm>
 
 namespace gm
 {
+	Widget::Widget() = default;
+	Widget::~Widget() = default;
+
 	Vector2 Widget::ResolveSize(const WidgetGeometry& parentGeometry) const
 	{
 		switch (_sizeRule)
@@ -31,6 +37,11 @@ namespace gm
 	{
 		if (_isVisible == false)
 			return;
+
+		for (const std::unique_ptr<WidgetTween>& tween : _tweens)
+			tween->Tick(*this, deltaTime);
+
+		std::erase_if(_tweens, [](const std::unique_ptr<WidgetTween>& tween) { return tween->IsCompleted(); });
 
 		OnTick(deltaTime);
 

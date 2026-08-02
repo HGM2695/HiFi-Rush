@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EngineCore.h"
+#include "WidgetTween.h"
 #include <type_traits>
 #include <utility>
 #include <vector>
@@ -23,7 +24,8 @@ namespace gm
 	class Widget
 	{
 	public:
-		virtual ~Widget() = default;
+		Widget();
+		virtual ~Widget();
 
 		template <typename T, typename... Args>
 		T* AddChild(Args&&... args)
@@ -86,6 +88,19 @@ namespace gm
 
 		void				SetSize(const Vector2& size) { _size = size; }
 		const Vector2&		GetSize() const { return _size; }
+
+		template <typename T, typename... Args>
+		T* AddTween(Args&&... args)
+		{
+			static_assert(std::is_base_of_v<WidgetTween, T>, "T는 반드시 WidgetTween의 자식 클래스여야 합니다.");
+
+			auto tween = std::make_unique<T>(std::forward<Args>(args)...);
+			T* raw = tween.get();
+			raw->Start(*this);
+			_tweens.push_back(std::move(tween));
+			return raw;
+		}
+
 		void				SetSizeRule(WidgetSizeRule sizeRule) { _sizeRule = sizeRule; }
 		WidgetSizeRule		GetSizeRule() const { return _sizeRule; }
 
@@ -127,6 +142,7 @@ namespace gm
 
 		Widget*									_parent = nullptr;
 		std::vector<std::unique_ptr<Widget>>	_childList{};
+		std::vector<std::unique_ptr<WidgetTween>> _tweens{};
 
 		std::wstring							_name = L"Widget";
 		Vector2									_position{};

@@ -302,6 +302,9 @@
     <ClInclude Include="Widget.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="WidgetTween.h">
+      <Filter>UI</Filter>
+    </ClInclude>
     <ClInclude Include="TextTypes.h">
       <Filter>Util\Types</Filter>
     </ClInclude>
@@ -579,6 +582,9 @@
       <Filter>Debugger\DebugRenderer</Filter>
     </ClCompile>
     <ClCompile Include="Widget.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="WidgetTween.cpp">
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="AnimatedSpriteComponent.cpp">

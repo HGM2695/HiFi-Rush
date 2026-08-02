@@ -276,6 +276,7 @@
     <ClInclude Include="VertexLayout.h" />
     <ClInclude Include="WeakGameObjectPtr.h" />
     <ClInclude Include="Widget.h" />
+    <ClInclude Include="WidgetTween.h" />
     <ClInclude Include="CanvasPanel.h" />
     <ClInclude Include="Border.h" />
     <ClInclude Include="TextBlock.h" />
@@ -366,6 +367,7 @@
     <ClCompile Include="UIManager.cpp" />
     <ClCompile Include="UserWidget.cpp" />
     <ClCompile Include="Widget.cpp" />
+    <ClCompile Include="WidgetTween.cpp" />
     <ClCompile Include="Border.cpp" />
     <ClCompile Include="TextBlock.cpp" />
     <ClCompile Include="WeakGameObjectPtr.cpp" />
