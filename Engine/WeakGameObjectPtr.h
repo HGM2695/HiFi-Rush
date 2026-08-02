@@ -11,7 +11,6 @@ namespace gm
 	{
 	public:
 		WeakGameObjectPtr() = default;
-		WeakGameObjectPtr(Scene* scene, GameObject* gameObject, GameObjectHandle handle);
 
 		GameObject*			Get() const;
 		GameObject*			GetUnsafe() const { return _gameObject; }
@@ -23,6 +22,10 @@ namespace gm
 		explicit operator bool() const { return IsValid(); }
 
 	private:
+		friend class GameObject;
+
+		WeakGameObjectPtr(Scene* scene, GameObject* gameObject, GameObjectHandle handle);
+
 		Scene*				_scene = nullptr;
 		GameObject*			_gameObject = nullptr;
 		GameObjectHandle	_handle{};

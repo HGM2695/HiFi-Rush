@@ -76,13 +76,11 @@ namespace gm
 		entry.owner = camera->GetOwner().GetWeakPtr();
 		entry.camera = camera;
 
-		_cameraList[cameraKey] = entry;
+		CameraEntry& registeredEntry = _cameraList[cameraKey];
+		registeredEntry = entry;
 
-		if (_activeCamera == nullptr)
-		{
-			_activeCamera = camera;
-			_activeCameraOwner = entry.owner;
-		}
+		if (_activeCameraEntry == nullptr)
+			_activeCameraEntry = &registeredEntry;
 	}
 
 	void CameraManager::UnregisterCamera(const std::wstring& cameraKey)
@@ -91,11 +89,8 @@ namespace gm
 		if (iter == _cameraList.end())
 			return;
 
-		if (_activeCamera == iter->second.camera)
-		{
-			_activeCamera = nullptr;
-			_activeCameraOwner.Reset();
-		}
+		if (_activeCameraEntry == &iter->second)
+			_activeCameraEntry = nullptr;
 
 		_cameraList.erase(cameraKey);
 	}
@@ -113,14 +108,11 @@ namespace gm
 				continue;
 			}
 
-			const bool isActiveCamera = _activeCamera == iter->second.camera;
-			iter = _cameraList.erase(iter);
-
+			const bool isActiveCamera = _activeCameraEntry == &iter->second;
 			if (isActiveCamera)
-			{
-				_activeCamera = nullptr;
-				_activeCameraOwner.Reset();
-			}
+				_activeCameraEntry = nullptr;
+
+			iter = _cameraList.erase(iter);
 		}
 	}
 
@@ -129,16 +121,15 @@ namespace gm
 		const auto iter = _cameraList.find(cameraKey);
 		GM_ASSERT_RETURN(iter != _cameraList.end(), "%ls Camera가 등록되어 있지 않습니다.", cameraKey.c_str());
 
-		_activeCamera = iter->second.camera;
-		_activeCameraOwner = iter->second.owner;
+		_activeCameraEntry = &iter->second;
 	}
 
 	CameraComponent* CameraManager::GetActiveCamera() const
 	{
-		if (_activeCamera == nullptr || _activeCameraOwner.IsValid() == false)
+		if (_activeCameraEntry == nullptr || _activeCameraEntry->owner.IsValid() == false)
 			return nullptr;
 
-		return _activeCamera;
+		return _activeCameraEntry->camera;
 	}
 
 	Vector2 CameraManager::WorldToScreen(const Vector3& worldPosition, uint32 screenWidth, uint32 screenHeight) const

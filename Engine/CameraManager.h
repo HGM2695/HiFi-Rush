@@ -55,8 +55,7 @@ namespace gm
 		};
 
 		std::unordered_map<std::wstring, CameraEntry>	_cameraList{};
-		CameraComponent*								_activeCamera = nullptr;
-		WeakGameObjectPtr								_activeCameraOwner{};
+		CameraEntry*									_activeCameraEntry = nullptr;
 		CameraViewInfo									_viewInfo{};
 
 		CameraShakeDesc									_defaultShakeDesc{};

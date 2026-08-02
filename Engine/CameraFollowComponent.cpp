@@ -8,12 +8,15 @@ namespace gm
 {
 	void CameraFollowComponent::SetTarget(const GameObject& target, const std::wstring& socketName)
 	{
-		_target = target.GetWeakPtr();
-		_targetSocketComponent = target.GetComponent<SocketComponent>();
-		_socketName = socketName;
+		const SocketComponent* socketComponent = target.GetComponent<SocketComponent>();
 
-		GM_ASSERT_RETURN(_targetSocketComponent, "Target GameObject에 SocketComponent가 존재하지 않습니다.");
-		GM_ASSERT_RETURN(_socketName.empty() == false, "CameraFollowComponent Socket 이름이 비어 있습니다.");
+		GM_ASSERT_RETURN(socketComponent, "Target GameObject에 SocketComponent가 존재하지 않습니다.");
+		GM_ASSERT_RETURN(socketName.empty() == false, "CameraFollowComponent Socket 이름이 비어 있습니다.");
+		GM_ASSERT_RETURN(socketComponent->HasSocket(socketName), "Target GameObject에 요청한 Camera Socket이 존재하지 않습니다.");
+
+		_target = target.GetWeakPtr();
+		_targetSocketComponent = socketComponent;
+		_socketName = socketName;
 	}
 
 	void CameraFollowComponent::ClearTarget()

@@ -16,7 +16,7 @@ namespace gm
 
 	bool WeakGameObjectPtr::IsValid() const
 	{
-		return _scene != nullptr && _scene->FindGameObject(_handle) == _gameObject;
+		return _scene != nullptr && _scene->IsValid(_handle);
 	}
 
 	void WeakGameObjectPtr::Reset()

@@ -7,12 +7,15 @@ namespace gm
 {
 	void SocketFollowComponent::SetTarget(const GameObject& target, const std::wstring& socketName)
 	{
-		_target = target.GetWeakPtr();
-		_targetSocketComponent = target.GetComponent<SocketComponent>();
-		_followSocketName = socketName;
+		const SocketComponent* socketComponent = target.GetComponent<SocketComponent>();
 
-		GM_ASSERT_RETURN(_targetSocketComponent, "Target GameObject에 SocketComponent가 존재하지 않습니다.");
-		GM_ASSERT_RETURN(_followSocketName.empty() == false, "Socket 이름이 비어 있습니다.");
+		GM_ASSERT_RETURN(socketComponent, "Target GameObject에 SocketComponent가 존재하지 않습니다.");
+		GM_ASSERT_RETURN(socketName.empty() == false, "Socket 이름이 비어 있습니다.");
+		GM_ASSERT_RETURN(socketComponent->HasSocket(socketName), "Target GameObject에 요청한 Socket이 존재하지 않습니다.");
+
+		_target = target.GetWeakPtr();
+		_targetSocketComponent = socketComponent;
+		_followSocketName = socketName;
 	}
 
 	void SocketFollowComponent::ClearTarget()
@@ -30,7 +33,7 @@ namespace gm
 
 	void SocketFollowComponent::OnTick(float deltaTime)
 	{
-		if (_target.IsValid() == false)
+		if (_ownerTransform == nullptr || _target.IsValid() == false || _targetSocketComponent == nullptr)
 			return;
 
 		_ownerTransform->SetWorldMatrix(_targetSocketComponent->GetSocketWorldMatrix(_followSocketName));
