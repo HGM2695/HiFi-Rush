@@ -81,7 +81,7 @@ namespace gm
 			return;
 
 		StaticMeshRenderItem item{};
-		item.world = _preTransform * _ownerTransform->GetWorldMatrix();
+		item.world = _ownerTransform->GetWorldMatrix();
 		item.staticMesh = _staticMesh.get();
 		item.materials.reserve(_staticMesh->GetTextureSetCount());
 
