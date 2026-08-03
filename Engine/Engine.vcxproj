@@ -222,7 +222,7 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshTypes.h" />
-    <ClInclude Include="NavMeshMoveController.h" />
+    <ClInclude Include="NavMeshControllerComponent.h" />
     <ClInclude Include="NavMeshSystem.h" />
     <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="NavigationMesh.h" />
@@ -239,6 +239,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Rigidbody2DComponent.h" />
+    <ClInclude Include="Rigidbody3DComponent.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="AudioSystem.h" />
@@ -327,7 +328,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="NavMeshMoveController.cpp" />
+    <ClCompile Include="NavMeshControllerComponent.cpp" />
     <ClCompile Include="NavMeshSystem.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
     <ClCompile Include="NavigationMesh.cpp" />

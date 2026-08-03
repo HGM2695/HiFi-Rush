@@ -2,11 +2,9 @@
 
 #include "Component.h"
 
-#include <memory>
-
 namespace gm
 {
-	class NavMeshMoveController;
+	class NavMeshControllerComponent;
 	class TransformComponent;
 
 	class MovementComponent : public Component
@@ -30,7 +28,7 @@ namespace gm
 		TransformComponent* GetOwnerTransform() const { return _ownerTransform; }
 
 	private:
-		TransformComponent*						_ownerTransform = nullptr;
-		std::unique_ptr<NavMeshMoveController>	_navMeshMoveController;
+		TransformComponent*			_ownerTransform = nullptr;
+		NavMeshControllerComponent*	_navMeshController = nullptr;
 	};
 }

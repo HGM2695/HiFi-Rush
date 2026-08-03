@@ -25,6 +25,13 @@ namespace gm
 		bool	isSliding = false;
 	};
 
+	struct NavigationGroundResult
+	{
+		float	height = 0.f;
+		int32	cellIndex = -1;
+		bool	hasGround = false;
+	};
+
 	struct NavigationCellQueryResult
 	{
 		bool	isInside = true;
@@ -89,6 +96,7 @@ namespace gm
 		virtual ResourceType GetType() const override { return Type; }
 
 		NavigationMoveResult	Move(int32 currentCellIndex, const Vector3& currentPosition, const Vector3& desiredDelta) const;
+		NavigationGroundResult	QueryGround(int32 currentCellIndex, const Vector3& position) const;
 		int32					FindCellIndex(const Vector3& position) const;
 		const NavigationCell*	GetCell(int32 cellIndex) const;
 		uint32					GetCellCount() const { return static_cast<uint32>(_cells.size()); }

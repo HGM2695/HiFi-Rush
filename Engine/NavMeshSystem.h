@@ -16,6 +16,7 @@ namespace gm
 
 		bool							HasActiveNavigationMesh() const { return _activeNavigationMesh != nullptr; }
 		NavigationMoveResult			MoveOnActiveNavigationMesh(int32 currentCellIndex, const Vector3& currentPosition, const Vector3& desiredDelta) const;
+		NavigationGroundResult			QueryActiveNavigationGround(int32 currentCellIndex, const Vector3& position) const;
 		int32							FindCellIndex(const Vector3& position) const;
 		std::shared_ptr<NavigationMesh> GetActiveNavigationMesh() const { return _activeNavigationMesh; }
 

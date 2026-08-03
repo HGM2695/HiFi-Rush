@@ -27,6 +27,14 @@ namespace gm
 		return _activeNavigationMesh->Move(currentCellIndex, currentPosition, desiredDelta);
 	}
 
+	NavigationGroundResult NavMeshSystem::QueryActiveNavigationGround(int32 currentCellIndex, const Vector3& position) const
+	{
+		if (_activeNavigationMesh == nullptr)
+			return NavigationGroundResult{};
+
+		return _activeNavigationMesh->QueryGround(currentCellIndex, position);
+	}
+
 	int32 NavMeshSystem::FindCellIndex(const Vector3& position) const
 	{
 		GM_ASSERT_RETURN_VAL(_activeNavigationMesh, -1, "Active NavigationMesh가 설정되지 않았습니다.");

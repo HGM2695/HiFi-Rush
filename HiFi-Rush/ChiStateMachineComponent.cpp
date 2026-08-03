@@ -7,6 +7,8 @@
 #include "ChiSpecialState.h"
 #include "GameObject.h"
 #include "ChiMoveComponent.h"
+#include "NavMeshControllerComponent.h"
+#include "Rigidbody3DComponent.h"
 #include "SkeletalAnimatorComponent.h"
 
 namespace gm
@@ -30,8 +32,16 @@ namespace gm
 		_moveComponent = GetOwner().GetComponent<ChiMoveComponent>();
 		GM_ASSERT_RETURN(_moveComponent, "ChiStateMachineComponent는 ChiMoveComponent가 필요합니다.");
 
+		NavMeshControllerComponent* navMeshControllerComponent = GetOwner().GetComponent<NavMeshControllerComponent>();
+		GM_ASSERT_RETURN(navMeshControllerComponent, "ChiStateMachineComponent는 NavMeshControllerComponent가 필요합니다.");
+
+		Rigidbody3DComponent* rigidbodyComponent = GetOwner().GetRigidbody3D();
+		GM_ASSERT_RETURN(rigidbodyComponent, "ChiStateMachineComponent는 Rigidbody3DComponent가 필요합니다.");
+
 		_context.stateMachine = this;
 		_context.moveComponent = _moveComponent;
+		_context.navMeshControllerComponent = navMeshControllerComponent;
+		_context.rigidbodyComponent = rigidbodyComponent;
 		_context.animatorComponent = _animatorComponent;
 
 		RegisterAnimationClips();

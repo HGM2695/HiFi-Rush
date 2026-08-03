@@ -10,6 +10,8 @@
 #include "Texture.h"
 #include "CameraComponent.h"
 #include "PhysicsSystem.h"
+#include "Rigidbody3DComponent.h"
+#include "NavMeshControllerComponent.h"
 #include "NavMeshSystem.h"
 #include "SceneManager.h"
 #include "UIManager.h"
@@ -98,6 +100,10 @@ namespace gm
 		player->AddComponent<SkeletalAnimatorComponent>();
 
 		ChiMoveComponent* moveComponent = player->AddComponent<ChiMoveComponent>();
+		Rigidbody3DComponent* rigidbody = player->AddComponent<Rigidbody3DComponent>();
+		rigidbody->SetGravityScale(3.f);
+		NavMeshControllerComponent* navMeshController = player->AddComponent<NavMeshControllerComponent>();
+		navMeshController->SetGroundCollisionEnabled(true);
 
 		SocketComponent* socketComponent = player->AddComponent<SocketComponent>();
 		Socket socket{};

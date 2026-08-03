@@ -2,19 +2,55 @@
 #include "Application.h"
 #include "ChiStateMachineComponent.h"
 #include "Input.h"
+#include "NavMeshControllerComponent.h"
+#include "Rigidbody3DComponent.h"
 
 namespace gm
 {
+	namespace
+	{
+		constexpr float JumpImpulse = 9.5f;
+		constexpr float DoubleJumpImpulse = 9.5f;
+
+		void ApplyVerticalImpulse(ChiStateContext& context, float impulse)
+		{
+			GM_ASSERT_RETURN(context.rigidbodyComponent, "점프 상태에는 Rigidbody3DComponent가 필요합니다.");
+
+			Vector3 velocity = context.rigidbodyComponent->GetVelocity();
+			velocity.y = 0.f;
+			context.rigidbodyComponent->SetVelocity(velocity);
+			context.rigidbodyComponent->AddImpulse(Vector3{ 0.f, impulse, 0.f });
+		}
+
+		bool IsAscending(const ChiStateContext& context)
+		{
+			return context.rigidbodyComponent && context.rigidbodyComponent->GetVelocity().y > 0.f;
+		}
+
+		bool IsGrounded(const ChiStateContext& context)
+		{
+			return context.navMeshControllerComponent && context.navMeshControllerComponent->IsGrounded();
+		}
+	}
+
 	/// Jump //////////////////////////////////////////////////////////////////////////////
 	ChiJumpUpState::ChiJumpUpState()
 		: ChiClipState(ChiStateId::JumpUp, ChiAnimationId::JumpUp)
 	{
 	}
 
+	void ChiJumpUpState::Enter(ChiStateContext& context)
+	{
+		ChiClipState::Enter(context);
+		ApplyVerticalImpulse(context, JumpImpulse);
+	}
+
 	void ChiJumpUpState::Tick(ChiStateContext& context, float deltaTime)
 	{
-		TryChangeAirAction(context, true);
-		if (IsAnimationCompleted(context))
+		if (TryChangeAirAction(context, true))
+			return;
+
+		if (IsAscending(context) == false)
 			context.stateMachine->ChangeState(ChiStateId::JumpDown);
 	}
 
@@ -25,10 +61,11 @@ namespace gm
 
 	void ChiJumpDownState::Tick(ChiStateContext& context, float deltaTime)
 	{
-		TryChangeAirAction(context, true);
+		if (TryChangeAirAction(context, true))
+			return;
 
-		// 임시로 loop를 false로 두고 Landing으로 전환합니다. 원래는 충돌 전까지 loop됩니다.
-		if (IsAnimationCompleted(context))
+		// NavMeshController가 바닥 접촉을 확정한 뒤 착지 상태로 전환합니다.
+		if (IsGrounded(context))
 			context.stateMachine->ChangeState(ChiStateId::JumpLanding);
 	}
 
@@ -63,12 +100,18 @@ namespace gm
 	{
 	}
 
+	void ChiJumpDoubleUpState::Enter(ChiStateContext& context)
+	{
+		ChiClipState::Enter(context);
+		ApplyVerticalImpulse(context, DoubleJumpImpulse);
+	}
+
 	void ChiJumpDoubleUpState::Tick(ChiStateContext& context, float deltaTime)
 	{
 		if (TryChangeAirAction(context, false))
 			return;
 
-		if (IsAnimationCompleted(context))
+		if (IsAscending(context) == false)
 			context.stateMachine->ChangeState(ChiStateId::JumpDoubleDown);
 	}
 
@@ -79,9 +122,11 @@ namespace gm
 
 	void ChiJumpDoubleDownState::Tick(ChiStateContext& context, float deltaTime)
 	{
-		TryChangeAirAction(context, false);
-		// 임시로 loop를 false로 두고 Landing으로 전환합니다. 원래는 충돌 전까지 loop됩니다.
-		if (IsAnimationCompleted(context))
+		if (TryChangeAirAction(context, false))
+			return;
+
+		// NavMeshController가 바닥 접촉을 확정한 뒤 착지 상태로 전환합니다.
+		if (IsGrounded(context))
 			context.stateMachine->ChangeState(ChiStateId::JumpLanding);
 	}
 }

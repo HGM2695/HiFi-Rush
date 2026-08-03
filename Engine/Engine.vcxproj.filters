@@ -149,6 +149,9 @@
     <ClInclude Include="Rigidbody2DComponent.h">
       <Filter>Engine Component\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="Rigidbody3DComponent.h">
+      <Filter>Engine Component\Physics</Filter>
+    </ClInclude>
     <ClInclude Include="UIManager.h">
       <Filter>SubSystem</Filter>
     </ClInclude>
@@ -212,7 +215,7 @@
     <ClInclude Include="NavMeshSystem.h">
       <Filter>Engine Component\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="NavMeshMoveController.h">
+    <ClInclude Include="NavMeshControllerComponent.h">
       <Filter>Engine Component\Physics</Filter>
     </ClInclude>
     <ClInclude Include="NavigationTypes.h">
@@ -536,7 +539,7 @@
     <ClCompile Include="NavMeshSystem.cpp">
       <Filter>Engine Component\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="NavMeshMoveController.cpp">
+    <ClCompile Include="NavMeshControllerComponent.cpp">
       <Filter>Engine Component\Physics</Filter>
     </ClCompile>
     <ClCompile Include="D3D11GraphicsDevice.cpp">

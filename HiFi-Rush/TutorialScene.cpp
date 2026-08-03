@@ -10,6 +10,8 @@
 #include "Texture.h"
 #include "CameraComponent.h"
 #include "PhysicsSystem.h"
+#include "Rigidbody3DComponent.h"
+#include "NavMeshControllerComponent.h"
 #include "NavMeshSystem.h"
 #include "SceneManager.h"
 #include "UIManager.h"
@@ -88,6 +90,10 @@ namespace gm
 		player->AddComponent<SkeletalAnimatorComponent>();
 
 		ChiMoveComponent* moveComponent = player->AddComponent<ChiMoveComponent>();
+		Rigidbody3DComponent* rigidbody = player->AddComponent<Rigidbody3DComponent>();
+		rigidbody->SetGravityScale(3.f);
+		NavMeshControllerComponent* navMeshController = player->AddComponent<NavMeshControllerComponent>();
+		navMeshController->SetGroundCollisionEnabled(true);
 		//moveComponent->SetRotationYawOffset(Math::GM_PI);
 
 		SocketComponent* socketComponent = player->AddComponent<SocketComponent>();
@@ -96,10 +102,6 @@ namespace gm
 		socketComponent->AddSocket(L"Player.Camera", socket);
 
 		player->AddComponent<ChiStateMachineComponent>();
-
-		WidgetComponent* userWidget = player->AddComponent<WidgetComponent>();
-		userWidget->SetUserWidget<MainHUDWidget>();
-		userWidget->SetScreenOffset(Vector2{ 0.f, -300.f });
 
 		CameraComponent* playerCamera = InitializeCamera(player);
 		moveComponent->SetMovementCamera(*playerCamera);

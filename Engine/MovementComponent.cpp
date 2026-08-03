@@ -1,7 +1,7 @@
 #include "MovementComponent.h"
 
 #include "GameObject.h"
-#include "NavMeshMoveController.h"
+#include "NavMeshControllerComponent.h"
 #include "TransformComponent.h"
 
 namespace gm
@@ -11,36 +11,36 @@ namespace gm
 
 	void MovementComponent::EnableNavigationMovement(bool enabled)
 	{
-		if (_navMeshMoveController == nullptr)
-			_navMeshMoveController = std::make_unique<NavMeshMoveController>();
-
-		_navMeshMoveController->SetEnabled(enabled);
+		GM_ASSERT_RETURN(_navMeshController || enabled == false, "Navigation 이동을 활성화하려면 NavMeshControllerComponent가 필요합니다.");
+		if (_navMeshController)
+			_navMeshController->SetMovementEnabled(enabled);
 	}
 
 	bool MovementComponent::IsNavigationMovementEnabled() const
 	{
-		return _navMeshMoveController && _navMeshMoveController->IsEnabled();
+		return _navMeshController && _navMeshController->IsMovementEnabled();
 	}
 
 	bool MovementComponent::RefreshNavigationCellIndex()
 	{
-		if (_navMeshMoveController == nullptr)
+		if (_navMeshController == nullptr)
 			return false;
 
-		return _navMeshMoveController->ResetCellIndex(_ownerTransform->GetPosition());
+		return _navMeshController->RefreshCellIndex();
 	}
 
 	void MovementComponent::OnInitialize()
 	{
 		_ownerTransform = GetOwner().GetTransform();
 		GM_ASSERT_RETURN(_ownerTransform, "MovementComponent는 TransformComponent가 필요합니다.");
+		_navMeshController = GetOwner().GetComponent<NavMeshControllerComponent>();
 	}
 
 	void MovementComponent::Move(const Vector3& desiredDelta)
 	{
-		if (_navMeshMoveController && _navMeshMoveController->IsEnabled())
+		if (_navMeshController && _navMeshController->IsMovementEnabled())
 		{
-			_navMeshMoveController->Move(*_ownerTransform, desiredDelta);
+			_navMeshController->Move(desiredDelta);
 			return;
 		}
 

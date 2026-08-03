@@ -287,6 +287,38 @@ namespace gm
 		return result;
 	}
 
+	NavigationGroundResult NavigationMesh::QueryGround(int32 currentCellIndex, const Vector3& position) const
+	{
+		NavigationGroundResult result{};
+
+		int32 cellIndex = currentCellIndex;
+		if (IsValidCellIndex(cellIndex) == false || _cells[cellIndex].IsSearchable() == false)
+			cellIndex = FindCellIndex(position);
+
+		for (uint32 retryCount = 0; retryCount < MaxMoveRetryCount; ++retryCount)
+		{
+			if (IsValidCellIndex(cellIndex) == false)
+				return result;
+
+			const NavigationCell& cell = _cells[cellIndex];
+			const NavigationCellQueryResult queryResult = cell.QueryPosition(position);
+			if (queryResult.isInside)
+			{
+				result.height = cell.CalcHeight(position);
+				result.cellIndex = cellIndex;
+				result.hasGround = true;
+				return result;
+			}
+
+			if (IsValidCellIndex(queryResult.neighborIndex) == false || _cells[queryResult.neighborIndex].IsSearchable() == false)
+				return result;
+
+			cellIndex = queryResult.neighborIndex;
+		}
+
+		return result;
+	}
+
 	int32 NavigationMesh::FindCellIndex(const Vector3& position) const
 	{
 		for (uint32 cellIndex = 0; cellIndex < _cells.size(); ++cellIndex)

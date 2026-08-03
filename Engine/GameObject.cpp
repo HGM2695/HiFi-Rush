@@ -1,6 +1,7 @@
 #include "GameObject.h"
 #include "Collider2DComponent.h"
 #include "Rigidbody2DComponent.h"
+#include "Rigidbody3DComponent.h"
 #include "Scene.h"
 #include "TransformComponent.h"
 #include "WeakGameObjectPtr.h"
@@ -69,6 +70,13 @@ namespace gm
 		{
 			GM_ASSERT_RETURN_VAL(_rigidbody2D == nullptr, false, "GameObject에는 Rigidbody2D가 중복으로 추가될 수 없습니다.");
 			_rigidbody2D = rigidbody2D;
+			return true;
+		}
+
+		if (auto rigidbody3D = dynamic_cast<Rigidbody3DComponent*>(component))
+		{
+			GM_ASSERT_RETURN_VAL(_rigidbody3D == nullptr, false, "GameObject에는 Rigidbody3D가 중복으로 추가될 수 없습니다.");
+			_rigidbody3D = rigidbody3D;
 			return true;
 		}
 

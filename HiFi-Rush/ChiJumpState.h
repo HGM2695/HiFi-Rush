@@ -9,6 +9,7 @@ namespace gm
 	{
 	public:
 		ChiJumpUpState();
+		virtual void Enter(ChiStateContext& context) override;
 		virtual void Tick(ChiStateContext& context, float deltaTime) override;
 	};
 
@@ -31,6 +32,7 @@ namespace gm
 	{
 	public:
 		ChiJumpDoubleUpState();
+		virtual void Enter(ChiStateContext& context) override;
 		virtual void Tick(ChiStateContext& context, float deltaTime) override;
 	};
 

@@ -11,6 +11,7 @@ namespace gm
 {
 	class Collider2DComponent;
 	class Rigidbody2DComponent;
+	class Rigidbody3DComponent;
 	class Scene;
 	class TransformComponent;
 	class WeakGameObjectPtr;
@@ -83,6 +84,8 @@ namespace gm
 		TransformComponent*						GetTransform();
 		const Rigidbody2DComponent*				GetRigidbody2D() const { return _rigidbody2D; }
 		Rigidbody2DComponent*					GetRigidbody2D() { return _rigidbody2D; }
+		const Rigidbody3DComponent*				GetRigidbody3D() const { return _rigidbody3D; }
+		Rigidbody3DComponent*					GetRigidbody3D() { return _rigidbody3D; }
 		const std::vector<Collider2DComponent*>& GetColliders2D() const { return _colliders2D; }
 
 		void			Initialize();
@@ -135,6 +138,7 @@ namespace gm
 		TransformComponent*						_transform = nullptr;
 
 		Rigidbody2DComponent*					_rigidbody2D = nullptr;
+		Rigidbody3DComponent*					_rigidbody3D = nullptr;
 		std::vector<Collider2DComponent*>		_colliders2D{};
 
 		GameObjectLifeState						_lifeState = GameObjectLifeState::Active;
@@ -156,4 +160,10 @@ namespace gm
 
 	template <>
 	inline const Rigidbody2DComponent* GameObject::GetComponent<Rigidbody2DComponent>() const { return _rigidbody2D; }
+
+	template <>
+	inline Rigidbody3DComponent* GameObject::GetComponent<Rigidbody3DComponent>() { return _rigidbody3D; }
+
+	template <>
+	inline const Rigidbody3DComponent* GameObject::GetComponent<Rigidbody3DComponent>() const { return _rigidbody3D; }
 }
