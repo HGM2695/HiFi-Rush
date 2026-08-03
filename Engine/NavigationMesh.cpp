@@ -10,6 +10,7 @@ namespace gm
 	{
 		constexpr uint32 MaxMoveRetryCount = 16;
 		constexpr float NavigationEdgeEpsilon = 0.0001f;
+		constexpr float JumpCellHeightEpsilon = 0.01f;
 
 		Plane CreatePlane(const std::array<Vector3, NavigationCell::PointCount>& points)
 		{
@@ -73,17 +74,19 @@ namespace gm
 		return result;
 	}
 
-	NavigationCellMoveQueryResult NavigationCell::QueryMovePosition(const Vector3& targetPosition) const
+	NavigationCellMoveQueryResult NavigationMesh::QueryMovePosition(int32 cellIndex, const Vector3& targetPosition) const
 	{
+		const NavigationCell& cell = _cells[cellIndex];
+
 		NavigationCellMoveQueryResult result{};
 		result.state = NavigationCellMoveState::TargetPosition;
 		result.targetPosition = targetPosition;
 		result.slidePosition = targetPosition;
 
-		for (uint32 edgeIndex = 0; edgeIndex < EdgeCount; ++edgeIndex)
+		for (uint32 edgeIndex = 0; edgeIndex < NavigationCell::EdgeCount; ++edgeIndex)
 		{
-			const Vector3& start = _points[edgeIndex];
-			const Vector3& end = _points[(edgeIndex + 1) % PointCount];
+			const Vector3& start = cell._points[edgeIndex];
+			const Vector3& end = cell._points[(edgeIndex + 1) % NavigationCell::PointCount];
 
 			// 시계방향 엣지 기준으로 바깥을 향하는 노멀을 계산
 			Vector3 edge = end - start;
@@ -101,8 +104,8 @@ namespace gm
 				continue;
 
 			// 나간 엣지에 이동 가능한 이웃이 있으면 해당 셀에서 다시 검사
-			const int32 neighborIndex = _neighborIndices[edgeIndex];
-			if (neighborIndex != -1 && _neighborTypes[edgeIndex] == NavigationCellType::Normal)
+			const int32 neighborIndex = cell._neighborIndices[edgeIndex];
+			if (CanEnterCell(neighborIndex, targetPosition))
 			{
 				result.state = NavigationCellMoveState::Recheck;
 				result.neighborIndex = neighborIndex;
@@ -117,11 +120,11 @@ namespace gm
 			// 투영점이 엣지 끝을 넘어가면 다음 엣지의 이웃을 따라 재검사
 			if (projectedDirection.LengthSquared() > edge.LengthSquared())
 			{
-				const uint32 nextEdgeIndex = (edgeIndex + 1) % EdgeCount;
-				const int32 nextNeighborIndex = _neighborIndices[nextEdgeIndex];
-				if (nextNeighborIndex != -1 && _neighborTypes[nextEdgeIndex] == NavigationCellType::Normal)
+				const uint32 nextEdgeIndex = (edgeIndex + 1) % NavigationCell::EdgeCount;
+				const int32 nextNeighborIndex = cell._neighborIndices[nextEdgeIndex];
+				projectedPosition.y = targetPosition.y;
+				if (CanEnterCell(nextNeighborIndex, projectedPosition))
 				{
-					projectedPosition.y = targetPosition.y;
 					result.state = NavigationCellMoveState::Recheck;
 					result.targetPosition = projectedPosition;
 					result.neighborIndex = nextNeighborIndex;
@@ -137,11 +140,11 @@ namespace gm
 			// 투영점이 엣지 시작점보다 뒤에 있으면 이전 엣지의 이웃을 따라 재검사
 			if (projectedDirection.Dot(edge) < 0.f)
 			{
-				const uint32 prevEdgeIndex = (edgeIndex + EdgeCount - 1) % EdgeCount;
-				const int32 prevNeighborIndex = _neighborIndices[prevEdgeIndex];
-				if (prevNeighborIndex != -1 && _neighborTypes[prevEdgeIndex] == NavigationCellType::Normal)
+				const uint32 prevEdgeIndex = (edgeIndex + NavigationCell::EdgeCount - 1) % NavigationCell::EdgeCount;
+				const int32 prevNeighborIndex = cell._neighborIndices[prevEdgeIndex];
+				projectedPosition.y = targetPosition.y;
+				if (CanEnterCell(prevNeighborIndex, projectedPosition))
 				{
-					projectedPosition.y = targetPosition.y;
 					result.state = NavigationCellMoveState::Recheck;
 					result.targetPosition = projectedPosition;
 					result.neighborIndex = prevNeighborIndex;
@@ -162,6 +165,27 @@ namespace gm
 		}
 
 		return result;
+	}
+
+	bool NavigationMesh::CanEnterCell(int32 cellIndex, const Vector3& targetPosition) const
+	{
+		if (IsValidCellIndex(cellIndex) == false)
+			return false;
+
+		const NavigationCell& cell = _cells[cellIndex];
+		switch (cell.GetType())
+		{
+		case NavigationCellType::Normal:
+			return true;
+
+		case NavigationCellType::Jump:
+			return targetPosition.y + JumpCellHeightEpsilon >= cell.CalcHeight(targetPosition);
+
+		case NavigationCellType::Dead:
+		case NavigationCellType::Dummy:
+		default:
+			return false;
+		}
 	}
 
 	bool NavigationCell::IsOutsideEdge(const Vector3& position, uint32 edgeIndex) const
@@ -243,7 +267,7 @@ namespace gm
 		for (uint32 retryCount = 0; retryCount < MaxMoveRetryCount; ++retryCount)
 		{
 			const NavigationCell& cell = _cells[cellIndex];
-			const NavigationCellMoveQueryResult queryResult = cell.QueryMovePosition(targetPosition);
+			const NavigationCellMoveQueryResult queryResult = QueryMovePosition(cellIndex, targetPosition);
 
 			switch (queryResult.state)
 			{

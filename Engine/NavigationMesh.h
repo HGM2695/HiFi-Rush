@@ -63,9 +63,7 @@ namespace gm
 
 		bool						IsInside(const Vector3& position) const;
 		NavigationCellQueryResult	QueryPosition(const Vector3& position) const;
-		NavigationCellMoveQueryResult QueryMovePosition(const Vector3& targetPosition) const;
 		float						CalcHeight(const Vector3& position) const;
-		bool						IsWalkable() const { return _type == NavigationCellType::Normal; }
 		bool						IsSearchable() const { return _type != NavigationCellType::Dummy; }
 #if GM_ENABLE_DEBUG_TOOLS
 		void						DebugDraw(IDebugRenderer& debugRenderer) const;
@@ -108,7 +106,9 @@ namespace gm
 		NavigationMesh() = default;
 		explicit NavigationMesh(const NavigationMeshData& data);
 
-		bool					IsValidCellIndex(int32 cellIndex) const;
+		NavigationCellMoveQueryResult	QueryMovePosition(int32 cellIndex, const Vector3& targetPosition) const;
+		bool							CanEnterCell(int32 cellIndex, const Vector3& targetPosition) const;
+		bool							IsValidCellIndex(int32 cellIndex) const;
 
 	private:
 		std::vector<NavigationCell> _cells;
