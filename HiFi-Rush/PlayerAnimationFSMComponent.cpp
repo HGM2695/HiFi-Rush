@@ -13,10 +13,10 @@ namespace gm
 		GM_ASSERT(_animatedSpriteComponent, "PlayerAnimationFSM은 AnimatedSpriteComponent가 필요합니다.");
 
 		SpriteAnimator& animator = _animatedSpriteComponent->GetAnimator();
-		_notifyConnection = animator.BindNotifyListener(
-			[this](const std::wstring& notifyName)
+		animator.GetNotifyEvent().Subscribe(_notifyConnection,
+			[this](const AnimationNotifyEvent& notifyEvent)
 			{
-				OnAnimationNotify(notifyName);
+				OnAnimationNotify(notifyEvent);
 			});
 
 		_playerMovement = GetOwner().GetComponent<PlayerMovementComponent>();
@@ -81,12 +81,12 @@ namespace gm
 		}
 	}
 
-	void PlayerAnimationFSMComponent::OnAnimationNotify(const std::wstring& notifyName)
+	void PlayerAnimationFSMComponent::OnAnimationNotify(const AnimationNotifyEvent& notifyEvent)
 	{
 #ifdef _DEBUG
-		if (notifyName == L"MoveLeftStep")
+		if (notifyEvent.name == L"MoveLeftStep")
 			OutputDebugStringW(L"[PlayerAnimationFSMComponent] 문자열 기반 AnimationNotify: MoveLeftStep\n");
-		else if (notifyName == L"MoveRightStep")
+		else if (notifyEvent.name == L"MoveRightStep")
 			OutputDebugStringW(L"[PlayerAnimationFSMComponent] 문자열 기반 AnimationNotify: MoveRightStep\n");
 #endif
 	}

@@ -1,8 +1,6 @@
 #pragma once
 
 #include <optional>
-#include <functional>
-#include <string>
 
 namespace gm
 {
@@ -21,6 +19,4 @@ namespace gm
         std::optional<bool>     loopOverride;
         std::optional<float>    playRateOverride;
     };
-
-    using AnimationNotifyListener = std::function<void(const std::wstring&)>;
 }

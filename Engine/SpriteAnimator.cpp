@@ -16,16 +16,6 @@ namespace gm
 
 	SpriteAnimator::~SpriteAnimator() = default;
 
-	NotifyConnection SpriteAnimator::BindNotifyListener(const AnimationNotifyListener& notifyListener)
-	{
-		return _animationNotifyDispatcher->BindNotifyListener(notifyListener);
-	}
-
-	void SpriteAnimator::ClearNotifyListeners()
-	{
-		_animationNotifyDispatcher->ClearNotifyListeners();
-	}
-
 	bool SpriteAnimator::AddClip(const std::wstring& name, const std::wstring& clipKey)
 	{
 		return _animationClipSet->AddClip(name, APPLICATION.GetResources().Find<SpriteAnimationClip>(clipKey));

@@ -5,11 +5,10 @@
 #include <memory>
 
 namespace gm
-{
-	class AnimationController;
-	class AnimationClipSet;
-	class AnimationNotifyDispatcher;
-	class SpriteAnimationClip;
+	{
+		class AnimationController;
+		class AnimationClipSet;
+		class SpriteAnimationClip;
 	class SpritePresenter;
 
 	class SpriteAnimator
@@ -22,9 +21,8 @@ namespace gm
 		bool									AddClip(const std::wstring& name, const std::shared_ptr<SpriteAnimationClip>& clip);
 		std::shared_ptr<SpriteAnimationClip>	FindClip(const std::wstring& name) const;
 		std::shared_ptr<SpriteAnimationClip>	GetCurrentClip() const { return _currentClip; }
+		EventPublisher<AnimationNotifyDispatcher, AnimationNotifyEvent>& GetNotifyEvent() { return _animationNotifyDispatcher->OnNotify; }
 
-		NotifyConnection						BindNotifyListener(const AnimationNotifyListener& notifyListener);
-		void									ClearNotifyListeners();
 		void									Tick(float deltaTime, SpritePresenter& presenter);
 
 		bool									HasClip(const std::wstring& name) const;

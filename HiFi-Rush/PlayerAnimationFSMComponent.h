@@ -26,7 +26,7 @@ namespace gm
 		virtual void	OnTick(float deltaTime) override;
 
 	private:
-		void			OnAnimationNotify(const std::wstring& notifyName);
+		void			OnAnimationNotify(const AnimationNotifyEvent& notifyEvent);
 		void			SyncDirection();
 		void			UpdateState();
 		void			ChangeState(PlayerAnimState nextState);
@@ -36,7 +36,7 @@ namespace gm
 		PlayerAnimState				_currentState = PlayerAnimState::None;
 		Vector2						_lastFacingDirection{ 1.f, 0.f };
 
-		NotifyConnection			_notifyConnection{};
+		EventConnection			_notifyConnection{};
 		AnimatedSpriteComponent*	_animatedSpriteComponent = nullptr;
 		PlayerMovementComponent*	_playerMovement = nullptr;
 	};

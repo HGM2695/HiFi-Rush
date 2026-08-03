@@ -84,16 +84,6 @@ namespace gm
 		return _animationClipSet->FindClip<SkeletalAnimationClip>(name);
 	}
 
-	NotifyConnection SkeletalAnimatorComponent::BindNotifyListener(const AnimationNotifyListener& notifyListener)
-	{
-		return _animationNotifyDispatcher->BindNotifyListener(notifyListener);
-	}
-
-	void SkeletalAnimatorComponent::ClearNotifyListeners()
-	{
-		_animationNotifyDispatcher->ClearNotifyListeners();
-	}
-
 	bool SkeletalAnimatorComponent::HasClip(const std::wstring& name) const
 	{
 		return _animationClipSet->HasClip(name);
