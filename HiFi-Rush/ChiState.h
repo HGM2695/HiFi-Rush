@@ -59,5 +59,11 @@ namespace gm
 
 		bool			_prevRootMotionEnabled = false;
 		bool			_enabledRootMotionOnEnter = false;
+		bool			_prevRootMotionYEnabled = true;
+		bool			_overrodeRootMotionYOnEnter = false;
+
+		ChiGravityMode	_gravityMode = ChiGravityMode::UseGravity;
+		bool			_prevUseGravity = true;
+		bool			_overrodeGravityOnEnter = false;
 	};
 }

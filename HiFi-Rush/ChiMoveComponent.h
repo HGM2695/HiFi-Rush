@@ -28,6 +28,7 @@ namespace gm
 		bool			IsMoving() const { return _isMoving; }
 		bool			IsMoveEnabled() const { return _moveEnabled; }
 		bool			IsRootMotionEnabled() const { return _rootMotionEnabled; }
+		bool			IsRootMotionYEnabled() const { return _rootMotionYEnabled; }
 		const Vector3&	GetMoveDirection() const { return _moveDirection; }
 		Vector2			GetMoveInputAxis() const;
 		Vector3			GetInputMoveDirection() const;

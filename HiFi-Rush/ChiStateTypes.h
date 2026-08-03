@@ -2,6 +2,13 @@
 
 namespace gm
 {
+	enum class ChiGravityMode
+	{
+		UseGravity,
+		IgnoreGravity,
+		UseRootMotion,
+	};
+
 	enum class ChiStateId
 	{
 		None,

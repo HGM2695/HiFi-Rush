@@ -3,6 +3,7 @@
 #include "ChiMoveComponent.h"
 #include "ChiStateMachineComponent.h"
 #include "Input.h"
+#include "Rigidbody3DComponent.h"
 #include "SkeletalAnimatorComponent.h"
 
 #include <cmath>
@@ -105,6 +106,34 @@ namespace gm
 			default:
 				return false;
 			}
+		}
+
+		ChiGravityMode GetGravityMode(ChiStateId stateId)
+		{
+			switch (stateId)
+			{
+			case ChiStateId::DashSky:
+			case ChiStateId::AttackSky0:
+			case ChiStateId::AttackSky1:
+			case ChiStateId::AttackSky2:
+			case ChiStateId::AttackSky3:
+			case ChiStateId::AttackStump0:
+				return ChiGravityMode::IgnoreGravity;
+
+			case ChiStateId::AttackStrongDash:
+			case ChiStateId::AttackDelayedWeak2:
+				return ChiGravityMode::UseRootMotion;
+
+			default:
+				return ChiGravityMode::UseGravity;
+			}
+		}
+
+		void StopVerticalPhysics(Rigidbody3DComponent& rigidbody)
+		{
+			Vector3 velocity = rigidbody.GetVelocity();
+			velocity.y = 0.f;
+			rigidbody.SetVelocity(velocity);
 		}
 	}
 
@@ -222,6 +251,23 @@ namespace gm
 			context.moveComponent->SetRootMotionEnabled(true);
 		}
 
+		_gravityMode = GetGravityMode(_stateId);
+		if (_gravityMode != ChiGravityMode::UseGravity)
+		{
+			GM_ASSERT_RETURN(context.rigidbodyComponent, "중력 정책을 적용하려면 Rigidbody3DComponent가 필요합니다.");
+			_prevUseGravity = context.rigidbodyComponent->IsUseGravity();
+			context.rigidbodyComponent->SetUseGravity(false);
+			StopVerticalPhysics(*context.rigidbodyComponent);
+			_overrodeGravityOnEnter = true;
+		}
+
+		if (_gravityMode == ChiGravityMode::UseRootMotion)
+		{
+			_prevRootMotionYEnabled = context.moveComponent->IsRootMotionYEnabled();
+			context.moveComponent->SetRootMotionYEnabled(true);
+			_overrodeRootMotionYOnEnter = true;
+		}
+
 		_disabledMoveOnEnter = IsMovementLockedState(_stateId);
 		if (_disabledMoveOnEnter)
 		{
@@ -285,6 +331,18 @@ namespace gm
 
 	void ChiClipState::Exit(ChiStateContext& context)
 	{
+		if (_overrodeGravityOnEnter)
+		{
+			context.rigidbodyComponent->SetUseGravity(_prevUseGravity);
+			_overrodeGravityOnEnter = false;
+		}
+
+		if (_overrodeRootMotionYOnEnter)
+		{
+			context.moveComponent->SetRootMotionYEnabled(_prevRootMotionYEnabled);
+			_overrodeRootMotionYOnEnter = false;
+		}
+
 		if (_enabledRootMotionOnEnter)
 		{
 			context.moveComponent->SetRootMotionEnabled(_prevRootMotionEnabled);
