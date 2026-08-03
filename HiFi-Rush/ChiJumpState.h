@@ -11,6 +11,7 @@ namespace gm
 		ChiJumpUpState();
 		virtual void Enter(ChiStateContext& context) override;
 		virtual void Tick(ChiStateContext& context, float deltaTime) override;
+		virtual void Exit(ChiStateContext& context) override;
 	};
 
 	class ChiJumpDownState final : public ChiClipState
@@ -34,6 +35,7 @@ namespace gm
 		ChiJumpDoubleUpState();
 		virtual void Enter(ChiStateContext& context) override;
 		virtual void Tick(ChiStateContext& context, float deltaTime) override;
+		virtual void Exit(ChiStateContext& context) override;
 	};
 
 	class ChiJumpDoubleDownState final : public ChiClipState

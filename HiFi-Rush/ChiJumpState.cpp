@@ -5,12 +5,25 @@
 #include "NavMeshControllerComponent.h"
 #include "Rigidbody3DComponent.h"
 
+#include <cmath>
+
 namespace gm
 {
 	namespace
 	{
 		constexpr float JumpImpulse = 9.5f;
 		constexpr float DoubleJumpImpulse = 9.5f;
+		constexpr float JumpStartTime = 0.15f;
+		constexpr float JumpLandingBlendDuration = 0.1f;
+		constexpr float DoubleJumpDownStartTime = 0.1f;
+		constexpr float JumpGravityScale = 3.f;
+		constexpr float ApexGravityScale = 1.f;
+		constexpr float ApexVelocityThreshold = 1.5f;
+
+		AnimationPlayOption MakeJumpPlayOption(bool isLoop, float startTime, float blendDuration = ChiDefaultBlendDuration)
+		{
+			return AnimationPlayOption{ .startTime = startTime, .blendDuration = blendDuration, .loopOverride = isLoop };
+		}
 
 		void ApplyVerticalImpulse(ChiStateContext& context, float impulse)
 		{
@@ -19,12 +32,26 @@ namespace gm
 			Vector3 velocity = context.rigidbodyComponent->GetVelocity();
 			velocity.y = 0.f;
 			context.rigidbodyComponent->SetVelocity(velocity);
+			context.rigidbodyComponent->SetGravityScale(JumpGravityScale);
 			context.rigidbodyComponent->AddImpulse(Vector3{ 0.f, impulse, 0.f });
 		}
 
-		bool IsAscending(const ChiStateContext& context)
+		void UpdateApexGravity(ChiStateContext& context)
 		{
-			return context.rigidbodyComponent && context.rigidbodyComponent->GetVelocity().y > 0.f;
+			GM_ASSERT_RETURN(context.rigidbodyComponent, "점프 상태에는 Rigidbody3DComponent가 필요합니다.");
+			const float verticalSpeed = std::abs(context.rigidbodyComponent->GetVelocity().y);
+			context.rigidbodyComponent->SetGravityScale(verticalSpeed <= ApexVelocityThreshold ? ApexGravityScale : JumpGravityScale);
+		}
+
+		void RestoreJumpGravity(ChiStateContext& context)
+		{
+			if (context.rigidbodyComponent)
+				context.rigidbodyComponent->SetGravityScale(JumpGravityScale);
+		}
+
+		bool HasLeftApex(const ChiStateContext& context)
+		{
+			return context.rigidbodyComponent && context.rigidbodyComponent->GetVelocity().y <= -ApexVelocityThreshold;
 		}
 
 		bool IsGrounded(const ChiStateContext& context)
@@ -35,7 +62,7 @@ namespace gm
 
 	/// Jump //////////////////////////////////////////////////////////////////////////////
 	ChiJumpUpState::ChiJumpUpState()
-		: ChiClipState(ChiStateId::JumpUp, ChiAnimationId::JumpUp)
+		: ChiClipState(ChiStateId::JumpUp, ChiAnimationId::JumpUp, MakeJumpPlayOption(true, JumpStartTime))
 	{
 	}
 
@@ -47,15 +74,24 @@ namespace gm
 
 	void ChiJumpUpState::Tick(ChiStateContext& context, float deltaTime)
 	{
+		UpdateApexGravity(context);
+
 		if (TryChangeAirAction(context, true))
 			return;
 
-		if (IsAscending(context) == false)
+		if (HasLeftApex(context))
 			context.stateMachine->ChangeState(ChiStateId::JumpDown);
 	}
 
+	void ChiJumpUpState::Exit(ChiStateContext& context)
+	{
+		RestoreJumpGravity(context);
+		ChiClipState::Exit(context);
+	}
+
+	/// JumpDown //////////////////////////////////////////////////////////////////////////////
 	ChiJumpDownState::ChiJumpDownState()
-		: ChiClipState(ChiStateId::JumpDown, ChiAnimationId::JumpDown, false)
+		: ChiClipState(ChiStateId::JumpDown, ChiAnimationId::JumpDown, MakeJumpPlayOption(true, JumpStartTime))
 	{
 	}
 
@@ -69,8 +105,9 @@ namespace gm
 			context.stateMachine->ChangeState(ChiStateId::JumpLanding);
 	}
 
+	/// JumpLanding //////////////////////////////////////////////////////////////////////////////
 	ChiJumpLandingState::ChiJumpLandingState()
-		: ChiClipState(ChiStateId::JumpLanding, ChiAnimationId::JumpLanding)
+		: ChiClipState(ChiStateId::JumpLanding, ChiAnimationId::JumpLanding, MakeJumpPlayOption(false, 0.f, JumpLandingBlendDuration))
 	{
 	}
 
@@ -108,15 +145,23 @@ namespace gm
 
 	void ChiJumpDoubleUpState::Tick(ChiStateContext& context, float deltaTime)
 	{
+		UpdateApexGravity(context);
+
 		if (TryChangeAirAction(context, false))
 			return;
 
-		if (IsAscending(context) == false)
+		if (HasLeftApex(context))
 			context.stateMachine->ChangeState(ChiStateId::JumpDoubleDown);
 	}
 
+	void ChiJumpDoubleUpState::Exit(ChiStateContext& context)
+	{
+		RestoreJumpGravity(context);
+		ChiClipState::Exit(context);
+	}
+
 	ChiJumpDoubleDownState::ChiJumpDoubleDownState()
-		: ChiClipState(ChiStateId::JumpDoubleDown, ChiAnimationId::JumpDoubleDown, false)
+		: ChiClipState(ChiStateId::JumpDoubleDown, ChiAnimationId::JumpDoubleDown, MakeJumpPlayOption(true, DoubleJumpDownStartTime))
 	{
 	}
 
