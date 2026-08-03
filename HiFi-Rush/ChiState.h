@@ -1,5 +1,6 @@
 #pragma once
 
+#include "AnimationTypes.h"
 #include "ChiAnimationTypes.h"
 #include "ChiStateContext.h"
 #include "ChiStateTypes.h"
@@ -7,6 +8,8 @@
 
 namespace gm
 {
+	inline constexpr float ChiDefaultBlendDuration = 0.15f;
+
 	class ChiState
 	{
 	public:
@@ -19,6 +22,7 @@ namespace gm
 
 	protected:
 		void	PlayAnimation(ChiStateContext& context, ChiAnimationId animationId, bool isLoop) const;
+		void	PlayAnimation(ChiStateContext& context, ChiAnimationId animationId, const AnimationPlayOption& playOption) const;
 		void	ReturnToIdleOrRun(ChiStateContext& context) const;
 		bool	IsAnimationCompleted(const ChiStateContext& context) const;
 		void	ChangeDashStateByInput(ChiStateContext& context) const;
@@ -31,6 +35,7 @@ namespace gm
 	{
 	public:
 		ChiClipState(ChiStateId stateId, ChiAnimationId animationId, bool isLoop = false);
+		ChiClipState(ChiStateId stateId, ChiAnimationId animationId, const AnimationPlayOption& playOption);
 
 		virtual ChiStateId GetStateId() const override { return _stateId; }
 		virtual void Enter(ChiStateContext& context) override;
@@ -43,7 +48,7 @@ namespace gm
 	private:
 		ChiStateId		_stateId = ChiStateId::None;
 		ChiAnimationId	_animationId = ChiAnimationId::Idle;
-		bool			_isLoop = false;
+		AnimationPlayOption _playOption{};
 
 		bool			_prevMoveEnabled = true;
 		bool			_disabledMoveOnEnter = false;

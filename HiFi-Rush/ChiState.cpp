@@ -11,8 +11,6 @@ namespace gm
 {
 	namespace
 	{
-		constexpr float ChiDefaultBlendDuration = 0.15f;
-
 		AnimationPlayOption MakePlayOption(bool isLoop)
 		{
 			AnimationPlayOption playOption{};
@@ -112,7 +110,12 @@ namespace gm
 
 	void ChiState::PlayAnimation(ChiStateContext& context, ChiAnimationId animationId, bool isLoop) const
 	{
-		context.animatorComponent->Play(GetChiAnimationName(animationId), MakePlayOption(isLoop));
+		PlayAnimation(context, animationId, MakePlayOption(isLoop));
+	}
+
+	void ChiState::PlayAnimation(ChiStateContext& context, ChiAnimationId animationId, const AnimationPlayOption& playOption) const
+	{
+		context.animatorComponent->Play(GetChiAnimationName(animationId), playOption);
 	}
 
 	void ChiState::ReturnToIdleOrRun(ChiStateContext& context) const
@@ -189,14 +192,18 @@ namespace gm
 
 	/// Clip //////////////////////////////////////////////////////////////////////////////
 	ChiClipState::ChiClipState(ChiStateId stateId, ChiAnimationId animationId, bool isLoop)
+		: ChiClipState(stateId, animationId, MakePlayOption(isLoop))
+	{}
+
+	ChiClipState::ChiClipState(ChiStateId stateId, ChiAnimationId animationId, const AnimationPlayOption& playOption)
 		: _stateId(stateId)
 		, _animationId(animationId)
-		, _isLoop(isLoop)
+		, _playOption(playOption)
 	{}
 
 	void ChiClipState::Enter(ChiStateContext& context)
 	{
-		PlayAnimation(context, _animationId, _isLoop);
+		PlayAnimation(context, _animationId, _playOption);
 
 		_enabledRootMotionOnEnter = UsesRootMotionState(_stateId);
 		if (_enabledRootMotionOnEnter)
@@ -262,7 +269,7 @@ namespace gm
 			}
 		}
 
-		if (_isLoop == false && IsAnimationCompleted(context))
+		if (context.animatorComponent->IsLoop() == false && IsAnimationCompleted(context))
 			ReturnToIdleOrRun(context);
 	}
 
