@@ -18,6 +18,14 @@ namespace gm
 			ReturnToIdleOrRun(context);
 	}
 
+	void ChiDamageState::OnGroundContact(ChiStateContext&, const NavigationGroundContactEvent&)
+	{
+	}
+
+	void ChiDamageState::OnGroundLost(ChiStateContext&, const NavigationGroundLostEvent&)
+	{
+	}
+
 	ChiWeakKnockbackDamageState::ChiWeakKnockbackDamageState()
 		: ChiDamageState(ChiStateId::DamageWeakKnockback, ChiAnimationId::DamageWeakKnockback, true)
 	{

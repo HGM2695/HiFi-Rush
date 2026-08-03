@@ -126,6 +126,16 @@ namespace gm
 			context.stateMachine->ChangeState(ChiStateId::Idle);
 	}
 
+	void ChiState::OnGroundContact(ChiStateContext& context, const NavigationGroundContactEvent&)
+	{
+		context.stateMachine->ChangeState(ChiStateId::JumpLanding);
+	}
+
+	void ChiState::OnGroundLost(ChiStateContext& context, const NavigationGroundLostEvent&)
+	{
+		context.stateMachine->ChangeState(ChiStateId::JumpDown);
+	}
+
 	bool ChiState::IsAnimationCompleted(const ChiStateContext& context) const
 	{
 		return context.animatorComponent->GetState() == AnimationState::Completed;

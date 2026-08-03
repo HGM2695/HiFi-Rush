@@ -180,8 +180,5 @@ namespace gm
 			context.stateMachine->ChangeState(ChiStateId::AttackStump0);
 			return;
 		}
-
-		if (IsAnimationCompleted(context))
-			context.stateMachine->ChangeState(ChiStateId::JumpLanding);
 	}
 }

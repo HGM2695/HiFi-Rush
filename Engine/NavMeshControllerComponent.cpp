@@ -28,6 +28,12 @@ namespace gm
 		CheckGroundCollision();
 	}
 
+	void NavMeshControllerComponent::SetMaxGroundSnapDownDistance(float distance)
+	{
+		GM_ASSERT_RETURN(distance >= 0.f, "지면 스냅 허용 거리는 0 이상이어야 합니다.");
+		_maxGroundSnapDownDistance = distance;
+	}
+
 	bool NavMeshControllerComponent::RefreshCellIndex()
 	{
 		GM_ASSERT_RETURN_VAL(_transform, false, "NavMeshControllerComponent가 초기화되지 않았습니다.");
@@ -53,28 +59,63 @@ namespace gm
 		if (navMeshSystem.HasActiveNavigationMesh() == false)
 			return false;
 
-		NavigationMoveResult result = navMeshSystem.MoveOnActiveNavigationMesh(_currentCellIndex, _transform->GetPosition(), desiredDelta);
+		const Vector3 currentPosition = _transform->GetPosition();
+		NavigationMoveResult result = navMeshSystem.MoveOnActiveNavigationMesh(_currentCellIndex, currentPosition, desiredDelta);
 		if (result.isOnMesh == false)
 			return false;
 
 		_currentCellIndex = result.cellIndex;
-		if (_groundCollisionEnabled && _isGrounded == false)
-			result.position.y = _transform->GetPosition().y;
+
+		bool hasStartedFalling = false;
+		const float groundHeight = result.position.y;
+		if (_groundCollisionEnabled)
+		{
+			const float dropDistance = currentPosition.y - groundHeight;
+			if (_isGrounded && dropDistance > _maxGroundSnapDownDistance)
+			{
+				result.position.y = currentPosition.y;
+				_isGrounded = false;
+				hasStartedFalling = _rigidbody == nullptr || _rigidbody->GetVelocity().y <= 0.f;
+			}
+			else if (_isGrounded == false)
+			{
+				result.position.y = currentPosition.y;
+			}
+		}
 
 		_transform->SetPosition(result.position);
+
+		if (hasStartedFalling)
+		{
+			NavigationGroundLostEvent event{};
+			event.position = result.position;
+			event.groundHeight = groundHeight;
+			event.cellIndex = result.cellIndex;
+			OnGroundLost.Publish(event);
+		}
+
 		return true;
 	}
 
 	void NavMeshControllerComponent::CheckGroundCollision()
 	{
+		const bool wasGroundStateInitialized = _isGroundStateInitialized;
 		const bool wasGrounded = _isGrounded;
 		_isGrounded = false;
 		if (_groundCollisionEnabled == false || _transform == nullptr || _rigidbody == nullptr || _rigidbody->IsEnabled() == false || _rigidbody->IsKinematic())
+		{
+			_isGroundStateInitialized = false;
 			return;
+		}
 
 		NavMeshSystem& navMeshSystem = APPLICATION.GetPhysicsSystem().GetNavMeshSystem();
 		if (navMeshSystem.HasActiveNavigationMesh() == false)
+		{
+			_isGroundStateInitialized = false;
 			return;
+		}
+
+		_isGroundStateInitialized = true;
 
 		Vector3 position = _transform->GetPosition();
 		const NavigationGroundResult groundResult = navMeshSystem.QueryActiveNavigationGround(_currentCellIndex, position);
@@ -96,7 +137,7 @@ namespace gm
 		_rigidbody->SetVelocity(resolvedVelocity);
 		_isGrounded = true;
 
-		if (wasGrounded == false)
+		if (wasGroundStateInitialized && wasGrounded == false)
 		{
 			NavigationGroundContactEvent event{};
 			event.position = position;

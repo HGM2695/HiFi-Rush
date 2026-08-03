@@ -4,6 +4,7 @@
 #include "ChiStateContext.h"
 #include "ChiStateTypes.h"
 #include "Component.h"
+#include "Event.h"
 
 #include <memory>
 #include <unordered_map>
@@ -14,6 +15,8 @@ namespace gm
 	class ChiState;
 	class ChiMoveComponent;
 	class SkeletalAnimatorComponent;
+	struct NavigationGroundContactEvent;
+	struct NavigationGroundLostEvent;
 
 	class ChiStateMachineComponent : public Component
 	{
@@ -33,6 +36,8 @@ namespace gm
 	private:
 		void					RegisterAnimationClips();
 		void					RegisterStates();
+		void					OnGroundContact(const NavigationGroundContactEvent& event);
+		void					OnGroundLost(const NavigationGroundLostEvent& event);
 		ChiState*				FindState(ChiStateId stateId) const;
 
 	private:
@@ -40,6 +45,8 @@ namespace gm
 
 		ChiStateId					_currentStateId = ChiStateId::None;
 		ChiStateContext				_context{};
+		EventConnection				_groundContactConnection{};
+		EventConnection				_groundLostConnection{};
 
 		SkeletalAnimatorComponent*	_animatorComponent = nullptr;
 		ChiMoveComponent*			_moveComponent = nullptr;

@@ -40,12 +40,23 @@ namespace gm
 
 		_context.stateMachine = this;
 		_context.moveComponent = _moveComponent;
-		_context.navMeshControllerComponent = navMeshControllerComponent;
 		_context.rigidbodyComponent = rigidbodyComponent;
 		_context.animatorComponent = _animatorComponent;
 
 		RegisterAnimationClips();
 		RegisterStates();
+
+		navMeshControllerComponent->OnGroundContact.Subscribe(_groundContactConnection,
+			[this](const NavigationGroundContactEvent& event)
+			{
+				OnGroundContact(event);
+			});
+		navMeshControllerComponent->OnGroundLost.Subscribe(_groundLostConnection,
+			[this](const NavigationGroundLostEvent& event)
+			{
+				OnGroundLost(event);
+			});
+
 		ChangeState(ChiStateId::Idle);
 	}
 
@@ -56,6 +67,20 @@ namespace gm
 			return;
 
 		currentState->Tick(_context, deltaTime);
+	}
+
+	void ChiStateMachineComponent::OnGroundContact(const NavigationGroundContactEvent& event)
+	{
+		ChiState* currentState = FindState(_currentStateId);
+		if (currentState)
+			currentState->OnGroundContact(_context, event);
+	}
+
+	void ChiStateMachineComponent::OnGroundLost(const NavigationGroundLostEvent& event)
+	{
+		ChiState* currentState = FindState(_currentStateId);
+		if (currentState)
+			currentState->OnGroundLost(_context, event);
 	}
 
 	void ChiStateMachineComponent::ChangeState(ChiStateId nextStateId)

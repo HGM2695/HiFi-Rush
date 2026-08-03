@@ -192,6 +192,7 @@ namespace gm
 	public:
 		ChiStump1AttackState();
 		virtual void Tick(ChiStateContext& context, float deltaTime) override;
+		virtual void OnGroundContact(ChiStateContext& context, const NavigationGroundContactEvent& event) override;
 	};
 
 	class ChiStump2AttackState final : public ChiClipState

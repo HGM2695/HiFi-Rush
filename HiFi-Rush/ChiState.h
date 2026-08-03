@@ -9,6 +9,8 @@
 namespace gm
 {
 	inline constexpr float ChiDefaultBlendDuration = 0.15f;
+	struct NavigationGroundContactEvent;
+	struct NavigationGroundLostEvent;
 
 	class ChiState
 	{
@@ -18,6 +20,8 @@ namespace gm
 		virtual ChiStateId GetStateId() const = 0;
 		virtual void Enter(ChiStateContext& context) {}
 		virtual void Tick(ChiStateContext& context, float deltaTime) {}
+		virtual void OnGroundContact(ChiStateContext& context, const NavigationGroundContactEvent& event);
+		virtual void OnGroundLost(ChiStateContext& context, const NavigationGroundLostEvent& event);
 		virtual void Exit(ChiStateContext& context) {}
 
 	protected:

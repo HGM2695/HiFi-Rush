@@ -2,7 +2,6 @@
 #include "Application.h"
 #include "ChiStateMachineComponent.h"
 #include "Input.h"
-#include "NavMeshControllerComponent.h"
 #include "Rigidbody3DComponent.h"
 
 #include <cmath>
@@ -11,14 +10,14 @@ namespace gm
 {
 	namespace
 	{
-		constexpr float JumpImpulse = 9.5f;
-		constexpr float DoubleJumpImpulse = 9.5f;
-		constexpr float JumpStartTime = 0.15f;
-		constexpr float JumpLandingBlendDuration = 0.1f;
-		constexpr float DoubleJumpDownStartTime = 0.1f;
+		constexpr float JumpImpulse = 9.f;
+		constexpr float DoubleJumpImpulse = 12.f;
+		constexpr float JumpStartTime = 0.1f;
+		constexpr float JumpLandingBlendDuration = 0.075f;
+		constexpr float DoubleJumpDownStartTime = 0.f;
 		constexpr float JumpGravityScale = 3.f;
 		constexpr float ApexGravityScale = 1.f;
-		constexpr float ApexVelocityThreshold = 1.5f;
+		constexpr float ApexVelocityThreshold = 2.f;
 
 		AnimationPlayOption MakeJumpPlayOption(bool isLoop, float startTime, float blendDuration = ChiDefaultBlendDuration)
 		{
@@ -52,11 +51,6 @@ namespace gm
 		bool HasLeftApex(const ChiStateContext& context)
 		{
 			return context.rigidbodyComponent && context.rigidbodyComponent->GetVelocity().y <= -ApexVelocityThreshold;
-		}
-
-		bool IsGrounded(const ChiStateContext& context)
-		{
-			return context.navMeshControllerComponent && context.navMeshControllerComponent->IsGrounded();
 		}
 	}
 
@@ -99,10 +93,6 @@ namespace gm
 	{
 		if (TryChangeAirAction(context, true))
 			return;
-
-		// NavMeshController가 바닥 접촉을 확정한 뒤 착지 상태로 전환합니다.
-		if (IsGrounded(context))
-			context.stateMachine->ChangeState(ChiStateId::JumpLanding);
 	}
 
 	/// JumpLanding //////////////////////////////////////////////////////////////////////////////
@@ -169,9 +159,5 @@ namespace gm
 	{
 		if (TryChangeAirAction(context, false))
 			return;
-
-		// NavMeshController가 바닥 접촉을 확정한 뒤 착지 상태로 전환합니다.
-		if (IsGrounded(context))
-			context.stateMachine->ChangeState(ChiStateId::JumpLanding);
 	}
 }

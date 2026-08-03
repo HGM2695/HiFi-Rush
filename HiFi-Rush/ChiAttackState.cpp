@@ -352,9 +352,11 @@ namespace gm
 
 	void ChiStump1AttackState::Tick(ChiStateContext& context, float deltaTime)
 	{
-		// 착지 판정과 연결되면 이 상태에서 AttackStump2로 전환합니다.
-		if (IsAnimationCompleted(context))
-			context.stateMachine->ChangeState(ChiStateId::AttackStump2);
+	}
+
+	void ChiStump1AttackState::OnGroundContact(ChiStateContext& context, const NavigationGroundContactEvent&)
+	{
+		context.stateMachine->ChangeState(ChiStateId::AttackStump2);
 	}
 
 	ChiStump2AttackState::ChiStump2AttackState()
