@@ -182,6 +182,9 @@
     <ClInclude Include="EngineCore.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Core</Filter>
+    </ClInclude>
     <ClInclude Include="IGraphicsResourceFactory.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -394,6 +397,9 @@
     </ClCompile>
     <ClCompile Include="Entity.cpp">
       <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Event.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Base</Filter>

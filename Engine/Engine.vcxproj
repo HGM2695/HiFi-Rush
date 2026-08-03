@@ -200,6 +200,7 @@
     <ClInclude Include="D3D11GraphicsDevice.h" />
     <ClInclude Include="EngineCore.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="Event.h" />
     <ClInclude Include="BoxCollider2DComponent.h" />
     <ClInclude Include="CircleCollider2DComponent.h" />
     <ClInclude Include="GameObjectHandle.h" />
@@ -320,6 +321,7 @@
     <ClCompile Include="DebugInputHandler.cpp" />
     <ClCompile Include="D3D11GraphicsDevice.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Event.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GMAssert.cpp" />
     <ClCompile Include="GMLog.cpp" />
