@@ -1,11 +1,18 @@
 #pragma once
 
 #include "Component.h"
+#include "Event.h"
 
 namespace gm
 {
 	class Rigidbody3DComponent;
 	class TransformComponent;
+
+	struct NavigationGroundContactEvent final : EventType
+	{
+		Vector3	position{};
+		int32	cellIndex = -1;
+	};
 
 	class NavMeshControllerComponent : public Component
 	{
@@ -22,6 +29,8 @@ namespace gm
 		void				SetCurrentCellIndex(int32 cellIndex) { _currentCellIndex = cellIndex; }
 		bool				RefreshCellIndex();
 		bool				Move(const Vector3& desiredDelta);
+
+		EventPublisher<NavMeshControllerComponent, NavigationGroundContactEvent> OnGroundContact;
 
 	protected:
 		virtual void		OnInitialize() override;

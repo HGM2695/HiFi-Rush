@@ -67,6 +67,7 @@ namespace gm
 
 	void NavMeshControllerComponent::CheckGroundCollision()
 	{
+		const bool wasGrounded = _isGrounded;
 		_isGrounded = false;
 		if (_groundCollisionEnabled == false || _transform == nullptr || _rigidbody == nullptr || _rigidbody->IsEnabled() == false || _rigidbody->IsKinematic())
 			return;
@@ -95,6 +96,12 @@ namespace gm
 		_rigidbody->SetVelocity(resolvedVelocity);
 		_isGrounded = true;
 
-		// 바닥 충돌에 대한 이벤트를 쏴줘야 할 수 있음.
+		if (wasGrounded == false)
+		{
+			NavigationGroundContactEvent event{};
+			event.position = position;
+			event.cellIndex = groundResult.cellIndex;
+			OnGroundContact.Publish(event);
+		}
 	}
 }
