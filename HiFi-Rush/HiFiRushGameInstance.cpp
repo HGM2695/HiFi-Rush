@@ -17,14 +17,25 @@
 
 namespace gm
 {
+	namespace
+	{
+		constexpr float DefaultBPM = 136.f;
+	}
+
 	bool HiFiRushGameInstance::OnInitialize()
 	{
 		if (LoadResources() == false)
 			return false;
 
+		_beatSystem.SetBPM(DefaultBPM);
 		SetupScenes();
 		SetupDebugTools();
 		return true;
+	}
+
+	void HiFiRushGameInstance::OnTick(float)
+	{
+		_beatSystem.Tick(APPLICATION.GetAudioSystem());
 	}
 
 	void HiFiRushGameInstance::SetupScenes()
