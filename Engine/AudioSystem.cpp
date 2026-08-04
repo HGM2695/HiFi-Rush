@@ -114,6 +114,25 @@ namespace gm
 		return _bgmChannel;
 	}
 
+	bool AudioSystem::GetBGMPlayTime(_Out_ float& outPlaybackTimeSeconds) const
+	{
+		outPlaybackTimeSeconds = 0.f;
+
+		if (_bgmChannel == nullptr)
+			return false;
+
+		unsigned int playbackTimeMilliseconds = 0;
+		const FMOD_RESULT result = _bgmChannel->getPosition(&playbackTimeMilliseconds, FMOD_TIMEUNIT_MS);
+		if (result != FMOD_OK)
+		{
+			LogFMODError("FMOD::Channel::getPosition", result);
+			return false;
+		}
+
+		outPlaybackTimeSeconds = static_cast<float>(playbackTimeMilliseconds) / 1000.f;
+		return true;
+	}
+
 	void AudioSystem::StopChannel(FMOD::Channel* channel)
 	{
 		if (channel == nullptr)
