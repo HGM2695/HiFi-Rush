@@ -171,6 +171,7 @@
     <ClInclude Include="AnimationTypes.h" />
     <ClInclude Include="AnimationController.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="GameInstance.h" />
     <ClInclude Include="AudioComponent.h" />
     <ClInclude Include="AudioStatics.h" />
     <ClInclude Include="BinaryIO.h" />
@@ -294,6 +295,7 @@
     <ClCompile Include="AnimationClipSet.cpp" />
     <ClCompile Include="AnimationNotify.cpp" />
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="GameInstance.cpp" />
     <ClCompile Include="AudioComponent.cpp" />
     <ClCompile Include="AudioStatics.cpp" />
     <ClCompile Include="BinaryModelLoader.cpp" />

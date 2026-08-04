@@ -18,6 +18,7 @@
 #include "GraphicsBackend.h"
 #include "CameraManager.h"
 #include "Renderer.h"
+#include "GameInstance.h"
 
 #if GM_ENABLE_DEBUG_TOOLS
 #include "IDebugRenderer.h"
@@ -26,15 +27,29 @@
 namespace gm
 {
 	Application::Application() = default;
-	Application::~Application() = default;
+	Application::~Application()
+	{
+		if (_gameInstance)
+			_gameInstance->Shutdown();
+	}
 
 	bool Application::Initialize(const ApplicationDesc& desc)
 	{
+		return Initialize(desc, std::make_unique<GameInstance>());
+	}
+
+	bool Application::Initialize(const ApplicationDesc& desc, std::unique_ptr<GameInstance> gameInstance)
+	{
+		GM_ASSERT_RETURN_VAL(gameInstance, false, "GameInstance가 존재하지 않습니다.");
+		_gameInstance = std::move(gameInstance);
+
 		GM_ASSERT_RETURN_VAL(initializeWindow(desc), false, "Window 초기화 실패");
 		GM_ASSERT_RETURN_VAL(initializeGraphics(desc), false, "Graphics Device 초기화 실패");
 		GM_ASSERT_RETURN_VAL(initializeSubSystem(), false, "SubSystem 초기화 실패");
 		GM_ASSERT_RETURN_VAL(initializeBuiltinResources(), false, "Builtin Resource 초기화 실패");
 		GM_ASSERT_RETURN_VAL(initializeRenderer(), false, "Renderer 초기화 실패");
+
+		GM_ASSERT_RETURN_VAL(_gameInstance->Initialize(), false, "GameInstance 초기화에 실패했습니다.");
 
 		_backbufferColor = desc.backBufferColor;
 
@@ -134,6 +149,8 @@ namespace gm
 				Loop();
 			}
 		}
+
+		_gameInstance->Shutdown();
 	}
 
 	void Application::Loop()
@@ -160,6 +177,7 @@ namespace gm
 		_audioSystem->Tick();
 
 		const float deltaTime = _time->GetDeltaTime();
+		_gameInstance->Tick(deltaTime);
 		_uiManager->Tick(deltaTime);
 	}
 

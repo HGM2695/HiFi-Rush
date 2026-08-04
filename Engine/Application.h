@@ -20,6 +20,7 @@ namespace gm
 	class IGraphicsCommandContext;
 	class Renderer;
 	class ITextRenderer;
+	class GameInstance;
 
 #if GM_ENABLE_DEBUG_TOOLS
 	class IDebugRenderer;
@@ -53,6 +54,7 @@ namespace gm
 
 	public:
 		bool				Initialize(const ApplicationDesc& desc);
+		bool				Initialize(const ApplicationDesc& desc, std::unique_ptr<GameInstance> gameInstance);
 		void				Run();
 
 		void				TickSystems();
@@ -76,6 +78,7 @@ namespace gm
 		IGraphicsCommandContext& GetGraphicsCommandContext() { return *_graphicsCommandContext; }
 		Renderer&			GetRenderer() { return *_renderer; }
 		ITextRenderer&		GetTextRenderer() { return *_textRenderer; }
+		GameInstance&		GetGameInstance() { return *_gameInstance; }
 
 #if GM_ENABLE_DEBUG_TOOLS
 		IDebugRenderer& GetDebugRenderer() { return *_debugRenderer; }
@@ -93,6 +96,7 @@ namespace gm
 		const IGraphicsCommandContext& GetGraphicsCommandContext() const { return *_graphicsCommandContext; }
 		const Renderer&		GetRenderer() const { return *_renderer; }
 		const ITextRenderer& GetTextRenderer() const { return *_textRenderer; }
+		const GameInstance& GetGameInstance() const { return *_gameInstance; }
 
 #if GM_ENABLE_DEBUG_TOOLS
 		const IDebugRenderer& GetDebugRenderer() const { return *_debugRenderer; }
@@ -122,6 +126,7 @@ namespace gm
 		std::unique_ptr<Resources>                   _resources;
 		std::unique_ptr<UIManager>                   _uiManager;
 		std::unique_ptr<SceneManager>                _sceneManager;
+		std::unique_ptr<GameInstance>                _gameInstance;
 
 		std::unique_ptr<PhysicsSystem>               _physicsSystem;
 		std::unique_ptr<Input>                       _input;

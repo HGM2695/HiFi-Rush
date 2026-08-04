@@ -2,6 +2,9 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="GameInstance.h">
+      <Filter>Core</Filter>
+    </ClInclude>
     <ClInclude Include="BuildConfig.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -368,6 +371,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="GameInstance.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
     <ClCompile Include="AudioComponent.cpp">
       <Filter>Engine Component\Audio</Filter>
     </ClCompile>
