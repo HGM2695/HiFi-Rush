@@ -6,17 +6,24 @@
 
 namespace gm
 {
+	class BeatSystem;
+
 	class DebugTextWidget : public UserWidget
 	{
+	public:
+		explicit DebugTextWidget(const BeatSystem& beatSystem) : _beatSystem(beatSystem) {}
+
 	protected:
 		std::unique_ptr<Widget> BuildWidgetTree() override;
 
 		virtual void			OnTick(float deltaTime) override;
 
 	private:
-		uint32	_callCount = 0;
-		float	_fps = 0.f;
-		float	_accTime = 0.f;
+		const BeatSystem&	_beatSystem;
+		uint32				_callCount = 0;
+		float				_fps = 0.f;
+		float				_accTime = 0.f;
+		float				_beatPulseTime = 0.f;
 	};
 }
 

@@ -55,7 +55,7 @@ namespace gm
 	{
 #if GM_ENABLE_DEBUG_TOOLS
 		RegisterSceneDebugTools();
-		APPLICATION.GetUIManager().AddDebugUserWidget<DebugTextWidget>();
+		APPLICATION.GetUIManager().AddDebugUserWidget<DebugTextWidget>(_beatSystem);
 #endif
 	}
 }
