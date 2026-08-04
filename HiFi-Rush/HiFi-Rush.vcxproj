@@ -183,9 +183,8 @@
     <ClInclude Include="DebugTextWidget.h" />
     <ClInclude Include="EnvironmentMapTypes.h" />
     <ClInclude Include="EnvironmentSpawner.h" />
-    <ClInclude Include="LoadDebugTools.h" />
     <ClInclude Include="LoadResources.h" />
-    <ClInclude Include="LoadScenes.h" />
+    <ClInclude Include="HiFiRushGameInstance.h" />
     <ClInclude Include="LoadingScreenWidget.h" />
     <ClInclude Include="MainHUDWidget.h" />
     <ClInclude Include="OutsideScene.h" />
@@ -215,6 +214,7 @@
     <ClCompile Include="BinaryEnvironmentMapLoader.cpp" />
     <ClCompile Include="DebugTextWidget.cpp" />
     <ClCompile Include="EnvironmentSpawner.cpp" />
+    <ClCompile Include="HiFiRushGameInstance.cpp" />
     <ClCompile Include="LoadResources.cpp" />
     <ClCompile Include="LoadingScreenWidget.cpp" />
     <ClCompile Include="main.cpp" />

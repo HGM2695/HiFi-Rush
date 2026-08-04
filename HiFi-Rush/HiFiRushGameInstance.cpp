@@ -1,7 +1,7 @@
-#pragma once
-
-#include "SceneManager.h"
+#include "HiFiRushGameInstance.h"
 #include "Application.h"
+#include "LoadResources.h"
+#include "SceneManager.h"
 #include "TutorialScene.h"
 #include "OutsideScene.h"
 #include "QamilScene.h"
@@ -9,9 +9,25 @@
 #include "TitleScene.h"
 #include "CommonLoadingScene.h"
 
+#if GM_ENABLE_DEBUG_TOOLS
+#include "DebugTextWidget.h"
+#include "SceneDebugTools.h"
+#include "UIManager.h"
+#endif
+
 namespace gm
 {
-	void SetupScenes()
+	bool HiFiRushGameInstance::OnInitialize()
+	{
+		if (LoadResources() == false)
+			return false;
+
+		SetupScenes();
+		SetupDebugTools();
+		return true;
+	}
+
+	void HiFiRushGameInstance::SetupScenes()
 	{
 		SceneManager& sceneManager = APPLICATION.GetSceneManager();
 		sceneManager.CreateScene<TitleScene>(L"TitleScene");
@@ -22,5 +38,13 @@ namespace gm
 		sceneManager.CreateScene<CommonLoadingScene>(L"CommonLoadingScene");
 
 		sceneManager.RequestSceneChange(L"TitleScene");
+	}
+
+	void HiFiRushGameInstance::SetupDebugTools()
+	{
+#if GM_ENABLE_DEBUG_TOOLS
+		RegisterSceneDebugTools();
+		APPLICATION.GetUIManager().AddDebugUserWidget<DebugTextWidget>();
+#endif
 	}
 }

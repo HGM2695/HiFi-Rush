@@ -1,8 +1,7 @@
 #include "WindowsCore.h"
-#include "LoadResources.h"
-#include "LoadScenes.h"
+#include "Application.h"
 #include "GraphicsTypes.h"
-#include "LoadDebugTools.h"
+#include "HiFiRushGameInstance.h"
 
 #ifdef _DEBUG
 #include <crtdbg.h>
@@ -25,11 +24,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     desc.graphicsAPI = gm::GraphicsAPI::D3D11;
     desc.backBufferColor = gm::Colors::Black;
 
-    GM_ASSERT_RETURN_VAL(APPLICATION.Initialize(desc), -1, "Application 초기화에 실패했습니다.");
-    GM_ASSERT_RETURN_VAL(gm::LoadResources(), -1, "공용 Resource 로드에 실패했습니다.");
-
-    gm::SetupScenes();
-    gm::LoadDebugTools();
+    GM_ASSERT_RETURN_VAL(APPLICATION.Initialize(desc, std::make_unique<gm::HiFiRushGameInstance>()), -1, "Application 초기화에 실패했습니다.");
 
     APPLICATION.Run();
 
