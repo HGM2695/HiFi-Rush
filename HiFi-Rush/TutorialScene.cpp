@@ -31,6 +31,7 @@
 #include "BinaryEnvironmentMapLoader.h"
 #include "EnvironmentMapTypes.h"
 #include "EnvironmentSpawner.h"
+#include "HiFiRushAudio.h"
 #include "Paths.h"
 #include "SceneDebugTools.h"
 
@@ -46,6 +47,7 @@ namespace gm
 		GM_ASSERT_RETURN(navigationMesh, "tutorial NavigationMesh가 로드되지 않았습니다.");
 		APPLICATION.GetPhysicsSystem().GetNavMeshSystem().SetActiveNavigationMesh(navigationMesh);
 		GetCameraManager()->SetActiveCamera(L"PlayerCamera");
+		PlayRhythmBGM(HiFiRushBGM::Tutorial);
 	}
 
 	void TutorialScene::OnExit()

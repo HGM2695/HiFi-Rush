@@ -184,6 +184,7 @@
     <ClInclude Include="EnvironmentMapTypes.h" />
     <ClInclude Include="EnvironmentSpawner.h" />
     <ClInclude Include="BeatSystem.h" />
+    <ClInclude Include="HiFiRushAudio.h" />
     <ClInclude Include="LoadResources.h" />
     <ClInclude Include="HiFiRushGameInstance.h" />
     <ClInclude Include="LoadingScreenWidget.h" />
@@ -216,6 +217,7 @@
     <ClCompile Include="DebugTextWidget.cpp" />
     <ClCompile Include="EnvironmentSpawner.cpp" />
     <ClCompile Include="BeatSystem.cpp" />
+    <ClCompile Include="HiFiRushAudio.cpp" />
     <ClCompile Include="HiFiRushGameInstance.cpp" />
     <ClCompile Include="LoadResources.cpp" />
     <ClCompile Include="LoadingScreenWidget.cpp" />

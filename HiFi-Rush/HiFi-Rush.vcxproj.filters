@@ -55,6 +55,7 @@
       <Filter>GameObject</Filter>
     </ClInclude>
     <ClInclude Include="BeatSystem.h" />
+    <ClInclude Include="HiFiRushAudio.h" />
     <ClInclude Include="TutorialScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
@@ -151,6 +152,7 @@
       <Filter>GameObject</Filter>
     </ClCompile>
     <ClCompile Include="BeatSystem.cpp" />
+    <ClCompile Include="HiFiRushAudio.cpp" />
     <ClCompile Include="HiFiRushGameInstance.cpp" />
     <ClCompile Include="LoadResources.cpp">
       <Filter>Resource</Filter>

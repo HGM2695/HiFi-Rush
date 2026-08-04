@@ -9,6 +9,7 @@
 #include "ChiAnimationTypes.h"
 #include "EnvironmentMapTypes.h"
 #include "GameObject.h"
+#include "HiFiRushAudio.h"
 #include "IGraphicsResourceFactory.h"
 #include "ITextRenderer.h"
 #include "LoadingScreenWidget.h"
@@ -20,6 +21,7 @@
 #include "SkeletalAnimationClip.h"
 #include "SkeletalMesh.h"
 #include "StaticMesh.h"
+#include "SoundWave.h"
 #include "Texture.h"
 #include "UIManager.h"
 
@@ -128,6 +130,9 @@ namespace gm
 			return result;
 
 		if (LoadNavigationMesh(result, resources, L"tutorial", L"tutorial.bin") == false)
+			return result;
+
+		if (LoadRhythmBGM(result, resources, HiFiRushBGM::Tutorial) == false)
 			return result;
 
 		result.succeeded = true;
@@ -326,6 +331,25 @@ namespace gm
 		return true;
 	}
 
+	bool CommonLoadingScene::LoadRhythmBGM(SceneLoadData& outLoadData, Resources& resources, const RhythmBGMDesc& desc)
+	{
+		if (resources.Find<SoundWave>(desc.resourceKey))
+			return true;
+
+		SoundWaveDesc soundDesc{};
+		soundDesc.path = GetAudioPath(desc.fileName);
+
+		std::shared_ptr<SoundWave> sound = SoundWave::Create(soundDesc);
+		if (sound == nullptr)
+		{
+			outLoadData.errorMessage = L"BGM SoundWave 생성에 실패했습니다. key=" + std::wstring(desc.resourceKey);
+			return false;
+		}
+
+		outLoadData.resources.push_back({ desc.resourceKey, std::move(sound) });
+		return true;
+	}
+
 	CommonLoadingScene::SceneLoadData CommonLoadingScene::LoadOutsideSceneResources(Resources& resources, IGraphicsResourceFactory& resourceFactory)
 	{
 		SceneLoadData result{};
@@ -337,6 +361,9 @@ namespace gm
 			return result;
 
 		if (LoadNavigationMesh(result, resources, L"jump_outside", L"jump_outside.bin") == false)
+			return result;
+
+		if (LoadRhythmBGM(result, resources, HiFiRushBGM::Outside) == false)
 			return result;
 
 		result.succeeded = true;
@@ -354,6 +381,9 @@ namespace gm
 			return result;
 
 		if (LoadNavigationMesh(result, resources, L"qamil", L"qamil.bin") == false)
+			return result;
+
+		if (LoadRhythmBGM(result, resources, HiFiRushBGM::Qamil) == false)
 			return result;
 
 		result.succeeded = true;

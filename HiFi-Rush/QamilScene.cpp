@@ -3,6 +3,7 @@
 #include "BinaryEnvironmentMapLoader.h"
 #include "EnvironmentMapTypes.h"
 #include "EnvironmentSpawner.h"
+#include "HiFiRushAudio.h"
 #include "NavigationMesh.h"
 #include "NavMeshSystem.h"
 #include "Paths.h"
@@ -21,6 +22,7 @@ namespace gm
 		APPLICATION.GetPhysicsSystem().GetNavMeshSystem().SetActiveNavigationMesh(navigationMesh);
 
 		ActivateEnvironmentOverviewCamera(*this);
+		PlayRhythmBGM(HiFiRushBGM::Qamil);
 	}
 
 	void QamilScene::OnInitialize()
