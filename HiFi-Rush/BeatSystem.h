@@ -18,6 +18,7 @@ namespace gm
 		float	GetCurrentBeat() const { return _currentBeat; }
 		int64	GetCurrentBeatIndex() const { return _currentIntegerBeat; }
 		float	GetBeatProgress() const { return _beatProgress; }
+		float	GetMusicPeak() const { return _musicPeak; }
 		bool	DidCrossBeatBoundary() const { return _isCrossIntegerBeat; }
 		bool	HasPlaybackTime() const { return _hasPlaybackTime; }
 
@@ -32,6 +33,7 @@ namespace gm
 		float	_currentBeat = 0.f;
 		int64	_currentIntegerBeat = 0;
 		float	_beatProgress = 0.f;
+		float	_musicPeak = 0.f;
 		bool	_isCrossIntegerBeat = false;
 		bool	_hasPlaybackTime = false;
 	};

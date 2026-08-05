@@ -33,6 +33,14 @@ namespace gm
 		_currentIntegerBeat = static_cast<int64>(currentBeatFloor);
 		_beatProgress = _currentBeat - currentBeatFloor;
 		_isCrossIntegerBeat = _hasPlaybackTime && _currentIntegerBeat != previousBeatIndex;
+
+		if (_hasPlaybackTime == false || _currentIntegerBeat != previousBeatIndex)
+		{
+			float musicPeak = 0.f;
+			if (audioSystem.GetBGMPeak(musicPeak))
+				_musicPeak = musicPeak;
+		}
+
 		_hasPlaybackTime = true;
 	}
 
@@ -42,6 +50,7 @@ namespace gm
 		_currentBeat = 0.f;
 		_currentIntegerBeat = 0;
 		_beatProgress = 0.f;
+		_musicPeak = 0.f;
 		_isCrossIntegerBeat = false;
 		_hasPlaybackTime = false;
 	}

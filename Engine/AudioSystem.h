@@ -30,12 +30,14 @@ namespace gm
 		FMOD::Channel*	PlaySound2D(const SoundWave& sound, float volume = 1.f, bool isLooping = false, bool startPaused = false);
 		FMOD::Channel*	PlayBGM(const SoundWave& sound, float volume = 1.f, bool startPaused = false);
 		bool			GetBGMPlayTime(_Out_ float& outPlaybackTimeSeconds) const;
+		bool			GetBGMPeak(_Out_ float& outPeak) const;
 		void			StopChannel(FMOD::Channel* channel);
 		void			StopBGM();
 		void			StopAllSounds(bool includeBGM);
 
 	private:
 		FMOD::Channel*	PlaySound2DInternal(const SoundWave& sound, float volume = 1.f, bool isLooping = false, bool startPaused = false);
+		bool			EnableBGMMetering();
 		void			RemoveStoppedChannels();
 
 	private:

@@ -236,6 +236,9 @@
     <ClInclude Include="MathUtil.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="Random.h">
+      <Filter>Util</Filter>
+    </ClInclude>
     <ClInclude Include="VertexTypes.h">
       <Filter>Util\Types</Filter>
     </ClInclude>
@@ -430,6 +433,9 @@
     </ClCompile>
     <ClCompile Include="Resource.cpp">
       <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Random.cpp">
+      <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="Resources.cpp">
       <Filter>SubSystem</Filter>

@@ -186,7 +186,12 @@
     <ClInclude Include="EnvironmentSpawner.h" />
     <ClInclude Include="FreeFlyMoveComponent.h" />
     <ClInclude Include="BeatMoveComponent.h" />
+    <ClInclude Include="BeatOrbitComponent.h" />
+    <ClInclude Include="BeatAudioLevelMoveComponent.h" />
+    <ClInclude Include="BeatMath.h" />
+    <ClInclude Include="BeatStaticMeshCycleComponent.h" />
     <ClInclude Include="BeatSystem.h" />
+    <ClInclude Include="BeatTransformComponent.h" />
     <ClInclude Include="HiFiRushAudio.h" />
     <ClInclude Include="LoadResources.h" />
     <ClInclude Include="HiFiRushGameInstance.h" />
@@ -223,7 +228,11 @@
     <ClCompile Include="EnvironmentSpawner.cpp" />
     <ClCompile Include="FreeFlyMoveComponent.cpp" />
     <ClCompile Include="BeatMoveComponent.cpp" />
+    <ClCompile Include="BeatOrbitComponent.cpp" />
+    <ClCompile Include="BeatAudioLevelMoveComponent.cpp" />
+    <ClCompile Include="BeatStaticMeshCycleComponent.cpp" />
     <ClCompile Include="BeatSystem.cpp" />
+    <ClCompile Include="BeatTransformComponent.cpp" />
     <ClCompile Include="HiFiRushAudio.cpp" />
     <ClCompile Include="HiFiRushGameInstance.cpp" />
     <ClCompile Include="LoadResources.cpp" />

@@ -111,6 +111,9 @@ namespace gm
 		StopBGM();
 
 		_bgmChannel = PlaySound2DInternal(sound, volume, true, startPaused);
+		if (_bgmChannel)
+			EnableBGMMetering();
+
 		return _bgmChannel;
 	}
 
@@ -130,6 +133,38 @@ namespace gm
 		}
 
 		outPlaybackTimeSeconds = static_cast<float>(playbackTimeMilliseconds) / 1000.f;
+		return true;
+	}
+
+	bool AudioSystem::GetBGMPeak(_Out_ float& outPeak) const
+	{
+		outPeak = 0.f;
+
+		if (_bgmChannel == nullptr)
+			return false;
+
+		FMOD::DSP* meterDSP = nullptr;
+		FMOD_RESULT result = _bgmChannel->getDSP(FMOD_CHANNELCONTROL_DSP_HEAD, &meterDSP);
+		if (result != FMOD_OK)
+		{
+			LogFMODError("FMOD::Channel::getDSP", result);
+			return false;
+		}
+
+		FMOD_DSP_METERING_INFO outputInfo{};
+		result = meterDSP->getMeteringInfo(nullptr, &outputInfo);
+		if (result != FMOD_OK)
+		{
+			LogFMODError("FMOD::DSP::getMeteringInfo", result);
+			return false;
+		}
+
+		if (outputInfo.numchannels <= 0)
+			return false;
+
+		for (int channelIndex = 0; channelIndex < outputInfo.numchannels; ++channelIndex)
+			outPeak = std::max(outPeak, outputInfo.peaklevel[channelIndex]);
+
 		return true;
 	}
 
@@ -204,6 +239,29 @@ namespace gm
 			channel->setPaused(false);
 
 		return channel;
+	}
+
+	bool AudioSystem::EnableBGMMetering()
+	{
+		if (_bgmChannel == nullptr)
+			return false;
+
+		FMOD::DSP* meterDSP = nullptr;
+		FMOD_RESULT result = _bgmChannel->getDSP(FMOD_CHANNELCONTROL_DSP_HEAD, &meterDSP);
+		if (result != FMOD_OK)
+		{
+			LogFMODError("FMOD::Channel::getDSP", result);
+			return false;
+		}
+
+		result = meterDSP->setMeteringEnabled(false, true);
+		if (result != FMOD_OK)
+		{
+			LogFMODError("FMOD::DSP::setMeteringEnabled", result);
+			return false;
+		}
+
+		return true;
 	}
 
 	void AudioSystem::RemoveStoppedChannels()

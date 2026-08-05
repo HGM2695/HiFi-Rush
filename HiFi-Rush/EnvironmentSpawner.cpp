@@ -1,11 +1,16 @@
 #include "EnvironmentSpawner.h"
 #include "Application.h"
+#include "BeatAudioLevelMoveComponent.h"
 #include "BeatMoveComponent.h"
+#include "BeatOrbitComponent.h"
+#include "BeatStaticMeshCycleComponent.h"
+#include "BeatTransformComponent.h"
 #include "EnvironmentMapTypes.h"
 #include "GameObject.h"
 #include "GMAssert.h"
 #include "GMLog.h"
 #include "HiFiRushGameInstance.h"
+#include "Random.h"
 #include "Resources.h"
 #include "Scene.h"
 #include "SkeletalAnimationClip.h"
@@ -33,9 +38,74 @@ namespace gm
 			return gameInstance.GetBeatSystem();
 		}
 
+		bool IsAudienceModel(uint32 modelIndex)
+		{
+			return modelIndex >= 29 && modelIndex <= 36;
+		}
+
+		bool IsBeatOrbitModel(uint32 modelIndex)
+		{
+			return modelIndex >= 174 && modelIndex <= 178;
+		}
+
 		bool IsBeatMoveModel(uint32 modelIndex)
 		{
 			return (modelIndex >= 4 && modelIndex <= 6) || modelIndex == 23 || modelIndex == 24 || modelIndex == 163;
+		}
+
+		bool IsBeatAudioLevelMoveModel(uint32 modelIndex)
+		{
+			return modelIndex == 164;
+		}
+
+		float CreateBeatAudioLevelMoveDistance()
+		{
+			return 5.f + static_cast<float>(Math::RandomInt(0, 60)) * 0.1f;
+		}
+
+		bool TryConfigureBeatTransform(const EnvironmentObjectData& objectData, TransformComponent& transform, BeatTransformDesc& outDesc)
+		{
+			if (objectData.modelIndex == 9)
+			{
+				transform.SetScale(Vector3{ 1.f, 1.5f, 1.3f });
+				outDesc.type = BeatTransformType::ScaleMultiplier;
+				outDesc.maxScaleMultiplier = Vector3{ 1.f, 7.f / 6.f, 1.f };
+				outDesc.cycleBeats = 2.f;
+				return true;
+			}
+
+			if (objectData.modelIndex >= 182 && objectData.modelIndex <= 184)
+			{
+				Vector3 initialScale = transform.GetScale();
+				initialScale.y = 0.5f;
+				transform.SetScale(initialScale);
+
+				outDesc.type = BeatTransformType::ScaleMultiplier;
+				outDesc.maxScaleMultiplier = Vector3{ 1.f, 4.f, 1.f };
+				outDesc.cycleBeats = 1.f;
+				return true;
+			}
+
+			if (objectData.moveBeat == 0)
+				return false;
+
+			if (objectData.modelIndex >= 29 && objectData.modelIndex <= 36)
+			{
+				outDesc.type = BeatTransformType::PositionOffset;
+				outDesc.positionOffset = Vector3{ 0.f, 1.f, 0.f };
+				outDesc.cycleBeats = static_cast<float>(objectData.moveBeat);
+				return true;
+			}
+
+			if (objectData.modelIndex >= 120 && objectData.modelIndex <= 123)
+			{
+				outDesc.type = BeatTransformType::ScaleMultiplier;
+				outDesc.maxScaleMultiplier = Vector3{ 1.2f, 1.f, 1.2f };
+				outDesc.cycleBeats = static_cast<float>(objectData.moveBeat);
+				return true;
+			}
+
+			return false;
 		}
 	}
 
@@ -84,11 +154,51 @@ namespace gm
 			BeatMoveComponent* beatMove = gameObject->AddComponent<BeatMoveComponent>(GetBeatSystem(), desc);
 			GM_ASSERT_RETURN_VAL(beatMove, false, "BeatMoveComponent 생성에 실패했습니다. key=%ls", modelKey.c_str());
 		}
+
+		BeatTransformDesc beatTransformDesc{};
+		if (TryConfigureBeatTransform(objectData, *transform, beatTransformDesc))
+		{
+			BeatTransformComponent* beatTransform = gameObject->AddComponent<BeatTransformComponent>(GetBeatSystem(), beatTransformDesc);
+			GM_ASSERT_RETURN_VAL(beatTransform, false, "BeatTransformComponent 생성에 실패했습니다. key=%ls", modelKey.c_str());
+		}
+
+		if (IsBeatOrbitModel(objectData.modelIndex))
+		{
+			BeatOrbitComponent* beatOrbit = gameObject->AddComponent<BeatOrbitComponent>(GetBeatSystem(), BeatOrbitDesc{ .faceCenter = true });
+			GM_ASSERT_RETURN_VAL(beatOrbit, false, "BeatOrbitComponent 생성에 실패했습니다. key=%ls", modelKey.c_str());
+		}
+
+		if (IsBeatAudioLevelMoveModel(objectData.modelIndex))
+		{
+			BeatAudioLevelMoveDesc desc{};
+			desc.maxDistance = CreateBeatAudioLevelMoveDistance();
+			BeatAudioLevelMoveComponent* audioLevelMove = gameObject->AddComponent<BeatAudioLevelMoveComponent>(GetBeatSystem(), desc);
+			GM_ASSERT_RETURN_VAL(audioLevelMove, false, "BeatAudioLevelMoveComponent 생성에 실패했습니다. key=%ls", modelKey.c_str());
+		}
+
 		if (staticMesh)
 		{
 			StaticMeshComponent* meshComponent = gameObject->AddComponent<StaticMeshComponent>();
 			GM_ASSERT_RETURN_VAL(meshComponent, false, "StaticMeshComponent 생성에 실패했습니다. key=%ls", modelKey.c_str());
 			meshComponent->SetStaticMesh(staticMesh);
+
+			if (IsAudienceModel(objectData.modelIndex))
+			{
+				const uint32 firstVariantIndex = objectData.modelIndex <= 32 ? 29 : 33;
+				std::vector<std::shared_ptr<StaticMesh>> meshVariants;
+				meshVariants.reserve(4);
+				for (uint32 variantIndex = firstVariantIndex; variantIndex < firstVariantIndex + 4; ++variantIndex)
+				{
+					const std::wstring variantKey = GetEnvironmentModelKey(variantIndex);
+					std::shared_ptr<StaticMesh> variant = _resources.Find<StaticMesh>(variantKey);
+					GM_ASSERT_RETURN_VAL(variant, false, "관객 StaticMesh 리소스가 없습니다. key=%ls", variantKey.c_str());
+					meshVariants.push_back(std::move(variant));
+				}
+
+				BeatStaticMeshCycleComponent* meshCycle = gameObject->AddComponent<BeatStaticMeshCycleComponent>(GetBeatSystem(), *meshComponent, std::move(meshVariants));
+				GM_ASSERT_RETURN_VAL(meshCycle, false, "BeatStaticMeshCycleComponent 생성에 실패했습니다. key=%ls", modelKey.c_str());
+			}
+
 			return true;
 		}
 

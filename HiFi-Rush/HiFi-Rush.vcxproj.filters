@@ -63,7 +63,22 @@
     <ClInclude Include="BeatMoveComponent.h">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClInclude>
+    <ClInclude Include="BeatOrbitComponent.h">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatAudioLevelMoveComponent.h">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatMath.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatStaticMeshCycleComponent.h">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClInclude>
     <ClInclude Include="BeatSystem.h" />
+    <ClInclude Include="BeatTransformComponent.h">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClInclude>
     <ClInclude Include="HiFiRushAudio.h" />
     <ClInclude Include="TutorialScene.h">
       <Filter>Scene</Filter>
@@ -172,7 +187,19 @@
     <ClCompile Include="BeatMoveComponent.cpp">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClCompile>
+    <ClCompile Include="BeatOrbitComponent.cpp">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatAudioLevelMoveComponent.cpp">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatStaticMeshCycleComponent.cpp">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClCompile>
     <ClCompile Include="BeatSystem.cpp" />
+    <ClCompile Include="BeatTransformComponent.cpp">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClCompile>
     <ClCompile Include="HiFiRushAudio.cpp" />
     <ClCompile Include="HiFiRushGameInstance.cpp" />
     <ClCompile Include="LoadResources.cpp">

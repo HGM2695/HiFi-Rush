@@ -221,6 +221,7 @@
     <ClInclude Include="ITextRenderer.h" />
     <ClInclude Include="MathTypes.h" />
     <ClInclude Include="MathUtil.h" />
+    <ClInclude Include="Random.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshTypes.h" />
@@ -341,6 +342,7 @@
     <ClCompile Include="PhysicsSystem2D.cpp" />
     <ClCompile Include="PhysicsSystem3D.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
+    <ClCompile Include="Random.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Renderer.cpp" />
