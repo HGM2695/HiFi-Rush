@@ -1,8 +1,11 @@
 #include "EnvironmentSpawner.h"
+#include "Application.h"
+#include "BeatMoveComponent.h"
 #include "EnvironmentMapTypes.h"
 #include "GameObject.h"
 #include "GMAssert.h"
 #include "GMLog.h"
+#include "HiFiRushGameInstance.h"
 #include "Resources.h"
 #include "Scene.h"
 #include "SkeletalAnimationClip.h"
@@ -23,6 +26,17 @@ namespace gm
 		{
 			return L"Environment" + std::to_wstring(modelIndex);
 		}
+
+		const BeatSystem& GetBeatSystem()
+		{
+			const HiFiRushGameInstance& gameInstance = static_cast<const HiFiRushGameInstance&>(APPLICATION.GetGameInstance());
+			return gameInstance.GetBeatSystem();
+		}
+
+		bool IsBeatMoveModel(uint32 modelIndex)
+		{
+			return (modelIndex >= 4 && modelIndex <= 6) || modelIndex == 23 || modelIndex == 24 || modelIndex == 163;
+		}
 	}
 
 	EnvironmentSpawner::EnvironmentSpawner(Resources& resources)
@@ -31,9 +45,19 @@ namespace gm
 
 	bool EnvironmentSpawner::Spawn(Scene& scene, const EnvironmentMapData& mapData) const
 	{
+		return SpawnObjects(scene, mapData, false);
+	}
+
+	bool EnvironmentSpawner::SpawnTriggerObjects(Scene& scene, const EnvironmentMapData& mapData) const
+	{
+		return SpawnObjects(scene, mapData, true);
+	}
+
+	bool EnvironmentSpawner::SpawnObjects(Scene& scene, const EnvironmentMapData& mapData, bool isTriggerObject) const
+	{
 		for (const EnvironmentObjectData& objectData : mapData.objects)
 		{
-			if (SpawnObject(scene, objectData) == false)
+			if (SpawnObject(scene, objectData, isTriggerObject) == false)
 				return false;
 		}
 
@@ -41,7 +65,7 @@ namespace gm
 		return true;
 	}
 
-	bool EnvironmentSpawner::SpawnObject(Scene& scene, const EnvironmentObjectData& objectData) const
+	bool EnvironmentSpawner::SpawnObject(Scene& scene, const EnvironmentObjectData& objectData, bool isTriggerObject) const
 	{
 		const std::wstring modelKey = GetEnvironmentModelKey(objectData.modelIndex);
 		const std::shared_ptr<StaticMesh> staticMesh = _resources.Find<StaticMesh>(modelKey);
@@ -49,8 +73,17 @@ namespace gm
 		GM_ASSERT_RETURN_VAL(staticMesh || skeletalMesh, false, "환경 오브젝트가 참조하는 모델 리소스가 없습니다. key=%ls", modelKey.c_str());
 
 		GameObject* gameObject = scene.SpawnGameObject<GameObject>();
-		gameObject->GetTransform()->SetWorldMatrix(objectData.world);
 		GM_ASSERT_RETURN_VAL(gameObject, false, "환경 오브젝트 생성에 실패했습니다. key=%ls", modelKey.c_str());
+		TransformComponent* transform = gameObject->GetTransform();
+		transform->SetWorldMatrix(objectData.world);
+
+		if (isTriggerObject && IsBeatMoveModel(objectData.modelIndex))
+		{
+			BeatMoveDesc desc{};
+			desc.targetPosition = objectData.moveEndPosition;
+			BeatMoveComponent* beatMove = gameObject->AddComponent<BeatMoveComponent>(GetBeatSystem(), desc);
+			GM_ASSERT_RETURN_VAL(beatMove, false, "BeatMoveComponent 생성에 실패했습니다. key=%ls", modelKey.c_str());
+		}
 		if (staticMesh)
 		{
 			StaticMeshComponent* meshComponent = gameObject->AddComponent<StaticMeshComponent>();

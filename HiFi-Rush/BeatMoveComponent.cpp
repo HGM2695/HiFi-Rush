@@ -1,0 +1,91 @@
+#include "BeatMoveComponent.h"
+#include "BeatSystem.h"
+#include "GameObject.h"
+#include "MathUtil.h"
+#include "TransformComponent.h"
+
+#if GM_ENABLE_DEBUG_TOOLS
+#include "Application.h"
+#include "DebugEventPublisher.h"
+#include "HiFiRushGameInstance.h"
+#endif
+
+#include <algorithm>
+#include <cmath>
+
+namespace gm
+{
+	BeatMoveComponent::BeatMoveComponent(const BeatSystem& beatSystem, const BeatMoveDesc& desc)
+		: _beatSystem(beatSystem), _desc(desc)
+	{}
+
+	void BeatMoveComponent::Activate()
+	{
+		GM_ASSERT_RETURN(_transform, "BeatMoveComponent는 Initialize 이후에 활성화해야 합니다.");
+
+		if (_state != MoveState::Inactive)
+			return;
+
+		_startPosition = _transform->GetPosition();
+
+		if (_beatSystem.HasPlaybackTime())
+			ScheduleMove();
+	}
+
+	void BeatMoveComponent::Reset()
+	{
+		GM_ASSERT_RETURN(_transform, "BeatMoveComponent는 Initialize 이후에 초기화해야 합니다.");
+
+		_transform->SetPosition(_initialPosition);
+		_startPosition = _initialPosition;
+		_startBeat = 0.f;
+		_state = MoveState::Inactive;
+	}
+
+	void BeatMoveComponent::OnInitialize()
+	{
+		GM_ASSERT_RETURN(_desc.durationBeats > 0.f, "BeatMoveComponent의 durationBeats는 0보다 커야 합니다.");
+
+		_transform = GetOwner().GetTransform();
+		GM_ASSERT_RETURN(_transform, "BeatMoveComponent는 TransformComponent가 필요합니다.");
+		_initialPosition = _transform->GetPosition();
+
+#if GM_ENABLE_DEBUG_TOOLS
+		HiFiRushGameInstance& gameInstance = static_cast<HiFiRushGameInstance&>(APPLICATION.GetGameInstance());
+		gameInstance.GetDebugEventPublisher().OnDebugEvent.Subscribe(_debugEventConnection,
+			[this](const DebugEvent& event)
+			{
+				if (event.type == DebugEventType::Activate)
+					Activate();
+				else if (event.type == DebugEventType::Reset)
+					Reset();
+			});
+#endif
+	}
+
+	void BeatMoveComponent::OnTick(float)
+	{
+		if (_transform == nullptr || _state == MoveState::Inactive || _beatSystem.HasPlaybackTime() == false)
+			return;
+
+		const float elapsedBeats = _beatSystem.GetCurrentBeat() - _startBeat;
+		if (elapsedBeats < 0.f)
+			return;
+
+		const float progress = std::clamp(elapsedBeats / _desc.durationBeats, 0.f, 1.f);
+		const float easedProgress = std::sin(progress * Math::GM_PI * 0.5f);
+		_transform->SetPosition(Vector3::Lerp(_startPosition, _desc.targetPosition, easedProgress));
+
+		if (progress >= 1.f)
+		{
+			_transform->SetPosition(_desc.targetPosition);
+			_state = MoveState::Inactive;
+		}
+	}
+
+	void BeatMoveComponent::ScheduleMove()
+	{
+		_startBeat = std::floor(_beatSystem.GetCurrentBeat()) + 1.f;
+		_state = MoveState::Scheduled;
+	}
+}

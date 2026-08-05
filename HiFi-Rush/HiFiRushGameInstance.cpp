@@ -28,6 +28,9 @@ namespace gm
 			return false;
 
 		_beatSystem.SetBPM(DefaultBPM);
+#if GM_ENABLE_DEBUG_TOOLS
+		_debugEventPublisher.Initialize();
+#endif
 		SetupScenes();
 		SetupDebugTools();
 		return true;
@@ -36,6 +39,9 @@ namespace gm
 	void HiFiRushGameInstance::OnTick(float)
 	{
 		_beatSystem.Tick(APPLICATION.GetAudioSystem());
+#if GM_ENABLE_DEBUG_TOOLS
+		_debugEventPublisher.Tick();
+#endif
 	}
 
 	void HiFiRushGameInstance::SetupScenes()

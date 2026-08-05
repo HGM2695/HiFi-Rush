@@ -126,6 +126,9 @@ namespace gm
 		if (LoadEnvironmentResources(result, resources, resourceFactory, L"TutorialEnvironmentMap.bin") == false)
 			return result;
 
+		if (LoadEnvironmentResources(result, resources, resourceFactory, L"TutorialTriggerEnvironmentMap.bin") == false)
+			return result;
+
 		if (LoadChiResources(result, resources, resourceFactory) == false)
 			return result;
 
@@ -192,7 +195,12 @@ namespace gm
 		for (uint32 modelIndex : modelIndices)
 		{
 			const std::wstring modelKey = L"Environment" + std::to_wstring(modelIndex);
-			if (resources.Find<StaticMesh>(modelKey) || resources.Find<SkeletalMesh>(modelKey))
+			const bool isPending = std::any_of(outLoadData.resources.begin(), outLoadData.resources.end(),
+				[&modelKey](const ResourceLoadData& loadData)
+				{
+					return loadData.key == modelKey;
+				});
+			if (resources.Find<StaticMesh>(modelKey) || resources.Find<SkeletalMesh>(modelKey) || isPending)
 				continue;
 
 			const std::wstring modelPath = GetModelPath(L"Binary/Environment/" + modelKey + L".bin");

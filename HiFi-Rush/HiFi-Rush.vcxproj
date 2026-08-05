@@ -181,8 +181,10 @@
     <ClInclude Include="CommonLoadingScene.h" />
     <ClInclude Include="BinaryEnvironmentMapLoader.h" />
     <ClInclude Include="DebugTextWidget.h" />
+    <ClInclude Include="DebugEventPublisher.h" />
     <ClInclude Include="EnvironmentMapTypes.h" />
     <ClInclude Include="EnvironmentSpawner.h" />
+    <ClInclude Include="BeatMoveComponent.h" />
     <ClInclude Include="BeatSystem.h" />
     <ClInclude Include="HiFiRushAudio.h" />
     <ClInclude Include="LoadResources.h" />
@@ -215,7 +217,9 @@
     <ClCompile Include="CommonLoadingScene.cpp" />
     <ClCompile Include="BinaryEnvironmentMapLoader.cpp" />
     <ClCompile Include="DebugTextWidget.cpp" />
+    <ClCompile Include="DebugEventPublisher.cpp" />
     <ClCompile Include="EnvironmentSpawner.cpp" />
+    <ClCompile Include="BeatMoveComponent.cpp" />
     <ClCompile Include="BeatSystem.cpp" />
     <ClCompile Include="HiFiRushAudio.cpp" />
     <ClCompile Include="HiFiRushGameInstance.cpp" />

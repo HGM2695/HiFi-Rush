@@ -44,6 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="DebugEventPublisher.h">
+      <Filter>Debug</Filter>
+    </ClInclude>
     <ClInclude Include="targetver.h" />
     <ClInclude Include="BinaryEnvironmentMapLoader.h">
       <Filter>Resource</Filter>
@@ -53,6 +56,9 @@
     </ClInclude>
     <ClInclude Include="EnvironmentSpawner.h">
       <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatMoveComponent.h">
+      <Filter>Component\01. Behavior\3D</Filter>
     </ClInclude>
     <ClInclude Include="BeatSystem.h" />
     <ClInclude Include="HiFiRushAudio.h" />
@@ -145,11 +151,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="DebugEventPublisher.cpp">
+      <Filter>Debug</Filter>
+    </ClCompile>
     <ClCompile Include="BinaryEnvironmentMapLoader.cpp">
       <Filter>Resource</Filter>
     </ClCompile>
     <ClCompile Include="EnvironmentSpawner.cpp">
       <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatMoveComponent.cpp">
+      <Filter>Component\01. Behavior\3D</Filter>
     </ClCompile>
     <ClCompile Include="BeatSystem.cpp" />
     <ClCompile Include="HiFiRushAudio.cpp" />

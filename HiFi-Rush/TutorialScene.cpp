@@ -75,6 +75,10 @@ namespace gm
 
 		EnvironmentSpawner spawner(APPLICATION.GetResources());
 		GM_ASSERT_RETURN(spawner.Spawn(*this, mapData), "Tutorial 환경 오브젝트 생성에 실패했습니다.");
+
+		EnvironmentMapData triggerMapData{};
+		GM_ASSERT_RETURN(BinaryEnvironmentMapLoader::Load(GetMapPath(L"TutorialTriggerEnvironmentMap.bin"), triggerMapData), "Tutorial 트리거 환경 맵을 로드하지 못했습니다.");
+		GM_ASSERT_RETURN(spawner.SpawnTriggerObjects(*this, triggerMapData), "Tutorial 트리거 환경 오브젝트 생성에 실패했습니다.");
 	}
 
 	void TutorialScene::InitializePlayer()
