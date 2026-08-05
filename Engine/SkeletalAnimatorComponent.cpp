@@ -40,11 +40,10 @@ namespace gm
 			return;
 
 		SkeletalPose& pose = _skeletalMeshComponent->GetPose();
-		if (_animationController->IsPlaying())
-		{
-			_animationController->Tick(deltaTime);
-			_animationNotifyDispatcher->Dispatch(_currentClip->GetNotifyEvents(), _animationController->GetPlayTime(), _currentClip->GetLength());
-		}
+		if (_externalPlayTime.has_value())
+			ApplyExternalPlayTime();
+		else
+			ApplyPlayTime(deltaTime);
 
 		const SkeletalPoseApplyResult result = pose.ApplyAnimation(*skeletalMesh, *_currentClip, _animationController->GetPlayTime(), _rootMotionBoneIndex);
 		UpdateRootMotion(result);
@@ -63,6 +62,8 @@ namespace gm
 			_animationBlender.Reset();
 
 		_currentClip = clip;
+		_externalPlayTime.reset();
+		_usedExternalPlayTimePrevTick = false;
 		const bool played = _animationController->Play(*_currentClip, option);
 		_animationNotifyDispatcher->Reset(_animationController->GetPlayTime());
 		ResetRootMotion();
@@ -94,6 +95,9 @@ namespace gm
 		_animationController->Reset();
 		_animationNotifyDispatcher->Reset();
 		_animationBlender.Reset();
+		_externalPlayTime.reset();
+		_usedExternalPlayTimePrevTick = false;
+		ResetRootMotion();
 	}
 
 	void SkeletalAnimatorComponent::Pause()
@@ -109,6 +113,39 @@ namespace gm
 	void SkeletalAnimatorComponent::SetPlayRate(float playRate)
 	{
 		_animationController->SetPlayRate(playRate);
+	}
+
+	void SkeletalAnimatorComponent::SetExternalPlayTime(float playTime)
+	{
+		GM_ASSERT_RETURN(playTime >= 0.f, "외부 Animation 재생 시각은 0 이상이어야 합니다.");
+		_externalPlayTime = playTime;
+	}
+
+	void SkeletalAnimatorComponent::ApplyExternalPlayTime()
+	{
+		_animationController->SetPlayTime(_externalPlayTime.value());
+		if (_usedExternalPlayTimePrevTick)
+		{
+			_animationNotifyDispatcher->Dispatch(_currentClip->GetNotifyEvents(), _animationController->GetPlayTime(), _currentClip->GetLength());
+		}
+		else
+		{
+			_animationNotifyDispatcher->Reset(_animationController->GetPlayTime());
+			ResetRootMotion();
+		}
+
+		_externalPlayTime.reset();
+		_usedExternalPlayTimePrevTick = true;
+	}
+
+	void SkeletalAnimatorComponent::ApplyPlayTime(float deltaTime)
+	{
+		_usedExternalPlayTimePrevTick = false;
+		if (_animationController->IsPlaying() == false)
+			return;
+
+		_animationController->Tick(deltaTime);
+		_animationNotifyDispatcher->Dispatch(_currentClip->GetNotifyEvents(), _animationController->GetPlayTime(), _currentClip->GetLength());
 	}
 
 	void SkeletalAnimatorComponent::SetRootMotionBoneName(const std::wstring& boneName)

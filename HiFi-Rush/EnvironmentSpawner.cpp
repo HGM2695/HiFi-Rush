@@ -5,6 +5,7 @@
 #include "BeatOrbitComponent.h"
 #include "BeatStaticMeshCycleComponent.h"
 #include "BeatPositionSequenceComponent.h"
+#include "BeatSkeletalAnimationSyncComponent.h"
 #include "BeatTransformComponent.h"
 #include "BeatTriggeredRotationComponent.h"
 #include "EnvironmentMapTypes.h"
@@ -69,6 +70,22 @@ namespace gm
 		bool IsBeatPositionSequenceModel(uint32 modelIndex)
 		{
 			return modelIndex == 158;
+		}
+
+		float GetSkeletalAnimationCycleBeats(uint32 modelIndex)
+		{
+			switch (modelIndex)
+			{
+			case 20:
+			case 135:
+				return 1.f;
+
+			case 142:
+				return 4.f;
+
+			default:
+				return 0.f;
+			}
 		}
 
 		float CreateBeatAudioLevelMoveDistance()
@@ -253,6 +270,15 @@ namespace gm
 			GM_ASSERT_RETURN_VAL(animator, false, "SkeletalAnimatorComponent 생성에 실패했습니다. key=%ls", modelKey.c_str());
 			GM_ASSERT_RETURN_VAL(animator->AddClip(L"Default", defaultClip), false, "환경 오브젝트의 기본 애니메이션 등록에 실패했습니다. key=%ls", modelKey.c_str());
 			GM_ASSERT_RETURN_VAL(animator->Play(L"Default"), false, "환경 오브젝트의 기본 애니메이션 재생에 실패했습니다. key=%ls", modelKey.c_str());
+
+			const float cycleBeats = GetSkeletalAnimationCycleBeats(objectData.modelIndex);
+			if (cycleBeats > 0.f)
+			{
+				BeatSkeletalAnimationSyncDesc desc{};
+				desc.cycleBeats = cycleBeats;
+				BeatSkeletalAnimationSyncComponent* animationSync = gameObject->AddComponent<BeatSkeletalAnimationSyncComponent>(GetBeatSystem(), *animator, desc);
+				GM_ASSERT_RETURN_VAL(animationSync, false, "BeatSkeletalAnimationSyncComponent 생성에 실패했습니다. key=%ls", modelKey.c_str());
+			}
 		}
 
 		return true;

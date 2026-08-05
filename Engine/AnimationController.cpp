@@ -63,4 +63,23 @@ namespace gm
         GM_ASSERT_RETURN(playRate >= 0.f, "Animation 재생 속도는 0 이상이어야 합니다.");
         _playRate = playRate;
     }
+
+    void AnimationController::SetPlayTime(float playTime)
+    {
+        GM_ASSERT_RETURN(playTime >= 0.f, "Animation 재생 시각은 0 이상이어야 합니다.");
+
+        if (_clipLength <= 0.f)
+        {
+            _currentTime = 0.f;
+            return;
+        }
+
+        if (_isLoop)
+        {
+            _currentTime = std::fmod(playTime, _clipLength);
+            return;
+        }
+
+        _currentTime = std::min(playTime, std::nextafter(_clipLength, 0.f));
+    }
 }

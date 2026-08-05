@@ -78,6 +78,9 @@
     <ClInclude Include="BeatPositionSequenceComponent.h">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClInclude>
+    <ClInclude Include="BeatSkeletalAnimationSyncComponent.h">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClInclude>
     <ClInclude Include="BeatSystem.h" />
     <ClInclude Include="BeatTransformComponent.h">
       <Filter>Component\01. Behavior\3D</Filter>
@@ -203,6 +206,9 @@
       <Filter>Component\01. Behavior\3D</Filter>
     </ClCompile>
     <ClCompile Include="BeatPositionSequenceComponent.cpp">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatSkeletalAnimationSyncComponent.cpp">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClCompile>
     <ClCompile Include="BeatSystem.cpp" />

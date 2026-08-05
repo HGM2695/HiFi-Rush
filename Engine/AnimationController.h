@@ -15,6 +15,7 @@ namespace gm
         void            Resume();
         void            Tick(float deltaTime);
         void            SetPlayRate(float playRate);
+        void            SetPlayTime(float playTime);
 
         float           GetPlayTime() const { return _currentTime; }
         float           GetPlayRate() const { return _playRate; }

@@ -6,6 +6,7 @@
 #include "SkeletalAnimationBlender.h"
 
 #include <memory>
+#include <optional>
 
 namespace gm
 	{
@@ -36,6 +37,7 @@ namespace gm
 		void									Pause();
 		void									Resume();
 		void									SetPlayRate(float playRate);
+		void									SetExternalPlayTime(float playTime);
 		void									SetRootMotionBoneName(const std::wstring& boneName);
 		Vector3									ConsumeRootMotionDelta();
 		AnimationState							GetState() const;
@@ -48,6 +50,8 @@ namespace gm
 		virtual void							OnTick(float deltaTime) override;
 
 	private:
+		void									ApplyExternalPlayTime();
+		void									ApplyPlayTime(float deltaTime);
 		void									ResolveRootMotionBoneIndex(const SkeletalMesh& skeletalMesh);
 		void									UpdateRootMotion(const SkeletalPoseApplyResult& result);
 		Vector3									ApplyPreTransformToRootMotionDelta(const Vector3& delta) const;
@@ -66,5 +70,7 @@ namespace gm
 		Vector3										_previousRootMotionPosition{};
 		Vector3										_rootMotionDelta{};
 		bool										_hasPreviousRootMotionPosition = false;
+		std::optional<float>						_externalPlayTime;
+		bool										_usedExternalPlayTimePrevTick = false;
 	};
 }
