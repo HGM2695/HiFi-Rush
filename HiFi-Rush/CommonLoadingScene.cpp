@@ -368,6 +368,9 @@ namespace gm
 		if (LoadEnvironmentResources(result, resources, resourceFactory, L"OutsideEnvironmentMap.bin") == false)
 			return result;
 
+		if (LoadEnvironmentResources(result, resources, resourceFactory, L"OutsideTriggerEnvironmentMap.bin") == false)
+			return result;
+
 		if (LoadChiResources(result, resources, resourceFactory) == false)
 			return result;
 
@@ -389,6 +392,9 @@ namespace gm
 			return result;
 
 		if (LoadEnvironmentResources(result, resources, resourceFactory, L"QamilEnvironmentMap.bin") == false)
+			return result;
+
+		if (LoadEnvironmentResources(result, resources, resourceFactory, L"QamilTriggerEnvironmentMap.bin") == false)
 			return result;
 
 		if (LoadChiResources(result, resources, resourceFactory) == false)

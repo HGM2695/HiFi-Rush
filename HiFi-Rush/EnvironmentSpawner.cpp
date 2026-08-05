@@ -5,11 +5,13 @@
 #include "BeatOrbitComponent.h"
 #include "BeatStaticMeshCycleComponent.h"
 #include "BeatTransformComponent.h"
+#include "BeatTriggeredRotationComponent.h"
 #include "EnvironmentMapTypes.h"
 #include "GameObject.h"
 #include "GMAssert.h"
 #include "GMLog.h"
 #include "HiFiRushGameInstance.h"
+#include "MathUtil.h"
 #include "Random.h"
 #include "Resources.h"
 #include "Scene.h"
@@ -56,6 +58,11 @@ namespace gm
 		bool IsBeatAudioLevelMoveModel(uint32 modelIndex)
 		{
 			return modelIndex == 164;
+		}
+
+		bool IsBeatTriggeredRotationModel(uint32 modelIndex)
+		{
+			return modelIndex == 157;
 		}
 
 		float CreateBeatAudioLevelMoveDistance()
@@ -153,6 +160,15 @@ namespace gm
 			desc.targetPosition = objectData.moveEndPosition;
 			BeatMoveComponent* beatMove = gameObject->AddComponent<BeatMoveComponent>(GetBeatSystem(), desc);
 			GM_ASSERT_RETURN_VAL(beatMove, false, "BeatMoveComponent 생성에 실패했습니다. key=%ls", modelKey.c_str());
+		}
+
+		if (isTriggerObject && IsBeatTriggeredRotationModel(objectData.modelIndex))
+		{
+			const Vector3 lookDirection = Math::GetLookVector(transform->GetRotation());
+			BeatTriggeredRotationDesc desc{};
+			desc.angleDegrees = lookDirection.x > 0.f ? -90.f : 90.f;
+			BeatTriggeredRotationComponent* beatRotation = gameObject->AddComponent<BeatTriggeredRotationComponent>(GetBeatSystem(), desc);
+			GM_ASSERT_RETURN_VAL(beatRotation, false, "BeatTriggeredRotationComponent 생성에 실패했습니다. key=%ls", modelKey.c_str());
 		}
 
 		BeatTransformDesc beatTransformDesc{};

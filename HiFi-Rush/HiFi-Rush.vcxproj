@@ -192,6 +192,7 @@
     <ClInclude Include="BeatStaticMeshCycleComponent.h" />
     <ClInclude Include="BeatSystem.h" />
     <ClInclude Include="BeatTransformComponent.h" />
+    <ClInclude Include="BeatTriggeredRotationComponent.h" />
     <ClInclude Include="HiFiRushAudio.h" />
     <ClInclude Include="LoadResources.h" />
     <ClInclude Include="HiFiRushGameInstance.h" />
@@ -233,6 +234,7 @@
     <ClCompile Include="BeatStaticMeshCycleComponent.cpp" />
     <ClCompile Include="BeatSystem.cpp" />
     <ClCompile Include="BeatTransformComponent.cpp" />
+    <ClCompile Include="BeatTriggeredRotationComponent.cpp" />
     <ClCompile Include="HiFiRushAudio.cpp" />
     <ClCompile Include="HiFiRushGameInstance.cpp" />
     <ClCompile Include="LoadResources.cpp" />

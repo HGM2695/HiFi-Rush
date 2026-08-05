@@ -79,6 +79,9 @@
     <ClInclude Include="BeatTransformComponent.h">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClInclude>
+    <ClInclude Include="BeatTriggeredRotationComponent.h">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClInclude>
     <ClInclude Include="HiFiRushAudio.h" />
     <ClInclude Include="TutorialScene.h">
       <Filter>Scene</Filter>
@@ -198,6 +201,9 @@
     </ClCompile>
     <ClCompile Include="BeatSystem.cpp" />
     <ClCompile Include="BeatTransformComponent.cpp">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatTriggeredRotationComponent.cpp">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClCompile>
     <ClCompile Include="HiFiRushAudio.cpp" />
