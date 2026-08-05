@@ -57,6 +57,9 @@
     <ClInclude Include="EnvironmentSpawner.h">
       <Filter>GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="FreeFlyMoveComponent.h">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClInclude>
     <ClInclude Include="BeatMoveComponent.h">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClInclude>
@@ -67,6 +70,9 @@
     </ClInclude>
     <ClInclude Include="OutsideScene.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerSpawner.h">
+      <Filter>GameObject</Filter>
     </ClInclude>
     <ClInclude Include="QamilScene.h">
       <Filter>Scene</Filter>
@@ -160,6 +166,9 @@
     <ClCompile Include="EnvironmentSpawner.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="FreeFlyMoveComponent.cpp">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClCompile>
     <ClCompile Include="BeatMoveComponent.cpp">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClCompile>
@@ -177,6 +186,9 @@
     </ClCompile>
     <ClCompile Include="OutsideScene.cpp">
       <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerSpawner.cpp">
+      <Filter>GameObject</Filter>
     </ClCompile>
     <ClCompile Include="QamilScene.cpp">
       <Filter>Scene</Filter>

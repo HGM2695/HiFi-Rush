@@ -1,13 +1,17 @@
 #include "QamilScene.h"
 #include "Application.h"
 #include "BinaryEnvironmentMapLoader.h"
+#include "CameraManager.h"
 #include "EnvironmentMapTypes.h"
 #include "EnvironmentSpawner.h"
 #include "HiFiRushAudio.h"
+#include "Input.h"
+#include "MathUtil.h"
 #include "NavigationMesh.h"
 #include "NavMeshSystem.h"
 #include "Paths.h"
 #include "PhysicsSystem.h"
+#include "PlayerSpawner.h"
 #include "Resources.h"
 #include "SceneDebugTools.h"
 
@@ -21,13 +25,28 @@ namespace gm
 		GM_ASSERT_RETURN(navigationMesh, "qamil NavigationMesh가 로드되지 않았습니다.");
 		APPLICATION.GetPhysicsSystem().GetNavMeshSystem().SetActiveNavigationMesh(navigationMesh);
 
-		ActivateEnvironmentOverviewCamera(*this);
+		APPLICATION.GetInput().SetCursorLocked(true);
+		GetCameraManager()->SetActiveCamera(PlayerCameraKey);
 		PlayRhythmBGM(HiFiRushBGM::Qamil);
+	}
+
+	void QamilScene::OnExit()
+	{
+		APPLICATION.GetInput().SetCursorLocked(false);
 	}
 
 	void QamilScene::OnInitialize()
 	{
 		InitializeEnvironment();
+
+		PlayerSpawner playerSpawner(APPLICATION.GetResources());
+		PlayerSpawnDesc playerDesc{};
+		playerDesc.position = Vector3{ -0.43f, 0.f, -6.13f };
+		playerDesc.cameraDistance = 9.f;
+		playerDesc.cameraYaw = Math::DegreesToRadians(-90.f);
+		playerDesc.cameraPitch = Math::DegreesToRadians(10.f);
+		playerDesc.cameraHeight = 3.f;
+		GM_ASSERT_RETURN(playerSpawner.Spawn(*this, playerDesc), "Qamil Player 생성에 실패했습니다.");
 	}
 
 	void QamilScene::OnTick(float deltaTime)
@@ -42,6 +61,5 @@ namespace gm
 
 		EnvironmentSpawner spawner(APPLICATION.GetResources());
 		GM_ASSERT_RETURN(spawner.Spawn(*this, mapData), "Qamil 환경 오브젝트 생성에 실패했습니다.");
-		CreateEnvironmentOverviewCamera(*this, Vector3{ -0.43f, 4.f, -15.f }, Vector3{ 0.f, 1.f, 0.f });
 	}
 }

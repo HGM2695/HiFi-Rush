@@ -368,6 +368,9 @@ namespace gm
 		if (LoadEnvironmentResources(result, resources, resourceFactory, L"OutsideEnvironmentMap.bin") == false)
 			return result;
 
+		if (LoadChiResources(result, resources, resourceFactory) == false)
+			return result;
+
 		if (LoadNavigationMesh(result, resources, L"jump_outside", L"jump_outside.bin") == false)
 			return result;
 
@@ -386,6 +389,9 @@ namespace gm
 			return result;
 
 		if (LoadEnvironmentResources(result, resources, resourceFactory, L"QamilEnvironmentMap.bin") == false)
+			return result;
+
+		if (LoadChiResources(result, resources, resourceFactory) == false)
 			return result;
 
 		if (LoadNavigationMesh(result, resources, L"qamil", L"qamil.bin") == false)

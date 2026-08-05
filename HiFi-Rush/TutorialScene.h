@@ -4,9 +4,6 @@
 
 namespace gm
 {
-	class CameraComponent;
-	class GameObject;
-
 	class TutorialScene : public Scene
 	{
 	protected:
@@ -21,7 +18,6 @@ namespace gm
 		void			InitializeSubObject();
 		void			InitializeStaticMeshTest();
 		void			InitializeSkeletalMeshTest();
-		CameraComponent*	InitializeCamera(GameObject* player);
 	};
 }
 

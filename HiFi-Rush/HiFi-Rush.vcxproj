@@ -184,6 +184,7 @@
     <ClInclude Include="DebugEventPublisher.h" />
     <ClInclude Include="EnvironmentMapTypes.h" />
     <ClInclude Include="EnvironmentSpawner.h" />
+    <ClInclude Include="FreeFlyMoveComponent.h" />
     <ClInclude Include="BeatMoveComponent.h" />
     <ClInclude Include="BeatSystem.h" />
     <ClInclude Include="HiFiRushAudio.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="LoadingScreenWidget.h" />
     <ClInclude Include="MainHUDWidget.h" />
     <ClInclude Include="OutsideScene.h" />
+    <ClInclude Include="PlayerSpawner.h" />
     <ClInclude Include="QamilScene.h" />
     <ClInclude Include="SceneDebugTools.h" />
     <ClInclude Include="TutorialScene.h" />
@@ -219,6 +221,7 @@
     <ClCompile Include="DebugTextWidget.cpp" />
     <ClCompile Include="DebugEventPublisher.cpp" />
     <ClCompile Include="EnvironmentSpawner.cpp" />
+    <ClCompile Include="FreeFlyMoveComponent.cpp" />
     <ClCompile Include="BeatMoveComponent.cpp" />
     <ClCompile Include="BeatSystem.cpp" />
     <ClCompile Include="HiFiRushAudio.cpp" />
@@ -228,6 +231,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainHUDWidget.cpp" />
     <ClCompile Include="OutsideScene.cpp" />
+    <ClCompile Include="PlayerSpawner.cpp" />
     <ClCompile Include="QamilScene.cpp" />
     <ClCompile Include="SceneDebugTools.cpp" />
     <ClCompile Include="TutorialScene.cpp" />

@@ -1,26 +1,16 @@
 #include "TutorialScene.h"
-#include "MainHUDWidget.h"
-#include "ChiStateMachineComponent.h"
-#include "ChiMoveComponent.h"
 #include "Application.h"
 #include "Input.h"
 #include "Resources.h"
 #include "GameObject.h"
 #include "SpriteComponent.h"
 #include "Texture.h"
-#include "CameraComponent.h"
 #include "PhysicsSystem.h"
-#include "Rigidbody3DComponent.h"
-#include "NavMeshControllerComponent.h"
 #include "NavMeshSystem.h"
-#include "SceneManager.h"
 #include "UIManager.h"
 #include "BoxCollider2DComponent.h"
-#include "WidgetComponent.h"
 #include "CameraManager.h"
 #include "TransformComponent.h"
-#include "SocketComponent.h"
-#include "CameraFollowComponent.h"
 #include "StaticMesh.h"
 #include "StaticMeshComponent.h"
 #include "SkeletalAnimatorComponent.h"
@@ -33,6 +23,7 @@
 #include "EnvironmentSpawner.h"
 #include "HiFiRushAudio.h"
 #include "Paths.h"
+#include "PlayerSpawner.h"
 #include "SceneDebugTools.h"
 
 namespace gm
@@ -46,7 +37,7 @@ namespace gm
 		std::shared_ptr<NavigationMesh> navigationMesh = APPLICATION.GetResources().Find<NavigationMesh>(L"tutorial");
 		GM_ASSERT_RETURN(navigationMesh, "tutorial NavigationMesh가 로드되지 않았습니다.");
 		APPLICATION.GetPhysicsSystem().GetNavMeshSystem().SetActiveNavigationMesh(navigationMesh);
-		GetCameraManager()->SetActiveCamera(L"PlayerCamera");
+		GetCameraManager()->SetActiveCamera(PlayerCameraKey);
 		PlayRhythmBGM(HiFiRushBGM::Tutorial);
 	}
 
@@ -83,34 +74,13 @@ namespace gm
 
 	void TutorialScene::InitializePlayer()
 	{
-		std::shared_ptr<SkeletalMesh> skeletalMesh = APPLICATION.GetResources().Find<SkeletalMesh>(L"chi");
-		GM_ASSERT_RETURN(skeletalMesh, "chi SkeletalMesh가 로드되지 않았습니다.");
-
-		GameObject* player = SpawnGameObject<GameObject>(Vector3{ 3.f, 0.f, 0.f });
-		TransformComponent* transform = player->GetTransform();
-		transform->SetScale(Vector3{ 1.f, 1.f, 1.f });
-		transform->SetRotationY(Math::GM_PI);
-
-		SkeletalMeshComponent* skeletalMeshComponent = player->AddComponent<SkeletalMeshComponent>();
-		skeletalMeshComponent->SetSkeletalMesh(skeletalMesh);
-		player->AddComponent<SkeletalAnimatorComponent>();
-
-		ChiMoveComponent* moveComponent = player->AddComponent<ChiMoveComponent>();
-		Rigidbody3DComponent* rigidbody = player->AddComponent<Rigidbody3DComponent>();
-		rigidbody->SetGravityScale(3.f);
-		NavMeshControllerComponent* navMeshController = player->AddComponent<NavMeshControllerComponent>();
-		navMeshController->SetGroundCollisionEnabled(true);
-		//moveComponent->SetRotationYawOffset(Math::GM_PI);
-
-		SocketComponent* socketComponent = player->AddComponent<SocketComponent>();
-		Socket socket{};
-		socket.position = Vector3{ 0.f, 1.2f, 0.f };
-		socketComponent->AddSocket(L"Player.Camera", socket);
-
-		player->AddComponent<ChiStateMachineComponent>();
-
-		CameraComponent* playerCamera = InitializeCamera(player);
-		moveComponent->SetMovementCamera(*playerCamera);
+		PlayerSpawner playerSpawner(APPLICATION.GetResources());
+		PlayerSpawnDesc playerDesc{};
+		playerDesc.position = Vector3{ 3.f, 0.f, 0.f };
+		playerDesc.rotationY = Math::GM_PI;
+		playerDesc.cameraDistance = 3.5f;
+		playerDesc.cameraPitch = Math::DegreesToRadians(15.f);
+		GM_ASSERT_RETURN(playerSpawner.Spawn(*this, playerDesc), "Tutorial Player 생성에 실패했습니다.");
 	}
 
 	void TutorialScene::InitializeSubObject()
@@ -172,20 +142,4 @@ namespace gm
 		animatorComponent->Play(L"Default");
 	}
 
-	CameraComponent* TutorialScene::InitializeCamera(GameObject* player)
-	{
-		auto cameraObject = SpawnGameObject<GameObject>({ 0.f, 0.f, 0.f });
-
-		CameraFollowComponent* followComponent = cameraObject->AddComponent<CameraFollowComponent>();
-		followComponent->SetTarget(*player, L"Player.Camera");
-		followComponent->SetDistance(3.5f);
-		followComponent->SetPitch(Math::DegreesToRadians(15.f));
-		followComponent->SetBottomDistanceLimit(-0.9f);
-
-		auto cameraComponent = cameraObject->AddComponent<CameraComponent>();
-		const float aspectRatio = static_cast<float>(APPLICATION.GetWidth()) / static_cast<float>(APPLICATION.GetHeight());
-		cameraComponent->SetPerspective(Math::GM_PI / 3.f, aspectRatio, 0.1f, 5000.f);
-		GetCameraManager()->RegisterCamera(L"PlayerCamera", cameraComponent);
-		return cameraComponent;
-	}
 }

@@ -1,13 +1,17 @@
 #include "OutsideScene.h"
 #include "Application.h"
 #include "BinaryEnvironmentMapLoader.h"
+#include "CameraManager.h"
 #include "EnvironmentMapTypes.h"
 #include "EnvironmentSpawner.h"
 #include "HiFiRushAudio.h"
+#include "Input.h"
+#include "MathUtil.h"
 #include "NavigationMesh.h"
 #include "NavMeshSystem.h"
 #include "Paths.h"
 #include "PhysicsSystem.h"
+#include "PlayerSpawner.h"
 #include "Resources.h"
 #include "SceneDebugTools.h"
 
@@ -21,13 +25,28 @@ namespace gm
 		GM_ASSERT_RETURN(navigationMesh, "jump_outside NavigationMesh가 로드되지 않았습니다.");
 		APPLICATION.GetPhysicsSystem().GetNavMeshSystem().SetActiveNavigationMesh(navigationMesh);
 
-		ActivateEnvironmentOverviewCamera(*this);
+		APPLICATION.GetInput().SetCursorLocked(true);
+		GetCameraManager()->SetActiveCamera(PlayerCameraKey);
 		PlayRhythmBGM(HiFiRushBGM::Outside);
+	}
+
+	void OutsideScene::OnExit()
+	{
+		APPLICATION.GetInput().SetCursorLocked(false);
 	}
 
 	void OutsideScene::OnInitialize()
 	{
 		InitializeEnvironment();
+
+		PlayerSpawner playerSpawner(APPLICATION.GetResources());
+		PlayerSpawnDesc playerDesc{};
+		playerDesc.position = Vector3{ -0.1f, 0.f, 11.f };
+		playerDesc.rotationY = Math::GM_PI;
+		playerDesc.cameraDistance = 5.f;
+		playerDesc.cameraYaw = Math::DegreesToRadians(90.f);
+		playerDesc.cameraPitch = Math::DegreesToRadians(20.f);
+		GM_ASSERT_RETURN(playerSpawner.Spawn(*this, playerDesc), "Outside Player 생성에 실패했습니다.");
 	}
 
 	void OutsideScene::OnTick(float deltaTime)
@@ -42,6 +61,5 @@ namespace gm
 
 		EnvironmentSpawner spawner(APPLICATION.GetResources());
 		GM_ASSERT_RETURN(spawner.Spawn(*this, mapData), "Outside 환경 오브젝트 생성에 실패했습니다.");
-		CreateEnvironmentOverviewCamera(*this, Vector3{ -0.1f, 4.f, 18.f }, Vector3{ -0.1f, 1.f, 5.f });
 	}
 }
