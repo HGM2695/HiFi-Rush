@@ -4,6 +4,7 @@
 #include "BeatMoveComponent.h"
 #include "BeatOrbitComponent.h"
 #include "BeatStaticMeshCycleComponent.h"
+#include "BeatPositionSequenceComponent.h"
 #include "BeatTransformComponent.h"
 #include "BeatTriggeredRotationComponent.h"
 #include "EnvironmentMapTypes.h"
@@ -63,6 +64,11 @@ namespace gm
 		bool IsBeatTriggeredRotationModel(uint32 modelIndex)
 		{
 			return modelIndex == 157;
+		}
+
+		bool IsBeatPositionSequenceModel(uint32 modelIndex)
+		{
+			return modelIndex == 158;
 		}
 
 		float CreateBeatAudioLevelMoveDistance()
@@ -169,6 +175,24 @@ namespace gm
 			desc.angleDegrees = lookDirection.x > 0.f ? -90.f : 90.f;
 			BeatTriggeredRotationComponent* beatRotation = gameObject->AddComponent<BeatTriggeredRotationComponent>(GetBeatSystem(), desc);
 			GM_ASSERT_RETURN_VAL(beatRotation, false, "BeatTriggeredRotationComponent 생성에 실패했습니다. key=%ls", modelKey.c_str());
+		}
+
+		if (isTriggerObject && IsBeatPositionSequenceModel(objectData.modelIndex))
+		{
+			const float moveHeight = objectData.moveEndPosition.y - transform->GetY();
+			BeatPositionSequenceDesc desc{};
+			desc.positionOffsets = {
+				Vector3{ 0.f, 0.f, 0.f },
+				Vector3{ 0.f, moveHeight * (1.f / 3.f), 0.f },
+				Vector3{ 0.f, moveHeight * (2.f / 3.f), 0.f },
+				Vector3{ 0.f, moveHeight, 0.f },
+				Vector3{ 0.f, moveHeight, 0.f },
+				Vector3{ 0.f, moveHeight * (2.f / 3.f), 0.f },
+				Vector3{ 0.f, moveHeight * (1.f / 3.f), 0.f },
+				Vector3{ 0.f, 0.f, 0.f }
+			};
+			BeatPositionSequenceComponent* positionSequence = gameObject->AddComponent<BeatPositionSequenceComponent>(GetBeatSystem(), desc);
+			GM_ASSERT_RETURN_VAL(positionSequence, false, "BeatPositionSequenceComponent 생성에 실패했습니다. key=%ls", modelKey.c_str());
 		}
 
 		BeatTransformDesc beatTransformDesc{};

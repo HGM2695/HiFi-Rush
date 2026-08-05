@@ -36,7 +36,7 @@ namespace gm
 		if (_beatSystem.DidCrossBeatBoundary())
 			UpdateTargetAngle();
 
-		const float ratio = 1.f - std::exp(-_desc.interpolationSpeed * deltaTime);
+		const float ratio = Math::CalcExponentialSmoothingRatio(_desc.interpolationSpeed, deltaTime);
 		_currentOrbitAngle += (_targetOrbitAngle - _currentOrbitAngle) * ratio;
 		ApplyTransform();
 	}

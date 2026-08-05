@@ -3,12 +3,19 @@
 #include "MathTypes.h"
 #include <DirectXMath.h>
 
+#include <cmath>
+
 namespace gm::Math
 {
 	inline constexpr float GM_PI = 3.141592654f;
 	inline constexpr float DegreesToRadians(float degrees)
 	{
 		return degrees * (GM_PI / 180.f);
+	}
+
+	inline float CalcExponentialSmoothingRatio(float interpolationSpeed, float deltaTime)
+	{
+		return 1.f - std::exp(-interpolationSpeed * deltaTime);
 	}
 
 	inline Vector3 EulerDegreesToRadians(const Vector3& eulerDegrees)
