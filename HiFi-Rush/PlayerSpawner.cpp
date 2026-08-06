@@ -1,13 +1,16 @@
 #include "PlayerSpawner.h"
 
 #include "Application.h"
+#include "BeatSkeletalAnimationSyncComponent.h"
 #include "CameraComponent.h"
 #include "CameraFollowComponent.h"
 #include "CameraManager.h"
+#include "ChiAnimationTypes.h"
 #include "ChiMoveComponent.h"
 #include "ChiStateMachineComponent.h"
 #include "FreeFlyMoveComponent.h"
 #include "GameObject.h"
+#include "HiFiRushGameInstance.h"
 #include "MathUtil.h"
 #include "NavMeshControllerComponent.h"
 #include "Resources.h"
@@ -21,6 +24,15 @@
 
 namespace gm
 {
+	namespace
+	{
+		const BeatSystem& GetBeatSystem()
+		{
+			const HiFiRushGameInstance& gameInstance = static_cast<const HiFiRushGameInstance&>(APPLICATION.GetGameInstance());
+			return gameInstance.GetBeatSystem();
+		}
+	}
+
 	PlayerSpawner::PlayerSpawner(Resources& resources)
 		: _resources(resources)
 	{
@@ -36,7 +48,7 @@ namespace gm
 
 		SkeletalMeshComponent* skeletalMeshComponent = player->AddComponent<SkeletalMeshComponent>();
 		skeletalMeshComponent->SetSkeletalMesh(skeletalMesh);
-		player->AddComponent<SkeletalAnimatorComponent>();
+		SkeletalAnimatorComponent* animator = player->AddComponent<SkeletalAnimatorComponent>();
 
 		ChiMoveComponent* moveComponent = player->AddComponent<ChiMoveComponent>();
 		Rigidbody3DComponent* rigidbody = player->AddComponent<Rigidbody3DComponent>();
@@ -51,6 +63,11 @@ namespace gm
 		socketComponent->AddSocket(L"Player.Camera", cameraSocket);
 
 		player->AddComponent<ChiStateMachineComponent>();
+
+		BeatSkeletalAnimationSyncDesc animationSyncDesc{};
+		BeatSkeletalAnimationSyncComponent* animationSync = player->AddComponent<BeatSkeletalAnimationSyncComponent>(GetBeatSystem(), *animator, animationSyncDesc);
+		GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetChiAnimationName(ChiAnimationId::Idle), BeatSkeletalAnimationSyncDesc{ .cycleBeats = 4.f }), nullptr, "플레이어 Idle 애니메이션 비트 동기화 규칙 등록에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetChiAnimationName(ChiAnimationId::RunFront), BeatSkeletalAnimationSyncDesc{ .cycleBeats = 2.f }), nullptr, "플레이어 Run 애니메이션 비트 동기화 규칙 등록에 실패했습니다.");
 
 		GameObject* cameraObject = scene.SpawnGameObject<GameObject>();
 		CameraFollowComponent* followComponent = cameraObject->AddComponent<CameraFollowComponent>();

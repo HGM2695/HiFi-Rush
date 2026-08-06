@@ -1,11 +1,14 @@
 #include "TestScene.h"
+#include "BeatSkeletalAnimationSyncComponent.h"
 #include "MainHUDWidget.h"
+#include "ChiAnimationTypes.h"
 #include "ChiStateMachineComponent.h"
 #include "ChiMoveComponent.h"
 #include "Application.h"
 #include "Input.h"
 #include "Resources.h"
 #include "GameObject.h"
+#include "HiFiRushGameInstance.h"
 #include "SpriteComponent.h"
 #include "Texture.h"
 #include "CameraComponent.h"
@@ -97,7 +100,7 @@ namespace gm
 
 		SkeletalMeshComponent* skeletalMeshComponent = player->AddComponent<SkeletalMeshComponent>();
 		skeletalMeshComponent->SetSkeletalMesh(skeletalMesh);
-		player->AddComponent<SkeletalAnimatorComponent>();
+		SkeletalAnimatorComponent* animator = player->AddComponent<SkeletalAnimatorComponent>();
 
 		ChiMoveComponent* moveComponent = player->AddComponent<ChiMoveComponent>();
 		Rigidbody3DComponent* rigidbody = player->AddComponent<Rigidbody3DComponent>();
@@ -111,6 +114,12 @@ namespace gm
 		socketComponent->AddSocket(L"Player.Camera", socket);
 
 		player->AddComponent<ChiStateMachineComponent>();
+
+		const HiFiRushGameInstance& gameInstance = static_cast<const HiFiRushGameInstance&>(APPLICATION.GetGameInstance());
+		BeatSkeletalAnimationSyncDesc animationSyncDesc{};
+		BeatSkeletalAnimationSyncComponent* animationSync = player->AddComponent<BeatSkeletalAnimationSyncComponent>(gameInstance.GetBeatSystem(), *animator, animationSyncDesc);
+		GM_ASSERT_RETURN(animationSync->AddClipSyncRule(GetChiAnimationName(ChiAnimationId::Idle), BeatSkeletalAnimationSyncDesc{ .cycleBeats = 4.f }), "플레이어 Idle 애니메이션 비트 동기화 규칙 등록에 실패했습니다.");
+		GM_ASSERT_RETURN(animationSync->AddClipSyncRule(GetChiAnimationName(ChiAnimationId::RunFront), BeatSkeletalAnimationSyncDesc{ .cycleBeats = 2.f }), "플레이어 Run 애니메이션 비트 동기화 규칙 등록에 실패했습니다.");
 
 		WidgetComponent* userWidget = player->AddComponent<WidgetComponent>();
 		userWidget->SetUserWidget<MainHUDWidget>();

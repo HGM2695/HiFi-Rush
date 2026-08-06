@@ -6,7 +6,7 @@
 
 namespace gm::BeatMath
 {
-	inline float EvaluateCycleProgress(float currentBeat, float cycleBeats, float phaseOffsetBeats = 0.f)
+	inline float EvaluateCycleRatio(float currentBeat, float cycleBeats, float phaseOffsetBeats = 0.f)
 	{
 		if (cycleBeats <= 0.f)
 			return 0.f;
@@ -18,8 +18,14 @@ namespace gm::BeatMath
 		return cycleBeat / cycleBeats;
 	}
 
+	// 애니메이션 클립 전체 길이(초)
+	inline float EvaluateCycleTime(float currentBeat, float cycleBeats, float duration, float phaseOffsetBeats = 0.f)
+	{
+		return duration * EvaluateCycleRatio(currentBeat, cycleBeats, phaseOffsetBeats);
+	}
+
 	inline float EvaluateSinePulse(float currentBeat, float cycleBeats, float phaseOffsetBeats = 0.f)
 	{
-		return std::sin(Math::GM_PI * EvaluateCycleProgress(currentBeat, cycleBeats, phaseOffsetBeats));
+		return std::sin(Math::GM_PI * EvaluateCycleRatio(currentBeat, cycleBeats, phaseOffsetBeats));
 	}
 }

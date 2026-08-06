@@ -29,6 +29,7 @@ namespace gm
 		bool									AddClip(const std::wstring& name, const std::shared_ptr<SkeletalAnimationClip>& clip);
 		std::shared_ptr<SkeletalAnimationClip>	FindClip(const std::wstring& name) const;
 		std::shared_ptr<SkeletalAnimationClip>	GetCurrentClip() const { return _currentClip; }
+		const std::wstring&						GetCurrentClipName() const { return _currentClipName; }
 		EventPublisher<AnimationNotifyDispatcher, AnimationNotifyEvent>& GetNotifyEvent() { return _animationNotifyDispatcher->OnNotify; }
 
 		bool									HasClip(const std::wstring& name) const;
@@ -62,6 +63,7 @@ namespace gm
 
 		std::unique_ptr<AnimationClipSet>			_animationClipSet;
 		std::shared_ptr<SkeletalAnimationClip>		_currentClip;
+		std::wstring								_currentClipName;
 		std::unique_ptr<AnimationController>		_animationController;
 		std::unique_ptr<AnimationNotifyDispatcher>	_animationNotifyDispatcher;
 		SkeletalAnimationBlender					_animationBlender;

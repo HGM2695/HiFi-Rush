@@ -62,6 +62,7 @@ namespace gm
 			_animationBlender.Reset();
 
 		_currentClip = clip;
+		_currentClipName = name;
 		_externalPlayTime.reset();
 		_usedExternalPlayTimePrevTick = false;
 		const bool played = _animationController->Play(*_currentClip, option);
