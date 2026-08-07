@@ -198,6 +198,7 @@
     <ClInclude Include="HiFiRushAudio.h" />
     <ClInclude Include="LoadResources.h" />
     <ClInclude Include="HiFiRushGameInstance.h" />
+    <ClInclude Include="HiFiRushStatics.h" />
     <ClInclude Include="LoadingScreenWidget.h" />
     <ClInclude Include="MainHUDWidget.h" />
     <ClInclude Include="OutsideScene.h" />
@@ -241,6 +242,7 @@
     <ClCompile Include="BeatTriggeredRotationComponent.cpp" />
     <ClCompile Include="HiFiRushAudio.cpp" />
     <ClCompile Include="HiFiRushGameInstance.cpp" />
+    <ClCompile Include="HiFiRushStatics.cpp" />
     <ClCompile Include="LoadResources.cpp" />
     <ClCompile Include="LoadingScreenWidget.cpp" />
     <ClCompile Include="main.cpp" />

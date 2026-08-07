@@ -26,7 +26,7 @@ namespace gm
 		void SetupDebugTools();
 
 	private:
-		BeatSystem _beatSystem;
+		BeatSystem		_beatSystem;
 #if GM_ENABLE_DEBUG_TOOLS
 		DebugEventPublisher	_debugEventPublisher;
 #endif

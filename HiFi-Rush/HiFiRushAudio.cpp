@@ -1,7 +1,8 @@
 #include "HiFiRushAudio.h"
 #include "Application.h"
 #include "AudioSystem.h"
-#include "HiFiRushGameInstance.h"
+#include "BeatSystem.h"
+#include "HiFiRushStatics.h"
 #include "Resources.h"
 #include "SoundWave.h"
 
@@ -15,7 +16,6 @@ namespace gm
 		FMOD::Channel* channel = APPLICATION.GetAudioSystem().PlayBGM(*sound, desc.volume);
 		GM_ASSERT_RETURN(channel, "BGM 재생에 실패했습니다. key=%ls", desc.resourceKey);
 
-		HiFiRushGameInstance& gameInstance = static_cast<HiFiRushGameInstance&>(APPLICATION.GetGameInstance());
-		gameInstance.GetBeatSystem().SetBPM(desc.bpm, desc.playbackOffsetSeconds);
+		HiFiRushStatics::GetBeatSystem().SetBPM(desc.bpm, desc.playbackOffsetSeconds);
 	}
 }

@@ -10,7 +10,7 @@
 #include "ChiStateMachineComponent.h"
 #include "FreeFlyMoveComponent.h"
 #include "GameObject.h"
-#include "HiFiRushGameInstance.h"
+#include "HiFiRushStatics.h"
 #include "MathUtil.h"
 #include "NavMeshControllerComponent.h"
 #include "Resources.h"
@@ -24,15 +24,6 @@
 
 namespace gm
 {
-	namespace
-	{
-		const BeatSystem& GetBeatSystem()
-		{
-			const HiFiRushGameInstance& gameInstance = static_cast<const HiFiRushGameInstance&>(APPLICATION.GetGameInstance());
-			return gameInstance.GetBeatSystem();
-		}
-	}
-
 	PlayerSpawner::PlayerSpawner(Resources& resources)
 		: _resources(resources)
 	{
@@ -65,7 +56,7 @@ namespace gm
 		player->AddComponent<ChiStateMachineComponent>();
 
 		BeatSkeletalAnimationSyncDesc animationSyncDesc{};
-		BeatSkeletalAnimationSyncComponent* animationSync = player->AddComponent<BeatSkeletalAnimationSyncComponent>(GetBeatSystem(), *animator, animationSyncDesc);
+		BeatSkeletalAnimationSyncComponent* animationSync = player->AddComponent<BeatSkeletalAnimationSyncComponent>(HiFiRushStatics::GetBeatSystem(), *animator, animationSyncDesc);
 		GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetChiAnimationName(ChiAnimationId::Idle), BeatSkeletalAnimationSyncDesc{ .cycleBeats = 4.f }), nullptr, "플레이어 Idle 애니메이션 비트 동기화 규칙 등록에 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetChiAnimationName(ChiAnimationId::RunFront), BeatSkeletalAnimationSyncDesc{ .cycleBeats = 2.f }), nullptr, "플레이어 Run 애니메이션 비트 동기화 규칙 등록에 실패했습니다.");
 
