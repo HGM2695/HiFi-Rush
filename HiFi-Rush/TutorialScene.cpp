@@ -18,11 +18,9 @@
 #include "SkeletalMeshComponent.h"
 #include "SkeletalAnimationClip.h"
 #include "NavigationMesh.h"
-#include "BinaryEnvironmentMapLoader.h"
-#include "EnvironmentMapTypes.h"
 #include "EnvironmentSpawner.h"
 #include "HiFiRushAudio.h"
-#include "Paths.h"
+#include "MapResource.h"
 #include "PlayerSpawner.h"
 #include "SceneDebugTools.h"
 
@@ -61,15 +59,11 @@ namespace gm
 
 	void TutorialScene::InitializeEnvironment()
 	{
-		EnvironmentMapData mapData{};
-		GM_ASSERT_RETURN(BinaryEnvironmentMapLoader::Load(GetMapPath(L"TutorialEnvironmentMap.bin"), mapData), "Tutorial 환경 맵을 로드하지 못했습니다.");
+		const std::shared_ptr<MapResource> mapResource = APPLICATION.GetResources().Find<MapResource>(L"TutorialMap");
+		GM_ASSERT_RETURN(mapResource, "Tutorial MapResource가 로드되지 않았습니다.");
 
 		EnvironmentSpawner spawner(APPLICATION.GetResources());
-		GM_ASSERT_RETURN(spawner.Spawn(*this, mapData), "Tutorial 환경 오브젝트 생성에 실패했습니다.");
-
-		EnvironmentMapData triggerMapData{};
-		GM_ASSERT_RETURN(BinaryEnvironmentMapLoader::Load(GetMapPath(L"TutorialTriggerEnvironmentMap.bin"), triggerMapData), "Tutorial 트리거 환경 맵을 로드하지 못했습니다.");
-		GM_ASSERT_RETURN(spawner.SpawnTriggerObjects(*this, triggerMapData), "Tutorial 트리거 환경 오브젝트 생성에 실패했습니다.");
+		GM_ASSERT_RETURN(spawner.Spawn(*this, mapResource->GetData()), "Tutorial 환경 구성에 실패했습니다.");
 	}
 
 	void TutorialScene::InitializePlayer()

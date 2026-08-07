@@ -1,18 +1,18 @@
 #include "CommonLoadingScene.h"
 #include "Application.h"
-#include "BinaryEnvironmentMapLoader.h"
+#include "BinaryMapLoader.h"
 #include "BinaryModelLoader.h"
 #include "BinaryNavigationMeshLoader.h"
 #include "BuiltinGraphicsResources.h"
 #include "CameraComponent.h"
 #include "CameraManager.h"
 #include "ChiAnimationTypes.h"
-#include "EnvironmentMapTypes.h"
 #include "GameObject.h"
 #include "HiFiRushAudio.h"
 #include "IGraphicsResourceFactory.h"
 #include "ITextRenderer.h"
 #include "LoadingScreenWidget.h"
+#include "MapResource.h"
 #include "NavigationMesh.h"
 #include "PathUtil.h"
 #include "Paths.h"
@@ -123,10 +123,7 @@ namespace gm
 		if (LoadMeshTextures(result, resources, resourceFactory) == false)
 			return result;
 
-		if (LoadEnvironmentResources(result, resources, resourceFactory, L"TutorialEnvironmentMap.bin") == false)
-			return result;
-
-		if (LoadEnvironmentResources(result, resources, resourceFactory, L"TutorialTriggerEnvironmentMap.bin") == false)
+		if (LoadMapResources(result, resources, resourceFactory, L"TutorialMap.bin") == false)
 			return result;
 
 		if (LoadChiResources(result, resources, resourceFactory) == false)
@@ -173,21 +170,42 @@ namespace gm
 		return true;
 	}
 
-	bool CommonLoadingScene::LoadEnvironmentResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory, const std::wstring& mapFileName)
+	bool CommonLoadingScene::LoadMapResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory, const std::wstring& mapFileName)
 	{
-		EnvironmentMapData mapData{};
-		if (BinaryEnvironmentMapLoader::Load(GetMapPath(mapFileName), mapData) == false)
+		const std::wstring mapKey = GetFileNameWithoutExtension(mapFileName);
+		std::shared_ptr<MapResource> mapResource = resources.Find<MapResource>(mapKey);
+		if (mapResource == nullptr)
 		{
-			outLoadData.errorMessage = L"환경 맵 데이터 로드에 실패했습니다.";
-			return false;
+			MapData mapData{};
+			if (BinaryMapLoader::Load(GetMapPath(mapFileName), mapData) == false)
+			{
+				outLoadData.errorMessage = L"맵 데이터 로드에 실패했습니다. key=" + mapKey;
+				return false;
+			}
+
+			mapResource = MapResource::Create(std::move(mapData));
+			if (mapResource == nullptr)
+			{
+				outLoadData.errorMessage = L"MapResource 생성에 실패했습니다. key=" + mapKey;
+				return false;
+			}
+
+			outLoadData.resources.push_back({ mapKey, mapResource });
 		}
 
 		std::vector<uint32> modelIndices;
-		modelIndices.reserve(mapData.objects.size());
-		for (const EnvironmentObjectData& object : mapData.objects)
+		modelIndices.reserve(mapResource->GetData().objects.size());
+		for (const EnvironmentObjectData& object : mapResource->GetData().objects)
+		{
 			modelIndices.push_back(object.modelIndex);
+			for (const EnvironmentComponentData& component : object.components)
+			{
+				const BeatStaticMeshCycleComponentData* meshCycle = std::get_if<BeatStaticMeshCycleComponentData>(&component);
+				if (meshCycle)
+					modelIndices.insert(modelIndices.end(), meshCycle->modelIndices.begin(), meshCycle->modelIndices.end());
+			}
+		}
 
-		// 로딩 순서 보장을 위한 작업
 		std::sort(modelIndices.begin(), modelIndices.end());
 		modelIndices.erase(std::unique(modelIndices.begin(), modelIndices.end()), modelIndices.end());
 
@@ -195,12 +213,7 @@ namespace gm
 		for (uint32 modelIndex : modelIndices)
 		{
 			const std::wstring modelKey = L"Environment" + std::to_wstring(modelIndex);
-			const bool isPending = std::any_of(outLoadData.resources.begin(), outLoadData.resources.end(),
-				[&modelKey](const ResourceLoadData& loadData)
-				{
-					return loadData.key == modelKey;
-				});
-			if (resources.Find<StaticMesh>(modelKey) || resources.Find<SkeletalMesh>(modelKey) || isPending)
+			if (resources.Find<StaticMesh>(modelKey) || resources.Find<SkeletalMesh>(modelKey))
 				continue;
 
 			const std::wstring modelPath = GetModelPath(L"Binary/Environment/" + modelKey + L".bin");
@@ -365,10 +378,7 @@ namespace gm
 		if (LoadMeshTextures(result, resources, resourceFactory) == false)
 			return result;
 
-		if (LoadEnvironmentResources(result, resources, resourceFactory, L"OutsideEnvironmentMap.bin") == false)
-			return result;
-
-		if (LoadEnvironmentResources(result, resources, resourceFactory, L"OutsideTriggerEnvironmentMap.bin") == false)
+		if (LoadMapResources(result, resources, resourceFactory, L"OutsideMap.bin") == false)
 			return result;
 
 		if (LoadChiResources(result, resources, resourceFactory) == false)
@@ -391,10 +401,7 @@ namespace gm
 		if (LoadMeshTextures(result, resources, resourceFactory) == false)
 			return result;
 
-		if (LoadEnvironmentResources(result, resources, resourceFactory, L"QamilEnvironmentMap.bin") == false)
-			return result;
-
-		if (LoadEnvironmentResources(result, resources, resourceFactory, L"QamilTriggerEnvironmentMap.bin") == false)
+		if (LoadMapResources(result, resources, resourceFactory, L"QamilMap.bin") == false)
 			return result;
 
 		if (LoadChiResources(result, resources, resourceFactory) == false)

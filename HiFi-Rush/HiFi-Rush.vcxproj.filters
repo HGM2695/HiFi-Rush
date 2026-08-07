@@ -48,21 +48,30 @@
       <Filter>Debug</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="BinaryEnvironmentMapLoader.h">
+    <ClInclude Include="BinaryMapLoader.h">
       <Filter>Resource</Filter>
     </ClInclude>
-    <ClInclude Include="EnvironmentMapTypes.h">
+    <ClInclude Include="MapTypes.h">
       <Filter>Util\Types</Filter>
+    </ClInclude>
+	<ClInclude Include="EnvironmentComponentTypes.h">
+	  <Filter>Util\Types</Filter>
+	</ClInclude>
+    <ClInclude Include="MapResource.h">
+      <Filter>Resource</Filter>
     </ClInclude>
     <ClInclude Include="EnvironmentSpawner.h">
       <Filter>GameObject</Filter>
     </ClInclude>
+	<ClInclude Include="EnvironmentComponentFactory.h">
+	  <Filter>GameObject</Filter>
+	</ClInclude>
     <ClInclude Include="FreeFlyMoveComponent.h">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClInclude>
-    <ClInclude Include="BeatVisibilityComponent.h">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClInclude>
+	<ClInclude Include="BeatVisibilityComponent.h">
+	  <Filter>Component\01. Behavior\3D</Filter>
+	</ClInclude>
     <ClInclude Include="BeatMoveComponent.h">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClInclude>
@@ -197,18 +206,24 @@
     <ClCompile Include="DebugEventPublisher.cpp">
       <Filter>Debug</Filter>
     </ClCompile>
-    <ClCompile Include="BinaryEnvironmentMapLoader.cpp">
+    <ClCompile Include="BinaryMapLoader.cpp">
       <Filter>Resource</Filter>
     </ClCompile>
+    <ClCompile Include="MapResource.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+	<ClCompile Include="EnvironmentComponentFactory.cpp">
+	  <Filter>GameObject</Filter>
+	</ClCompile>
     <ClCompile Include="EnvironmentSpawner.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
     <ClCompile Include="FreeFlyMoveComponent.cpp">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClCompile>
-    <ClCompile Include="BeatVisibilityComponent.cpp">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClCompile>
+	<ClCompile Include="BeatVisibilityComponent.cpp">
+	  <Filter>Component\01. Behavior\3D</Filter>
+	</ClCompile>
     <ClCompile Include="BeatMoveComponent.cpp">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClCompile>

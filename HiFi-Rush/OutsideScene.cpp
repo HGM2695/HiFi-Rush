@@ -1,15 +1,13 @@
 #include "OutsideScene.h"
 #include "Application.h"
-#include "BinaryEnvironmentMapLoader.h"
 #include "CameraManager.h"
-#include "EnvironmentMapTypes.h"
 #include "EnvironmentSpawner.h"
 #include "HiFiRushAudio.h"
 #include "Input.h"
 #include "MathUtil.h"
+#include "MapResource.h"
 #include "NavigationMesh.h"
 #include "NavMeshSystem.h"
-#include "Paths.h"
 #include "PhysicsSystem.h"
 #include "PlayerSpawner.h"
 #include "Resources.h"
@@ -56,14 +54,10 @@ namespace gm
 
 	void OutsideScene::InitializeEnvironment()
 	{
-		EnvironmentMapData mapData{};
-		GM_ASSERT_RETURN(BinaryEnvironmentMapLoader::Load(GetMapPath(L"OutsideEnvironmentMap.bin"), mapData), "Outside 환경 맵을 로드하지 못했습니다.");
+		const std::shared_ptr<MapResource> mapResource = APPLICATION.GetResources().Find<MapResource>(L"OutsideMap");
+		GM_ASSERT_RETURN(mapResource, "Outside MapResource가 로드되지 않았습니다.");
 
 		EnvironmentSpawner spawner(APPLICATION.GetResources());
-		GM_ASSERT_RETURN(spawner.Spawn(*this, mapData), "Outside 환경 오브젝트 생성에 실패했습니다.");
-
-		EnvironmentMapData triggerMapData{};
-		GM_ASSERT_RETURN(BinaryEnvironmentMapLoader::Load(GetMapPath(L"OutsideTriggerEnvironmentMap.bin"), triggerMapData), "Outside 트리거 환경 맵을 로드하지 못했습니다.");
-		GM_ASSERT_RETURN(spawner.SpawnTriggerObjects(*this, triggerMapData), "Outside 트리거 환경 오브젝트 생성에 실패했습니다.");
+		GM_ASSERT_RETURN(spawner.Spawn(*this, mapResource->GetData()), "Outside 환경 구성에 실패했습니다.");
 	}
 }

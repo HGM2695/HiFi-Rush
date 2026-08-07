@@ -179,13 +179,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CommonLoadingScene.h" />
-    <ClInclude Include="BinaryEnvironmentMapLoader.h" />
+    <ClInclude Include="BinaryMapLoader.h" />
     <ClInclude Include="DebugTextWidget.h" />
     <ClInclude Include="DebugEventPublisher.h" />
-    <ClInclude Include="EnvironmentMapTypes.h" />
+    <ClInclude Include="MapTypes.h" />
+	<ClInclude Include="EnvironmentComponentTypes.h" />
+    <ClInclude Include="MapResource.h" />
+	<ClInclude Include="EnvironmentComponentFactory.h" />
     <ClInclude Include="EnvironmentSpawner.h" />
     <ClInclude Include="FreeFlyMoveComponent.h" />
-    <ClInclude Include="BeatVisibilityComponent.h" />
+	<ClInclude Include="BeatVisibilityComponent.h" />
     <ClInclude Include="BeatMoveComponent.h" />
     <ClInclude Include="IBeatTriggerAction.h" />
     <ClInclude Include="BeatTriggerSequenceComponent.h" />
@@ -230,12 +233,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CommonLoadingScene.cpp" />
-    <ClCompile Include="BinaryEnvironmentMapLoader.cpp" />
+    <ClCompile Include="BinaryMapLoader.cpp" />
+    <ClCompile Include="MapResource.cpp" />
+	<ClCompile Include="EnvironmentComponentFactory.cpp" />
     <ClCompile Include="DebugTextWidget.cpp" />
     <ClCompile Include="DebugEventPublisher.cpp" />
     <ClCompile Include="EnvironmentSpawner.cpp" />
     <ClCompile Include="FreeFlyMoveComponent.cpp" />
-    <ClCompile Include="BeatVisibilityComponent.cpp" />
+	<ClCompile Include="BeatVisibilityComponent.cpp" />
     <ClCompile Include="BeatMoveComponent.cpp" />
     <ClCompile Include="BeatTriggerSequenceComponent.cpp" />
     <ClCompile Include="BeatOrbitComponent.cpp" />

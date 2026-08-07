@@ -17,6 +17,7 @@ namespace gm
 		SkeletalAnimationClip,
 		Shader,
 		NavigationMesh,
+		Map,
 
 		Count
 	};
