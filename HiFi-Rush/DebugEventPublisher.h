@@ -1,5 +1,7 @@
 #pragma once
 
+#if GM_ENABLE_DEBUG_TOOLS
+
 #include "Event.h"
 
 namespace gm
@@ -24,3 +26,5 @@ namespace gm
 		EventPublisher<DebugEventPublisher, DebugEvent> OnDebugEvent;
 	};
 }
+
+#endif

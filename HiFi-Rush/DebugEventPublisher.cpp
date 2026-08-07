@@ -1,5 +1,11 @@
 #include "DebugEventPublisher.h"
+
+#if GM_ENABLE_DEBUG_TOOLS
+
+#include "Application.h"
 #include "DebugInputHandler.h"
+#include "IDebugRenderer.h"
+#include "UIManager.h"
 
 namespace gm
 {
@@ -27,5 +33,15 @@ namespace gm
 			event.type = DebugEventType::Reset;
 			OnDebugEvent.Publish(event);
 		}
+
+		if (DebugInputHandler::IsTriggered(DebugInputType, KeyCode::F11))
+		{
+			IDebugRenderer& debugRenderer = APPLICATION.GetDebugRenderer();
+			const bool isEnabled = debugRenderer.IsEnabled() == false;
+			debugRenderer.SetEnabled(isEnabled);
+			APPLICATION.GetUIManager().SetDebugWidgetsVisible(isEnabled);
+		}
 	}
 }
+
+#endif

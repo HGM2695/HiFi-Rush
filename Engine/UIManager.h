@@ -41,6 +41,11 @@ namespace gm
 		void ClearDebugWidgets();
 		void ClearAllWidgets();
 
+#if GM_ENABLE_DEBUG_TOOLS
+		void SetDebugWidgetsVisible(bool isVisible) { _areDebugWidgetsVisible = isVisible; }
+		bool AreDebugWidgetsVisible() const { return _areDebugWidgetsVisible; }
+#endif
+
 	private:
 		template <typename T, typename... Args>
 		std::unique_ptr<T> CreateUserWidget(Args&&... args)
@@ -58,6 +63,7 @@ namespace gm
 
 #if GM_ENABLE_DEBUG_TOOLS
 		std::vector<std::unique_ptr<UserWidget>> _debugWidgetList{};
+		bool _areDebugWidgetsVisible = true;
 #endif
 	};
 }

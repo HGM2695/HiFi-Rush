@@ -27,8 +27,11 @@ namespace gm
 			widget->Render(viewportGeometry);
 
 #if GM_ENABLE_DEBUG_TOOLS
-		for (const auto& widget : _debugWidgetList)
-			widget->Render(viewportGeometry);
+		if (_areDebugWidgetsVisible)
+		{
+			for (const auto& widget : _debugWidgetList)
+				widget->Render(viewportGeometry);
+		}
 #endif
 	}
 

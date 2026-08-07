@@ -13,6 +13,14 @@ namespace gm
 	public:
 		virtual ~IDebugRenderer() = default;
 
+		void SetEnabled(bool isEnabled)
+		{
+			_isEnabled = isEnabled;
+			if (_isEnabled == false)
+				Clear();
+		}
+		bool IsEnabled() const { return _isEnabled; }
+
 		virtual bool Initialize(IGraphicsDevice& graphicsDevice) = 0;
 		virtual void Render(const CameraViewInfo& viewInfo) = 0;
 
@@ -35,5 +43,8 @@ namespace gm
 			TextHorizontalAlignment horizontalAlignment = TextHorizontalAlignment::Left, TextVerticalAlignment verticalAlignment = TextVerticalAlignment::Top) = 0;
 
 		virtual void Clear() = 0;
+
+	private:
+		bool _isEnabled = true;
 	};
 }

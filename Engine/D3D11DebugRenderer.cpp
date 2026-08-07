@@ -53,6 +53,12 @@ namespace gm
 	void D3D11DebugRenderer::Render(const CameraViewInfo& viewInfo)
 	{
 #if GM_ENABLE_DEBUG_TOOLS
+		if (IsEnabled() == false)
+		{
+			Clear();
+			return;
+		}
+
 		if (_lines.empty() && _triangles.empty() && _quads.empty() && _rings.empty() && _boxes.empty() && _obbs.empty() && _spheres.empty() && _rays.empty())
 			return;
 
@@ -115,6 +121,9 @@ namespace gm
 	void D3D11DebugRenderer::RequestDrawLine(const Vector3& start, const Vector3& end, Color color)
 	{
 #if GM_ENABLE_DEBUG_TOOLS
+		if (IsEnabled() == false)
+			return;
+
 		_lines.push_back({ start, end, color });
 #endif
 	}
@@ -133,6 +142,9 @@ namespace gm
 	void D3D11DebugRenderer::RequestDrawTriangle(const Vector3& a, const Vector3& b, const Vector3& c, Color color)
 	{
 #if GM_ENABLE_DEBUG_TOOLS
+		if (IsEnabled() == false)
+			return;
+
 		_triangles.push_back({ a, b, c, color });
 #endif
 	}
@@ -140,6 +152,9 @@ namespace gm
 	void D3D11DebugRenderer::RequestDrawQuad(const Vector3& a, const Vector3& b, const Vector3& c, const Vector3& d, Color color)
 	{
 #if GM_ENABLE_DEBUG_TOOLS
+		if (IsEnabled() == false)
+			return;
+
 		_quads.push_back({ a, b, c, d, color });
 #endif
 	}
@@ -152,6 +167,9 @@ namespace gm
 	void D3D11DebugRenderer::RequestDrawCircle(const Vector3& center, float radius, Color color, uint32 segments)
 	{
 #if GM_ENABLE_DEBUG_TOOLS
+		if (IsEnabled() == false)
+			return;
+
 		_rings.push_back({ center, Vector3(radius, 0.f, 0.f), Vector3(0.f, radius, 0.f), color });
 #endif
 	}
@@ -164,6 +182,9 @@ namespace gm
 	void D3D11DebugRenderer::RequestDrawBox(const BoundingBox& box, Color color)
 	{
 #if GM_ENABLE_DEBUG_TOOLS
+		if (IsEnabled() == false)
+			return;
+
 		_boxes.push_back({ box, color });
 #endif
 	}
@@ -176,6 +197,9 @@ namespace gm
 	void D3D11DebugRenderer::RequestDrawOBB(const BoundingOrientedBox& obb, Color color)
 	{
 #if GM_ENABLE_DEBUG_TOOLS
+		if (IsEnabled() == false)
+			return;
+
 		_obbs.push_back({ obb, color });
 #endif
 	}
@@ -188,6 +212,9 @@ namespace gm
 	void D3D11DebugRenderer::RequestDrawSphere(const BoundingSphere& sphere, Color color)
 	{
 #if GM_ENABLE_DEBUG_TOOLS
+		if (IsEnabled() == false)
+			return;
+
 		_spheres.push_back({ sphere, color });
 #endif
 	}
@@ -200,6 +227,9 @@ namespace gm
 	void D3D11DebugRenderer::RequestDrawRay(const Ray& ray, float length, Color color)
 	{
 #if GM_ENABLE_DEBUG_TOOLS
+		if (IsEnabled() == false)
+			return;
+
 		if (ray.direction.LengthSquared() <= 0.f || length <= 0.f)
 			return;
 
@@ -211,6 +241,9 @@ namespace gm
 		TextHorizontalAlignment horizontalAlignment, TextVerticalAlignment verticalAlignment)
 	{
 #if GM_ENABLE_DEBUG_TOOLS
+		if (IsEnabled() == false)
+			return;
+
 		_textRenderer->RequestDrawText(content, BuiltinResourceKey::DefaultUIFont, viewPosition, fontSize, color, horizontalAlignment, verticalAlignment);
 #endif
 	}
