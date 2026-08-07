@@ -60,7 +60,16 @@
     <ClInclude Include="FreeFlyMoveComponent.h">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClInclude>
+    <ClInclude Include="BeatVisibilityComponent.h">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClInclude>
     <ClInclude Include="BeatMoveComponent.h">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="IBeatTriggerAction.h">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatTriggerSequenceComponent.h">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClInclude>
     <ClInclude Include="BeatOrbitComponent.h">
@@ -79,6 +88,9 @@
       <Filter>Component\01. Behavior\3D</Filter>
     </ClInclude>
     <ClInclude Include="BeatSkeletalAnimationSyncComponent.h">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatTriggeredSkeletalAnimationComponent.h">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClInclude>
     <ClInclude Include="BeatSystem.h" />
@@ -194,7 +206,13 @@
     <ClCompile Include="FreeFlyMoveComponent.cpp">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClCompile>
+    <ClCompile Include="BeatVisibilityComponent.cpp">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClCompile>
     <ClCompile Include="BeatMoveComponent.cpp">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatTriggerSequenceComponent.cpp">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClCompile>
     <ClCompile Include="BeatOrbitComponent.cpp">
@@ -210,6 +228,9 @@
       <Filter>Component\01. Behavior\3D</Filter>
     </ClCompile>
     <ClCompile Include="BeatSkeletalAnimationSyncComponent.cpp">
+      <Filter>Component\01. Behavior\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatTriggeredSkeletalAnimationComponent.cpp">
       <Filter>Component\01. Behavior\3D</Filter>
     </ClCompile>
     <ClCompile Include="BeatSystem.cpp" />

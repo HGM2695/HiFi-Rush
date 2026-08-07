@@ -4,12 +4,6 @@
 #include "MathUtil.h"
 #include "TransformComponent.h"
 
-#if GM_ENABLE_DEBUG_TOOLS
-#include "Application.h"
-#include "DebugEventPublisher.h"
-#include "HiFiRushGameInstance.h"
-#endif
-
 #include <algorithm>
 
 namespace gm
@@ -25,7 +19,17 @@ namespace gm
 		if (_state != RotationState::Inactive || _beatSystem.HasPlaybackTime() == false)
 			return;
 
-		_startBeat = _beatSystem.GetCurrentBeat();
+		Schedule(_beatSystem.GetCurrentBeat());
+	}
+
+	void BeatTriggeredRotationComponent::Schedule(float startBeat)
+	{
+		GM_ASSERT_RETURN(_transform, "BeatTriggeredRotationComponent는 Initialize 이후 예약해야 합니다.");
+
+		if (_state != RotationState::Inactive || _beatSystem.HasPlaybackTime() == false)
+			return;
+
+		_startBeat = startBeat;
 		_startRotation = _transform->GetRotation();
 		const Quaternion deltaRotation = Quaternion::CreateFromAxisAngle(_rotationAxis, Math::DegreesToRadians(_desc.angleDegrees));
 		_targetRotation = _startRotation * deltaRotation;
@@ -57,18 +61,6 @@ namespace gm
 		_initialRotation = _transform->GetRotation();
 		_startRotation = _initialRotation;
 		_targetRotation = _initialRotation;
-
-#if GM_ENABLE_DEBUG_TOOLS
-		HiFiRushGameInstance& gameInstance = static_cast<HiFiRushGameInstance&>(APPLICATION.GetGameInstance());
-		gameInstance.GetDebugEventPublisher().OnDebugEvent.Subscribe(_debugEventConnection,
-			[this](const DebugEvent& event)
-			{
-				if (event.type == DebugEventType::Activate)
-					Activate();
-				else if (event.type == DebugEventType::Reset)
-					Reset();
-			});
-#endif
 	}
 
 	void BeatTriggeredRotationComponent::OnTick(float)

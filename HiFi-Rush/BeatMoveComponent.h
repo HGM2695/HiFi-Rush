@@ -1,9 +1,7 @@
 #pragma once
 
+#include "IBeatTriggerAction.h"
 #include "Component.h"
-#if GM_ENABLE_DEBUG_TOOLS
-#include "Event.h"
-#endif
 
 namespace gm
 {
@@ -16,13 +14,14 @@ namespace gm
 		float	durationBeats = 1.f;
 	};
 
-	class BeatMoveComponent : public Component
+	class BeatMoveComponent : public Component, public IBeatTriggerAction
 	{
 	public:
 		BeatMoveComponent(const BeatSystem& beatSystem, const BeatMoveDesc& desc);
 
 		void Activate();
-		void Reset();
+		void Schedule(float startBeat) override;
+		void Reset() override;
 		bool IsActive() const { return _state != MoveState::Inactive; }
 
 	protected:
@@ -36,14 +35,9 @@ namespace gm
 			Scheduled,
 		};
 
-		void ScheduleMove();
-
 	private:
-		const BeatSystem&	_beatSystem;
-		BeatMoveDesc		_desc{};
-#if GM_ENABLE_DEBUG_TOOLS
-		EventConnection		_debugEventConnection{};
-#endif
+		const BeatSystem&		_beatSystem;
+		BeatMoveDesc			_desc{};
 		TransformComponent*		_transform = nullptr;
 		Vector3					_initialPosition{};
 		Vector3					_startPosition{};

@@ -1,9 +1,7 @@
 #pragma once
 
+#include "IBeatTriggerAction.h"
 #include "Component.h"
-#if GM_ENABLE_DEBUG_TOOLS
-#include "Event.h"
-#endif
 
 namespace gm
 {
@@ -17,13 +15,14 @@ namespace gm
 		float	durationBeats = 0.25f;
 	};
 
-	class BeatTriggeredRotationComponent : public Component
+	class BeatTriggeredRotationComponent : public Component, public IBeatTriggerAction
 	{
 	public:
 		BeatTriggeredRotationComponent(const BeatSystem& beatSystem, const BeatTriggeredRotationDesc& desc);
 
 		void Activate();
-		void Reset();
+		void Schedule(float startBeat) override;
+		void Reset() override;
 		bool IsActive() const { return _state == RotationState::Rotating; }
 
 	protected:
@@ -41,9 +40,6 @@ namespace gm
 	private:
 		const BeatSystem&			_beatSystem;
 		BeatTriggeredRotationDesc	_desc{};
-#if GM_ENABLE_DEBUG_TOOLS
-		EventConnection				_debugEventConnection{};
-#endif
 		TransformComponent*			_transform = nullptr;
 		Vector3						_rotationAxis{};
 		Quaternion					_initialRotation{};

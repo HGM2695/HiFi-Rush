@@ -4,12 +4,6 @@
 #include "MathUtil.h"
 #include "TransformComponent.h"
 
-#if GM_ENABLE_DEBUG_TOOLS
-#include "Application.h"
-#include "DebugEventPublisher.h"
-#include "HiFiRushGameInstance.h"
-#endif
-
 #include <algorithm>
 #include <cmath>
 
@@ -23,13 +17,23 @@ namespace gm
 	{
 		GM_ASSERT_RETURN(_transform, "BeatMoveComponent는 Initialize 이후에 활성화해야 합니다.");
 
+		if (_state != MoveState::Inactive || _beatSystem.HasPlaybackTime() == false)
+			return;
+
+		if (_beatSystem.HasPlaybackTime())
+			Schedule(std::floor(_beatSystem.GetCurrentBeat()) + 1.f);
+	}
+
+	void BeatMoveComponent::Schedule(float startBeat)
+	{
+		GM_ASSERT_RETURN(_transform, "BeatMoveComponent는 Initialize 이후 예약해야 합니다.");
+
 		if (_state != MoveState::Inactive)
 			return;
 
 		_startPosition = _transform->GetPosition();
-
-		if (_beatSystem.HasPlaybackTime())
-			ScheduleMove();
+		_startBeat = startBeat;
+		_state = MoveState::Scheduled;
 	}
 
 	void BeatMoveComponent::Reset()
@@ -49,18 +53,6 @@ namespace gm
 		_transform = GetOwner().GetTransform();
 		GM_ASSERT_RETURN(_transform, "BeatMoveComponent는 TransformComponent가 필요합니다.");
 		_initialPosition = _transform->GetPosition();
-
-#if GM_ENABLE_DEBUG_TOOLS
-		HiFiRushGameInstance& gameInstance = static_cast<HiFiRushGameInstance&>(APPLICATION.GetGameInstance());
-		gameInstance.GetDebugEventPublisher().OnDebugEvent.Subscribe(_debugEventConnection,
-			[this](const DebugEvent& event)
-			{
-				if (event.type == DebugEventType::Activate)
-					Activate();
-				else if (event.type == DebugEventType::Reset)
-					Reset();
-			});
-#endif
 	}
 
 	void BeatMoveComponent::OnTick(float)
@@ -81,11 +73,5 @@ namespace gm
 			_transform->SetPosition(_desc.targetPosition);
 			_state = MoveState::Inactive;
 		}
-	}
-
-	void BeatMoveComponent::ScheduleMove()
-	{
-		_startBeat = std::floor(_beatSystem.GetCurrentBeat()) + 1.f;
-		_state = MoveState::Scheduled;
 	}
 }
