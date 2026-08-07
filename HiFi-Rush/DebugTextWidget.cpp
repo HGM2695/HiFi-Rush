@@ -51,7 +51,7 @@ namespace gm
 			_beatPulseTime = std::max(0.f, _beatPulseTime - deltaTime);
 
 		TextBlock* textBlock = static_cast<TextBlock*>(GetRootWidget());
-		textBlock->SetColor(_beatPulseTime > 0.f ? Colors::Yellow : Colors::Green);
+		textBlock->SetColor(_beatPulseTime > 0.f ? Colors::Red : Colors::Green);
 
 		std::wostringstream text;
 		text << std::fixed << std::setprecision(1);
@@ -71,7 +71,6 @@ namespace gm
 			text << L"Beat : " << _beatSystem.GetCurrentBeatIndex() << L" (" << _beatSystem.GetCurrentBeat() << L")\n";
 			text << std::setprecision(1);
 			text << L"Beat Progress : [" << CreateBeatProgressBar(_beatSystem.GetBeatProgress()) << L"] " << _beatSystem.GetBeatProgress() * 100.f << L"%\n";
-			text << L"Beat Boundary : " << (_beatSystem.DidCrossBeatBoundary() ? L"Crossed" : L"-");
 		}
 
 		textBlock->SetText(text.str());
