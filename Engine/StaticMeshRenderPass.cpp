@@ -7,6 +7,10 @@
 #include "Mesh.h"
 #include "StaticMesh.h"
 
+#if GM_ENABLE_DEBUG_TOOLS
+#include "IDebugRenderer.h"
+#endif
+
 namespace gm
 {
 	namespace
@@ -48,6 +52,17 @@ namespace gm
 
 		_items.push_back(item);
 	}
+
+#if GM_ENABLE_DEBUG_TOOLS
+	void StaticMeshRenderPass::DebugDraw(IDebugRenderer& debugRenderer) const
+	{
+		for (const StaticMeshRenderItem& item : _items)
+		{
+			if (item.worldBounds.isValid)
+				debugRenderer.RequestDrawBox(item.worldBounds.box, Colors::Green);
+		}
+	}
+#endif
 
 	void StaticMeshRenderPass::Render(const CameraViewInfo& viewInfo, const BoundingFrustum* worldFrustum)
 	{

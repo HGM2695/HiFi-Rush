@@ -7,6 +7,10 @@
 #include "Mesh.h"
 #include "SkeletalMesh.h"
 
+#if GM_ENABLE_DEBUG_TOOLS
+#include "IDebugRenderer.h"
+#endif
+
 #include <algorithm>
 #include <array>
 
@@ -72,6 +76,17 @@ namespace gm
 
 		_items.push_back(item);
 	}
+
+#if GM_ENABLE_DEBUG_TOOLS
+	void SkeletalMeshRenderPass::DebugDraw(IDebugRenderer& debugRenderer) const
+	{
+		for (const SkeletalMeshRenderItem& item : _items)
+		{
+			if (item.worldBounds.isValid)
+				debugRenderer.RequestDrawBox(item.worldBounds.box, Colors::Cyan);
+		}
+	}
+#endif
 
 	void SkeletalMeshRenderPass::Render(const CameraViewInfo& viewInfo, const BoundingFrustum* worldFrustum)
 	{

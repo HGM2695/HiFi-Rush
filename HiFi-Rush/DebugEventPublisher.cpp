@@ -5,6 +5,7 @@
 #include "Application.h"
 #include "DebugInputHandler.h"
 #include "IDebugRenderer.h"
+#include "Renderer.h"
 #include "UIManager.h"
 
 namespace gm
@@ -40,6 +41,13 @@ namespace gm
 			const bool isEnabled = debugRenderer.IsEnabled() == false;
 			debugRenderer.SetEnabled(isEnabled);
 			APPLICATION.GetUIManager().SetDebugWidgetsVisible(isEnabled);
+		}
+
+		if (DebugInputHandler::IsTriggered(DebugInputType, KeyCode::B))
+		{
+			Renderer& renderer = APPLICATION.GetRenderer();
+			const bool isEnabled = renderer.IsBoundingVolumeDebugDrawEnabled() == false;
+			renderer.SetBoundingVolumeDebugDrawEnabled(isEnabled);
 		}
 	}
 }

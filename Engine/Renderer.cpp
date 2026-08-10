@@ -5,6 +5,10 @@
 #include "SkeletalMeshRenderPass.h"
 #include "UIRenderPass.h"
 
+#if GM_ENABLE_DEBUG_TOOLS
+#include "IDebugRenderer.h"
+#endif
+
 namespace gm
 {
 	Renderer::Renderer(Resources& resources, IGraphicsCommandContext& commandContext, IGraphicsResourceFactory& resourceFactory)
@@ -46,6 +50,17 @@ namespace gm
 	{
 		_uiRenderPass->Submit(item);
 	}
+
+#if GM_ENABLE_DEBUG_TOOLS
+	void Renderer::DebugDraw(IDebugRenderer& debugRenderer) const
+	{
+		if (_isBoundingVolumeDebugDrawEnabled == false)
+			return;
+
+		_staticMeshRenderPass->DebugDraw(debugRenderer);
+		_skeletalMeshRenderPass->DebugDraw(debugRenderer);
+	}
+#endif
 
 	void Renderer::Render(const CameraViewInfo& viewInfo, uint32 width, uint32 height)
 	{

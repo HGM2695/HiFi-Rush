@@ -11,6 +11,9 @@ namespace gm
 	class Resources;
 	class IGraphicsCommandContext;
 	class IGraphicsResourceFactory;
+#if GM_ENABLE_DEBUG_TOOLS
+	class IDebugRenderer;
+#endif
 	class Material;
 
 	class SkeletalMeshRenderPass
@@ -21,6 +24,9 @@ namespace gm
 
 		bool Initialize();
 		void Submit(const SkeletalMeshRenderItem& item);
+#if GM_ENABLE_DEBUG_TOOLS
+		void DebugDraw(IDebugRenderer& debugRenderer) const;
+#endif
 		void Render(const CameraViewInfo& viewInfo, const BoundingFrustum* worldFrustum);
 		void Clear();
 
