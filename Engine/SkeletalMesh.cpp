@@ -13,6 +13,7 @@ namespace gm
 		GM_ASSERT_RETURN_VAL(modelData.bones.empty() == false, nullptr, "SkeletalMesh Bone 데이터가 비어 있습니다.");
 		GM_ASSERT_RETURN_VAL(modelData.skinnedVertices.empty() == false, nullptr, "SkeletalMesh 정점 데이터가 비어 있습니다.");
 		GM_ASSERT_RETURN_VAL(modelData.indices.empty() == false, nullptr, "SkeletalMesh 인덱스 데이터가 비어 있습니다.");
+		GM_ASSERT_RETURN_VAL(modelData.localBounds.isValid, nullptr, "SkeletalMesh 로컬 바운드 데이터가 유효하지 않습니다.");
 
 		MeshDesc meshDesc{};
 		meshDesc.topology = PrimitiveTopology::TriangleList;
@@ -30,6 +31,7 @@ namespace gm
 
 	SkeletalMesh::SkeletalMesh(std::shared_ptr<Mesh> mesh, const ModelData& modelData)
 		: _preTransform(modelData.preTransform)
+		, _localBounds(modelData.localBounds)
 		, _mesh(std::move(mesh))
 		, _sections(modelData.sections)
 		, _textureSets(modelData.textureSets)

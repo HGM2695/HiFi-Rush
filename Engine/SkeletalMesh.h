@@ -19,6 +19,7 @@ namespace gm
 		virtual ResourceType GetType() const override { return Type; }
 
 		const Matrix&							GetPreTransform() const { return _preTransform; }
+		const BoundingVolume&					GetLocalBounds() const { return _localBounds; }
 		const std::shared_ptr<Mesh>&			GetMesh() const { return _mesh; }
 		const std::vector<MeshSection>&			GetSections() const { return _sections; }
 		const std::vector<MeshTextureSet>&		GetTextureSets() const { return _textureSets; }
@@ -34,6 +35,7 @@ namespace gm
 
 	private:
 		Matrix									_preTransform = Matrix::CreateScale(1.f);
+		BoundingVolume							_localBounds{};
 
 		std::shared_ptr<Mesh>					_mesh;
 		std::vector<MeshSection>				_sections;

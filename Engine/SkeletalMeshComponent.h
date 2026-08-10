@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BoundingTypes.h"
 #include "Component.h"
 #include "MathTypes.h"
 #include "SkeletalPose.h"
@@ -21,6 +22,8 @@ namespace gm
 
 		void									SetPreTransform(const Matrix& preTransform) { _preTransform = preTransform; }
 		const Matrix&							GetPreTransform() const { return _preTransform; }
+		BoundingVolume							GetLocalBounds() const;
+		BoundingVolume							GetWorldBounds() const;
 
 		SkeletalPose&							GetPose() { return _pose; }
 		const SkeletalPose&						GetPose() const { return _pose; }

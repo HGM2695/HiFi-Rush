@@ -21,6 +21,26 @@ namespace gm
 		constexpr uint32 LegacyRoughnessTextureType = 16;
 		constexpr uint32 LegacyAmbientOcclusionTextureType = 17;
 
+		struct ModelBoundsBinaryData
+		{
+			Vector3 boxCenter{};
+			Vector3 boxExtents{};
+		};
+
+		bool ReadModelBounds(std::istream& inputStream, BoundingVolume& outBounds)
+		{
+			ModelBoundsBinaryData data{};
+			if (ReadBinary(inputStream, data) == false)
+				return false;
+
+			if (data.boxExtents.x < 0.f || data.boxExtents.y < 0.f || data.boxExtents.z < 0.f)
+				return false;
+
+			outBounds.box = BoundingBox(data.boxCenter, data.boxExtents);
+			outBounds.isValid = true;
+			return true;
+		}
+
 		TextureSlot ToEngineTextureSlot(uint32 legacyTextureType)
 		{
 			switch (legacyTextureType)
@@ -61,6 +81,8 @@ namespace gm
 
 		GM_ASSERT_RETURN_VAL(ReadMeshes(inputStream, modelData), modelData, "모델 Mesh 데이터 읽기에 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(ReadMaterials(inputStream, modelData), modelData, "모델 Material 데이터 읽기에 실패했습니다.");
+
+		GM_ASSERT_RETURN_VAL(ReadModelBounds(inputStream, modelData.localBounds), modelData, "Model 바운드 데이터 읽기에 실패했습니다. 베이킹 여부를 확인하세요. path=%ls", filepath.c_str());
 
 		return modelData;
 	}

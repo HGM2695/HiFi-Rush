@@ -21,6 +21,7 @@ namespace gm
 
 		SkeletalMeshRenderItem item{};
 		item.world = _preTransform * _ownerTransform->GetWorldMatrix();
+		item.worldBounds = TransformBoundingVolume(_skeletalMesh->GetLocalBounds(), item.world);
 		item.skeletalMesh = _skeletalMesh.get();
 		item.boneModelMatrices = &_pose.GetBoneModelMatrices();
 		item.materials.reserve(_skeletalMesh->GetTextureSetCount());
@@ -29,6 +30,23 @@ namespace gm
 			item.materials.push_back(GetMaterial(i));
 
 		APPLICATION.GetRenderer().SubmitSkeletalMesh(item);
+	}
+
+	BoundingVolume SkeletalMeshComponent::GetLocalBounds() const
+	{
+		if (_skeletalMesh == nullptr)
+			return BoundingVolume{};
+
+		return _skeletalMesh->GetLocalBounds();
+	}
+
+	BoundingVolume SkeletalMeshComponent::GetWorldBounds() const
+	{
+		if (_skeletalMesh == nullptr || _ownerTransform == nullptr)
+			return BoundingVolume{};
+
+		const Matrix world = _preTransform * _ownerTransform->GetWorldMatrix();
+		return TransformBoundingVolume(_skeletalMesh->GetLocalBounds(), world);
 	}
 
 	void SkeletalMeshComponent::SetSkeletalMesh(const std::shared_ptr<SkeletalMesh>& skeletalMesh)

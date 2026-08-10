@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BoundingTypes.h"
 #include "GraphicsTypes.h"
 #include "MathTypes.h"
 #include "SpriteFrame.h"
@@ -43,6 +44,7 @@ namespace gm
 	struct StaticMeshRenderItem
 	{
 		Matrix							world = Matrix::CreateScale(1.f);
+		BoundingVolume					worldBounds{};
 		const StaticMesh*				staticMesh = nullptr;
 		std::vector<const Material*>	materials;
 	};
@@ -51,6 +53,7 @@ namespace gm
 	struct SkeletalMeshRenderItem
 	{
 		Matrix								world = Matrix::CreateScale(1.f);
+		BoundingVolume						worldBounds{};
 		const SkeletalMesh*					skeletalMesh = nullptr;
 		const std::vector<Matrix>*			boneModelMatrices = nullptr;
 		std::vector<const Material*>		materials;

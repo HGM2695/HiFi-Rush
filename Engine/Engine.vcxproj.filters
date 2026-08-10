@@ -230,6 +230,9 @@
     <ClInclude Include="MathTypes.h">
       <Filter>Util\Types</Filter>
     </ClInclude>
+    <ClInclude Include="BoundingTypes.h">
+      <Filter>Util\Types</Filter>
+    </ClInclude>
     <ClInclude Include="Rect.h">
       <Filter>Util\Types</Filter>
     </ClInclude>

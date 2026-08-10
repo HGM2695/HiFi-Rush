@@ -75,6 +75,23 @@ namespace gm
 		GM_ASSERT_RETURN(_ownerTransform, "StaticMeshComponent 소유자의 TransformComponent가 존재하지 않습니다.");
 	}
 
+	BoundingVolume StaticMeshComponent::GetLocalBounds() const
+	{
+		if (_staticMesh == nullptr)
+			return BoundingVolume{};
+
+		return _staticMesh->GetLocalBounds();
+	}
+
+	BoundingVolume StaticMeshComponent::GetWorldBounds() const
+	{
+		if (_staticMesh == nullptr || _ownerTransform == nullptr)
+			return BoundingVolume{};
+
+		const Matrix world = _ownerTransform->GetWorldMatrix();
+		return TransformBoundingVolume(_staticMesh->GetLocalBounds(), world);
+	}
+
 	void StaticMeshComponent::OnRender()
 	{
 		if (_staticMesh == nullptr || _ownerTransform == nullptr)
@@ -82,6 +99,7 @@ namespace gm
 
 		StaticMeshRenderItem item{};
 		item.world = _ownerTransform->GetWorldMatrix();
+		item.worldBounds = TransformBoundingVolume(_staticMesh->GetLocalBounds(), item.world);
 		item.staticMesh = _staticMesh.get();
 		item.materials.reserve(_staticMesh->GetTextureSetCount());
 

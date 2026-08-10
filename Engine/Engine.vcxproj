@@ -219,6 +219,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="IDebugRenderer.h" />
     <ClInclude Include="ITextRenderer.h" />
+    <ClInclude Include="BoundingTypes.h" />
     <ClInclude Include="MathTypes.h" />
     <ClInclude Include="MathUtil.h" />
     <ClInclude Include="Random.h" />

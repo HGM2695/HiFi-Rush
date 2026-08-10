@@ -12,6 +12,7 @@ namespace gm
 		GM_ASSERT_RETURN_VAL(modelData.type == ModelType::Static, nullptr, "StaticMesh는 Static 모델 데이터로만 생성할 수 있습니다.");
 		GM_ASSERT_RETURN_VAL(modelData.vertices.empty() == false, nullptr, "StaticMesh 정점 데이터가 비어 있습니다.");
 		GM_ASSERT_RETURN_VAL(modelData.indices.empty() == false, nullptr, "StaticMesh 인덱스 데이터가 비어 있습니다.");
+		GM_ASSERT_RETURN_VAL(modelData.localBounds.isValid, nullptr, "StaticMesh 로컬 바운드 데이터가 유효하지 않습니다.");
 
 		MeshDesc meshDesc{};
 		meshDesc.topology = PrimitiveTopology::TriangleList;
@@ -28,10 +29,11 @@ namespace gm
 	}
 
 	StaticMesh::StaticMesh(std::shared_ptr<Mesh> mesh, const ModelData& modelData)
-		: _mesh(std::move(mesh))
+		: _preTransform(modelData.preTransform)
+		, _localBounds(modelData.localBounds)
+		, _mesh(std::move(mesh))
 		, _sections(modelData.sections)
 		, _textureSets(modelData.textureSets)
-		, _preTransform(modelData.preTransform)
 	{}
 
 	const MeshSection* StaticMesh::GetSection(uint32 index) const

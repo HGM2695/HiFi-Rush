@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BoundingTypes.h"
 #include "Component.h"
 #include "MathTypes.h"
 #include <memory>
@@ -22,6 +23,8 @@ namespace gm
 
 		void								SetPreTransform(const Matrix& preTransform) { _preTransform = preTransform; }
 		const Matrix&						GetPreTransform() const { return _preTransform; }
+		BoundingVolume						GetLocalBounds() const;
+		BoundingVolume						GetWorldBounds() const;
 
 		void								SetMaterial(uint32 slotIndex, const Material& material);
 		Material*							GetMaterial(uint32 slotIndex) const;

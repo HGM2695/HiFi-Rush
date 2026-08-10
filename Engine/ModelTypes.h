@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BoundingTypes.h"
 #include "MathTypes.h"
 #include "MeshTypes.h"
 #include "Types.h"
@@ -19,6 +20,7 @@ namespace gm
 	{
 		ModelType type = ModelType::Static;
 		Matrix preTransform = Matrix::CreateScale(1.f);
+		BoundingVolume localBounds{};
 
 		std::vector<VertexMesh>				vertices;
 		std::vector<uint32>					indices;
