@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include "GraphicsUtils.h"
 #include "SpriteRenderPass.h"
 #include "StaticMeshRenderPass.h"
 #include "SkeletalMeshRenderPass.h"
@@ -48,9 +49,11 @@ namespace gm
 
 	void Renderer::Render(const CameraViewInfo& viewInfo, uint32 width, uint32 height)
 	{
+		const BoundingFrustum worldFrustum = CreateWorldFrustum(viewInfo.view, viewInfo.projection);
+
 		_spriteRenderPass->Render(viewInfo);
-		_staticMeshRenderPass->Render(viewInfo);
-		_skeletalMeshRenderPass->Render(viewInfo);
+		_staticMeshRenderPass->Render(viewInfo, &worldFrustum);
+		_skeletalMeshRenderPass->Render(viewInfo, &worldFrustum);
 		_uiRenderPass->Render(width, height);
 	}
 

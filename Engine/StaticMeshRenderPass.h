@@ -23,7 +23,7 @@ namespace gm
 
 		bool Initialize();
 		void Submit(const StaticMeshRenderItem& item);
-		void Render(const CameraViewInfo& viewInfo);
+		void Render(const CameraViewInfo& viewInfo, const BoundingFrustum* worldFrustum);
 		void Clear();
 
 	private:

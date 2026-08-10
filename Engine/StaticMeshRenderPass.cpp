@@ -1,5 +1,6 @@
 #include "StaticMeshRenderPass.h"
 #include "ConstantBuffer.h"
+#include "GraphicsUtils.h"
 #include "IGraphicsCommandContext.h"
 #include "IGraphicsResourceFactory.h"
 #include "Material.h"
@@ -48,7 +49,7 @@ namespace gm
 		_items.push_back(item);
 	}
 
-	void StaticMeshRenderPass::Render(const CameraViewInfo& viewInfo)
+	void StaticMeshRenderPass::Render(const CameraViewInfo& viewInfo, const BoundingFrustum* worldFrustum)
 	{
 		_constantBufferPool.ResetUsage();
 
@@ -62,6 +63,9 @@ namespace gm
 
 		for (const StaticMeshRenderItem& item : _items)
 		{
+			if (worldFrustum != nullptr && IsBoundingVolumeVisible(*worldFrustum, item.worldBounds) == false)
+				continue;
+
 			const StaticMesh& staticMesh = *item.staticMesh;
 			const std::shared_ptr<Mesh>& mesh = staticMesh.GetMesh();
 			if (mesh == nullptr)

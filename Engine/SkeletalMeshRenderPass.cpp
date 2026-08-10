@@ -1,5 +1,6 @@
 #include "SkeletalMeshRenderPass.h"
 #include "ConstantBuffer.h"
+#include "GraphicsUtils.h"
 #include "IGraphicsCommandContext.h"
 #include "IGraphicsResourceFactory.h"
 #include "Material.h"
@@ -72,7 +73,7 @@ namespace gm
 		_items.push_back(item);
 	}
 
-	void SkeletalMeshRenderPass::Render(const CameraViewInfo& viewInfo)
+	void SkeletalMeshRenderPass::Render(const CameraViewInfo& viewInfo, const BoundingFrustum* worldFrustum)
 	{
 		_constantBufferPool.ResetUsage();
 
@@ -86,6 +87,9 @@ namespace gm
 
 		for (const SkeletalMeshRenderItem& item : _items)
 		{
+			if (worldFrustum != nullptr && IsBoundingVolumeVisible(*worldFrustum, item.worldBounds) == false)
+				continue;
+
 			const SkeletalMesh& skeletalMesh = *item.skeletalMesh;
 			const std::shared_ptr<Mesh>& mesh = skeletalMesh.GetMesh();
 			if (mesh == nullptr)
