@@ -92,6 +92,12 @@ namespace gm
 	{
 		_constantBufferPool.ResetUsage();
 
+#if GM_ENABLE_DEBUG_TOOLS
+		_lastSubmittedItemCount = static_cast<uint32>(_items.size());
+		_lastVisibleItemCount = 0;
+		_lastCulledItemCount = 0;
+#endif
+
 		CameraConstantVS cameraConstantVS{};
 		cameraConstantVS.view = viewInfo.view;
 		cameraConstantVS.proj = viewInfo.projection;
@@ -99,11 +105,19 @@ namespace gm
 		ConstantBuffer* cameraBuffer = _constantBufferPool.Acquire(sizeof(CameraConstantVS));
 		_commandContext.UpdateConstantBuffer(*cameraBuffer, &cameraConstantVS, sizeof(CameraConstantVS));
 		_commandContext.BindConstantBuffer(ShaderStage::Vertex, 1, cameraBuffer);
-
 		for (const SkeletalMeshRenderItem& item : _items)
 		{
 			if (worldFrustum != nullptr && IsBoundingVolumeVisible(*worldFrustum, item.worldBounds) == false)
+			{
+#if GM_ENABLE_DEBUG_TOOLS
+				++_lastCulledItemCount;
+#endif
 				continue;
+			}
+
+#if GM_ENABLE_DEBUG_TOOLS
+			++_lastVisibleItemCount;
+#endif
 
 			const SkeletalMesh& skeletalMesh = *item.skeletalMesh;
 			const std::shared_ptr<Mesh>& mesh = skeletalMesh.GetMesh();

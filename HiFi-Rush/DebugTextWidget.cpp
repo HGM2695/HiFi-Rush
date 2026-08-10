@@ -2,7 +2,9 @@
 
 #if GM_ENABLE_DEBUG_TOOLS
 
+#include "Application.h"
 #include "BeatSystem.h"
+#include "Renderer.h"
 #include "TextBlock.h"
 #include <algorithm>
 #include <iomanip>
@@ -70,8 +72,21 @@ namespace gm
 			text << L"BGM Time : " << _beatSystem.GetPlaybackTime() << L" s\n";
 			text << L"Beat : " << _beatSystem.GetCurrentBeatIndex() << L" (" << _beatSystem.GetCurrentBeat() << L")\n";
 			text << std::setprecision(1);
-			text << L"Beat Progress : [" << CreateBeatProgressBar(_beatSystem.GetBeatProgress()) << L"] " << _beatSystem.GetBeatProgress() * 100.f << L"%\n";
+			text << L"Beat Progress : [" << CreateBeatProgressBar(_beatSystem.GetBeatProgress()) << L"] " << _beatSystem.GetBeatProgress() * 100.f << L'%';
 		}
+
+		const Renderer& renderer = APPLICATION.GetRenderer();
+		const CullingDebugStats cullingStats = renderer.GetCullingDebugStats();
+		const uint32 submittedCount = cullingStats.staticMesh.submittedCount + cullingStats.skeletalMesh.submittedCount;
+		const uint32 visibleCount = cullingStats.staticMesh.visibleCount + cullingStats.skeletalMesh.visibleCount;
+		const uint32 culledCount = cullingStats.staticMesh.culledCount + cullingStats.skeletalMesh.culledCount;
+
+		text << L"\nBounding Volume [B] : " << (renderer.IsBoundingVolumeDebugDrawEnabled() ? L"On" : L"Off");
+		text << L"\nFrustum Culling [Ctrl+B] : " << (renderer.IsFrustumCullingEnabled() ? L"On" : L"Off");
+		text << L"\nCulling Stats (Submitted / Visible / Culled)";
+		text << L"\n  Total : " << submittedCount << L" / " << visibleCount << L" / " << culledCount;
+		text << L"\n  Static : " << cullingStats.staticMesh.submittedCount << L" / " << cullingStats.staticMesh.visibleCount << L" / " << cullingStats.staticMesh.culledCount;
+		text << L"\n  Skeletal : " << cullingStats.skeletalMesh.submittedCount << L" / " << cullingStats.skeletalMesh.visibleCount << L" / " << cullingStats.skeletalMesh.culledCount;
 
 		textBlock->SetText(text.str());
 	}

@@ -46,8 +46,19 @@ namespace gm
 		if (DebugInputHandler::IsTriggered(DebugInputType, KeyCode::B))
 		{
 			Renderer& renderer = APPLICATION.GetRenderer();
-			const bool isEnabled = renderer.IsBoundingVolumeDebugDrawEnabled() == false;
-			renderer.SetBoundingVolumeDebugDrawEnabled(isEnabled);
+			const Input& input = APPLICATION.GetInput();
+			const bool isControlPressed = input.IsKeyRepeat(KeyCode::LeftCtrl) || input.IsKeyRepeat(KeyCode::RightCtrl);
+
+			if (isControlPressed)
+			{
+				const bool isEnabled = renderer.IsFrustumCullingEnabled() == false;
+				renderer.SetFrustumCullingEnabled(isEnabled);
+			}
+			else
+			{
+				const bool isEnabled = renderer.IsBoundingVolumeDebugDrawEnabled() == false;
+				renderer.SetBoundingVolumeDebugDrawEnabled(isEnabled);
+			}
 		}
 	}
 }

@@ -52,6 +52,18 @@ namespace gm
 	}
 
 #if GM_ENABLE_DEBUG_TOOLS
+	CullingDebugStats Renderer::GetCullingDebugStats() const
+	{
+		CullingDebugStats stats{};
+		stats.staticMesh.submittedCount = _staticMeshRenderPass->GetLastSubmittedItemCount();
+		stats.staticMesh.visibleCount = _staticMeshRenderPass->GetLastVisibleItemCount();
+		stats.staticMesh.culledCount = _staticMeshRenderPass->GetLastCulledItemCount();
+		stats.skeletalMesh.submittedCount = _skeletalMeshRenderPass->GetLastSubmittedItemCount();
+		stats.skeletalMesh.visibleCount = _skeletalMeshRenderPass->GetLastVisibleItemCount();
+		stats.skeletalMesh.culledCount = _skeletalMeshRenderPass->GetLastCulledItemCount();
+		return stats;
+	}
+
 	void Renderer::DebugDraw(IDebugRenderer& debugRenderer) const
 	{
 		if (_isBoundingVolumeDebugDrawEnabled == false)
@@ -64,11 +76,20 @@ namespace gm
 
 	void Renderer::Render(const CameraViewInfo& viewInfo, uint32 width, uint32 height)
 	{
-		const BoundingFrustum worldFrustum = CreateWorldFrustum(viewInfo.view, viewInfo.projection);
+		BoundingFrustum worldFrustum{};
+		const BoundingFrustum* worldFrustumPtr = nullptr;
+
+#if GM_ENABLE_DEBUG_TOOLS
+		if (_isFrustumCullingEnabled)
+#endif
+		{
+			worldFrustum = CreateWorldFrustum(viewInfo.view, viewInfo.projection);
+			worldFrustumPtr = &worldFrustum;
+		}
 
 		_spriteRenderPass->Render(viewInfo);
-		_staticMeshRenderPass->Render(viewInfo, &worldFrustum);
-		_skeletalMeshRenderPass->Render(viewInfo, &worldFrustum);
+		_staticMeshRenderPass->Render(viewInfo, worldFrustumPtr);
+		_skeletalMeshRenderPass->Render(viewInfo, worldFrustumPtr);
 		_uiRenderPass->Render(width, height);
 	}
 

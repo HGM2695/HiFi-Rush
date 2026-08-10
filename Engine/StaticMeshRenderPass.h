@@ -28,6 +28,9 @@ namespace gm
 		void Submit(const StaticMeshRenderItem& item);
 #if GM_ENABLE_DEBUG_TOOLS
 		void DebugDraw(IDebugRenderer& debugRenderer) const;
+		uint32 GetLastSubmittedItemCount() const { return _lastSubmittedItemCount; }
+		uint32 GetLastVisibleItemCount() const { return _lastVisibleItemCount; }
+		uint32 GetLastCulledItemCount() const { return _lastCulledItemCount; }
 #endif
 		void Render(const CameraViewInfo& viewInfo, const BoundingFrustum* worldFrustum);
 		void Clear();
@@ -42,5 +45,11 @@ namespace gm
 
 		std::vector<StaticMeshRenderItem>	_items;
 		ConstantBufferPool					_constantBufferPool;
+
+#if GM_ENABLE_DEBUG_TOOLS
+		uint32 _lastSubmittedItemCount = 0;
+		uint32 _lastVisibleItemCount = 0;
+		uint32 _lastCulledItemCount = 0;
+#endif
 	};
 }

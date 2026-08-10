@@ -13,6 +13,19 @@ namespace gm
 	class UIRenderPass;
 #if GM_ENABLE_DEBUG_TOOLS
 	class IDebugRenderer;
+
+	struct MeshCullingDebugStats
+	{
+		uint32 submittedCount = 0;
+		uint32 visibleCount = 0;
+		uint32 culledCount = 0;
+	};
+
+	struct CullingDebugStats
+	{
+		MeshCullingDebugStats staticMesh{};
+		MeshCullingDebugStats skeletalMesh{};
+	};
 #endif
 
 	struct SpriteRenderItem;
@@ -36,6 +49,9 @@ namespace gm
 #if GM_ENABLE_DEBUG_TOOLS
 		void SetBoundingVolumeDebugDrawEnabled(bool isEnabled) { _isBoundingVolumeDebugDrawEnabled = isEnabled; }
 		bool IsBoundingVolumeDebugDrawEnabled() const { return _isBoundingVolumeDebugDrawEnabled; }
+		void SetFrustumCullingEnabled(bool isEnabled) { _isFrustumCullingEnabled = isEnabled; }
+		bool IsFrustumCullingEnabled() const { return _isFrustumCullingEnabled; }
+		CullingDebugStats GetCullingDebugStats() const;
 		void DebugDraw(IDebugRenderer& debugRenderer) const;
 #endif
 
@@ -51,6 +67,7 @@ namespace gm
 
 #if GM_ENABLE_DEBUG_TOOLS
 		bool _isBoundingVolumeDebugDrawEnabled = false;
+		bool _isFrustumCullingEnabled = true;
 #endif
 	};
 }
