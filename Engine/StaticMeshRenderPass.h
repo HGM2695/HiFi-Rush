@@ -36,6 +36,7 @@ namespace gm
 		void Clear();
 
 	private:
+		void BuildRenderBatches(const BoundingFrustum* worldFrustum);
 		void BindMaterialConstantData(const Material& material);
 
 	private:
@@ -44,6 +45,7 @@ namespace gm
 		IGraphicsResourceFactory&			_resourceFactory;
 
 		std::vector<StaticMeshRenderItem>	_items;
+		std::vector<StaticMeshRenderBatch>	_renderBatchList;
 		ConstantBufferPool					_constantBufferPool;
 
 #if GM_ENABLE_DEBUG_TOOLS

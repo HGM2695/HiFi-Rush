@@ -11,6 +11,9 @@
 #include "IDebugRenderer.h"
 #endif
 
+#include <algorithm>
+#include <functional>
+
 namespace gm
 {
 	namespace
@@ -25,6 +28,49 @@ namespace gm
 			Matrix view;
 			Matrix proj;
 		};
+
+		struct StaticMeshBatchItem
+		{
+			StaticMeshBatchKey key{};
+			Matrix world = Matrix::CreateScale(1.f);
+		};
+
+		bool CompareBatchItems(const StaticMeshBatchItem& lhs, const StaticMeshBatchItem& rhs)
+		{
+			if (lhs.key.materialStateHash != rhs.key.materialStateHash)
+				return lhs.key.materialStateHash < rhs.key.materialStateHash;
+
+			if (lhs.key.mesh != rhs.key.mesh)
+				return std::less<const Mesh*>{}(lhs.key.mesh, rhs.key.mesh);
+
+			if (lhs.key.indexStart != rhs.key.indexStart)
+				return lhs.key.indexStart < rhs.key.indexStart;
+
+			return lhs.key.indexCount < rhs.key.indexCount;
+		}
+
+		void AppendBatchItem(std::vector<StaticMeshRenderBatch>& batches, const StaticMeshBatchItem& item)
+		{
+			if (batches.empty() == false && batches.back().key == item.key)
+			{
+				batches.back().worlds.push_back(item.world);
+				return;
+			}
+
+			StaticMeshRenderBatch batch{};
+			batch.key = item.key;
+			batch.worlds.push_back(item.world);
+			batches.push_back(std::move(batch));
+		}
+	}
+
+	bool StaticMeshBatchKey::operator==(const StaticMeshBatchKey& rhs) const
+	{
+		if (mesh != rhs.mesh || indexStart != rhs.indexStart || indexCount != rhs.indexCount ||
+			materialStateHash != rhs.materialStateHash || material == nullptr || rhs.material == nullptr)
+			return false;
+
+		return material->HasSameRenderState(*rhs.material);
 	}
 
 	StaticMeshRenderPass::StaticMeshRenderPass(
@@ -67,12 +113,15 @@ namespace gm
 	void StaticMeshRenderPass::Render(const CameraViewInfo& viewInfo, const BoundingFrustum* worldFrustum)
 	{
 		_constantBufferPool.ResetUsage();
+		_renderBatchList.clear();
 
 #if GM_ENABLE_DEBUG_TOOLS
 		_lastSubmittedItemCount = static_cast<uint32>(_items.size());
 		_lastVisibleItemCount = 0;
 		_lastCulledItemCount = 0;
 #endif
+
+		BuildRenderBatches(worldFrustum);
 
 		CameraConstantVS cameraConstantVS{};
 		cameraConstantVS.view = viewInfo.view;
@@ -81,6 +130,41 @@ namespace gm
 		ConstantBuffer* cameraBuffer = _constantBufferPool.Acquire(sizeof(CameraConstantVS));
 		_commandContext.UpdateConstantBuffer(*cameraBuffer, &cameraConstantVS, sizeof(CameraConstantVS));
 		_commandContext.BindConstantBuffer(ShaderStage::Vertex, 1, cameraBuffer);
+		for (const StaticMeshRenderBatch& batch : _renderBatchList)
+		{
+			const StaticMeshBatchKey& key = batch.key;
+			if (key.mesh == nullptr || key.material == nullptr || key.indexCount == 0)
+				continue;
+
+			_commandContext.BindMesh(*key.mesh);
+			_commandContext.BindMaterial(*key.material);
+			BindMaterialConstantData(*key.material);
+
+			for (const Matrix& world : batch.worlds)
+			{
+				ObjectConstantVS objectConstantVS{};
+				objectConstantVS.world = world;
+
+				ConstantBuffer* objectBuffer = _constantBufferPool.Acquire(sizeof(ObjectConstantVS));
+				_commandContext.UpdateConstantBuffer(*objectBuffer, &objectConstantVS, sizeof(ObjectConstantVS));
+				_commandContext.BindConstantBuffer(ShaderStage::Vertex, 0, objectBuffer);
+				_commandContext.DrawIndexed(key.indexCount, key.indexStart, 0);
+			}
+		}
+
+		Clear();
+	}
+
+	void StaticMeshRenderPass::Clear()
+	{
+		_items.clear();
+		_renderBatchList.clear();
+	}
+
+	void StaticMeshRenderPass::BuildRenderBatches(const BoundingFrustum* worldFrustum)
+	{
+		std::vector<StaticMeshBatchItem> batchItems;
+
 		for (const StaticMeshRenderItem& item : _items)
 		{
 			if (worldFrustum != nullptr && IsBoundingVolumeVisible(*worldFrustum, item.worldBounds) == false)
@@ -100,38 +184,30 @@ namespace gm
 			if (mesh == nullptr)
 				continue;
 
-			ObjectConstantVS objectConstantVS{};
-			objectConstantVS.world = item.world;
-
-			ConstantBuffer* objectBuffer = _constantBufferPool.Acquire(sizeof(ObjectConstantVS));
-			_commandContext.UpdateConstantBuffer(*objectBuffer, &objectConstantVS, sizeof(ObjectConstantVS));
-			_commandContext.BindConstantBuffer(ShaderStage::Vertex, 0, objectBuffer);
-			_commandContext.BindMesh(*mesh);
-
 			for (const MeshSection& section : staticMesh.GetSections())
 			{
-				if (section.indexCount == 0)
-					continue;
-
-				if (section.textureSetIndex >= item.materials.size())
+				if (section.indexCount == 0 || section.textureSetIndex >= item.materials.size())
 					continue;
 
 				const Material* material = item.materials[section.textureSetIndex];
 				if (material == nullptr || material->GetVertexShader() == nullptr || material->GetPixelShader() == nullptr)
 					continue;
 
-				_commandContext.BindMaterial(*material);
-				BindMaterialConstantData(*material);
-				_commandContext.DrawIndexed(section.indexCount, section.indexStart, 0);
+				StaticMeshBatchItem batchItem{};
+				batchItem.key.mesh = mesh.get();
+				batchItem.key.material = material;
+				batchItem.key.materialStateHash = material->GetRenderStateHash();
+				batchItem.key.indexStart = section.indexStart;
+				batchItem.key.indexCount = section.indexCount;
+				batchItem.world = item.world;
+
+				batchItems.push_back(std::move(batchItem));
 			}
 		}
 
-		Clear();
-	}
-
-	void StaticMeshRenderPass::Clear()
-	{
-		_items.clear();
+		std::sort(batchItems.begin(), batchItems.end(), CompareBatchItems);
+		for (const StaticMeshBatchItem& item : batchItems)
+			AppendBatchItem(_renderBatchList, item);
 	}
 
 	void StaticMeshRenderPass::BindMaterialConstantData(const Material& material)

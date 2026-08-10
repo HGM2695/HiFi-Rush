@@ -4,12 +4,14 @@
 #include "GraphicsTypes.h"
 #include "MathTypes.h"
 #include "SpriteFrame.h"
+#include <cstddef>
 #include <memory>
 #include <vector>
 
 namespace gm
 {
 	class Material;
+	class Mesh;
 	class StaticMesh;
 	class SkeletalMesh;
 	class Texture;
@@ -47,6 +49,23 @@ namespace gm
 		BoundingVolume					worldBounds{};
 		const StaticMesh*				staticMesh = nullptr;
 		std::vector<const Material*>	materials;
+	};
+
+	struct StaticMeshBatchKey
+	{
+		const Mesh*		mesh = nullptr;
+		const Material*	material = nullptr;
+		size_t			materialStateHash = 0;
+		uint32			indexStart = 0;
+		uint32			indexCount = 0;
+
+		bool operator==(const StaticMeshBatchKey& rhs) const;
+	};
+
+	struct StaticMeshRenderBatch
+	{
+		StaticMeshBatchKey	key{};
+		std::vector<Matrix>	worlds;
 	};
 
 	/// SkeletalMesh ////////////////////////////////////////////////////////////////////////////////////////////////

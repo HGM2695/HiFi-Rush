@@ -3,6 +3,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "GraphicsUtils.h"
+#include "HashUtil.h"
 
 namespace gm
 {
@@ -17,6 +18,38 @@ namespace gm
 			Material::ConstantSlot& slotData = constantData[ToShaderStageIndex(stage)][slot];
 			slotData.bytes.assign(Align16(size), 0);
 			std::memcpy(slotData.bytes.data(), data, size);
+		}
+
+		void HashRasterizerDesc(size_t& seed, const RasterizerDesc& desc)
+		{
+			HashEnum(seed, desc.fillMode);
+			HashEnum(seed, desc.cullMode);
+			HashValue(seed, desc.frontCounterClockwise);
+			HashValue(seed, desc.depthClipEnable);
+		}
+
+		void HashDepthStencilDesc(size_t& seed, const DepthStencilDesc& desc)
+		{
+			HashValue(seed, desc.depthEnable);
+			HashValue(seed, desc.depthWriteEnable);
+			HashEnum(seed, desc.depthFunc);
+			HashValue(seed, desc.stencilEnable);
+		}
+
+		void HashBlendDesc(size_t& seed, const BlendDesc& desc)
+		{
+			HashValue(seed, desc.blendEnable);
+			HashEnum(seed, desc.srcBlend);
+			HashEnum(seed, desc.destBlend);
+			HashEnum(seed, desc.blendOp);
+		}
+
+		void HashSamplerDesc(size_t& seed, const SamplerDesc& desc)
+		{
+			HashEnum(seed, desc.filter);
+			HashEnum(seed, desc.addressU);
+			HashEnum(seed, desc.addressV);
+			HashEnum(seed, desc.addressW);
 		}
 	}
 
@@ -53,6 +86,68 @@ namespace gm
 	const Material::ConstantSlots& Material::GetConstantSlots(ShaderStage stage) const
 	{
 		return _constantData[ToShaderStageIndex(stage)];
+	}
+
+	size_t Material::GetRenderStateHash() const
+	{
+		size_t seed = 0;
+		HashValue(seed, _vertexShader.get());
+		HashValue(seed, _pixelShader.get());
+		HashEnum(seed, _topology);
+		HashRasterizerDesc(seed, _rasterizerDesc);
+		HashDepthStencilDesc(seed, _depthStencilDesc);
+		HashBlendDesc(seed, _blendDesc);
+
+		for (uint32 textureIndex = 0; textureIndex < TextureSlotCount; ++textureIndex)
+		{
+			HashValue(seed, _textures[textureIndex].get());
+			HashSamplerDesc(seed, _samplerDescs[textureIndex]);
+		}
+
+		for (uint32 stageIndex = 0; stageIndex < ShaderStageCount; ++stageIndex)
+		{
+			for (uint32 slot = 0; slot < MaxConstantBufferSlots; ++slot)
+			{
+				const std::vector<uint8>& bytes = _constantData[stageIndex][slot].bytes;
+				HashValue(seed, bytes.size());
+				for (uint8 byte : bytes)
+					HashValue(seed, byte);
+			}
+		}
+
+		return seed;
+	}
+
+	bool Material::HasSameRenderState(const Material& rhs) const
+	{
+		if (this == &rhs)
+			return true;
+
+		if (_vertexShader != rhs._vertexShader || _pixelShader != rhs._pixelShader || _topology != rhs._topology)
+			return false;
+
+		if ((_rasterizerDesc == rhs._rasterizerDesc) == false ||
+			(_depthStencilDesc == rhs._depthStencilDesc) == false ||
+			(_blendDesc == rhs._blendDesc) == false)
+			return false;
+
+		for (uint32 textureIndex = 0; textureIndex < TextureSlotCount; ++textureIndex)
+		{
+			if (_textures[textureIndex] != rhs._textures[textureIndex] ||
+				(_samplerDescs[textureIndex] == rhs._samplerDescs[textureIndex]) == false)
+				return false;
+		}
+
+		for (uint32 stageIndex = 0; stageIndex < ShaderStageCount; ++stageIndex)
+		{
+			for (uint32 slot = 0; slot < MaxConstantBufferSlots; ++slot)
+			{
+				if (_constantData[stageIndex][slot].bytes != rhs._constantData[stageIndex][slot].bytes)
+					return false;
+			}
+		}
+
+		return true;
 	}
 
 	void Material::SetTexture(TextureSlot slot, const std::shared_ptr<Texture>& texture)

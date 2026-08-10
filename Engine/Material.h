@@ -2,6 +2,7 @@
 
 #include "GraphicsTypes.h"
 #include <array>
+#include <cstddef>
 #include <cstring>
 #include <memory>
 #include <string>
@@ -43,6 +44,8 @@ namespace gm
 		const SamplerDesc&		GetSamplerDesc(TextureSlot slot) const;
 		const ConstantSlot&		GetConstantSlot(ShaderStage stage, uint32 slot) const;
 		const ConstantSlots&	GetConstantSlots(ShaderStage stage) const;
+		size_t					GetRenderStateHash() const;
+		bool					HasSameRenderState(const Material& rhs) const;
 
 		void					SetVertexShader(const std::shared_ptr<Shader>& shader);
 		void					SetPixelShader(const std::shared_ptr<Shader>& shader);
