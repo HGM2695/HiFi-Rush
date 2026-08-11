@@ -92,17 +92,8 @@
     <ClInclude Include="SkeletalMeshComponent.h">
       <Filter>Engine Component</Filter>
     </ClInclude>
-    <ClInclude Include="Collider2DComponent.h">
-      <Filter>Engine Component\Physics</Filter>
-    </ClInclude>
     <ClInclude Include="AnimationClip.h">
       <Filter>Resource\AnimationClip</Filter>
-    </ClInclude>
-    <ClInclude Include="BoxCollider2DComponent.h">
-      <Filter>Engine Component\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="CircleCollider2DComponent.h">
-      <Filter>Engine Component\Physics</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Resource\Texture</Filter>
@@ -140,19 +131,7 @@
     <ClInclude Include="AnimationNotify.h">
       <Filter>Engine Component\Animator</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsSystem2D.h">
-      <Filter>Engine Component\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsSystem3D.h">
-      <Filter>Engine Component\Physics</Filter>
-    </ClInclude>
     <ClInclude Include="PhysicsSystem.h">
-      <Filter>Engine Component\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Rigidbody2DComponent.h">
-      <Filter>Engine Component\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Rigidbody3DComponent.h">
       <Filter>Engine Component\Physics</Filter>
     </ClInclude>
     <ClInclude Include="UIManager.h">
@@ -380,6 +359,37 @@
     <ClInclude Include="BinaryNavigationMeshLoader.h">
       <Filter>Loader</Filter>
     </ClInclude>
+    <ClInclude Include="BoxCollider2DComponent.h">
+      <Filter>Engine Component\Physics\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="CircleCollider2DComponent.h">
+      <Filter>Engine Component\Physics\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider2DComponent.h">
+      <Filter>Engine Component\Physics\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsSystem2D.h">
+      <Filter>Engine Component\Physics\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Rigidbody2DComponent.h">
+      <Filter>Engine Component\Physics\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionTypes.h" />
+    <ClInclude Include="PhysicsSystem3D.h">
+      <Filter>Engine Component\Physics\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Rigidbody3DComponent.h">
+      <Filter>Engine Component\Physics\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxCollider3DComponent.h">
+      <Filter>Engine Component\Physics\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider3DComponent.h">
+      <Filter>Engine Component\Physics\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereCollider3DComponent.h">
+      <Filter>Engine Component\Physics\3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -391,9 +401,6 @@
     </ClCompile>
     <ClCompile Include="AudioStatics.cpp">
       <Filter>Util</Filter>
-    </ClCompile>
-    <ClCompile Include="BoxCollider2DComponent.cpp">
-      <Filter>Engine Component\Physics</Filter>
     </ClCompile>
     <ClCompile Include="TransformComponent.cpp">
       <Filter>Engine Component</Filter>
@@ -469,18 +476,6 @@
     </ClCompile>
     <ClCompile Include="SkeletalMeshComponent.cpp">
       <Filter>Engine Component</Filter>
-    </ClCompile>
-    <ClCompile Include="CircleCollider2DComponent.cpp">
-      <Filter>Engine Component\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="Collider2DComponent.cpp">
-      <Filter>Engine Component\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsSystem2D.cpp">
-      <Filter>Engine Component\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsSystem3D.cpp">
-      <Filter>Engine Component\Physics</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsSystem.cpp">
       <Filter>Engine Component\Physics</Filter>
@@ -656,6 +651,30 @@
     <ClCompile Include="SkeletalMeshRenderPass.cpp">
       <Filter>Graphics\Renderpass</Filter>
     </ClCompile>
+    <ClCompile Include="BoxCollider2DComponent.cpp">
+      <Filter>Engine Component\Physics\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="CircleCollider2DComponent.cpp">
+      <Filter>Engine Component\Physics\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider2DComponent.cpp">
+      <Filter>Engine Component\Physics\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsSystem2D.cpp">
+      <Filter>Engine Component\Physics\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsSystem3D.cpp">
+      <Filter>Engine Component\Physics\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxCollider3DComponent.cpp">
+      <Filter>Engine Component\Physics\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider3DComponent.cpp">
+      <Filter>Engine Component\Physics\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereCollider3DComponent.cpp">
+      <Filter>Engine Component\Physics\3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
@@ -744,6 +763,12 @@
     </Filter>
     <Filter Include="Graphics\Renderpass">
       <UniqueIdentifier>{88007aeb-fde8-4abf-ac8d-dfeb232c06bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Component\Physics\3D">
+      <UniqueIdentifier>{970da6f3-4275-4ca0-9d1f-4c7745cd7c67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine Component\Physics\2D">
+      <UniqueIdentifier>{f06d9a03-9592-4652-a408-b83563944ca4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

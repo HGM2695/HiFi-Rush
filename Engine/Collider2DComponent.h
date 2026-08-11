@@ -4,7 +4,7 @@
 
 namespace gm
 {
-	enum class Collider2DType
+	enum class ColliderShape2DType
 	{
 		Box,
 		Circle,
@@ -15,7 +15,7 @@ namespace gm
 	public:
 		virtual ~Collider2DComponent() = default;
 
-		Collider2DType				GetColliderType() const { return _colliderType; }
+		ColliderShape2DType		GetShapeType() const { return _shapeType; }
 		void						SetOffset(const Vector2& offset) { _offset = offset; }
 		const Vector2&				GetOffset() const { return _offset; }
 
@@ -23,12 +23,12 @@ namespace gm
 		bool						IsTrigger() const { return _isTrigger; }
 
 	protected:
-		explicit Collider2DComponent(Collider2DType colliderType) : _colliderType(colliderType) {}
+		explicit Collider2DComponent(ColliderShape2DType shapeType) : _shapeType(shapeType) {}
 
 		void						OnTick(float deltaTime) override;
 
 	private:
-		Collider2DType				_colliderType;
+		ColliderShape2DType		_shapeType;
 		Vector2						_offset{};
 		bool						_isTrigger = false;
 	};

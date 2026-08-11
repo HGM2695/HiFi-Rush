@@ -179,16 +179,16 @@ namespace gm
 
 	CollisionHit PhysicsSystem2D::CheckCollision(const Collider2DComponent& lhs, const GameObject& lhsObject, const Collider2DComponent& rhs, const GameObject& rhsObject) const
 	{
-		if (lhs.GetColliderType() == Collider2DType::Box && rhs.GetColliderType() == Collider2DType::Box)
+		if (lhs.GetShapeType() == ColliderShape2DType::Box && rhs.GetShapeType() == ColliderShape2DType::Box)
 			return CheckBoxCollision(static_cast<const BoxCollider2DComponent&>(lhs), lhsObject, static_cast<const BoxCollider2DComponent&>(rhs), rhsObject);
 
-		if (lhs.GetColliderType() == Collider2DType::Circle && rhs.GetColliderType() == Collider2DType::Circle)
+		if (lhs.GetShapeType() == ColliderShape2DType::Circle && rhs.GetShapeType() == ColliderShape2DType::Circle)
 			return CheckCircleCollision(static_cast<const CircleCollider2DComponent&>(lhs), lhsObject, static_cast<const CircleCollider2DComponent&>(rhs), rhsObject);
 
-		if (lhs.GetColliderType() == Collider2DType::Circle && rhs.GetColliderType() == Collider2DType::Box)
+		if (lhs.GetShapeType() == ColliderShape2DType::Circle && rhs.GetShapeType() == ColliderShape2DType::Box)
 			return CheckCircleBoxCollision(static_cast<const CircleCollider2DComponent&>(lhs), lhsObject, static_cast<const BoxCollider2DComponent&>(rhs), rhsObject);
 
-		if (lhs.GetColliderType() == Collider2DType::Box && rhs.GetColliderType() == Collider2DType::Circle)
+		if (lhs.GetShapeType() == ColliderShape2DType::Box && rhs.GetShapeType() == ColliderShape2DType::Circle)
 			return CheckCircleBoxCollision(static_cast<const CircleCollider2DComponent&>(rhs), rhsObject, static_cast<const BoxCollider2DComponent&>(lhs), lhsObject);
 
 		GM_ASSERT(false, "lhs, rhs 콜라이더 간의 타입 매칭이 존재하지 않습니다.");

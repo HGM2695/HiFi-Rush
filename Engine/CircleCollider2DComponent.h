@@ -7,7 +7,7 @@ namespace gm
 	class CircleCollider2DComponent : public Collider2DComponent
 	{
 	public:
-		CircleCollider2DComponent() : Collider2DComponent(Collider2DType::Circle) {}
+		CircleCollider2DComponent() : Collider2DComponent(ColliderShape2DType::Circle) {}
 
 		void	SetRadius(float radius) { _radius = radius; }
 		float	GetRadius() const { return _radius; }

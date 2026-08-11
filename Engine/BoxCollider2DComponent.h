@@ -7,7 +7,7 @@ namespace gm
 	class BoxCollider2DComponent : public Collider2DComponent
 	{
 	public:
-		BoxCollider2DComponent() : Collider2DComponent(Collider2DType::Box) {}
+		BoxCollider2DComponent() : Collider2DComponent(ColliderShape2DType::Box) {}
 
 		void					SetSize(const Vector2& size) { _size = size; }
 		const Vector2&			GetSize() const { return _size; }
