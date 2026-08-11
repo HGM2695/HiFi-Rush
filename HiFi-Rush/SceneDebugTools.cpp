@@ -13,17 +13,12 @@
 
 namespace gm
 {
+	constexpr const wchar_t* SceneTransitionDebugType = L"SceneTransition";
+
 #if GM_ENABLE_DEBUG_TOOLS
 	namespace
 	{
-		constexpr const wchar_t* SceneTransitionDebugType = L"SceneTransition";
 		constexpr const wchar_t* EnvironmentOverviewCameraKey = L"EnvironmentOverviewCamera";
-
-		void RequestSceneTransition(const wchar_t* sceneName)
-		{
-			GM_LOG("Scene transition debug requested. target=%ls", sceneName);
-			APPLICATION.GetSceneManager().RequestSceneChange(sceneName, L"CommonLoadingScene");
-		}
 	}
 #endif
 
@@ -36,14 +31,28 @@ namespace gm
 
 	void TickSceneTransitionDebug()
 	{
-#if GM_ENABLE_DEBUG_TOOLS
-		if (DebugInputHandler::IsTriggered(SceneTransitionDebugType, KeyCode::F1))
-			RequestSceneTransition(L"TutorialScene");
-		else if (DebugInputHandler::IsTriggered(SceneTransitionDebugType, KeyCode::F2))
-			RequestSceneTransition(L"OutsideScene");
-		else if (DebugInputHandler::IsTriggered(SceneTransitionDebugType, KeyCode::F3))
-			RequestSceneTransition(L"QamilScene");
-#endif
+		const Input& input = APPLICATION.GetInput();
+		if (input.IsKeyDown(KeyCode::F1))
+		{
+			APPLICATION.GetSceneManager().RequestSceneChange(
+				L"TutorialScene",
+				L"CommonLoadingScene"
+			);
+		}
+		else if (input.IsKeyDown(KeyCode::F2))
+		{
+			APPLICATION.GetSceneManager().RequestSceneChange(
+				L"OutsideScene",
+				L"CommonLoadingScene"
+			);
+		}
+		else if (input.IsKeyDown(KeyCode::F3))
+		{
+			APPLICATION.GetSceneManager().RequestSceneChange(
+				L"QamilScene",
+				L"CommonLoadingScene"
+			);
+		}
 	}
 
 	void CreateEnvironmentOverviewCamera(Scene& scene, const Vector3& cameraPosition, const Vector3& targetPosition)
