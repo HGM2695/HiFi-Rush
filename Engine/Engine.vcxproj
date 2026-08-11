@@ -184,6 +184,8 @@
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="CameraViewInfo.h" />
     <ClInclude Include="Collider2DComponent.h" />
+    <ClInclude Include="Collider3DComponent.h" />
+    <ClInclude Include="CollisionTypes.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="ConstantBufferPool.h" />
@@ -204,7 +206,9 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="BoxCollider2DComponent.h" />
+    <ClInclude Include="BoxCollider3DComponent.h" />
     <ClInclude Include="CircleCollider2DComponent.h" />
+    <ClInclude Include="SphereCollider3DComponent.h" />
     <ClInclude Include="GameObjectHandle.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GMAssert.h" />
@@ -305,12 +309,15 @@
     <ClCompile Include="BinaryModelLoader.cpp" />
     <ClCompile Include="BinaryNavigationMeshLoader.cpp" />
     <ClCompile Include="BoxCollider2DComponent.cpp" />
+    <ClCompile Include="BoxCollider3DComponent.cpp" />
     <ClCompile Include="BuiltinGraphicsResources.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="CameraFollowComponent.cpp" />
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="CircleCollider2DComponent.cpp" />
     <ClCompile Include="Collider2DComponent.cpp" />
+    <ClCompile Include="Collider3DComponent.cpp" />
+    <ClCompile Include="SphereCollider3DComponent.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="ConstantBufferPool.cpp" />
