@@ -11,8 +11,12 @@ namespace gm
 
 		void				SetSize(const Vector3& size);
 		const Vector3&		GetSize() const { return _size; }
+		const BoundingOrientedBox& GetWorldShape() const { return _worldShape; }
 
 	private:
+		void				UpdateWorldShape() override;
+
 		Vector3				_size{ 1.f, 1.f, 1.f };
+		BoundingOrientedBox	_worldShape{};
 	};
 }

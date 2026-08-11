@@ -1,11 +1,19 @@
 #include "PhysicsSystem3D.h"
+#include "BoxCollider3DComponent.h"
+#include "Collider3DComponent.h"
 #include "GameObject.h"
+#include "HashUtil.h"
 #include "Rigidbody3DComponent.h"
 #include "Scene.h"
+#include "SphereCollider3DComponent.h"
 #include "TransformComponent.h"
 
 #include <algorithm>
 #include <cmath>
+#include <functional>
+#include <unordered_set>
+#include <utility>
+#include <vector>
 
 namespace gm
 {
@@ -17,6 +25,13 @@ namespace gm
 
 	void PhysicsSystem3D::Simulate(Scene& scene, float deltaTime)
 	{
+		if (_trackedScene != &scene)
+		{
+			_activePairs.clear();
+			_colliderPairs.clear();
+			_trackedScene = &scene;
+		}
+
 		float remainingTime = deltaTime;
 		while (remainingTime > 0.f)
 		{
@@ -36,6 +51,8 @@ namespace gm
 				IntegratePosition(gameObject, *rigidbody, simulationStep);
 			});
 		}
+
+		DetectCollisions(scene);
 
 		scene.ForEachGameObject([](GameObject& gameObject)
 		{
@@ -88,5 +105,135 @@ namespace gm
 		TransformComponent* transform = gameObject.GetTransform();
 		GM_ASSERT_RETURN(transform, "Rigidbody3D를 가진 GameObject에 TransformComponent가 존재하지 않습니다.");
 		transform->Translate(rigidbody._velocity * deltaTime);
+	}
+
+	size_t PhysicsSystem3D::ColliderPairKeyHasher::operator()(const ColliderPairKey& pair) const
+	{
+		size_t seed = 0;
+		HashValue(seed, pair.colliderA.collider);
+		HashValue(seed, pair.colliderA.owner.index);
+		HashValue(seed, pair.colliderA.owner.generation);
+		HashValue(seed, pair.colliderB.collider);
+		HashValue(seed, pair.colliderB.owner.index);
+		HashValue(seed, pair.colliderB.owner.generation);
+		return seed;
+	}
+
+	void PhysicsSystem3D::DetectCollisions(Scene& scene)
+	{
+		std::vector<Collider3DComponent*> colliders;
+		scene.ForEachGameObject([&colliders](GameObject& gameObject)
+		{
+			for (Collider3DComponent* collider : gameObject.GetColliders3D())
+			{
+				if (collider == nullptr || collider->IsEnabled() == false)
+					continue;
+
+				collider->UpdateWorldShape();
+				colliders.push_back(collider);
+			}
+		});
+
+		std::vector<ColliderPairKey> detectedPairs;
+		for (size_t lhsIndex = 0; lhsIndex < colliders.size(); ++lhsIndex)
+		{
+			Collider3DComponent& lhs = *colliders[lhsIndex];
+			for (size_t rhsIndex = lhsIndex + 1; rhsIndex < colliders.size(); ++rhsIndex)
+			{
+				Collider3DComponent& rhs = *colliders[rhsIndex];
+				if (&lhs.GetOwner() == &rhs.GetOwner())
+					continue;
+
+				if (ShouldCollide(lhs.GetCollisionFilter(), rhs.GetCollisionFilter()) == false)
+					continue;
+
+				if (Intersects(lhs, rhs) == false)
+					continue;
+
+				detectedPairs.push_back(MakePairKey(lhs, rhs));
+			}
+		}
+
+		UpdateColliderPairs(scene, std::move(detectedPairs));
+	}
+
+	bool PhysicsSystem3D::Intersects(const Collider3DComponent& lhs, const Collider3DComponent& rhs) const
+	{
+		const ColliderShape3DType lhsType = lhs.GetShapeType();
+		const ColliderShape3DType rhsType = rhs.GetShapeType();
+
+		if (lhsType == ColliderShape3DType::Box && rhsType == ColliderShape3DType::Box)
+		{
+			const auto& lhsBox = static_cast<const BoxCollider3DComponent&>(lhs);
+			const auto& rhsBox = static_cast<const BoxCollider3DComponent&>(rhs);
+			return lhsBox.GetWorldShape().Intersects(rhsBox.GetWorldShape());
+		}
+
+		if (lhsType == ColliderShape3DType::Sphere && rhsType == ColliderShape3DType::Sphere)
+		{
+			const auto& lhsSphere = static_cast<const SphereCollider3DComponent&>(lhs);
+			const auto& rhsSphere = static_cast<const SphereCollider3DComponent&>(rhs);
+			return lhsSphere.GetWorldShape().Intersects(rhsSphere.GetWorldShape());
+		}
+
+		if (lhsType == ColliderShape3DType::Sphere && rhsType == ColliderShape3DType::Box)
+		{
+			const auto& lhsSphere = static_cast<const SphereCollider3DComponent&>(lhs);
+			const auto& rhsBox = static_cast<const BoxCollider3DComponent&>(rhs);
+			return lhsSphere.GetWorldShape().Intersects(rhsBox.GetWorldShape());
+		}
+
+		if (lhsType == ColliderShape3DType::Box && rhsType == ColliderShape3DType::Sphere)
+		{
+			const auto& lhsBox = static_cast<const BoxCollider3DComponent&>(lhs);
+			const auto& rhsSphere = static_cast<const SphereCollider3DComponent&>(rhs);
+			return rhsSphere.GetWorldShape().Intersects(lhsBox.GetWorldShape());
+		}
+
+		GM_ASSERT(false, "지원하지 않는 3D Collider Shape 조합입니다.");
+		return false;
+	}
+
+	void PhysicsSystem3D::UpdateColliderPairs(Scene& scene, std::vector<ColliderPairKey>&& detectedPairs)
+	{
+		using ColliderPairSet = std::unordered_set<ColliderPairKey, ColliderPairKeyHasher>;
+
+		const ColliderPairSet previousPairSet(_activePairs.begin(), _activePairs.end());
+		const ColliderPairSet detectedPairSet(detectedPairs.begin(), detectedPairs.end());
+
+		_colliderPairs.clear();
+		_colliderPairs.reserve(detectedPairs.size() + _activePairs.size());
+
+		for (const ColliderPairKey& pair : detectedPairs)
+		{
+			const ColliderPairState state = previousPairSet.contains(pair) ? ColliderPairState::Stay : ColliderPairState::Enter;
+			_colliderPairs.push_back({ pair.colliderA.collider, pair.colliderB.collider, state });
+		}
+
+		for (const ColliderPairKey& pair : _activePairs)
+		{
+			if (detectedPairSet.contains(pair) || IsPairAlive(scene, pair) == false)
+				continue;
+
+			_colliderPairs.push_back({ pair.colliderA.collider, pair.colliderB.collider, ColliderPairState::Exit });
+		}
+
+		_activePairs = std::move(detectedPairs);
+	}
+
+	bool PhysicsSystem3D::IsPairAlive(const Scene& scene, const ColliderPairKey& pair) const
+	{
+		return scene.IsValid(pair.colliderA.owner) && scene.IsValid(pair.colliderB.owner);
+	}
+
+	PhysicsSystem3D::ColliderPairKey PhysicsSystem3D::MakePairKey(Collider3DComponent& lhs, Collider3DComponent& rhs)
+	{
+		ColliderPairElement lhsElement{ &lhs, lhs.GetOwner().GetHandle() };
+		ColliderPairElement rhsElement{ &rhs, rhs.GetOwner().GetHandle() };
+
+		if (std::less<Collider3DComponent*>{}(rhsElement.collider, lhsElement.collider))
+			std::swap(lhsElement, rhsElement);
+
+		return { lhsElement, rhsElement };
 	}
 }

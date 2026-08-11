@@ -11,8 +11,12 @@ namespace gm
 
 		void	SetRadius(float radius);
 		float	GetRadius() const { return _radius; }
+		const BoundingSphere& GetWorldShape() const { return _worldShape; }
 
 	private:
-		float	_radius = 0.5f;
+		void	UpdateWorldShape() override;
+
+		float			_radius = 0.5f;
+		BoundingSphere	_worldShape{};
 	};
 }

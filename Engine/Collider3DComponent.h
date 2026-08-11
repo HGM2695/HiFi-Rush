@@ -5,8 +5,12 @@
 
 namespace gm
 {
+	class PhysicsSystem3D;
+
 	class Collider3DComponent : public Component
 	{
+	friend class PhysicsSystem3D;
+
 	public:
 		virtual ~Collider3DComponent() = default;
 
@@ -33,6 +37,8 @@ namespace gm
 		explicit Collider3DComponent(ColliderShape3DType shapeType) : _shapeType(shapeType) {}
 
 	private:
+		virtual void UpdateWorldShape() = 0;
+
 		ColliderShape3DType	_shapeType;
 		Vector3			_localCenter{};
 		Quaternion		_localRotation{ 0.f, 0.f, 0.f, 1.f };

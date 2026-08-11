@@ -10,6 +10,7 @@
 namespace gm
 {
 	class Collider2DComponent;
+	class Collider3DComponent;
 	class Rigidbody2DComponent;
 	class Rigidbody3DComponent;
 	class Scene;
@@ -87,6 +88,7 @@ namespace gm
 		const Rigidbody3DComponent*				GetRigidbody3D() const { return _rigidbody3D; }
 		Rigidbody3DComponent*					GetRigidbody3D() { return _rigidbody3D; }
 		const std::vector<Collider2DComponent*>& GetColliders2D() const { return _colliders2D; }
+		const std::vector<Collider3DComponent*>& GetColliders3D() const { return _colliders3D; }
 
 		void			Initialize();
 		void			Tick(float deltaTime);
@@ -140,6 +142,7 @@ namespace gm
 		Rigidbody2DComponent*					_rigidbody2D = nullptr;
 		Rigidbody3DComponent*					_rigidbody3D = nullptr;
 		std::vector<Collider2DComponent*>		_colliders2D{};
+		std::vector<Collider3DComponent*>		_colliders3D{};
 
 		GameObjectLifeState						_lifeState = GameObjectLifeState::Active;
 		bool									_isRender = true;

@@ -4,6 +4,8 @@
 
 namespace gm
 {
+	class Collider3DComponent;
+
 	using CollisionLayer = uint32;
 	using CollisionMask = uint32;
 
@@ -21,6 +23,20 @@ namespace gm
 	{
 		CollisionLayer	layer = DefaultCollisionLayer;
 		CollisionMask	mask = AllCollisionLayers;
+	};
+
+	enum class ColliderPairState
+	{
+		Enter,
+		Stay,
+		Exit,
+	};
+
+	struct ColliderPair
+	{
+		Collider3DComponent*	colliderA = nullptr;
+		Collider3DComponent*	colliderB = nullptr;
+		ColliderPairState		state = ColliderPairState::Enter;
 	};
 
 	inline constexpr bool IsSingleCollisionLayer(CollisionLayer layer)

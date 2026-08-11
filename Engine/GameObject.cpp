@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "Collider2DComponent.h"
+#include "Collider3DComponent.h"
 #include "Rigidbody2DComponent.h"
 #include "Rigidbody3DComponent.h"
 #include "Scene.h"
@@ -83,6 +84,12 @@ namespace gm
 		if (auto collider2D = dynamic_cast<Collider2DComponent*>(component))
 		{
 			_colliders2D.push_back(collider2D);
+			return true;
+		}
+
+		if (auto collider3D = dynamic_cast<Collider3DComponent*>(component))
+		{
+			_colliders3D.push_back(collider3D);
 			return true;
 		}
 
