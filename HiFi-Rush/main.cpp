@@ -21,6 +21,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     desc.height = 900;
     desc.showCommand = nCmdShow;
     desc.isVSync = false;
+#if !GM_ENABLE_DEBUG_TOOLS
+    desc.showFps = true;
+#endif
     desc.graphicsAPI = gm::GraphicsAPI::D3D11;
     desc.backBufferColor = gm::Colors::Black;
 

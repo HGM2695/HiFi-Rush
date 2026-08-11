@@ -35,6 +35,7 @@ namespace gm
 		int				height = 0;
 		int				showCommand = 0;
 		bool			isVSync = true;
+		bool			showFps = false;
 		GraphicsAPI		graphicsAPI = GraphicsAPI::D3D11;
 		Color			backBufferColor = Colors::Gray;
 	};
@@ -109,6 +110,8 @@ namespace gm
 		bool				initializeSubSystem();
 		bool				initializeBuiltinResources();
 		bool				initializeRenderer();
+		void				updateFps(float deltaTime);
+		void				requestDrawFps();
 
 	private:
 		std::unique_ptr<Window>                      _window;
@@ -134,5 +137,9 @@ namespace gm
 
 	private:
 		Color										_backbufferColor = Colors::Gray;
+		bool										_isFpsDisplayEnabled = false;
+		uint32										_fpsFrameCount = 0;
+		float										_fpsAccumulatedTime = 0.f;
+		float										_fps = 0.f;
 	};
 }

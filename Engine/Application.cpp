@@ -19,6 +19,7 @@
 #include "CameraManager.h"
 #include "Renderer.h"
 #include "GameInstance.h"
+#include <cwchar>
 
 #if GM_ENABLE_DEBUG_TOOLS
 #include "IDebugRenderer.h"
@@ -52,6 +53,7 @@ namespace gm
 		GM_ASSERT_RETURN_VAL(_gameInstance->Initialize(), false, "GameInstance 초기화에 실패했습니다.");
 
 		_backbufferColor = desc.backBufferColor;
+		_isFpsDisplayEnabled = desc.showFps;
 
 		return true;
 	}
@@ -175,6 +177,7 @@ namespace gm
 		_input->Tick();
 		_time->Tick();
 		_audioSystem->Tick();
+		updateFps(_time->GetUnscaledDeltaTime());
 
 		const float deltaTime = _time->GetDeltaTime();
 		_gameInstance->Tick(deltaTime);
@@ -208,9 +211,36 @@ namespace gm
 #endif
 
 		_renderer->Render(viewInfo, GetWidth(), GetHeight());
+		requestDrawFps();
 		_textRenderer->Render();
 
 		_graphicsDevice->EndFrame();
+	}
+
+	void Application::updateFps(float deltaTime)
+	{
+		if (_isFpsDisplayEnabled == false)
+			return;
+
+		_fpsAccumulatedTime += deltaTime;
+		++_fpsFrameCount;
+
+		if (_fpsAccumulatedTime < 1.f)
+			return;
+
+		_fps = static_cast<float>(_fpsFrameCount) / _fpsAccumulatedTime;
+		_fpsFrameCount = 0;
+		_fpsAccumulatedTime = 0.f;
+	}
+
+	void Application::requestDrawFps()
+	{
+		if (_isFpsDisplayEnabled == false)
+			return;
+
+		wchar_t text[32]{};
+		std::swprintf(text, 32, L"FPS : %.1f", _fps);
+		_textRenderer->RequestDrawText(text, BuiltinResourceKey::DefaultUIFont, Vector2{}, 24.f, Colors::Green);
 	}
 
 	void Application::EndFrame()
