@@ -77,12 +77,17 @@ namespace gm
 
 		const Renderer& renderer = APPLICATION.GetRenderer();
 		const CullingDebugStats cullingStats = renderer.GetCullingDebugStats();
+		const StaticMeshInstancingDebugStats instancingStats = renderer.GetStaticMeshInstancingDebugStats();
 		const uint32 submittedCount = cullingStats.staticMesh.submittedCount + cullingStats.skeletalMesh.submittedCount;
 		const uint32 visibleCount = cullingStats.staticMesh.visibleCount + cullingStats.skeletalMesh.visibleCount;
 		const uint32 culledCount = cullingStats.staticMesh.culledCount + cullingStats.skeletalMesh.culledCount;
 
 		text << L"\nBounding Volume [B] : " << (renderer.IsBoundingVolumeDebugDrawEnabled() ? L"On" : L"Off");
 		text << L"\nFrustum Culling [Ctrl+B] : " << (renderer.IsFrustumCullingEnabled() ? L"On" : L"Off");
+		text << L"\nStatic Mesh Instancing [Ctrl+I] : " << (renderer.IsStaticMeshInstancingEnabled() ? L"On" : L"Off");
+		text << L"\nStatic Mesh Batches : " << instancingStats.renderBatchCount;
+		text << L"\nStatic Mesh Draw Calls (Normal / Instanced) : " << instancingStats.normalDrawCallCount << L" / " << instancingStats.instancedDrawCallCount;
+		text << L"\nInstanced Objects : " << instancingStats.instancedInstanceCount;
 		text << L"\nCulling Stats (Submitted / Visible / Culled)";
 		text << L"\n  Total : " << submittedCount << L" / " << visibleCount << L" / " << culledCount;
 		text << L"\n  Static : " << cullingStats.staticMesh.submittedCount << L" / " << cullingStats.staticMesh.visibleCount << L" / " << cullingStats.staticMesh.culledCount;

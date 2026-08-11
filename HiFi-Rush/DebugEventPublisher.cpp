@@ -60,6 +60,19 @@ namespace gm
 				renderer.SetBoundingVolumeDebugDrawEnabled(isEnabled);
 			}
 		}
+
+		if (DebugInputHandler::IsTriggered(DebugInputType, KeyCode::I))
+		{
+			Renderer& renderer = APPLICATION.GetRenderer();
+			const Input& input = APPLICATION.GetInput();
+			const bool isControlPressed = input.IsKeyRepeat(KeyCode::LeftCtrl) || input.IsKeyRepeat(KeyCode::RightCtrl);
+
+			if (isControlPressed)
+			{
+				const bool isEnabled = renderer.IsStaticMeshInstancingEnabled() == false;
+				renderer.SetStaticMeshInstancingEnabled(isEnabled);
+			}
+		}
 	}
 }
 
