@@ -202,10 +202,10 @@ namespace gm
 				ToD3D11SemanticName(element.semantic),
 				element.semanticIndex,
 				ToDXGIFormat(element.format),
-				0,
+				element.inputSlot,
 				element.offset,
-				D3D11_INPUT_PER_VERTEX_DATA,
-				0
+				element.inputClassification == VertexInputClassification::PerInstance ? D3D11_INPUT_PER_INSTANCE_DATA : D3D11_INPUT_PER_VERTEX_DATA,
+				element.instanceDataStepRate
 			});
 		}
 

@@ -188,6 +188,7 @@
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="ConstantBufferPool.h" />
     <ClInclude Include="D3D11ConstantBuffer.h" />
+    <ClInclude Include="D3D11InstanceBuffer.h" />
     <ClInclude Include="D3D11GraphicsCommandContext.h" />
     <ClInclude Include="D3D11GraphicsResourceFactory.h" />
     <ClInclude Include="D3D11Mesh.h" />
@@ -213,6 +214,7 @@
     <ClInclude Include="GraphicsUtils.h" />
     <ClInclude Include="HashUtil.h" />
     <ClInclude Include="IGraphicsCommandContext.h" />
+    <ClInclude Include="InstanceBuffer.h" />
     <ClInclude Include="IGraphicsDevice.h" />
     <ClInclude Include="IGraphicsResourceFactory.h" />
     <ClInclude Include="Image.h" />
@@ -313,6 +315,7 @@
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="ConstantBufferPool.cpp" />
     <ClCompile Include="D3D11ConstantBuffer.cpp" />
+    <ClCompile Include="D3D11InstanceBuffer.cpp" />
     <ClCompile Include="D3D11GraphicsCommandContext.cpp" />
     <ClCompile Include="D3D11Mesh.cpp" />
     <ClCompile Include="D3D11GraphicsResourceFactory.cpp" />
@@ -407,6 +410,16 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='DevRelease|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Shaders\StaticMeshVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='DevRelease|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='DevRelease|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\StaticMeshInstancedVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

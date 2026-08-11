@@ -26,6 +26,14 @@ namespace gm
 		MeshCullingDebugStats staticMesh{};
 		MeshCullingDebugStats skeletalMesh{};
 	};
+
+	struct StaticMeshInstancingDebugStats
+	{
+		uint32 renderBatchCount = 0;
+		uint32 normalDrawCallCount = 0;
+		uint32 instancedDrawCallCount = 0;
+		uint32 instancedInstanceCount = 0;
+	};
 #endif
 
 	struct SpriteRenderItem;
@@ -51,7 +59,10 @@ namespace gm
 		bool IsBoundingVolumeDebugDrawEnabled() const { return _isBoundingVolumeDebugDrawEnabled; }
 		void SetFrustumCullingEnabled(bool isEnabled) { _isFrustumCullingEnabled = isEnabled; }
 		bool IsFrustumCullingEnabled() const { return _isFrustumCullingEnabled; }
+		void SetStaticMeshInstancingEnabled(bool isEnabled) { _isStaticMeshInstancingEnabled = isEnabled; }
+		bool IsStaticMeshInstancingEnabled() const { return _isStaticMeshInstancingEnabled; }
 		CullingDebugStats GetCullingDebugStats() const;
+		StaticMeshInstancingDebugStats GetStaticMeshInstancingDebugStats() const;
 		void DebugDraw(IDebugRenderer& debugRenderer) const;
 #endif
 
@@ -68,6 +79,7 @@ namespace gm
 #if GM_ENABLE_DEBUG_TOOLS
 		bool _isBoundingVolumeDebugDrawEnabled = false;
 		bool _isFrustumCullingEnabled = true;
+		bool _isStaticMeshInstancingEnabled = true;
 #endif
 	};
 }

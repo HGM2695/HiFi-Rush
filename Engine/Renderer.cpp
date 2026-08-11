@@ -64,6 +64,16 @@ namespace gm
 		return stats;
 	}
 
+	StaticMeshInstancingDebugStats Renderer::GetStaticMeshInstancingDebugStats() const
+	{
+		StaticMeshInstancingDebugStats stats{};
+		stats.renderBatchCount = _staticMeshRenderPass->GetLastRenderBatchCount();
+		stats.normalDrawCallCount = _staticMeshRenderPass->GetLastNormalDrawCallCount();
+		stats.instancedDrawCallCount = _staticMeshRenderPass->GetLastInstancedDrawCallCount();
+		stats.instancedInstanceCount = _staticMeshRenderPass->GetLastInstancedInstanceCount();
+		return stats;
+	}
+
 	void Renderer::DebugDraw(IDebugRenderer& debugRenderer) const
 	{
 		if (_isBoundingVolumeDebugDrawEnabled == false)
@@ -88,7 +98,11 @@ namespace gm
 		}
 
 		_spriteRenderPass->Render(viewInfo);
-		_staticMeshRenderPass->Render(viewInfo, worldFrustumPtr);
+		bool isStaticMeshInstancingEnabled = true;
+#if GM_ENABLE_DEBUG_TOOLS
+		isStaticMeshInstancingEnabled = _isStaticMeshInstancingEnabled;
+#endif
+		_staticMeshRenderPass->Render(viewInfo, worldFrustumPtr, isStaticMeshInstancingEnabled);
 		_skeletalMeshRenderPass->Render(viewInfo, worldFrustumPtr);
 		_uiRenderPass->Render(width, height);
 	}

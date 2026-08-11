@@ -33,20 +33,23 @@ namespace gm
 		virtual void		BindPixelShader(const Shader& shader) override;
 
 		virtual void		BindMesh(const Mesh& mesh) override;
+		virtual void		BindInstanceBuffer(const InstanceBuffer& buffer) override;
 
 		virtual void		BindTexture(uint32 slot, const Texture* texture) override;
 		virtual void		BindSampler(uint32 slot, const SamplerDesc* samplerDesc) override;
 
 		virtual void		BindConstantBuffer(ShaderStage stage, uint32 slot, const ConstantBuffer* cbuffer) override;
 		virtual void		UpdateConstantBuffer(ConstantBuffer& buffer, const void* data, uint32 size) override;
+		virtual bool		UpdateInstanceBuffer(InstanceBuffer& buffer, const void* data, uint32 instanceCount) override;
 
 		virtual void		DrawIndexed(uint32 indexCount) override;
 		virtual void		DrawIndexed(uint32 indexCount, uint32 startIndexLocation, int32 baseVertexLocation) override;
+		virtual void		DrawIndexedInstanced(uint32 indexCount, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation = 0) override;
 
 	private:
 		void				BindNativeVertexShader(ID3D11VertexShader* vertexShader, ID3D11InputLayout* inputLayout);
 		void				BindNativePixelShader(ID3D11PixelShader* pixelShader);
-		void				BindNativeVertexBuffer(ID3D11Buffer* vertexBuffer, uint32 stride);
+		void				BindNativeVertexBuffer(uint32 slot, ID3D11Buffer* vertexBuffer, uint32 stride);
 		void				BindNativeIndexBuffer(ID3D11Buffer* indexBuffer);
 		void				BindNativeTexture(uint32 slot, ID3D11ShaderResourceView* shaderResourceView);
 		void				BindNativeSampler(uint32 slot, ID3D11SamplerState* samplerState);

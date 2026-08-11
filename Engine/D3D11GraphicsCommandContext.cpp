@@ -1,5 +1,6 @@
 #include "D3D11GraphicsCommandContext.h"
 #include "D3D11ConstantBuffer.h"
+#include "D3D11InstanceBuffer.h"
 #include "D3D11Mesh.h"
 #include "D3D11Shader.h"
 #include "D3D11Texture.h"
@@ -7,6 +8,7 @@
 #include "Material.h"
 #include "Shader.h"
 #include <d3d11.h>
+#include <cstring>
 
 namespace gm
 {
@@ -56,10 +58,16 @@ namespace gm
 	void D3D11GraphicsCommandContext::BindMesh(const Mesh& mesh)
 	{
 		const D3D11Mesh& d3d11Mesh = static_cast<const D3D11Mesh&>(mesh);
-		BindNativeVertexBuffer(d3d11Mesh.GetVertexBuffer(), d3d11Mesh.GetVertexStride());
+		BindNativeVertexBuffer(0, d3d11Mesh.GetVertexBuffer(), d3d11Mesh.GetVertexStride());
 
 		if (d3d11Mesh.GetIndexBuffer())
 			BindNativeIndexBuffer(d3d11Mesh.GetIndexBuffer());
+	}
+
+	void D3D11GraphicsCommandContext::BindInstanceBuffer(const InstanceBuffer& buffer)
+	{
+		const D3D11InstanceBuffer& d3d11Buffer = static_cast<const D3D11InstanceBuffer&>(buffer);
+		BindNativeVertexBuffer(1, d3d11Buffer.GetNativeBuffer(), d3d11Buffer.GetStride());
 	}
 
 	void D3D11GraphicsCommandContext::BindTexture(uint32 slot, const Texture* texture)
@@ -104,6 +112,23 @@ namespace gm
 		_context->UpdateSubresource(d3dBuffer.GetNativeBuffer(), 0, nullptr, data, 0, 0);
 	}
 
+	bool D3D11GraphicsCommandContext::UpdateInstanceBuffer(InstanceBuffer& buffer, const void* data, uint32 instanceCount)
+	{
+		GM_ASSERT_RETURN_VAL(data, false, "Instance Buffer 업데이트 데이터가 nullptr입니다.");
+		GM_ASSERT_RETURN_VAL(instanceCount > 0, false, "Instance 개수가 0입니다.");
+		GM_ASSERT_RETURN_VAL(instanceCount <= buffer.GetCapacity(), false, "Instance 개수가 Buffer Capacity를 초과했습니다.");
+
+		D3D11InstanceBuffer& d3d11Buffer = static_cast<D3D11InstanceBuffer&>(buffer);
+		D3D11_MAPPED_SUBRESOURCE mappedResource{};
+		const HRESULT hr = _context->Map(d3d11Buffer.GetNativeBuffer(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+		GM_ASSERT_RETURN_VAL(SUCCEEDED(hr), false, "D3D11 Instance Buffer Map에 실패했습니다.");
+
+		const size_t dataSize = static_cast<size_t>(buffer.GetStride()) * instanceCount;
+		std::memcpy(mappedResource.pData, data, dataSize);
+		_context->Unmap(d3d11Buffer.GetNativeBuffer(), 0);
+		return true;
+	}
+
 	void D3D11GraphicsCommandContext::BindMaterial(const Material& material)
 	{
 		std::shared_ptr<Shader> vertexShader = material.GetVertexShader();
@@ -141,6 +166,16 @@ namespace gm
 		_context->DrawIndexed(indexCount, startIndexLocation, baseVertexLocation);
 	}
 
+	void D3D11GraphicsCommandContext::DrawIndexedInstanced(
+		uint32 indexCount,
+		uint32 instanceCount,
+		uint32 startIndexLocation,
+		int32 baseVertexLocation,
+		uint32 startInstanceLocation)
+	{
+		_context->DrawIndexedInstanced(indexCount, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
+	}
+
 	void D3D11GraphicsCommandContext::BindNativeVertexShader(ID3D11VertexShader* vertexShader, ID3D11InputLayout* inputLayout)
 	{
 		GM_ASSERT_RETURN(vertexShader, "VertexShader가 유효하지 않습니다.");
@@ -155,14 +190,14 @@ namespace gm
 		_context->PSSetShader(pixelShader, nullptr, 0);
 	}
 
-	void D3D11GraphicsCommandContext::BindNativeVertexBuffer(ID3D11Buffer* vertexBuffer, uint32 stride)
+	void D3D11GraphicsCommandContext::BindNativeVertexBuffer(uint32 slot, ID3D11Buffer* vertexBuffer, uint32 stride)
 	{
 		GM_ASSERT_RETURN(vertexBuffer, "VertexBuffer가 유효하지 않습니다.");
 
 		ID3D11Buffer* buffers[] = { vertexBuffer };
 		UINT strides[] = { stride };
 		UINT offsets[] = { 0 };
-		_context->IASetVertexBuffers(0, 1, buffers, strides, offsets);
+		_context->IASetVertexBuffers(slot, 1, buffers, strides, offsets);
 	}
 
 	void D3D11GraphicsCommandContext::BindNativeIndexBuffer(ID3D11Buffer* indexBuffer)

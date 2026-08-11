@@ -106,4 +106,26 @@ namespace gm
 			};
 		}
 	};
+
+	struct VertexMeshInstanced
+	{
+		static VertexLayoutDesc GetLayout()
+		{
+			VertexLayoutDesc layout = VertexMesh::GetLayout();
+			for (uint32 rowIndex = 0; rowIndex < 4; ++rowIndex)
+			{
+				VertexElementDesc element{};
+				element.semantic = VertexElementSemantic::TexCoord;
+				element.semanticIndex = rowIndex + 1;
+				element.format = VertexElementFormat::Float4;
+				element.offset = rowIndex * sizeof(Vector4);
+				element.inputSlot = 1;
+				element.instanceDataStepRate = 1;
+				element.inputClassification = VertexInputClassification::PerInstance;
+				layout.elements.push_back(element);
+			}
+
+			return layout;
+		}
+	};
 }

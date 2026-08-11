@@ -290,6 +290,12 @@
     <ClInclude Include="D3D11ConstantBuffer.h">
       <Filter>Graphics\D3D11</Filter>
     </ClInclude>
+    <ClInclude Include="InstanceBuffer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11InstanceBuffer.h">
+      <Filter>Graphics\D3D11</Filter>
+    </ClInclude>
     <ClInclude Include="ConstantBuffer.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -593,6 +599,9 @@
     <ClCompile Include="D3D11ConstantBuffer.cpp">
       <Filter>Graphics\D3D11</Filter>
     </ClCompile>
+    <ClCompile Include="D3D11InstanceBuffer.cpp">
+      <Filter>Graphics\D3D11</Filter>
+    </ClCompile>
     <ClCompile Include="ConstantBuffer.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -757,6 +766,9 @@
       <Filter>Shaders\VS</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\StaticMeshVS.hlsl">
+      <Filter>Shaders\VS</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\StaticMeshInstancedVS.hlsl">
       <Filter>Shaders\VS</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\SkeletalMeshVS.hlsl">

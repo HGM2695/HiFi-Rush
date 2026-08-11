@@ -10,6 +10,7 @@ namespace gm
 	class Texture;
 	class Material;
 	class ConstantBuffer;
+	class InstanceBuffer;
 
 	class IGraphicsCommandContext
 	{
@@ -27,14 +28,17 @@ namespace gm
 		virtual void		BindPixelShader(const Shader& shader) = 0;
 
 		virtual void		BindMesh(const Mesh& mesh) = 0;
+		virtual void		BindInstanceBuffer(const InstanceBuffer& buffer) = 0;
 
 		virtual void		BindTexture(uint32 slot, const Texture* texture) = 0;
 		virtual void		BindSampler(uint32 slot, const SamplerDesc* samplerDesc) = 0;
 
 		virtual void		BindConstantBuffer(ShaderStage stage, uint32 slot, const ConstantBuffer* cbuffer) = 0;
 		virtual void		UpdateConstantBuffer(ConstantBuffer& buffer, const void* data, uint32 size) = 0;
+		virtual bool		UpdateInstanceBuffer(InstanceBuffer& buffer, const void* data, uint32 instanceCount) = 0;
 
 		virtual void		DrawIndexed(uint32 indexCount) = 0;
 		virtual void		DrawIndexed(uint32 indexCount, uint32 startIndexLocation, int32 baseVertexLocation) = 0;
+		virtual void		DrawIndexedInstanced(uint32 indexCount, uint32 instanceCount, uint32 startIndexLocation, int32 baseVertexLocation, uint32 startInstanceLocation = 0) = 0;
 	};
 }

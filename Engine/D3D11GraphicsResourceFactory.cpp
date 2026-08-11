@@ -5,6 +5,7 @@
 #include "D3D11TypeConverter.h"
 #include "D3D11Texture.h"
 #include "D3D11ConstantBuffer.h"
+#include "D3D11InstanceBuffer.h"
 
 namespace gm
 {
@@ -67,5 +68,15 @@ namespace gm
 		desc.device = _graphicsDevice.GetNativeDevice();
 
 		return D3D11ConstantBuffer::Create(desc);
+	}
+
+	std::unique_ptr<InstanceBuffer> D3D11GraphicsResourceFactory::CreateInstanceBuffer(const InstanceBufferDesc& instanceBufferDesc)
+	{
+		D3D11InstanceBufferDesc desc{};
+		desc.device = _graphicsDevice.GetNativeDevice();
+		desc.stride = instanceBufferDesc.stride;
+		desc.capacity = instanceBufferDesc.capacity;
+
+		return D3D11InstanceBuffer::Create(desc);
 	}
 }

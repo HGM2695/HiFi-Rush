@@ -8,11 +8,13 @@ namespace gm
 	class Mesh;
 	class Texture;
 	class ConstantBuffer;
+	class InstanceBuffer;
 	struct ShaderDesc;
 	struct VertexLayoutDesc;
 	struct MeshDesc;
 	struct TextureDesc;
 	struct ConstantBufferDesc;
+	struct InstanceBufferDesc;
 
 	class IGraphicsResourceFactory
 	{
@@ -25,5 +27,6 @@ namespace gm
 		virtual std::shared_ptr<Texture>		CreateTexture(const TextureDesc& textureDesc) = 0;
 
 		virtual std::unique_ptr<ConstantBuffer>	CreateConstantBuffer(const ConstantBufferDesc& constantBufferDesc) = 0;
+		virtual std::unique_ptr<InstanceBuffer>	CreateInstanceBuffer(const InstanceBufferDesc& instanceBufferDesc) = 0;
 	};
 }

@@ -1,10 +1,14 @@
 #include "StaticMeshRenderPass.h"
+#include "BuiltinGraphicsResources.h"
 #include "ConstantBuffer.h"
 #include "GraphicsUtils.h"
 #include "IGraphicsCommandContext.h"
 #include "IGraphicsResourceFactory.h"
+#include "InstanceBuffer.h"
 #include "Material.h"
 #include "Mesh.h"
+#include "Resources.h"
+#include "Shader.h"
 #include "StaticMesh.h"
 
 #if GM_ENABLE_DEBUG_TOOLS
@@ -13,6 +17,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <limits>
 
 namespace gm
 {
@@ -88,6 +93,12 @@ namespace gm
 
 	bool StaticMeshRenderPass::Initialize()
 	{
+		_staticMeshVertexShader = _resources.Find<Shader>(BuiltinResourceKey::StaticMeshVS);
+		GM_ASSERT_RETURN_VAL(_staticMeshVertexShader, false, "Static Mesh Vertex Shader를 찾지 못했습니다.");
+
+		_staticMeshInstancedVertexShader = _resources.Find<Shader>(BuiltinResourceKey::StaticMeshInstancedVS);
+		GM_ASSERT_RETURN_VAL(_staticMeshInstancedVertexShader, false, "Static Mesh Instanced Vertex Shader를 찾지 못했습니다.");
+
 		return true;
 	}
 
@@ -110,7 +121,7 @@ namespace gm
 	}
 #endif
 
-	void StaticMeshRenderPass::Render(const CameraViewInfo& viewInfo, const BoundingFrustum* worldFrustum)
+	void StaticMeshRenderPass::Render(const CameraViewInfo& viewInfo, const BoundingFrustum* worldFrustum, bool isInstancingEnabled)
 	{
 		_constantBufferPool.ResetUsage();
 		_renderBatchList.clear();
@@ -119,9 +130,17 @@ namespace gm
 		_lastSubmittedItemCount = static_cast<uint32>(_items.size());
 		_lastVisibleItemCount = 0;
 		_lastCulledItemCount = 0;
+		_lastRenderBatchCount = 0;
+		_lastNormalDrawCallCount = 0;
+		_lastInstancedDrawCallCount = 0;
+		_lastInstancedInstanceCount = 0;
 #endif
 
 		BuildRenderBatches(worldFrustum);
+
+#if GM_ENABLE_DEBUG_TOOLS
+		_lastRenderBatchCount = static_cast<uint32>(_renderBatchList.size());
+#endif
 
 		CameraConstantVS cameraConstantVS{};
 		cameraConstantVS.view = viewInfo.view;
@@ -140,16 +159,10 @@ namespace gm
 			_commandContext.BindMaterial(*key.material);
 			BindMaterialConstantData(*key.material);
 
-			for (const Matrix& world : batch.worlds)
-			{
-				ObjectConstantVS objectConstantVS{};
-				objectConstantVS.world = world;
+			if (CanRenderInstanced(batch, isInstancingEnabled) && RenderInstancedBatch(batch))
+				continue;
 
-				ConstantBuffer* objectBuffer = _constantBufferPool.Acquire(sizeof(ObjectConstantVS));
-				_commandContext.UpdateConstantBuffer(*objectBuffer, &objectConstantVS, sizeof(ObjectConstantVS));
-				_commandContext.BindConstantBuffer(ShaderStage::Vertex, 0, objectBuffer);
-				_commandContext.DrawIndexed(key.indexCount, key.indexStart, 0);
-			}
+			RenderNormalBatch(batch);
 		}
 
 		Clear();
@@ -208,6 +221,77 @@ namespace gm
 		std::sort(batchItems.begin(), batchItems.end(), CompareBatchItems);
 		for (const StaticMeshBatchItem& item : batchItems)
 			AppendBatchItem(_renderBatchList, item);
+	}
+
+	bool StaticMeshRenderPass::CanRenderInstanced(const StaticMeshRenderBatch& batch, bool isInstancingEnabled) const
+	{
+		if (isInstancingEnabled == false || batch.worlds.size() <= 1 || batch.key.material == nullptr)
+			return false;
+
+		if (batch.worlds.size() > std::numeric_limits<uint32>::max())
+			return false;
+
+		return batch.key.material->GetVertexShader() == _staticMeshVertexShader && _staticMeshInstancedVertexShader != nullptr;
+	}
+
+	bool StaticMeshRenderPass::EnsureInstanceBufferCapacity(uint32 requiredCapacity)
+	{
+		if (_instanceBuffer != nullptr && _instanceBuffer->GetCapacity() >= requiredCapacity)
+			return true;
+
+		const uint32 currentCapacity = _instanceBuffer != nullptr ? _instanceBuffer->GetCapacity() : 0;
+		const uint32 grownCapacity = currentCapacity > 0 && currentCapacity <= std::numeric_limits<uint32>::max() / 2
+			? currentCapacity * 2 : currentCapacity;
+		const uint32 newCapacity = std::max({ requiredCapacity, grownCapacity, 256u });
+
+		InstanceBufferDesc desc{};
+		desc.stride = sizeof(Matrix);
+		desc.capacity = newCapacity;
+
+		std::unique_ptr<InstanceBuffer> instanceBuffer = _resourceFactory.CreateInstanceBuffer(desc);
+		GM_ASSERT_RETURN_VAL(instanceBuffer, false, "Static Mesh Instance Buffer 생성에 실패했습니다.");
+
+		_instanceBuffer = std::move(instanceBuffer);
+		return true;
+	}
+
+	void StaticMeshRenderPass::RenderNormalBatch(const StaticMeshRenderBatch& batch)
+	{
+		for (const Matrix& world : batch.worlds)
+		{
+			ObjectConstantVS objectConstantVS{};
+			objectConstantVS.world = world;
+
+			ConstantBuffer* objectBuffer = _constantBufferPool.Acquire(sizeof(ObjectConstantVS));
+			_commandContext.UpdateConstantBuffer(*objectBuffer, &objectConstantVS, sizeof(ObjectConstantVS));
+			_commandContext.BindConstantBuffer(ShaderStage::Vertex, 0, objectBuffer);
+			_commandContext.DrawIndexed(batch.key.indexCount, batch.key.indexStart, 0);
+
+#if GM_ENABLE_DEBUG_TOOLS
+			++_lastNormalDrawCallCount;
+#endif
+		}
+	}
+
+	bool StaticMeshRenderPass::RenderInstancedBatch(const StaticMeshRenderBatch& batch)
+	{
+		const uint32 instanceCount = static_cast<uint32>(batch.worlds.size());
+		if (EnsureInstanceBufferCapacity(instanceCount) == false)
+			return false;
+
+		if (_commandContext.UpdateInstanceBuffer(*_instanceBuffer, batch.worlds.data(), instanceCount) == false)
+			return false;
+
+		_commandContext.BindVertexShader(*_staticMeshInstancedVertexShader);
+		_commandContext.BindInstanceBuffer(*_instanceBuffer);
+		_commandContext.DrawIndexedInstanced(batch.key.indexCount, instanceCount, batch.key.indexStart, 0);
+
+#if GM_ENABLE_DEBUG_TOOLS
+		++_lastInstancedDrawCallCount;
+		_lastInstancedInstanceCount += instanceCount;
+#endif
+
+		return true;
 	}
 
 	void StaticMeshRenderPass::BindMaterialConstantData(const Material& material)

@@ -19,6 +19,14 @@ namespace gm
 		Count
 	};
 
+	enum class VertexInputClassification
+	{
+		PerVertex,
+		PerInstance,
+
+		Count
+	};
+
 	enum class VertexElementFormat
 	{
 		Float2,
@@ -29,14 +37,21 @@ namespace gm
 		Count
 	};
 
+	// Vertex Shader 입력 엘리먼트 하나를 설명
 	struct VertexElementDesc
 	{
-		VertexElementSemantic	semantic = VertexElementSemantic::Position;
-		uint32					semanticIndex = 0;
-		VertexElementFormat		format = VertexElementFormat::Float3;
-		uint32					offset = 0;
+		VertexElementSemantic		semantic = VertexElementSemantic::Position;
+		uint32						semanticIndex = 0;
+		VertexElementFormat			format = VertexElementFormat::Float3;
+		uint32						offset = 0;
+
+		// 데이터를 가져올 Input Assembler의 입력 슬롯
+		uint32						inputSlot = 0;
+		uint32						instanceDataStepRate = 0;
+		VertexInputClassification	inputClassification = VertexInputClassification::PerVertex;
 	};
 
+	// Vertex Shader에 전달할 입력 엘리먼트의 전체 구성
 	struct VertexLayoutDesc
 	{
 		std::vector<VertexElementDesc> elements;

@@ -18,6 +18,7 @@ namespace gm
 		virtual std::shared_ptr<Texture>		CreateTexture(const TextureDesc& textureDesc) override;
 
 		virtual std::unique_ptr<ConstantBuffer>	CreateConstantBuffer(const ConstantBufferDesc& constantBufferDesc) override;
+		virtual std::unique_ptr<InstanceBuffer>	CreateInstanceBuffer(const InstanceBufferDesc& instanceBufferDesc) override;
 
 	private:
 		D3D11GraphicsDevice& _graphicsDevice;
