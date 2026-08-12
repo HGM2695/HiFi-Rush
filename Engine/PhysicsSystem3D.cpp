@@ -28,7 +28,7 @@ namespace gm
 		if (_trackedScene != &scene)
 		{
 			_activePairs.clear();
-			_colliderPairs.clear();
+			_collisionResults.clear();
 			_trackedScene = &scene;
 		}
 
@@ -107,15 +107,16 @@ namespace gm
 		transform->Translate(rigidbody._velocity * deltaTime);
 	}
 
-	size_t PhysicsSystem3D::ColliderPairKeyHasher::operator()(const ColliderPairKey& pair) const
+	size_t PhysicsSystem3D::CollisionPairKeyHasher::operator()(const CollisionPairKey& pair) const
 	{
 		size_t seed = 0;
-		HashValue(seed, pair.colliderA.collider);
-		HashValue(seed, pair.colliderA.owner.index);
-		HashValue(seed, pair.colliderA.owner.generation);
-		HashValue(seed, pair.colliderB.collider);
-		HashValue(seed, pair.colliderB.owner.index);
-		HashValue(seed, pair.colliderB.owner.generation);
+		HashValue(seed, pair.elementA.collider);
+		HashValue(seed, pair.elementA.owner.index);
+		HashValue(seed, pair.elementA.owner.generation);
+		HashValue(seed, pair.elementB.collider);
+		HashValue(seed, pair.elementB.owner.index);
+		HashValue(seed, pair.elementB.owner.generation);
+		HashEnum(seed, pair.type);
 		return seed;
 	}
 
@@ -134,7 +135,7 @@ namespace gm
 			}
 		});
 
-		std::vector<ColliderPairKey> detectedPairs;
+		std::vector<CollisionPairKey> detectedPairs;
 		for (size_t lhsIndex = 0; lhsIndex < colliders.size(); ++lhsIndex)
 		{
 			Collider3DComponent& lhs = *colliders[lhsIndex];
@@ -154,7 +155,7 @@ namespace gm
 			}
 		}
 
-		UpdateColliderPairs(scene, std::move(detectedPairs));
+		UpdateCollisionPairs(scene, std::move(detectedPairs));
 	}
 
 	bool PhysicsSystem3D::Intersects(const Collider3DComponent& lhs, const Collider3DComponent& rhs) const
@@ -194,46 +195,64 @@ namespace gm
 		return false;
 	}
 
-	void PhysicsSystem3D::UpdateColliderPairs(Scene& scene, std::vector<ColliderPairKey>&& detectedPairs)
+	void PhysicsSystem3D::UpdateCollisionPairs(Scene& scene, std::vector<CollisionPairKey>&& detectedPairs)
 	{
-		using ColliderPairSet = std::unordered_set<ColliderPairKey, ColliderPairKeyHasher>;
+		using CollisionPairSet = std::unordered_set<CollisionPairKey, CollisionPairKeyHasher>;
 
-		const ColliderPairSet previousPairSet(_activePairs.begin(), _activePairs.end());
-		const ColliderPairSet detectedPairSet(detectedPairs.begin(), detectedPairs.end());
+		const CollisionPairSet previousPairSet(_activePairs.begin(), _activePairs.end());
+		const CollisionPairSet detectedPairSet(detectedPairs.begin(), detectedPairs.end());
 
-		_colliderPairs.clear();
-		_colliderPairs.reserve(detectedPairs.size() + _activePairs.size());
+		_collisionResults.clear();
+		_collisionResults.reserve(detectedPairs.size() + _activePairs.size());
 
-		for (const ColliderPairKey& pair : detectedPairs)
-		{
-			const ColliderPairState state = previousPairSet.contains(pair) ? ColliderPairState::Stay : ColliderPairState::Enter;
-			_colliderPairs.push_back({ pair.colliderA.collider, pair.colliderB.collider, state });
-		}
-
-		for (const ColliderPairKey& pair : _activePairs)
+		for (const CollisionPairKey& pair : _activePairs)
 		{
 			if (detectedPairSet.contains(pair) || IsPairAlive(scene, pair) == false)
 				continue;
 
-			_colliderPairs.push_back({ pair.colliderA.collider, pair.colliderB.collider, ColliderPairState::Exit });
+			_collisionResults.push_back({ pair.elementA.collider, pair.elementB.collider, pair.type, CollisionState::Exit });
+		}
+
+		for (const CollisionPairKey& pair : detectedPairs)
+		{
+			const CollisionState state = previousPairSet.contains(pair) ? CollisionState::Stay : CollisionState::Enter;
+			_collisionResults.push_back({ pair.elementA.collider, pair.elementB.collider, pair.type, state });
 		}
 
 		_activePairs = std::move(detectedPairs);
+		DispatchCollisionEvents();
 	}
 
-	bool PhysicsSystem3D::IsPairAlive(const Scene& scene, const ColliderPairKey& pair) const
+	void PhysicsSystem3D::DispatchCollisionEvents()
 	{
-		return scene.IsValid(pair.colliderA.owner) && scene.IsValid(pair.colliderB.owner);
+		for (const CollisionResult& result : _collisionResults)
+		{
+			if (result.elementA == nullptr || result.elementB == nullptr)
+			{
+				GM_ASSERT(false, "Collider Pair에 유효하지 않은 Collider가 포함되어 있습니다.");
+				continue;
+			}
+
+			result.elementA->DispatchCollisionEvent(result.state, result.type, *result.elementB);
+			result.elementB->DispatchCollisionEvent(result.state, result.type, *result.elementA);
+		}
 	}
 
-	PhysicsSystem3D::ColliderPairKey PhysicsSystem3D::MakePairKey(Collider3DComponent& lhs, Collider3DComponent& rhs)
+	bool PhysicsSystem3D::IsPairAlive(const Scene& scene, const CollisionPairKey& pair) const
 	{
-		ColliderPairElement lhsElement{ &lhs, lhs.GetOwner().GetHandle() };
-		ColliderPairElement rhsElement{ &rhs, rhs.GetOwner().GetHandle() };
+		return scene.IsValid(pair.elementA.owner) && scene.IsValid(pair.elementB.owner);
+	}
+
+	PhysicsSystem3D::CollisionPairKey PhysicsSystem3D::MakePairKey(Collider3DComponent& lhs, Collider3DComponent& rhs)
+	{
+		CollisionPairElement lhsElement{ &lhs, lhs.GetOwner().GetHandle() };
+		CollisionPairElement rhsElement{ &rhs, rhs.GetOwner().GetHandle() };
 
 		if (std::less<Collider3DComponent*>{}(rhsElement.collider, lhsElement.collider))
 			std::swap(lhsElement, rhsElement);
 
-		return { lhsElement, rhsElement };
+		const CollisionType type = lhs.IsTrigger() || rhs.IsTrigger() ? CollisionType::Trigger : CollisionType::Contact;
+
+		return { lhsElement, rhsElement, type };
 	}
 }

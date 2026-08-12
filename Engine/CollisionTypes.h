@@ -25,18 +25,25 @@ namespace gm
 		CollisionMask	mask = AllCollisionLayers;
 	};
 
-	enum class ColliderPairState
+	enum class CollisionType
+	{
+		Contact,
+		Trigger,
+	};
+
+	enum class CollisionState
 	{
 		Enter,
 		Stay,
 		Exit,
 	};
 
-	struct ColliderPair
+	struct CollisionResult
 	{
-		Collider3DComponent*	colliderA = nullptr;
-		Collider3DComponent*	colliderB = nullptr;
-		ColliderPairState		state = ColliderPairState::Enter;
+		Collider3DComponent*	elementA = nullptr;
+		Collider3DComponent*	elementB = nullptr;
+		CollisionType			type = CollisionType::Contact;
+		CollisionState			state = CollisionState::Enter;
 	};
 
 	inline constexpr bool IsSingleCollisionLayer(CollisionLayer layer)

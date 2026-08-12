@@ -16,34 +16,35 @@ namespace gm
 	{
 	public:
 		void						Simulate(Scene& scene, float deltaTime);
-		const std::vector<ColliderPair>&	GetColliderPairs() const { return _colliderPairs; }
+		const std::vector<CollisionResult>&	GetCollisionResults() const { return _collisionResults; }
 
 	private:
-		struct ColliderPairElement
+		struct CollisionPairElement
 		{
 			Collider3DComponent*	collider = nullptr;
 			GameObjectHandle		owner{};
 
-			bool operator==(const ColliderPairElement& rhs) const
+			bool operator==(const CollisionPairElement& rhs) const
 			{
 				return collider == rhs.collider && owner == rhs.owner;
 			}
 		};
 
-		struct ColliderPairKey
+		struct CollisionPairKey
 		{
-			ColliderPairElement	colliderA{};
-			ColliderPairElement	colliderB{};
+			CollisionPairElement	elementA{};
+			CollisionPairElement	elementB{};
+			CollisionType			type = CollisionType::Contact;
 
-			bool operator==(const ColliderPairKey& rhs) const
+			bool operator==(const CollisionPairKey& rhs) const
 			{
-				return colliderA == rhs.colliderA && colliderB == rhs.colliderB;
+				return elementA == rhs.elementA && elementB == rhs.elementB && type == rhs.type;
 			}
 		};
 
-		struct ColliderPairKeyHasher
+		struct CollisionPairKeyHasher
 		{
-			size_t operator()(const ColliderPairKey& pair) const;
+			size_t operator()(const CollisionPairKey& pair) const;
 		};
 
 		void	ApplyForces(Rigidbody3DComponent& rigidbody, float deltaTime) const;
@@ -54,13 +55,14 @@ namespace gm
 
 		void	DetectCollisions(Scene& scene);
 		bool	Intersects(const Collider3DComponent& lhs, const Collider3DComponent& rhs) const;
-		void	UpdateColliderPairs(Scene& scene, std::vector<ColliderPairKey>&& detectedPairs);
-		bool	IsPairAlive(const Scene& scene, const ColliderPairKey& pair) const;
+		void	UpdateCollisionPairs(Scene& scene, std::vector<CollisionPairKey>&& detectedPairs);
+		void	DispatchCollisionEvents();
+		bool	IsPairAlive(const Scene& scene, const CollisionPairKey& pair) const;
 
-		static ColliderPairKey MakePairKey(Collider3DComponent& lhs, Collider3DComponent& rhs);
+		static CollisionPairKey MakePairKey(Collider3DComponent& lhs, Collider3DComponent& rhs);
 
-		std::vector<ColliderPairKey>	_activePairs{};
-		std::vector<ColliderPair>		_colliderPairs{};
+		std::vector<CollisionPairKey>	_activePairs{};
+		std::vector<CollisionResult>	_collisionResults{};
 		const Scene*					_trackedScene = nullptr;
 	};
 }
