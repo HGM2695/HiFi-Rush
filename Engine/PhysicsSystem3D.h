@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CollisionTypes.h"
-#include "GameObjectHandle.h"
+#include "WeakGameObjectPtr.h"
 #include <cstddef>
 #include <vector>
 
@@ -31,7 +31,7 @@ namespace gm
 		struct CollisionPairElement
 		{
 			Collider3DComponent*	collider = nullptr;
-			GameObjectHandle		owner{};
+			WeakGameObjectPtr		owner{};
 
 			bool operator==(const CollisionPairElement& rhs) const
 			{
@@ -76,10 +76,10 @@ namespace gm
 		void	ResolveCollision(Collider3DComponent& lhs, Collider3DComponent& rhs, const CollisionContact& contact) const;
 		void	UpdateWorldShapes(GameObject& gameObject) const;
 		void	AccumulateDetectedCollisions(std::vector<DetectedCollision>& accumulatedCollisions, const std::vector<DetectedCollision>& detectedCollisions) const;
-		void	FinalizeCollisionFrame(Scene& scene, const std::vector<CollisionPairKey>& frameStartPairs,
+		void	FinalizeCollisionFrame(const std::vector<CollisionPairKey>& frameStartPairs,
 			const std::vector<DetectedCollision>& detectedDuringFrame, std::vector<DetectedCollision>&& finalDetectedCollisions);
 		void	DispatchCollisionEvents();
-		bool	IsPairAlive(const Scene& scene, const CollisionPairKey& pair) const;
+		bool	IsPairAlive(const CollisionPairKey& pair) const;
 		bool	IsQueryCandidate(const Collider3DComponent& collider, const CollisionQueryFilter& filter) const;
 		Vector3	CalculateRaycastNormal(const Collider3DComponent& collider, const Vector3& point, const Vector3& rayDirection) const;
 

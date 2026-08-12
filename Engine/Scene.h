@@ -14,11 +14,13 @@ namespace gm
 	class CameraManager;
 	class Component;
 	class TickManager;
+	class WeakGameObjectPtr;
 
 	class Scene : public Entity
 	{
 	friend class SceneManager;
 	friend class GameObject;
+	friend class WeakGameObjectPtr;
 
 	public:
 		Scene();
@@ -90,9 +92,6 @@ namespace gm
 
 		CameraManager*			GetCameraManager() { return _cameraManager.get(); }
 		const CameraManager*	GetCameraManager() const { return _cameraManager.get(); }
-		GameObject*				FindGameObject(GameObjectHandle handle);
-		const GameObject*		FindGameObject(GameObjectHandle handle) const;
-		bool					IsValid(GameObjectHandle handle) const;
 
 	protected:
 		virtual void	OnInitialize() {}
@@ -134,11 +133,13 @@ namespace gm
 		void			Render();
 		void			EndFrame();
 
-		void	InitializePendingGameObjects();
-		void	RemovePendingDestroyGameObjects();
-		void	RegisterGameObjectComponents(GameObject& gameObject);
-		void	NotifyComponentAdded(Component& component);
-		uint32	AddGameObjectToSlot(std::unique_ptr<GameObject> gameObject);
+		void				InitializePendingGameObjects();
+		void				RemovePendingDestroyGameObjects();
+		void				NotifyComponentAdded(Component& component);
+		uint32				AddGameObjectToSlot(std::unique_ptr<GameObject> gameObject);
+		GameObject*			FindGameObject(GameObjectHandle handle);
+		const GameObject*	FindGameObject(GameObjectHandle handle) const;
+		bool				IsValid(GameObjectHandle handle) const;
 		
 	private:
 		std::vector<GameObjectSlot>					_gameObjectSlots{};

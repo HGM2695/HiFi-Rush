@@ -74,7 +74,7 @@ namespace gm
 			AccumulateDetectedCollisions(detectedDuringFrame, finalDetectedCollisions);
 		}
 
-		FinalizeCollisionFrame(scene, frameStartPairs, detectedDuringFrame, std::move(finalDetectedCollisions));
+		FinalizeCollisionFrame(frameStartPairs, detectedDuringFrame, std::move(finalDetectedCollisions));
 
 		scene.ForEachGameObject([](GameObject& gameObject)
 		{
@@ -131,13 +131,12 @@ namespace gm
 
 	size_t PhysicsSystem3D::CollisionPairKeyHasher::operator()(const CollisionPairKey& pair) const
 	{
+		const WeakGameObjectPtrHasher gameObjectHasher{};
 		size_t seed = 0;
 		HashValue(seed, pair.elementA.collider);
-		HashValue(seed, pair.elementA.owner.index);
-		HashValue(seed, pair.elementA.owner.generation);
+		HashCombine(seed, gameObjectHasher(pair.elementA.owner));
 		HashValue(seed, pair.elementB.collider);
-		HashValue(seed, pair.elementB.owner.index);
-		HashValue(seed, pair.elementB.owner.generation);
+		HashCombine(seed, gameObjectHasher(pair.elementB.owner));
 		HashEnum(seed, pair.type);
 		return seed;
 	}
@@ -715,7 +714,7 @@ namespace gm
 		}
 	}
 
-	void PhysicsSystem3D::FinalizeCollisionFrame(Scene& scene, const std::vector<CollisionPairKey>& frameStartPairs, const std::vector<DetectedCollision>& detectedDuringFrame, std::vector<DetectedCollision>&& finalDetectedCollisions)
+	void PhysicsSystem3D::FinalizeCollisionFrame(const std::vector<CollisionPairKey>& frameStartPairs, const std::vector<DetectedCollision>& detectedDuringFrame, std::vector<DetectedCollision>&& finalDetectedCollisions)
 	{
 		using CollisionPairSet = std::unordered_set<CollisionPairKey, CollisionPairKeyHasher>;
 
@@ -732,7 +731,7 @@ namespace gm
 
 		for (const CollisionPairKey& pair : frameStartPairs)
 		{
-			if (finalPairSet.contains(pair) || IsPairAlive(scene, pair) == false)
+			if (finalPairSet.contains(pair) || IsPairAlive(pair) == false)
 				continue;
 
 			_collisionResults.push_back({ pair.elementA.collider, pair.elementB.collider, pair.type, CollisionState::Exit, {} });
@@ -778,15 +777,15 @@ namespace gm
 		}
 	}
 
-	bool PhysicsSystem3D::IsPairAlive(const Scene& scene, const CollisionPairKey& pair) const
+	bool PhysicsSystem3D::IsPairAlive(const CollisionPairKey& pair) const
 	{
-		return scene.IsValid(pair.elementA.owner) && scene.IsValid(pair.elementB.owner);
+		return pair.elementA.owner.IsValid() && pair.elementB.owner.IsValid();
 	}
 
 	PhysicsSystem3D::CollisionPairKey PhysicsSystem3D::MakePairKey(Collider3DComponent& lhs, Collider3DComponent& rhs)
 	{
-		CollisionPairElement lhsElement{ &lhs, lhs.GetOwner().GetHandle() };
-		CollisionPairElement rhsElement{ &rhs, rhs.GetOwner().GetHandle() };
+		CollisionPairElement lhsElement{ &lhs, lhs.GetOwner().GetWeakPtr() };
+		CollisionPairElement rhsElement{ &rhs, rhs.GetOwner().GetWeakPtr() };
 
 		if (std::less<Collider3DComponent*>{}(rhsElement.collider, lhsElement.collider))
 			std::swap(lhsElement, rhsElement);

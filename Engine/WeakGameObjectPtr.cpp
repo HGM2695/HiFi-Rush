@@ -1,4 +1,5 @@
 #include "WeakGameObjectPtr.h"
+#include "HashUtil.h"
 #include "Scene.h"
 
 namespace gm
@@ -30,5 +31,14 @@ namespace gm
 	{
 		GM_ASSERT_RETURN_VAL(IsValid(), nullptr, "유효하지 않은 WeakGameObjectPtr입니다.");
 		return GetUnsafe();
+	}
+
+	size_t WeakGameObjectPtrHasher::operator()(const WeakGameObjectPtr& value) const
+	{
+		size_t seed = 0;
+		HashValue(seed, value._scene);
+		HashValue(seed, value._handle.index);
+		HashValue(seed, value._handle.generation);
+		return seed;
 	}
 }

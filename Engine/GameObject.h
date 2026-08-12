@@ -102,7 +102,6 @@ namespace gm
 		bool			IsRenderEnabled() const { return _isRender; }
 
 		Scene*				GetScene() const { return _scene; }
-		GameObjectHandle	GetHandle() const { return _handle; }
 		WeakGameObjectPtr	GetWeakPtr() const;
 
 		template <typename TFunc>
