@@ -761,9 +761,6 @@
     <Filter Include="Graphics\D3D11">
       <UniqueIdentifier>{c6772289-3abf-4939-bb06-5a9ed43a9411}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource\PSO">
-      <UniqueIdentifier>{5cc0a678-0a9b-403a-b1be-0959fb7c0ee1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders\PS">
       <UniqueIdentifier>{1d1c9ebf-fcf7-4b33-a237-3eaca86077ea}</UniqueIdentifier>
     </Filter>
