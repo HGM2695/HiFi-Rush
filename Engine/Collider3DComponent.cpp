@@ -26,12 +26,13 @@ namespace gm
 		_collisionFilter.mask &= ~layer;
 	}
 
-	void Collider3DComponent::DispatchCollisionEvent(CollisionState state, CollisionType type, Collider3DComponent& otherCollider)
+	void Collider3DComponent::DispatchCollisionEvent(CollisionState state, CollisionType type, const CollisionContact& contact, Collider3DComponent& otherCollider)
 	{
 		Collision3DEvent event{};
 		event.selfCollider = this;
 		event.otherCollider = &otherCollider;
 		event.type = type;
+		event.contact = contact;
 
 		switch (state)
 		{

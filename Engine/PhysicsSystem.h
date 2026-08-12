@@ -32,6 +32,8 @@ namespace gm
 
 		NavMeshSystem&			GetNavMeshSystem() { return *_navMeshSystem; }
 		const NavMeshSystem&	GetNavMeshSystem() const { return *_navMeshSystem; }
+		PhysicsSystem3D&		GetPhysicsSystem3D() { return *_physicsSystem3D; }
+		const PhysicsSystem3D&	GetPhysicsSystem3D() const { return *_physicsSystem3D; }
 
 	private:
 		PhysicsMode							_physicsMode = PhysicsMode::None;

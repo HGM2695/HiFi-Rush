@@ -14,6 +14,7 @@ namespace gm
 		Collider3DComponent*	selfCollider = nullptr;
 		Collider3DComponent*	otherCollider = nullptr;
 		CollisionType			type = CollisionType::Contact;
+		CollisionContact		contact{};
 	};
 
 	class Collider3DComponent : public Component
@@ -51,7 +52,7 @@ namespace gm
 
 	private:
 		virtual void UpdateWorldShape() = 0;
-		void DispatchCollisionEvent(CollisionState state, CollisionType type, Collider3DComponent& otherCollider);
+		void DispatchCollisionEvent(CollisionState state, CollisionType type, const CollisionContact& contact, Collider3DComponent& otherCollider);
 
 		ColliderShape3DType	_shapeType;
 		Vector3				_localCenter{};

@@ -74,6 +74,22 @@ namespace gm::Math
 		return result;
 	}
 
+	inline bool IntersectsRay(const BoundingOrientedBox& box, const Vector3& origin, const Vector3& direction, float& outDistance)
+	{
+		return box.Intersects(
+			DirectX::XMLoadFloat3(&origin),
+			DirectX::XMLoadFloat3(&direction),
+			outDistance);
+	}
+
+	inline bool IntersectsRay(const BoundingSphere& sphere, const Vector3& origin, const Vector3& direction, float& outDistance)
+	{
+		return sphere.Intersects(
+			DirectX::XMLoadFloat3(&origin),
+			DirectX::XMLoadFloat3(&direction),
+			outDistance);
+	}
+
 	inline Quaternion IdentityQuaternion()
 	{
 		return Quaternion(0.f, 0.f, 0.f, 1.f);

@@ -1,10 +1,11 @@
 #pragma once
 
-#include "Types.h"
+#include "MathTypes.h"
 
 namespace gm
 {
 	class Collider3DComponent;
+	class GameObject;
 
 	using CollisionLayer = uint32;
 	using CollisionMask = uint32;
@@ -38,12 +39,36 @@ namespace gm
 		Exit,
 	};
 
+	struct CollisionContact
+	{
+		Vector3	selfPoint{};
+		Vector3	otherPoint{};
+		Vector3	normal{};
+		float	penetrationDepth = 0.f;
+	};
+
 	struct CollisionResult
 	{
 		Collider3DComponent*	elementA = nullptr;
 		Collider3DComponent*	elementB = nullptr;
 		CollisionType			type = CollisionType::Contact;
 		CollisionState			state = CollisionState::Enter;
+		CollisionContact		contact{};
+	};
+
+	struct CollisionQueryFilter
+	{
+		CollisionMask		mask = AllCollisionLayers;
+		const GameObject*	ignoredOwner = nullptr;
+		bool				includeTriggers = false;
+	};
+
+	struct RaycastHit3D
+	{
+		Collider3DComponent*	collider = nullptr;
+		Vector3					point{};
+		Vector3					normal{};
+		float					distance = 0.f;
 	};
 
 	inline constexpr bool IsSingleCollisionLayer(CollisionLayer layer)
