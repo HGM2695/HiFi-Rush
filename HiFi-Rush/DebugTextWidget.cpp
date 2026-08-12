@@ -4,6 +4,7 @@
 
 #include "Application.h"
 #include "BeatSystem.h"
+#include "PhysicsSystem.h"
 #include "Renderer.h"
 #include "TextBlock.h"
 #include <algorithm>
@@ -76,6 +77,7 @@ namespace gm
 		}
 
 		const Renderer& renderer = APPLICATION.GetRenderer();
+		const PhysicsSystem& physicsSystem = APPLICATION.GetPhysicsSystem();
 		const CullingDebugStats cullingStats = renderer.GetCullingDebugStats();
 		const StaticMeshInstancingDebugStats instancingStats = renderer.GetStaticMeshInstancingDebugStats();
 		const uint32 submittedCount = cullingStats.staticMesh.submittedCount + cullingStats.skeletalMesh.submittedCount;
@@ -83,6 +85,7 @@ namespace gm
 		const uint32 culledCount = cullingStats.staticMesh.culledCount + cullingStats.skeletalMesh.culledCount;
 
 		text << L"\nBounding Volume [B] : " << (renderer.IsBoundingVolumeDebugDrawEnabled() ? L"On" : L"Off");
+		text << L"\n3D Collider [C] : " << (physicsSystem.IsCollider3DDebugDrawEnabled() ? L"On" : L"Off");
 		text << L"\nFrustum Culling [Ctrl+B] : " << (renderer.IsFrustumCullingEnabled() ? L"On" : L"Off");
 		text << L"\nStatic Mesh Instancing [Ctrl+I] : " << (renderer.IsStaticMeshInstancingEnabled() ? L"On" : L"Off");
 		text << L"\nStatic Mesh Batches : " << instancingStats.renderBatchCount;

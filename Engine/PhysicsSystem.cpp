@@ -34,9 +34,12 @@ namespace gm
 	}
 
 #if GM_ENABLE_DEBUG_TOOLS
-	void PhysicsSystem::DebugRender(IDebugRenderer& debugRenderer) const
+	void PhysicsSystem::DebugRender(Scene& scene, IDebugRenderer& debugRenderer) const
 	{
 		_navMeshSystem->DebugDraw(debugRenderer);
+
+		if (_physicsMode == PhysicsMode::Physics3D && _isCollider3DDebugDrawEnabled)
+			_physicsSystem3D->DebugDraw(scene, debugRenderer);
 	}
 #endif
 }

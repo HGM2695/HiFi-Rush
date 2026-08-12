@@ -5,6 +5,7 @@
 #include "Application.h"
 #include "DebugInputHandler.h"
 #include "IDebugRenderer.h"
+#include "PhysicsSystem.h"
 #include "Renderer.h"
 #include "UIManager.h"
 
@@ -72,6 +73,13 @@ namespace gm
 				const bool isEnabled = renderer.IsStaticMeshInstancingEnabled() == false;
 				renderer.SetStaticMeshInstancingEnabled(isEnabled);
 			}
+		}
+
+		if (DebugInputHandler::IsTriggered(DebugInputType, KeyCode::C))
+		{
+			PhysicsSystem& physicsSystem = APPLICATION.GetPhysicsSystem();
+			const bool isEnabled = physicsSystem.IsCollider3DDebugDrawEnabled();
+			physicsSystem.SetCollider3DDebugDrawEnabled(!isEnabled);
 		}
 	}
 }

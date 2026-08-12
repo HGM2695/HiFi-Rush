@@ -205,7 +205,7 @@ namespace gm
 
 		const CameraViewInfo viewInfo = activeScene->GetCameraManager()->GetViewInfo();
 #if GM_ENABLE_DEBUG_TOOLS
-		_physicsSystem->DebugRender(*_debugRenderer);
+		_physicsSystem->DebugRender(*activeScene, *_debugRenderer);
 		_renderer->DebugDraw(*_debugRenderer);
 		_debugRenderer->Render(viewInfo);
 #endif

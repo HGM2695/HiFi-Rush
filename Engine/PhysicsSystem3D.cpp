@@ -18,6 +18,10 @@
 #include <utility>
 #include <vector>
 
+#if GM_ENABLE_DEBUG_TOOLS
+#include "IDebugRenderer.h"
+#endif
+
 namespace gm
 {
 	namespace
@@ -481,6 +485,32 @@ namespace gm
 				collider->UpdateWorldShape();
 		}
 	}
+
+#if GM_ENABLE_DEBUG_TOOLS
+	void PhysicsSystem3D::DebugDraw(Scene& scene, IDebugRenderer& debugRenderer) const
+	{
+		scene.ForEachGameObject([&debugRenderer](GameObject& gameObject)
+		{
+			for (Collider3DComponent* collider : gameObject.GetColliders3D())
+			{
+				if (collider == nullptr || collider->IsEnabled() == false)
+					continue;
+
+				collider->UpdateWorldShape();
+				const Color color = collider->IsTrigger() ? Colors::Red : Colors::Green;
+				switch (collider->GetShapeType())
+				{
+				case ColliderShape3DType::Box:
+					debugRenderer.RequestDrawOBB(static_cast<BoxCollider3DComponent*>(collider)->GetWorldShape(), color);
+					break;
+				case ColliderShape3DType::Sphere:
+					debugRenderer.RequestDrawSphere(static_cast<SphereCollider3DComponent*>(collider)->GetWorldShape(), color);
+					break;
+				}
+			}
+		});
+	}
+#endif
 
 	bool PhysicsSystem3D::Raycast(Scene& scene, const Vector3& origin, const Vector3& direction, float maxDistance, RaycastHit3D& outHit, const CollisionQueryFilter& filter) const
 	{

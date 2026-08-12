@@ -26,8 +26,11 @@ namespace gm
 		void		SetPhysicsMode(PhysicsMode physicsMode) { _physicsMode = physicsMode; }
 		PhysicsMode	GetPhysicsMode() const { return _physicsMode; }
 		void		Simulate(Scene& scene, float deltaTime);
+
 #if GM_ENABLE_DEBUG_TOOLS
-		void		DebugRender(IDebugRenderer& debugRenderer) const;
+		void		SetCollider3DDebugDrawEnabled(bool isEnabled) { _isCollider3DDebugDrawEnabled = isEnabled; }
+		bool		IsCollider3DDebugDrawEnabled() const { return _isCollider3DDebugDrawEnabled; }
+		void		DebugRender(Scene& scene, IDebugRenderer& debugRenderer) const;
 #endif
 
 		NavMeshSystem&			GetNavMeshSystem() { return *_navMeshSystem; }
@@ -40,5 +43,9 @@ namespace gm
 		std::unique_ptr<NavMeshSystem>		_navMeshSystem;
 		std::unique_ptr<PhysicsSystem2D>	_physicsSystem2D;
 		std::unique_ptr<PhysicsSystem3D>	_physicsSystem3D;
+
+#if GM_ENABLE_DEBUG_TOOLS
+		bool								_isCollider3DDebugDrawEnabled = false;
+#endif
 	};
 }

@@ -11,6 +11,7 @@ namespace gm
 	class BoxCollider3DComponent;
 	class SphereCollider3DComponent;
 	class GameObject;
+	class IDebugRenderer;
 	class Rigidbody3DComponent;
 	class Scene;
 
@@ -22,6 +23,9 @@ namespace gm
 		bool								Raycast(Scene& scene, const Vector3& origin, const Vector3& direction, float maxDistance, RaycastHit3D& outHit, const CollisionQueryFilter& filter = {}) const;
 		std::vector<Collider3DComponent*>	OverlapBox(Scene& scene, const Vector3& center, const Vector3& size, const Quaternion& rotation = Quaternion(0.f, 0.f, 0.f, 1.f), const CollisionQueryFilter& filter = {}) const;
 		std::vector<Collider3DComponent*>	OverlapSphere(Scene& scene, const Vector3& center, float radius, const CollisionQueryFilter& filter = {}) const;
+#if GM_ENABLE_DEBUG_TOOLS
+		void								DebugDraw(Scene& scene, IDebugRenderer& debugRenderer) const;
+#endif
 
 	private:
 		struct CollisionPairElement
