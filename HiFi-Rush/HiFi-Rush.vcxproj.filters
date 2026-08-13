@@ -47,6 +47,9 @@
     <Filter Include="Component\Combat">
       <UniqueIdentifier>{6ee65bd6-c24d-4ace-86d2-d6dc7f6d9d91}</UniqueIdentifier>
     </Filter>
+	<Filter Include="Component\Environment">
+	  <UniqueIdentifier>{ec004ba5-5560-4c63-a73f-4894240920f2}</UniqueIdentifier>
+	</Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CombatTypes.h">
@@ -58,6 +61,9 @@
     <ClInclude Include="HitBoxComponent.h">
       <Filter>Component\Combat</Filter>
     </ClInclude>
+	<ClInclude Include="HitTriggeredEnvironmentComponent.h">
+	  <Filter>Component\Environment</Filter>
+	</ClInclude>
     <ClInclude Include="HurtBoxComponent.h">
       <Filter>Component\Combat</Filter>
     </ClInclude>
@@ -229,6 +235,9 @@
     <ClCompile Include="HitBoxComponent.cpp">
       <Filter>Component\Combat</Filter>
     </ClCompile>
+	<ClCompile Include="HitTriggeredEnvironmentComponent.cpp">
+	  <Filter>Component\Environment</Filter>
+	</ClCompile>
     <ClCompile Include="HurtBoxComponent.cpp">
       <Filter>Component\Combat</Filter>
     </ClCompile>

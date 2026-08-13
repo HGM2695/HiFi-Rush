@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CollisionTypes.h"
 #include "MathTypes.h"
 #include "Types.h"
 
@@ -95,6 +96,41 @@ namespace gm
 		std::wstring				clipName = L"Default";
 	};
 
+	struct BoxCollider3DComponentData
+	{
+		std::wstring	colliderId{};
+		Vector3			localCenter{};
+		Quaternion		localRotation{ 0.f, 0.f, 0.f, 1.f };
+		Vector3			size{ 1.f, 1.f, 1.f };
+		CollisionFilter	collisionFilter{};
+		bool			isTrigger = false;
+	};
+
+	struct SphereCollider3DComponentData
+	{
+		std::wstring	colliderId{};
+		Vector3			localCenter{};
+		float			radius = 0.5f;
+		CollisionFilter	collisionFilter{};
+		bool			isTrigger = false;
+	};
+
+	struct HealthComponentData
+	{
+		int32	maxHealth = 1;
+		float	damageInvincibilityDuration = 0.f;
+	};
+
+	struct HurtBoxComponentData
+	{
+		std::wstring colliderId{};
+	};
+
+	struct HitTriggeredEnvironmentComponentData
+	{
+		std::wstring	sequenceId{};
+	};
+
 	enum class EnvironmentComponentType : uint32
 	{
 		BeatMove,
@@ -107,6 +143,11 @@ namespace gm
 		BeatStaticMeshCycle,
 		BeatSkeletalAnimationSync,
 		BeatTriggeredSkeletalAnimation,
+		BoxCollider3D,
+		SphereCollider3D,
+		Health,
+		HurtBox,
+		HitTriggeredEnvironment,
 		Count,
 	};
 
@@ -120,7 +161,12 @@ namespace gm
 		BeatAudioLevelMoveComponentData,
 		BeatStaticMeshCycleComponentData,
 		BeatSkeletalAnimationSyncComponentData,
-		BeatTriggeredSkeletalAnimationComponentData>;
+		BeatTriggeredSkeletalAnimationComponentData,
+		BoxCollider3DComponentData,
+		SphereCollider3DComponentData,
+		HealthComponentData,
+		HurtBoxComponentData,
+		HitTriggeredEnvironmentComponentData>;
 
 	static_assert(std::variant_size_v<EnvironmentComponentData> == static_cast<size_t>(EnvironmentComponentType::Count));
 }

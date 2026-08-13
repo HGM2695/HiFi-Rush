@@ -140,6 +140,57 @@ namespace gm
 			return true;
 		}
 
+		case EnvironmentComponentType::BoxCollider3D:
+		{
+			BoxCollider3DComponentData data{};
+			GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, data.colliderId), false, "BoxCollider3D의 Collider ID를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.localCenter), false, "BoxCollider3D의 Local Center를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.localRotation), false, "BoxCollider3D의 Local Rotation을 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.size), false, "BoxCollider3D의 크기를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.collisionFilter.layer) && ReadBinary(inputStream, data.collisionFilter.mask), false, "BoxCollider3D의 충돌 필터를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.isTrigger), false, "BoxCollider3D의 Trigger 설정을 읽는 데 실패했습니다.");
+			outObject.components.emplace_back(std::move(data));
+			return true;
+		}
+
+		case EnvironmentComponentType::SphereCollider3D:
+		{
+			SphereCollider3DComponentData data{};
+			GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, data.colliderId), false, "SphereCollider3D의 Collider ID를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.localCenter), false, "SphereCollider3D의 Local Center를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.radius), false, "SphereCollider3D의 반지름을 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.collisionFilter.layer) && ReadBinary(inputStream, data.collisionFilter.mask), false, "SphereCollider3D의 충돌 필터를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.isTrigger), false, "SphereCollider3D의 Trigger 설정을 읽는 데 실패했습니다.");
+			outObject.components.emplace_back(std::move(data));
+			return true;
+		}
+
+		case EnvironmentComponentType::Health:
+		{
+			HealthComponentData data{};
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.maxHealth), false, "Health의 Max Health를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.damageInvincibilityDuration), false, "Health의 피격 무적 시간을 읽는 데 실패했습니다.");
+			outObject.components.emplace_back(std::move(data));
+			return true;
+		}
+
+		case EnvironmentComponentType::HurtBox:
+		{
+			HurtBoxComponentData data{};
+			GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, data.colliderId), false, "HurtBox의 Collider ID를 읽는 데 실패했습니다.");
+			outObject.components.emplace_back(std::move(data));
+			return true;
+		}
+
+		case EnvironmentComponentType::HitTriggeredEnvironment:
+		{
+			HitTriggeredEnvironmentComponentData data{};
+			GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, data.sequenceId), false, "HitTriggeredEnvironment의 Sequence ID를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(data.sequenceId.empty() == false, false, "HitTriggeredEnvironment의 Sequence ID가 비어 있습니다.");
+			outObject.components.emplace_back(std::move(data));
+			return true;
+		}
+
 		default:
 			return false;
 		}

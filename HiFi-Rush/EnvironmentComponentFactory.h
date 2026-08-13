@@ -36,6 +36,12 @@ namespace gm
 		bool CreateComponent(GameObject& gameObject, const BeatStaticMeshCycleComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
 		bool CreateComponent(GameObject& gameObject, const BeatSkeletalAnimationSyncComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
 		bool CreateComponent(GameObject& gameObject, const BeatTriggeredSkeletalAnimationComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
+		bool CreateComponent(GameObject& gameObject, const BoxCollider3DComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
+		bool CreateComponent(GameObject& gameObject, const SphereCollider3DComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
+		bool CreateComponent(GameObject& gameObject, const HealthComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
+		bool CreateComponent(GameObject& gameObject, const HurtBoxComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
+		bool CreateComponent(GameObject& gameObject, const HitTriggeredEnvironmentComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
+
 	private:
 		Resources&			_resources;
 		const BeatSystem&	_beatSystem;
