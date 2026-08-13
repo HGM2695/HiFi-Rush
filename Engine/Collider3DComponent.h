@@ -4,6 +4,8 @@
 #include "Component.h"
 #include "Event.h"
 
+#include <string>
+
 namespace gm
 {
 	class Collider3DComponent;
@@ -25,6 +27,8 @@ namespace gm
 		virtual ~Collider3DComponent() = default;
 
 		ColliderShape3DType		GetShapeType() const { return _shapeType; }
+		void					SetColliderId(const std::wstring& colliderId);
+		const std::wstring&		GetColliderId() const { return _colliderId; }
 
 		void					SetLocalCenter(const Vector3& center) { _localCenter = center; }
 		const Vector3&			GetLocalCenter() const { return _localCenter; }
@@ -55,6 +59,7 @@ namespace gm
 		void DispatchCollisionEvent(CollisionState state, CollisionType type, const CollisionContact& contact, Collider3DComponent& otherCollider);
 
 		ColliderShape3DType	_shapeType;
+		std::wstring		_colliderId{};
 		Vector3				_localCenter{};
 		Quaternion			_localRotation{ 0.f, 0.f, 0.f, 1.f };
 		CollisionFilter		_collisionFilter{};

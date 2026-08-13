@@ -2,6 +2,11 @@
 
 namespace gm
 {
+	void Collider3DComponent::SetColliderId(const std::wstring& colliderId)
+	{
+		_colliderId = colliderId;
+	}
+
 	void Collider3DComponent::SetCollisionFilter(const CollisionFilter& filter)
 	{
 		GM_ASSERT_RETURN(IsSingleCollisionLayer(filter.layer), "Collision Layer는 하나의 비트만 설정할 수 있습니다.");

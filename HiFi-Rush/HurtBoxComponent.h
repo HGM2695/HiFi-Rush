@@ -3,6 +3,8 @@
 #include "CombatTypes.h"
 #include "Component.h"
 
+#include <string>
+
 namespace gm
 {
 	class Collider3DComponent;
@@ -14,10 +16,11 @@ namespace gm
 	friend class HitBoxComponent;
 
 	public:
-		explicit HurtBoxComponent(Collider3DComponent& collider);
+		explicit HurtBoxComponent(const std::wstring& colliderId);
 
-		Collider3DComponent&		GetCollider() { return _collider; }
-		const Collider3DComponent&	GetCollider() const { return _collider; }
+		Collider3DComponent&		GetCollider() { return *_collider; }
+		const Collider3DComponent&	GetCollider() const { return *_collider; }
+		const std::wstring&		GetColliderId() const { return _colliderId; }
 
 		EventPublisher<HurtBoxComponent, HitEvent> OnHurt;
 
@@ -27,7 +30,8 @@ namespace gm
 	private:
 		DamageResult ReceiveHit(const HitEvent& event);
 
-		Collider3DComponent&	_collider;
+		std::wstring		_colliderId{};
+		Collider3DComponent*	_collider = nullptr;
 		HealthComponent*		_health = nullptr;
 	};
 }
