@@ -14,7 +14,7 @@
 #include "GameObject.h"
 #include "GMAssert.h"
 #include "HealthComponent.h"
-#include "HitTriggeredEnvironmentComponent.h"
+#include "HitReactionComponent.h"
 #include "HurtBoxComponent.h"
 #include "IBeatTriggerAction.h"
 #include "Resources.h"
@@ -131,13 +131,13 @@ namespace gm
 		return gameObject.AddComponent<HurtBoxComponent>(data.colliderId) != nullptr;
 	}
 
-	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const HitTriggeredEnvironmentComponentData& data, std::vector<EnvironmentTriggerAction>&) const
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const HitReactionComponentData& data, std::vector<EnvironmentTriggerAction>&) const
 	{
-		GM_ASSERT_RETURN_VAL(gameObject.GetComponent<HitTriggeredEnvironmentComponent>() == nullptr, false, "환경 GameObject에는 HitTriggeredEnvironmentComponent를 하나만 추가할 수 있습니다.");
-		GM_ASSERT_RETURN_VAL(data.sequenceId.empty() == false, false, "HitTriggeredEnvironment의 Sequence ID가 비어 있습니다.");
+		GM_ASSERT_RETURN_VAL(gameObject.GetComponent<HitReactionComponent>() == nullptr, false, "GameObject에는 HitReactionComponent를 하나만 추가할 수 있습니다.");
+		GM_ASSERT_RETURN_VAL(data.completionSequenceId.empty() == false, false, "HitReaction의 완료 Sequence ID가 비어 있습니다.");
 
-		HitTriggeredEnvironmentComponent* component = gameObject.AddComponent<HitTriggeredEnvironmentComponent>(data.sequenceId);
-		GM_ASSERT_RETURN_VAL(component, false, "HitTriggeredEnvironmentComponent 생성에 실패했습니다.");
+		HitReactionComponent* component = gameObject.AddComponent<HitReactionComponent>(data.completionSequenceId, data.reactionAnimationClipName);
+		GM_ASSERT_RETURN_VAL(component, false, "HitReactionComponent 생성에 실패했습니다.");
 		return true;
 	}
 

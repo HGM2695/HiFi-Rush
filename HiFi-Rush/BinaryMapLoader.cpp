@@ -182,11 +182,12 @@ namespace gm
 			return true;
 		}
 
-		case EnvironmentComponentType::HitTriggeredEnvironment:
+		case EnvironmentComponentType::HitReaction:
 		{
-			HitTriggeredEnvironmentComponentData data{};
-			GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, data.sequenceId), false, "HitTriggeredEnvironment의 Sequence ID를 읽는 데 실패했습니다.");
-			GM_ASSERT_RETURN_VAL(data.sequenceId.empty() == false, false, "HitTriggeredEnvironment의 Sequence ID가 비어 있습니다.");
+			HitReactionComponentData data{};
+			GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, data.completionSequenceId), false, "HitReaction의 완료 Sequence ID를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(data.completionSequenceId.empty() == false, false, "HitReaction의 완료 Sequence ID가 비어 있습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, data.reactionAnimationClipName), false, "HitReaction의 반응 Animation Clip 이름을 읽는 데 실패했습니다.");
 			outObject.components.emplace_back(std::move(data));
 			return true;
 		}

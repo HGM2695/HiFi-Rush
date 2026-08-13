@@ -61,8 +61,8 @@
     <ClInclude Include="HitBoxComponent.h">
       <Filter>Component\Combat</Filter>
     </ClInclude>
-	<ClInclude Include="HitTriggeredEnvironmentComponent.h">
-	  <Filter>Component\Environment</Filter>
+	<ClInclude Include="HitReactionComponent.h">
+	  <Filter>Component\Combat</Filter>
 	</ClInclude>
     <ClInclude Include="HurtBoxComponent.h">
       <Filter>Component\Combat</Filter>
@@ -235,8 +235,8 @@
     <ClCompile Include="HitBoxComponent.cpp">
       <Filter>Component\Combat</Filter>
     </ClCompile>
-	<ClCompile Include="HitTriggeredEnvironmentComponent.cpp">
-	  <Filter>Component\Environment</Filter>
+	<ClCompile Include="HitReactionComponent.cpp">
+	  <Filter>Component\Combat</Filter>
 	</ClCompile>
     <ClCompile Include="HurtBoxComponent.cpp">
       <Filter>Component\Combat</Filter>

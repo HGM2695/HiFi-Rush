@@ -126,9 +126,10 @@ namespace gm
 		std::wstring colliderId{};
 	};
 
-	struct HitTriggeredEnvironmentComponentData
+	struct HitReactionComponentData
 	{
-		std::wstring	sequenceId{};
+		std::wstring	completionSequenceId{};
+		std::wstring	reactionAnimationClipName{};
 	};
 
 	enum class EnvironmentComponentType : uint32
@@ -147,7 +148,7 @@ namespace gm
 		SphereCollider3D,
 		Health,
 		HurtBox,
-		HitTriggeredEnvironment,
+		HitReaction,
 		Count,
 	};
 
@@ -166,7 +167,7 @@ namespace gm
 		SphereCollider3DComponentData,
 		HealthComponentData,
 		HurtBoxComponentData,
-		HitTriggeredEnvironmentComponentData>;
+		HitReactionComponentData>;
 
 	static_assert(std::variant_size_v<EnvironmentComponentData> == static_cast<size_t>(EnvironmentComponentType::Count));
 }

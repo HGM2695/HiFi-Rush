@@ -181,7 +181,7 @@
     <ClInclude Include="CombatTypes.h" />
     <ClInclude Include="HealthComponent.h" />
     <ClInclude Include="HitBoxComponent.h" />
-	<ClInclude Include="HitTriggeredEnvironmentComponent.h" />
+	<ClInclude Include="HitReactionComponent.h" />
     <ClInclude Include="HurtBoxComponent.h" />
     <ClInclude Include="CommonLoadingScene.h" />
     <ClInclude Include="BinaryMapLoader.h" />
@@ -240,7 +240,7 @@
   <ItemGroup>
     <ClCompile Include="HealthComponent.cpp" />
     <ClCompile Include="HitBoxComponent.cpp" />
-	<ClCompile Include="HitTriggeredEnvironmentComponent.cpp" />
+	<ClCompile Include="HitReactionComponent.cpp" />
     <ClCompile Include="HurtBoxComponent.cpp" />
     <ClCompile Include="CommonLoadingScene.cpp" />
     <ClCompile Include="BinaryMapLoader.cpp" />
