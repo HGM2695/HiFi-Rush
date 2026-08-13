@@ -3,6 +3,7 @@
 #include "CameraManager.h"
 #include "EnvironmentSpawner.h"
 #include "HiFiRushAudio.h"
+#include "HiFiRushStatics.h"
 #include "Input.h"
 #include "MathUtil.h"
 #include "MapResource.h"
@@ -44,7 +45,7 @@ namespace gm
 		playerDesc.cameraDistance = 5.f;
 		playerDesc.cameraYaw = Math::DegreesToRadians(90.f);
 		playerDesc.cameraPitch = Math::DegreesToRadians(20.f);
-		GM_ASSERT_RETURN(playerSpawner.Spawn(*this, playerDesc), "Outside Player 생성에 실패했습니다.");
+		GM_ASSERT_RETURN(playerSpawner.Spawn(*this, playerDesc, HiFiRushStatics::GetPlayerRuntimeState()), "Outside Player 생성에 실패했습니다.");
 	}
 
 	void OutsideScene::OnTick(float deltaTime)

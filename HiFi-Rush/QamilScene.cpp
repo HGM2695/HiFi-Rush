@@ -3,6 +3,7 @@
 #include "CameraManager.h"
 #include "EnvironmentSpawner.h"
 #include "HiFiRushAudio.h"
+#include "HiFiRushStatics.h"
 #include "Input.h"
 #include "MathUtil.h"
 #include "MapResource.h"
@@ -44,7 +45,7 @@ namespace gm
 		playerDesc.cameraYaw = Math::DegreesToRadians(-90.f);
 		playerDesc.cameraPitch = Math::DegreesToRadians(10.f);
 		playerDesc.cameraHeight = 3.f;
-		GM_ASSERT_RETURN(playerSpawner.Spawn(*this, playerDesc), "Qamil Player 생성에 실패했습니다.");
+		GM_ASSERT_RETURN(playerSpawner.Spawn(*this, playerDesc, HiFiRushStatics::GetPlayerRuntimeState()), "Qamil Player 생성에 실패했습니다.");
 	}
 
 	void QamilScene::OnTick(float deltaTime)

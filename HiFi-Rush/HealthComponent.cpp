@@ -83,6 +83,22 @@ namespace gm
 		return _health - previousHealth;
 	}
 
+	void HealthComponent::SetHealth(int32 health)
+	{
+		GM_ASSERT_RETURN(health >= 0 && health <= _maxHealth, "Health는 0 이상 Max Health 이하여야 합니다. health=%d, max=%d", health, _maxHealth);
+		if (_health == health)
+			return;
+
+		const int32 previousHealth = _health;
+		_health = health;
+
+		HealthChangedEvent healthChangedEvent{};
+		healthChangedEvent.previousHealth = previousHealth;
+		healthChangedEvent.currentHealth = _health;
+		healthChangedEvent.maxHealth = _maxHealth;
+		OnHealthChanged.Publish(healthChangedEvent);
+	}
+
 	float HealthComponent::GetHealthRatio() const
 	{
 		return static_cast<float>(_health) / static_cast<float>(_maxHealth);

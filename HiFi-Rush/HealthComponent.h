@@ -13,6 +13,7 @@ namespace gm
 		DamageResult	ApplyDamage(const HitEvent& hitEvent);
 		DamageResult	ApplyDamage(const DamageInfo& damageInfo);
 		int32			Heal(int32 amount);
+		void			SetHealth(int32 health);
 
 		int32	GetHealth() const { return _health; }
 		int32	GetMaxHealth() const { return _maxHealth; }

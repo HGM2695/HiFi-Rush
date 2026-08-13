@@ -11,10 +11,13 @@
 #include "ChiStateMachineComponent.h"
 #include "FreeFlyMoveComponent.h"
 #include "GameObject.h"
+#include "HealthComponent.h"
 #include "HiFiRushCollisionLayers.h"
 #include "HiFiRushStatics.h"
 #include "MathUtil.h"
 #include "NavMeshControllerComponent.h"
+#include "PlayerRuntimeState.h"
+#include "PlayerRuntimeStateSyncComponent.h"
 #include "Resources.h"
 #include "Rigidbody3DComponent.h"
 #include "Scene.h"
@@ -31,7 +34,7 @@ namespace gm
 	{
 	}
 
-	GameObject* PlayerSpawner::Spawn(Scene& scene, const PlayerSpawnDesc& desc) const
+	GameObject* PlayerSpawner::Spawn(Scene& scene, const PlayerSpawnDesc& desc, PlayerRuntimeState& runtimeState) const
 	{
 		std::shared_ptr<SkeletalMesh> skeletalMesh = _resources.Find<SkeletalMesh>(L"chi");
 		GM_ASSERT_RETURN_VAL(skeletalMesh, nullptr, "chi SkeletalMesh가 로드되지 않았습니다.");
@@ -53,6 +56,10 @@ namespace gm
 		bodyCollider->SetLocalCenter(Vector3{ 0.f, 0.9f, 0.f });
 		bodyCollider->SetSize(Vector3{ 0.8f, 1.8f, 0.8f });
 		bodyCollider->SetCollisionLayer(HiFiRushCollisionLayer::Player);
+
+		HealthComponent* healthComponent = player->AddComponent<HealthComponent>(runtimeState.maxHealth);
+		GM_ASSERT_RETURN_VAL(healthComponent, nullptr, "Player HealthComponent 생성에 실패했습니다.");
+		//GM_ASSERT_RETURN_VAL(player->AddComponent<PlayerRuntimeStateSyncComponent>(runtimeState), nullptr, "PlayerRuntimeStateSyncComponent 생성에 실패했습니다.");
 
 		NavMeshControllerComponent* navMeshController = player->AddComponent<NavMeshControllerComponent>();
 		navMeshController->SetGroundCollisionEnabled(true);

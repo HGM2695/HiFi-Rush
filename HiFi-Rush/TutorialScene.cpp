@@ -20,6 +20,7 @@
 #include "NavigationMesh.h"
 #include "EnvironmentSpawner.h"
 #include "HiFiRushAudio.h"
+#include "HiFiRushStatics.h"
 #include "MapResource.h"
 #include "PlayerSpawner.h"
 #include "SceneDebugTools.h"
@@ -74,7 +75,7 @@ namespace gm
 		playerDesc.rotationY = Math::GM_PI;
 		playerDesc.cameraDistance = 3.5f;
 		playerDesc.cameraPitch = Math::DegreesToRadians(15.f);
-		GM_ASSERT_RETURN(playerSpawner.Spawn(*this, playerDesc), "Tutorial Player 생성에 실패했습니다.");
+		GM_ASSERT_RETURN(playerSpawner.Spawn(*this, playerDesc, HiFiRushStatics::GetPlayerRuntimeState()), "Tutorial Player 생성에 실패했습니다.");
 	}
 
 	void TutorialScene::InitializeSubObject()

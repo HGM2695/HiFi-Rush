@@ -14,6 +14,11 @@ namespace gm
 		return GetGameInstance().GetBeatSystem();
 	}
 
+	PlayerRuntimeState& HiFiRushStatics::GetPlayerRuntimeState()
+	{
+		return GetGameInstance().GetPlayerRuntimeState();
+	}
+
 #if GM_ENABLE_DEBUG_TOOLS
 	DebugEventPublisher& HiFiRushStatics::GetDebugEventPublisher()
 	{

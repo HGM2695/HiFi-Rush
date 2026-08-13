@@ -7,6 +7,7 @@ namespace gm
 	class GameObject;
 	class Resources;
 	class Scene;
+	struct PlayerRuntimeState;
 
 	inline constexpr wchar_t PlayerCameraKey[] = L"PlayerCamera";
 
@@ -25,7 +26,7 @@ namespace gm
 	public:
 		explicit PlayerSpawner(Resources& resources);
 
-		GameObject* Spawn(Scene& scene, const PlayerSpawnDesc& desc) const;
+		GameObject* Spawn(Scene& scene, const PlayerSpawnDesc& desc, PlayerRuntimeState& runtimeState) const;
 
 	private:
 		Resources& _resources;

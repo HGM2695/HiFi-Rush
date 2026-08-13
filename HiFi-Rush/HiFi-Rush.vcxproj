@@ -217,6 +217,8 @@
     <ClInclude Include="LoadingScreenWidget.h" />
     <ClInclude Include="MainHUDWidget.h" />
     <ClInclude Include="OutsideScene.h" />
+    <ClInclude Include="PlayerRuntimeState.h" />
+    <ClInclude Include="PlayerRuntimeStateSyncComponent.h" />
     <ClInclude Include="PlayerSpawner.h" />
     <ClInclude Include="QamilScene.h" />
     <ClInclude Include="SceneDebugTools.h" />
@@ -241,6 +243,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HealthComponent.cpp" />
+    <ClCompile Include="PlayerRuntimeStateSyncComponent.cpp" />
     <ClCompile Include="SceneTransitionTriggerComponent.cpp" />
     <ClCompile Include="HitBoxComponent.cpp" />
 	<ClCompile Include="HitReactionComponent.cpp" />
