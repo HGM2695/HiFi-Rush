@@ -1,7 +1,7 @@
 #include "HurtBoxComponent.h"
 #include "Collider3DComponent.h"
-
-#include <utility>
+#include "GameObject.h"
+#include "HealthComponent.h"
 
 namespace gm
 {
@@ -14,14 +14,19 @@ namespace gm
 	void HurtBoxComponent::OnInitialize()
 	{
 		GM_ASSERT_RETURN(&_collider.GetOwner() == &GetOwner(), "HurtBox와 Collider는 같은 GameObject에 속해야 합니다.");
+
+		_health = GetOwner().GetComponent<HealthComponent>();
+		GM_ASSERT_RETURN(_health, "HurtBox를 가진 GameObject에는 HealthComponent가 필요합니다.");
 	}
 
-	void HurtBoxComponent::ReceiveHit(const HitEvent& event)
+	DamageResult HurtBoxComponent::ReceiveHit(const HitEvent& event)
 	{
-		// HitBox를 기준으로 들어온 Contanct를 HurtBox 기준으로 변경
 		HitEvent receivedEvent = event;
-		std::swap(receivedEvent.contact.selfPoint, receivedEvent.contact.otherPoint);
-		receivedEvent.contact.normal = -receivedEvent.contact.normal;
+
+		if (_health != nullptr && _health->IsEnabled())
+			receivedEvent.damageResult = _health->ApplyDamage(receivedEvent);
+
 		OnHurt.Publish(receivedEvent);
+		return receivedEvent.damageResult;
 	}
 }

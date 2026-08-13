@@ -41,8 +41,23 @@
     <Filter Include="Component\01. Behavior\3D\State">
       <UniqueIdentifier>{1fbc4598-ecac-4e3a-88fe-18ab9a71aa4a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\Combat">
+      <UniqueIdentifier>{6ee65bd6-c24d-4ace-86d2-d6dc7f6d9d91}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CombatTypes.h">
+      <Filter>Component\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthComponent.h">
+      <Filter>Component\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="HitBoxComponent.h">
+      <Filter>Component\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="HurtBoxComponent.h">
+      <Filter>Component\Combat</Filter>
+    </ClInclude>
     <ClInclude Include="Resource.h" />
     <ClInclude Include="DebugEventPublisher.h">
       <Filter>Debug</Filter>
@@ -202,6 +217,15 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="HealthComponent.cpp">
+      <Filter>Component\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="HitBoxComponent.cpp">
+      <Filter>Component\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="HurtBoxComponent.cpp">
+      <Filter>Component\Combat</Filter>
+    </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="DebugEventPublisher.cpp">
       <Filter>Debug</Filter>

@@ -6,6 +6,7 @@
 namespace gm
 {
 	class Collider3DComponent;
+	class HealthComponent;
 	class HitBoxComponent;
 
 	class HurtBoxComponent final : public Component
@@ -24,8 +25,9 @@ namespace gm
 		void OnInitialize() override;
 
 	private:
-		void ReceiveHit(const HitEvent& event);
+		DamageResult ReceiveHit(const HitEvent& event);
 
-		Collider3DComponent& _collider;
+		Collider3DComponent&	_collider;
+		HealthComponent*		_health = nullptr;
 	};
 }

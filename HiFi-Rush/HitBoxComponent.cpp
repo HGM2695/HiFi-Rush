@@ -14,6 +14,18 @@ namespace gm
 		_collider.SetEnabled(false);
 	}
 
+	void HitBoxComponent::SetDamage(int32 damage)
+	{
+		GM_ASSERT_RETURN(damage >= 0, "Damage는 0 이상이어야 합니다.");
+		_damageInfo.amount = damage;
+	}
+
+	void HitBoxComponent::SetDamageInfo(const DamageInfo& damageInfo)
+	{
+		GM_ASSERT_RETURN(damageInfo.amount >= 0, "Damage는 0 이상이어야 합니다.");
+		_damageInfo = damageInfo;
+	}
+
 	void HitBoxComponent::BeginAttack()
 	{
 		_hitTargets.clear();
@@ -64,7 +76,13 @@ namespace gm
 		hitEvent.hitBox = this;
 		hitEvent.hurtBox = hurtBox;
 		hitEvent.contact = event.contact;
-		hurtBox->ReceiveHit(hitEvent);
+		hitEvent.damage = _damageInfo;
+
+		HitEvent hurtEvent = hitEvent;
+		std::swap(hurtEvent.contact.selfPoint, hurtEvent.contact.otherPoint);
+		hurtEvent.contact.normal = -hurtEvent.contact.normal;
+
+		hitEvent.damageResult = hurtBox->ReceiveHit(hurtEvent);
 		OnHit.Publish(hitEvent);
 	}
 

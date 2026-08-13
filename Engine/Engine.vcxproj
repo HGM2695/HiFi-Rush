@@ -186,7 +186,6 @@
     <ClInclude Include="Collider2DComponent.h" />
     <ClInclude Include="Collider3DComponent.h" />
     <ClInclude Include="CollisionTypes.h" />
-    <ClInclude Include="CombatTypes.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="ConstantBufferPool.h" />
@@ -218,8 +217,6 @@
     <ClInclude Include="GraphicsTypes.h" />
     <ClInclude Include="GraphicsUtils.h" />
     <ClInclude Include="HashUtil.h" />
-    <ClInclude Include="HitBoxComponent.h" />
-    <ClInclude Include="HurtBoxComponent.h" />
     <ClInclude Include="IGraphicsCommandContext.h" />
     <ClInclude Include="InstanceBuffer.h" />
     <ClInclude Include="IGraphicsDevice.h" />
@@ -343,8 +340,6 @@
     <ClCompile Include="GMAssert.cpp" />
     <ClCompile Include="GMLog.cpp" />
     <ClCompile Include="GraphicsBackend.cpp" />
-    <ClCompile Include="HitBoxComponent.cpp" />
-    <ClCompile Include="HurtBoxComponent.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Material.cpp" />

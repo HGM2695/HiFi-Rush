@@ -178,6 +178,10 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CombatTypes.h" />
+    <ClInclude Include="HealthComponent.h" />
+    <ClInclude Include="HitBoxComponent.h" />
+    <ClInclude Include="HurtBoxComponent.h" />
     <ClInclude Include="CommonLoadingScene.h" />
     <ClInclude Include="BinaryMapLoader.h" />
     <ClInclude Include="DebugTextWidget.h" />
@@ -232,6 +236,9 @@
     <ClInclude Include="TitleScene.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="HealthComponent.cpp" />
+    <ClCompile Include="HitBoxComponent.cpp" />
+    <ClCompile Include="HurtBoxComponent.cpp" />
     <ClCompile Include="CommonLoadingScene.cpp" />
     <ClCompile Include="BinaryMapLoader.cpp" />
     <ClCompile Include="MapResource.cpp" />

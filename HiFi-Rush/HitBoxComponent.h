@@ -19,6 +19,12 @@ namespace gm
 		void	BeginAttack();
 		void	EndAttack();
 		bool	IsAttackActive() const { return _isAttackActive; }
+		void	SetDamage(int32 damage);
+		int32	GetDamage() const { return _damageInfo.amount; }
+		void	SetIgnoreInvincibility(bool ignoreInvincibility) { _damageInfo.ignoreInvincibility = ignoreInvincibility; }
+		bool	IsIgnoreInvincibility() const { return _damageInfo.ignoreInvincibility; }
+		void	SetDamageInfo(const DamageInfo& damageInfo);
+		const DamageInfo& GetDamageInfo() const { return _damageInfo; }
 
 		Collider3DComponent&		GetCollider() { return _collider; }
 		const Collider3DComponent&	GetCollider() const { return _collider; }
@@ -37,6 +43,7 @@ namespace gm
 		std::vector<WeakGameObjectPtr>	_hitTargets{};
 		EventConnection					_collisionEnterConnection{};
 		EventConnection					_collisionStayConnection{};
+		DamageInfo						_damageInfo{};
 		bool							_isAttackActive = false;
 	};
 }

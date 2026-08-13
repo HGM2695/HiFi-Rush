@@ -390,15 +390,6 @@
     <ClInclude Include="SphereCollider3DComponent.h">
       <Filter>Engine Component\Physics\3D</Filter>
     </ClInclude>
-    <ClInclude Include="CombatTypes.h">
-      <Filter>Engine Component\Combat</Filter>
-    </ClInclude>
-    <ClInclude Include="HitBoxComponent.h">
-      <Filter>Engine Component\Combat</Filter>
-    </ClInclude>
-    <ClInclude Include="HurtBoxComponent.h">
-      <Filter>Engine Component\Combat</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -684,12 +675,6 @@
     <ClCompile Include="SphereCollider3DComponent.cpp">
       <Filter>Engine Component\Physics\3D</Filter>
     </ClCompile>
-    <ClCompile Include="HitBoxComponent.cpp">
-      <Filter>Engine Component\Combat</Filter>
-    </ClCompile>
-    <ClCompile Include="HurtBoxComponent.cpp">
-      <Filter>Engine Component\Combat</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
@@ -781,9 +766,6 @@
     </Filter>
     <Filter Include="Engine Component\Physics\2D">
       <UniqueIdentifier>{f06d9a03-9592-4652-a408-b83563944ca4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine Component\Combat">
-      <UniqueIdentifier>{6ee65bd6-c24d-4ace-86d2-d6dc7f6d9d91}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
