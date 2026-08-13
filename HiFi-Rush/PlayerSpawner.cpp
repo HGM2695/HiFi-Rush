@@ -2,6 +2,7 @@
 
 #include "Application.h"
 #include "BeatSkeletalAnimationSyncComponent.h"
+#include "BoxCollider3DComponent.h"
 #include "CameraComponent.h"
 #include "CameraFollowComponent.h"
 #include "CameraManager.h"
@@ -10,6 +11,7 @@
 #include "ChiStateMachineComponent.h"
 #include "FreeFlyMoveComponent.h"
 #include "GameObject.h"
+#include "HiFiRushCollisionLayers.h"
 #include "HiFiRushStatics.h"
 #include "MathUtil.h"
 #include "NavMeshControllerComponent.h"
@@ -44,6 +46,13 @@ namespace gm
 		ChiMoveComponent* moveComponent = player->AddComponent<ChiMoveComponent>();
 		Rigidbody3DComponent* rigidbody = player->AddComponent<Rigidbody3DComponent>();
 		rigidbody->SetGravityScale(3.f);
+
+		BoxCollider3DComponent* bodyCollider = player->AddComponent<BoxCollider3DComponent>();
+		GM_ASSERT_RETURN_VAL(bodyCollider, nullptr, "Player Body Collider 생성에 실패했습니다.");
+		bodyCollider->SetColliderId(L"Body");
+		bodyCollider->SetLocalCenter(Vector3{ 0.f, 0.9f, 0.f });
+		bodyCollider->SetSize(Vector3{ 0.8f, 1.8f, 0.8f });
+		bodyCollider->SetCollisionLayer(HiFiRushCollisionLayer::Player);
 
 		NavMeshControllerComponent* navMeshController = player->AddComponent<NavMeshControllerComponent>();
 		navMeshController->SetGroundCollisionEnabled(true);

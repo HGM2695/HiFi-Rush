@@ -41,6 +41,7 @@ namespace gm
 		bool CreateComponent(GameObject& gameObject, const HealthComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
 		bool CreateComponent(GameObject& gameObject, const HurtBoxComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
 		bool CreateComponent(GameObject& gameObject, const HitReactionComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
+		bool CreateComponent(GameObject& gameObject, const SceneTransitionTriggerComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
 
 	private:
 		Resources&			_resources;

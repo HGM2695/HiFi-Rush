@@ -18,6 +18,7 @@
 #include "HurtBoxComponent.h"
 #include "IBeatTriggerAction.h"
 #include "Resources.h"
+#include "SceneTransitionTriggerComponent.h"
 #include "SkeletalAnimatorComponent.h"
 #include "SphereCollider3DComponent.h"
 #include "StaticMesh.h"
@@ -139,6 +140,15 @@ namespace gm
 		HitReactionComponent* component = gameObject.AddComponent<HitReactionComponent>(data.completionSequenceId, data.reactionAnimationClipName);
 		GM_ASSERT_RETURN_VAL(component, false, "HitReactionComponent 생성에 실패했습니다.");
 		return true;
+	}
+
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const SceneTransitionTriggerComponentData& data, std::vector<EnvironmentTriggerAction>&) const
+	{
+		GM_ASSERT_RETURN_VAL(gameObject.GetComponent<SceneTransitionTriggerComponent>() == nullptr, false, "GameObject에는 SceneTransitionTriggerComponent를 하나만 추가할 수 있습니다.");
+		GM_ASSERT_RETURN_VAL(data.colliderId.empty() == false, false, "Scene Transition이 참조할 Collider ID는 비어 있을 수 없습니다.");
+		GM_ASSERT_RETURN_VAL(data.targetSceneName.empty() == false, false, "Scene Transition의 Target Scene 이름은 비어 있을 수 없습니다.");
+
+		return gameObject.AddComponent<SceneTransitionTriggerComponent>(data.colliderId, data.targetSceneName) != nullptr;
 	}
 
 	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatMoveComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const

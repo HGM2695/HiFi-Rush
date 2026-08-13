@@ -197,7 +197,8 @@ namespace gm
 		modelIndices.reserve(mapResource->GetData().objects.size());
 		for (const EnvironmentObjectData& object : mapResource->GetData().objects)
 		{
-			modelIndices.push_back(object.modelIndex);
+			if (object.renderType != EnvironmentRenderType::None)
+				modelIndices.push_back(object.modelIndex);
 			for (const EnvironmentComponentData& component : object.components)
 			{
 				const BeatStaticMeshCycleComponentData* meshCycle = std::get_if<BeatStaticMeshCycleComponentData>(&component);

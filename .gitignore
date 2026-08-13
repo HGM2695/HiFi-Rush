@@ -7,6 +7,12 @@
 Resources/
 ThirdParty/
 
+# Local tools and PowerShell scripts
+/Tools/
+*.ps1
+*.psm1
+*.psd1
+
 # User-specific files
 *.rsuser
 *.suo

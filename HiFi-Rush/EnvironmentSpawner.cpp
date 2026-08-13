@@ -74,39 +74,42 @@ namespace gm
 
 	bool EnvironmentSpawner::SpawnObject(GameplayScene& scene, const EnvironmentObjectData& objectData, SpawnEntry& outSpawnEntry) const
 	{
-		const std::wstring modelKey = GetEnvironmentModelKey(objectData.modelIndex);
-		const std::shared_ptr<StaticMesh> staticMesh = _resources.Find<StaticMesh>(modelKey);
-		const std::shared_ptr<SkeletalMesh> skeletalMesh = _resources.Find<SkeletalMesh>(modelKey);
-		GM_ASSERT_RETURN_VAL(staticMesh || skeletalMesh, false, "환경 오브젝트가 참조하는 모델 리소스가 없습니다. key=%ls", modelKey.c_str());
-
 		GameObject* gameObject = scene.SpawnGameObject<GameObject>();
-		GM_ASSERT_RETURN_VAL(gameObject, false, "환경 오브젝트 생성에 실패했습니다. key=%ls", modelKey.c_str());
+		GM_ASSERT_RETURN_VAL(gameObject, false, "환경 오브젝트 생성에 실패했습니다.");
 		gameObject->GetTransform()->SetWorldMatrix(objectData.world);
 
-		if (staticMesh)
+		if (objectData.renderType != EnvironmentRenderType::None)
 		{
-			StaticMeshComponent* meshComponent = gameObject->AddComponent<StaticMeshComponent>();
-			GM_ASSERT_RETURN_VAL(meshComponent, false, "StaticMeshComponent 생성에 실패했습니다. key=%ls", modelKey.c_str());
-			meshComponent->SetStaticMesh(staticMesh);
-		}
-		else // skeletalMesh
-		{
-			SkeletalMeshComponent* meshComponent = gameObject->AddComponent<SkeletalMeshComponent>();
-			GM_ASSERT_RETURN_VAL(meshComponent, false, "SkeletalMeshComponent 생성에 실패했습니다. key=%ls", modelKey.c_str());
-			meshComponent->SetSkeletalMesh(skeletalMesh);
+			const std::wstring modelKey = GetEnvironmentModelKey(objectData.modelIndex);
+			const std::shared_ptr<StaticMesh> staticMesh = _resources.Find<StaticMesh>(modelKey);
+			const std::shared_ptr<SkeletalMesh> skeletalMesh = _resources.Find<SkeletalMesh>(modelKey);
+			GM_ASSERT_RETURN_VAL(staticMesh || skeletalMesh, false, "환경 오브젝트가 참조하는 모델 리소스가 없습니다. key=%ls", modelKey.c_str());
 
-			const std::shared_ptr<SkeletalAnimationClip> defaultClip = _resources.Find<SkeletalAnimationClip>(modelKey + L".DefaultAnimation");
-			if (defaultClip)
+			if (staticMesh)
 			{
-				SkeletalAnimatorComponent* animator = gameObject->AddComponent<SkeletalAnimatorComponent>();
-				GM_ASSERT_RETURN_VAL(animator, false, "SkeletalAnimatorComponent 생성에 실패했습니다. key=%ls", modelKey.c_str());
-				GM_ASSERT_RETURN_VAL(animator->AddClip(L"Default", defaultClip), false, "환경 오브젝트의 기본 애니메이션 등록에 실패했습니다. key=%ls", modelKey.c_str());
-				GM_ASSERT_RETURN_VAL(animator->Play(L"Default"), false, "환경 오브젝트의 기본 애니메이션 재생에 실패했습니다. key=%ls", modelKey.c_str());
+				StaticMeshComponent* meshComponent = gameObject->AddComponent<StaticMeshComponent>();
+				GM_ASSERT_RETURN_VAL(meshComponent, false, "StaticMeshComponent 생성에 실패했습니다. key=%ls", modelKey.c_str());
+				meshComponent->SetStaticMesh(staticMesh);
+			}
+			else // skeletalMesh
+			{
+				SkeletalMeshComponent* meshComponent = gameObject->AddComponent<SkeletalMeshComponent>();
+				GM_ASSERT_RETURN_VAL(meshComponent, false, "SkeletalMeshComponent 생성에 실패했습니다. key=%ls", modelKey.c_str());
+				meshComponent->SetSkeletalMesh(skeletalMesh);
+
+				const std::shared_ptr<SkeletalAnimationClip> defaultClip = _resources.Find<SkeletalAnimationClip>(modelKey + L".DefaultAnimation");
+				if (defaultClip)
+				{
+					SkeletalAnimatorComponent* animator = gameObject->AddComponent<SkeletalAnimatorComponent>();
+					GM_ASSERT_RETURN_VAL(animator, false, "SkeletalAnimatorComponent 생성에 실패했습니다. key=%ls", modelKey.c_str());
+					GM_ASSERT_RETURN_VAL(animator->AddClip(L"Default", defaultClip), false, "환경 오브젝트의 기본 애니메이션 등록에 실패했습니다. key=%ls", modelKey.c_str());
+					GM_ASSERT_RETURN_VAL(animator->Play(L"Default"), false, "환경 오브젝트의 기본 애니메이션 재생에 실패했습니다. key=%ls", modelKey.c_str());
+				}
 			}
 		}
 
 		std::vector<EnvironmentTriggerAction> triggerActions;
-		GM_ASSERT_RETURN_VAL(_componentFactory.AddComponents(*gameObject, objectData.components, triggerActions), false, "환경 오브젝트 Component 구성에 실패했습니다. key=%ls", modelKey.c_str());
+		GM_ASSERT_RETURN_VAL(_componentFactory.AddComponents(*gameObject, objectData.components, triggerActions), false, "환경 오브젝트 Component 구성에 실패했습니다.");
 		outSpawnEntry = SpawnEntry{ gameObject->GetWeakPtr(), std::move(triggerActions) };
 
 		return true;

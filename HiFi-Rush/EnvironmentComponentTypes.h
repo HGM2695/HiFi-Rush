@@ -132,6 +132,12 @@ namespace gm
 		std::wstring	reactionAnimationClipName{};
 	};
 
+	struct SceneTransitionTriggerComponentData
+	{
+		std::wstring	colliderId{};
+		std::wstring	targetSceneName{};
+	};
+
 	enum class EnvironmentComponentType : uint32
 	{
 		BeatMove,
@@ -149,6 +155,7 @@ namespace gm
 		Health,
 		HurtBox,
 		HitReaction,
+		SceneTransitionTrigger,
 		Count,
 	};
 
@@ -167,7 +174,8 @@ namespace gm
 		SphereCollider3DComponentData,
 		HealthComponentData,
 		HurtBoxComponentData,
-		HitReactionComponentData>;
+		HitReactionComponentData,
+		SceneTransitionTriggerComponentData>;
 
 	static_assert(std::variant_size_v<EnvironmentComponentData> == static_cast<size_t>(EnvironmentComponentType::Count));
 }

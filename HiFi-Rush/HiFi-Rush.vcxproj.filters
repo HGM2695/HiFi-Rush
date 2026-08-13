@@ -58,6 +58,9 @@
     <ClInclude Include="HealthComponent.h">
       <Filter>Component\Combat</Filter>
     </ClInclude>
+    <ClInclude Include="HiFiRushCollisionLayers.h">
+      <Filter>Util\Types</Filter>
+    </ClInclude>
     <ClInclude Include="HitBoxComponent.h">
       <Filter>Component\Combat</Filter>
     </ClInclude>
@@ -66,6 +69,9 @@
 	</ClInclude>
     <ClInclude Include="HurtBoxComponent.h">
       <Filter>Component\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneTransitionTriggerComponent.h">
+      <Filter>Component\Environment</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h" />
     <ClInclude Include="DebugEventPublisher.h">
@@ -231,6 +237,9 @@
   <ItemGroup>
     <ClCompile Include="HealthComponent.cpp">
       <Filter>Component\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneTransitionTriggerComponent.cpp">
+      <Filter>Component\Environment</Filter>
     </ClCompile>
     <ClCompile Include="HitBoxComponent.cpp">
       <Filter>Component\Combat</Filter>

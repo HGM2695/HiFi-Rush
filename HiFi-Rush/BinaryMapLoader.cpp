@@ -15,9 +15,7 @@ namespace gm
 		uint32 renderType = 0;
 		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, renderType), false, "환경 오브젝트의 렌더 타입을 읽는 데 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(
-			renderType == static_cast<uint32>(EnvironmentRenderType::Opaque) ||
-				renderType == static_cast<uint32>(EnvironmentRenderType::InOrderBlend) ||
-				renderType == static_cast<uint32>(EnvironmentRenderType::AfterEdge),
+			renderType == static_cast<uint32>(EnvironmentRenderType::None) || renderType == static_cast<uint32>(EnvironmentRenderType::Opaque) || renderType == static_cast<uint32>(EnvironmentRenderType::InOrderBlend) || renderType == static_cast<uint32>(EnvironmentRenderType::AfterEdge),
 			false, "지원하지 않는 환경 오브젝트 렌더 타입입니다. type=%u", renderType);
 
 		outObject.renderType = static_cast<EnvironmentRenderType>(renderType);
@@ -188,6 +186,17 @@ namespace gm
 			GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, data.completionSequenceId), false, "HitReaction의 완료 Sequence ID를 읽는 데 실패했습니다.");
 			GM_ASSERT_RETURN_VAL(data.completionSequenceId.empty() == false, false, "HitReaction의 완료 Sequence ID가 비어 있습니다.");
 			GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, data.reactionAnimationClipName), false, "HitReaction의 반응 Animation Clip 이름을 읽는 데 실패했습니다.");
+			outObject.components.emplace_back(std::move(data));
+			return true;
+		}
+
+		case EnvironmentComponentType::SceneTransitionTrigger:
+		{
+			SceneTransitionTriggerComponentData data{};
+			GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, data.colliderId), false, "SceneTransitionTrigger의 Collider ID를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(data.colliderId.empty() == false, false, "SceneTransitionTrigger의 Collider ID가 비어 있습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, data.targetSceneName), false, "SceneTransitionTrigger의 Target Scene 이름을 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(data.targetSceneName.empty() == false, false, "SceneTransitionTrigger의 Target Scene 이름이 비어 있습니다.");
 			outObject.components.emplace_back(std::move(data));
 			return true;
 		}
