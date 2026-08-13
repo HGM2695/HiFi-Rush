@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Scene.h"
+#include "GameplayScene.h"
 
 namespace gm
 {
-	class QamilScene : public Scene
+	class QamilScene : public GameplayScene
 	{
 	protected:
 		virtual void OnEnter() override;

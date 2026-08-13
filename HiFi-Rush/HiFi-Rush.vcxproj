@@ -191,11 +191,12 @@
     <ClInclude Include="MapResource.h" />
 	<ClInclude Include="EnvironmentComponentFactory.h" />
     <ClInclude Include="EnvironmentSpawner.h" />
+	<ClInclude Include="GameplayScene.h" />
     <ClInclude Include="FreeFlyMoveComponent.h" />
 	<ClInclude Include="BeatVisibilityComponent.h" />
     <ClInclude Include="BeatMoveComponent.h" />
     <ClInclude Include="IBeatTriggerAction.h" />
-    <ClInclude Include="BeatTriggerSequenceComponent.h" />
+	<ClInclude Include="TriggerSequenceSystem.h" />
     <ClInclude Include="BeatOrbitComponent.h" />
     <ClInclude Include="BeatAudioLevelMoveComponent.h" />
     <ClInclude Include="BeatMath.h" />
@@ -246,10 +247,11 @@
     <ClCompile Include="DebugTextWidget.cpp" />
     <ClCompile Include="DebugEventPublisher.cpp" />
     <ClCompile Include="EnvironmentSpawner.cpp" />
+	<ClCompile Include="GameplayScene.cpp" />
     <ClCompile Include="FreeFlyMoveComponent.cpp" />
 	<ClCompile Include="BeatVisibilityComponent.cpp" />
     <ClCompile Include="BeatMoveComponent.cpp" />
-    <ClCompile Include="BeatTriggerSequenceComponent.cpp" />
+	<ClCompile Include="TriggerSequenceSystem.cpp" />
     <ClCompile Include="BeatOrbitComponent.cpp" />
     <ClCompile Include="BeatAudioLevelMoveComponent.cpp" />
     <ClCompile Include="BeatStaticMeshCycleComponent.cpp" />

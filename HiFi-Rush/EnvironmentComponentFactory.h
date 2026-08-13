@@ -12,7 +12,7 @@ namespace gm
 	struct EnvironmentTriggerAction
 	{
 		TriggerSequenceBindingData	triggerBindingData{};
-		IBeatTriggerAction*			action = nullptr;
+		IBeatTriggerAction*			actionComponent = nullptr;
 	};
 
 	class EnvironmentComponentFactory
@@ -20,7 +20,10 @@ namespace gm
 	public:
 		EnvironmentComponentFactory(Resources& resources, const BeatSystem& beatSystem);
 
-		bool AddComponents(GameObject& gameObject, const std::vector<EnvironmentComponentData>& components, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
+		bool AddComponents(
+			GameObject& gameObject,
+			const std::vector<EnvironmentComponentData>& components,
+			std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
 
 	private:
 		bool CreateComponent(GameObject& gameObject, const BeatMoveComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
@@ -33,7 +36,6 @@ namespace gm
 		bool CreateComponent(GameObject& gameObject, const BeatStaticMeshCycleComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
 		bool CreateComponent(GameObject& gameObject, const BeatSkeletalAnimationSyncComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
 		bool CreateComponent(GameObject& gameObject, const BeatTriggeredSkeletalAnimationComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
-
 	private:
 		Resources&			_resources;
 		const BeatSystem&	_beatSystem;

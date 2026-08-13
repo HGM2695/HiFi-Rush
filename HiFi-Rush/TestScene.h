@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Scene.h"
+#include "GameplayScene.h"
 
 namespace gm
 {
 	class CameraComponent;
 	class GameObject;
 
-	class TestScene : public Scene
+	class TestScene : public GameplayScene
 	{
 	protected:
 		virtual void	OnEnter() override;

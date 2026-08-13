@@ -1,12 +1,11 @@
 #include "EnvironmentSpawner.h"
-#include "BeatTriggerSequenceComponent.h"
 #include "GameObject.h"
+#include "GameplayScene.h"
 #include "GMAssert.h"
 #include "GMLog.h"
 #include "HiFiRushStatics.h"
 #include "MapTypes.h"
 #include "Resources.h"
-#include "Scene.h"
 #include "SkeletalAnimationClip.h"
 #include "SkeletalAnimatorComponent.h"
 #include "SkeletalMesh.h"
@@ -14,10 +13,10 @@
 #include "StaticMesh.h"
 #include "StaticMeshComponent.h"
 #include "TransformComponent.h"
+#include "TriggerSequenceSystem.h"
 
 #include <cmath>
 #include <string>
-#include <unordered_map>
 #include <utility>
 
 namespace gm
@@ -34,7 +33,7 @@ namespace gm
 		: _resources(resources), _componentFactory(resources, HiFiRushStatics::GetBeatSystem())
 	{}
 
-	bool EnvironmentSpawner::Spawn(Scene& scene, const MapData& mapData) const
+	bool EnvironmentSpawner::Spawn(GameplayScene& scene, const MapData& mapData) const
 	{
 		std::vector<SpawnEntry> spawnEntries;
 		spawnEntries.reserve(mapData.objects.size());
@@ -52,36 +51,28 @@ namespace gm
 		return true;
 	}
 
-	bool EnvironmentSpawner::BuildTriggerSequences(Scene& scene, const std::vector<SpawnEntry>& spawnEntries) const
+	bool EnvironmentSpawner::BuildTriggerSequences(GameplayScene& scene, const std::vector<SpawnEntry>& spawnEntries) const
 	{
-		std::unordered_map<std::wstring, BeatTriggerSequenceComponent*> sequences;
+		TriggerSequenceSystem& triggerSequenceSystem = scene.GetTriggerSequenceSystem();
 		for (const SpawnEntry& spawnEntry : spawnEntries)
 		{
 			GM_ASSERT_RETURN_VAL(spawnEntry.owner.IsValid(), false, "환경 오브젝트 Owner가 유효하지 않습니다.");
 			for (const EnvironmentTriggerAction& triggerAction : spawnEntry.triggerActions)
 			{
 				const TriggerSequenceBindingData& binding = triggerAction.triggerBindingData;
-				GM_ASSERT_RETURN_VAL(triggerAction.action, false, "환경 오브젝트에 유효하지 않은 Trigger Action이 있습니다. sequenceId=%ls", binding.sequenceId.c_str());
+				GM_ASSERT_RETURN_VAL(triggerAction.actionComponent, false, "환경 오브젝트에 유효하지 않은 Trigger Action이 있습니다. sequenceId=%ls", binding.sequenceId.c_str());
 				GM_ASSERT_RETURN_VAL(binding.sequenceId.empty() == false, false, "Trigger Action의 Sequence ID가 비어 있습니다.");
 				GM_ASSERT_RETURN_VAL(std::isfinite(binding.beatOffset) && binding.beatOffset >= 0.f, false, "Trigger Action의 Beat Offset이 유효하지 않습니다. sequenceId=%ls", binding.sequenceId.c_str());
-
-				BeatTriggerSequenceComponent*& sequence = sequences[binding.sequenceId];
-				if (sequence == nullptr)
-				{
-					GameObject* sequenceObject = scene.SpawnGameObject<GameObject>();
-					GM_ASSERT_RETURN_VAL(sequenceObject, false, "트리거 시퀀스 GameObject 생성에 실패했습니다. sequenceId=%ls", binding.sequenceId.c_str());
-					sequence = sequenceObject->AddComponent<BeatTriggerSequenceComponent>(HiFiRushStatics::GetBeatSystem());
-					GM_ASSERT_RETURN_VAL(sequence, false, "BeatTriggerSequenceComponent 생성에 실패했습니다. sequenceId=%ls", binding.sequenceId.c_str());
-				}
-
-				sequence->AddAction(binding.beatOffset, spawnEntry.owner, *triggerAction.action);
+				GM_ASSERT_RETURN_VAL(
+					triggerSequenceSystem.RegisterAction(binding.sequenceId, binding.beatOffset, spawnEntry.owner, *triggerAction.actionComponent),
+					false, "Trigger Sequence Action 등록에 실패했습니다. sequenceId=%ls", binding.sequenceId.c_str());
 			}
 		}
 
 		return true;
 	}
 
-	bool EnvironmentSpawner::SpawnObject(Scene& scene, const EnvironmentObjectData& objectData, SpawnEntry& outSpawnEntry) const
+	bool EnvironmentSpawner::SpawnObject(GameplayScene& scene, const EnvironmentObjectData& objectData, SpawnEntry& outSpawnEntry) const
 	{
 		const std::wstring modelKey = GetEnvironmentModelKey(objectData.modelIndex);
 		const std::shared_ptr<StaticMesh> staticMesh = _resources.Find<StaticMesh>(modelKey);
