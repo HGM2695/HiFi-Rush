@@ -1,4 +1,5 @@
 #include "NavigationMesh.h"
+#include "MathUtil.h"
 
 #if GM_ENABLE_DEBUG_TOOLS
 #include "IDebugRenderer.h"
@@ -89,14 +90,12 @@ namespace gm
 			const Vector3& end = cell._points[(edgeIndex + 1) % NavigationCell::PointCount];
 
 			// 시계방향 엣지 기준으로 바깥을 향하는 노멀을 계산
-			Vector3 edge = end - start;
-			edge.y = 0.f;
+			const Vector3 edge = Math::ProjectOnXZPlane(end - start);
 
 			Vector3 normal{ -edge.z, 0.f, edge.x };
 			normal.Normalize();
 
-			Vector3 direction = targetPosition - start;
-			direction.y = 0.f;
+			const Vector3 direction = Math::ProjectOnXZPlane(targetPosition - start);
 
 			// dot이 elipson보다 작다면 해당 엣지 기준으로는 내부로 판정
 			const float dot = normal.Dot(direction);
@@ -114,8 +113,7 @@ namespace gm
 
 			// 막힌 엣지라면 targetPosition을 해당 엣지 위로 투영해 슬라이드
 			Vector3 projectedPosition = start + direction - dot * normal;
-			Vector3 projectedDirection = projectedPosition - start;
-			projectedDirection.y = 0.f;
+			const Vector3 projectedDirection = Math::ProjectOnXZPlane(projectedPosition - start);
 
 			// 투영점이 엣지 끝을 넘어가면 다음 엣지의 이웃을 따라 재검사
 			if (projectedDirection.LengthSquared() > edge.LengthSquared())
@@ -193,14 +191,12 @@ namespace gm
 		const Vector3& start = _points[edgeIndex];
 		const Vector3& end = _points[(edgeIndex + 1) % PointCount];
 
-		Vector3 edge = end - start;
-		edge.y = 0.f;
+		const Vector3 edge = Math::ProjectOnXZPlane(end - start);
 
 		Vector3 normal{ -edge.z, 0.f, edge.x };
 		normal.Normalize();
 
-		Vector3 direction = position - start;
-		direction.y = 0.f;
+		const Vector3 direction = Math::ProjectOnXZPlane(position - start);
 
 		return normal.Dot(direction) > NavigationEdgeEpsilon;
 	}

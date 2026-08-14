@@ -24,6 +24,21 @@ namespace gm
 		return viewInfo;
 	}
 
+	Vector3 CameraComponent::GetForwardDirection() const
+	{
+		return Math::GetLookVector(_ownerTransform->GetRotation());
+	}
+
+	Vector3 CameraComponent::GetRightDirection() const
+	{
+		return Math::GetRightVector(_ownerTransform->GetRotation());
+	}
+
+	Vector3 CameraComponent::GetUpDirection() const
+	{
+		return Math::GetUpVector(_ownerTransform->GetRotation());
+	}
+
 	void CameraComponent::SetOrthographic(float width, float height, float nearZ, float farZ)
 	{
 		_projectionMode = CameraProjectionMode::Orthographic;

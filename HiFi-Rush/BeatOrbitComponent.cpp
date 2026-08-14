@@ -20,9 +20,9 @@ namespace gm
 		GM_ASSERT_RETURN(_transform, "BeatOrbitComponent는 TransformComponent가 필요합니다.");
 
 		const Vector3 initialPosition = _transform->GetPosition();
-		Vector3 centerDirection = initialPosition - _desc.center;
-		_heightOffset = centerDirection.y;
-		centerDirection.y = 0.f;
+		const Vector3 centerOffset = initialPosition - _desc.center;
+		_heightOffset = centerOffset.y;
+		const Vector3 centerDirection = Math::ProjectOnXZPlane(centerOffset);
 		_radius = centerDirection.Length();
 		_currentOrbitAngle = std::atan2(centerDirection.z, centerDirection.x);
 		_targetOrbitAngle = _currentOrbitAngle;
@@ -58,8 +58,7 @@ namespace gm
 
 		if (_desc.faceCenter)
 		{
-			Vector3 centerDirection = _desc.center - position;
-			centerDirection.y = 0.f;
+			const Vector3 centerDirection = Math::ProjectOnXZPlane(_desc.center - position);
 			if (centerDirection.LengthSquared() > 0.000001f)
 				_transform->SetRotationY(std::atan2(centerDirection.x, centerDirection.z));
 		}

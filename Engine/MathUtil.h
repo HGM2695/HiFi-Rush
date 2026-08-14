@@ -43,6 +43,27 @@ namespace gm::Math
 		return Vector3::Transform(Vector3(0.f, 0.f, 1.f), rotation);
 	}
 
+	inline Vector3 ProjectOnXZPlane(const Vector3& vector)
+	{
+		return Vector3{ vector.x, 0.f, vector.z };
+	}
+
+	inline Vector3 GetNormalizedXZDirection(const Vector3& vector)
+	{
+		Vector3 direction = ProjectOnXZPlane(vector);
+		if (direction.LengthSquared() <= 0.000001f)
+			return {};
+
+		direction.Normalize();
+		return direction;
+	}
+
+	inline Quaternion CreateRotationByDirection(const Vector3& direction, float yawOffset = 0.f)
+	{
+		const float yaw = std::atan2(direction.x, direction.z);
+		return Quaternion::CreateFromAxisAngle(Vector3{ 0.f, 1.f, 0.f }, yaw + yawOffset);
+	}
+
 	inline Matrix CreateTransformMatrix(const Vector3& position, const Quaternion& rotation, const Vector3& scale = Vector3(1.f, 1.f, 1.f))
 	{
 		return Matrix::CreateScale(scale) * Matrix::CreateFromQuaternion(rotation) * Matrix::CreateTranslation(position);

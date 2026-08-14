@@ -21,6 +21,9 @@ namespace gm
 		virtual TickGroup		GetTickGroup() const override { return TickGroup::Camera; }
 
 		CameraViewInfo			GetViewInfo() const;
+		Vector3					GetForwardDirection() const;
+		Vector3					GetRightDirection() const;
+		Vector3					GetUpDirection() const;
 
 		void					SetOrthographic(float width, float height, float nearZ = 0.f, float farZ = 1000.f);
 		void					SetPerspective(float fovYRadians, float aspectRatio, float nearZ = 0.1f, float farZ = 1000.f);
