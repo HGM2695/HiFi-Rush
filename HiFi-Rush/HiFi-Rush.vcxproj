@@ -217,7 +217,12 @@
     <ClInclude Include="LoadingScreenWidget.h" />
     <ClInclude Include="MainHUDWidget.h" />
 	<ClInclude Include="MonsterResources.h" />
+	<ClInclude Include="MonsterCombatComponent.h" />
 	<ClInclude Include="MonsterSpawner.h" />
+	<ClInclude Include="MonsterState.h" />
+	<ClInclude Include="MonsterStateContext.h" />
+	<ClInclude Include="MonsterStateMachineComponent.h" />
+	<ClInclude Include="MonsterStateTypes.h" />
 	<ClInclude Include="MonsterTypes.h" />
     <ClInclude Include="OutsideScene.h" />
     <ClInclude Include="PlayerRuntimeState.h" />
@@ -280,7 +285,10 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainHUDWidget.cpp" />
 	<ClCompile Include="MonsterResources.cpp" />
+	<ClCompile Include="MonsterCombatComponent.cpp" />
 	<ClCompile Include="MonsterSpawner.cpp" />
+	<ClCompile Include="MonsterState.cpp" />
+	<ClCompile Include="MonsterStateMachineComponent.cpp" />
     <ClCompile Include="OutsideScene.cpp" />
     <ClCompile Include="PlayerSpawner.cpp" />
     <ClCompile Include="QamilScene.cpp" />

@@ -1,6 +1,7 @@
 #include "GameplayScene.h"
 #include "Application.h"
 #include "EnvironmentSpawner.h"
+#include "GameObject.h"
 #include "GMAssert.h"
 #include "HiFiRushStatics.h"
 #include "MapResource.h"
@@ -48,11 +49,17 @@ namespace gm
 	bool GameplayScene::InitializePlayer(const PlayerSpawnDesc& desc)
 	{
 		PlayerSpawner playerSpawner(APPLICATION.GetResources());
-		return playerSpawner.Spawn(*this, desc, HiFiRushStatics::GetPlayerRuntimeState()) != nullptr;
+		GameObject* player = playerSpawner.Spawn(*this, desc, HiFiRushStatics::GetPlayerRuntimeState());
+		if (player == nullptr)
+			return false;
+
+		_player = player->GetWeakPtr();
+		return true;
 	}
 
 	void GameplayScene::OnUnload()
 	{
+		_player.Reset();
 		_triggerSequenceSystem->Clear();
 	}
 }

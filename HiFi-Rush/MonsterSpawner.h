@@ -18,6 +18,9 @@ namespace gm
 		GameObject* Spawn(Scene& scene, const MonsterSpawnData& data) const;
 
 	private:
+		bool AddCommonComponents(GameObject& monster, const MonsterSpawnData& data) const;
+
+	private:
 		Resources& _resources;
 	};
 }

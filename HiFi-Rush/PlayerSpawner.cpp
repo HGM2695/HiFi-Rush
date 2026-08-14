@@ -14,6 +14,7 @@
 #include "HealthComponent.h"
 #include "HiFiRushCollisionLayers.h"
 #include "HiFiRushStatics.h"
+#include "HurtBoxComponent.h"
 #include "MathUtil.h"
 #include "NavMeshControllerComponent.h"
 #include "PlayerRuntimeState.h"
@@ -56,10 +57,20 @@ namespace gm
 		bodyCollider->SetLocalCenter(Vector3{ 0.f, 0.9f, 0.f });
 		bodyCollider->SetSize(Vector3{ 0.8f, 1.8f, 0.8f });
 		bodyCollider->SetCollisionLayer(HiFiRushCollisionLayer::Player);
+		bodyCollider->SetCollisionMask(AllCollisionLayers & ~(HiFiRushCollisionLayer::PlayerAttack | HiFiRushCollisionLayer::MonsterAttack));
+
+		BoxCollider3DComponent* hurtCollider = player->AddComponent<BoxCollider3DComponent>();
+		GM_ASSERT_RETURN_VAL(hurtCollider, nullptr, "Player Hurt Collider 생성에 실패했습니다.");
+		hurtCollider->SetColliderId(L"HurtBox");
+		hurtCollider->SetLocalCenter(Vector3{ 0.f, 0.9f, 0.f });
+		hurtCollider->SetSize(Vector3{ 0.8f, 1.8f, 0.8f });
+		hurtCollider->SetCollisionLayer(HiFiRushCollisionLayer::Player);
+		hurtCollider->SetCollisionMask(HiFiRushCollisionLayer::MonsterAttack);
 
 		HealthComponent* healthComponent = player->AddComponent<HealthComponent>(runtimeState.maxHealth);
 		GM_ASSERT_RETURN_VAL(healthComponent, nullptr, "Player HealthComponent 생성에 실패했습니다.");
 		//GM_ASSERT_RETURN_VAL(player->AddComponent<PlayerRuntimeStateSyncComponent>(runtimeState), nullptr, "PlayerRuntimeStateSyncComponent 생성에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(player->AddComponent<HurtBoxComponent>(L"HurtBox"), nullptr, "Player HurtBoxComponent 생성에 실패했습니다.");
 
 		NavMeshControllerComponent* navMeshController = player->AddComponent<NavMeshControllerComponent>();
 		navMeshController->SetGroundCollisionEnabled(true);

@@ -1,9 +1,19 @@
 #include "MonsterSpawner.h"
 
+#include "BoxCollider3DComponent.h"
+#include "CharacterMovementComponent.h"
 #include "GameObject.h"
+#include "HealthComponent.h"
+#include "HiFiRushCollisionLayers.h"
+#include "HiFiRushStatics.h"
+#include "HurtBoxComponent.h"
+#include "MonsterCombatComponent.h"
 #include "MonsterResources.h"
+#include "MonsterStateMachineComponent.h"
 #include "MonsterTypes.h"
+#include "NavMeshControllerComponent.h"
 #include "Resources.h"
+#include "Rigidbody3DComponent.h"
 #include "Scene.h"
 #include "SkeletalAnimationClip.h"
 #include "SkeletalAnimatorComponent.h"
@@ -55,7 +65,53 @@ namespace gm
 		AnimationPlayOption playOption{};
 		playOption.loopOverride = true;
 		GM_ASSERT_RETURN_VAL(animator->Play(L"Default", playOption), nullptr, "Monster 기본 Animation 재생에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(AddCommonComponents(*monster, data), nullptr, "Monster 공통 Component 구성에 실패했습니다.");
 
 		return monster;
+	}
+
+	bool MonsterSpawner::AddCommonComponents(GameObject& monster, const MonsterSpawnData& data) const
+	{
+		GM_ASSERT_RETURN_VAL(data.maxHealth > 0, false, "Monster Max Health는 0보다 커야 합니다.");
+		GM_ASSERT_RETURN_VAL(
+			data.bodyColliderSize.x > 0.f && data.bodyColliderSize.y > 0.f && data.bodyColliderSize.z > 0.f,
+			false, "Monster Body Collider Size는 모든 축에서 0보다 커야 합니다.");
+		GM_ASSERT_RETURN_VAL(data.moveSpeed >= 0.f, false, "Monster Move Speed는 0 이상이어야 합니다.");
+		GM_ASSERT_RETURN_VAL(data.rotationInterpSpeed >= 0.f, false, "Monster Rotation Interp Speed는 0 이상이어야 합니다.");
+		GM_ASSERT_RETURN_VAL(data.attackCooldownBeats >= 0.f, false, "Monster Attack Cooldown은 0 이상이어야 합니다.");
+
+		Rigidbody3DComponent* rigidbody = monster.AddComponent<Rigidbody3DComponent>();
+		GM_ASSERT_RETURN_VAL(rigidbody, false, "Monster Rigidbody3DComponent 생성에 실패했습니다.");
+		rigidbody->SetGravityScale(3.f);
+
+		BoxCollider3DComponent* bodyCollider = monster.AddComponent<BoxCollider3DComponent>();
+		GM_ASSERT_RETURN_VAL(bodyCollider, false, "Monster Body Collider 생성에 실패했습니다.");
+		bodyCollider->SetColliderId(L"Body");
+		bodyCollider->SetLocalCenter(data.bodyColliderCenter);
+		bodyCollider->SetSize(data.bodyColliderSize);
+		bodyCollider->SetCollisionLayer(HiFiRushCollisionLayer::Monster);
+		bodyCollider->SetCollisionMask(AllCollisionLayers & ~(HiFiRushCollisionLayer::PlayerAttack | HiFiRushCollisionLayer::MonsterAttack));
+
+		BoxCollider3DComponent* hurtCollider = monster.AddComponent<BoxCollider3DComponent>();
+		GM_ASSERT_RETURN_VAL(hurtCollider, false, "Monster Hurt Collider 생성에 실패했습니다.");
+		hurtCollider->SetColliderId(L"HurtBox");
+		hurtCollider->SetLocalCenter(data.bodyColliderCenter);
+		hurtCollider->SetSize(data.bodyColliderSize);
+		hurtCollider->SetCollisionLayer(HiFiRushCollisionLayer::Monster);
+		hurtCollider->SetCollisionMask(HiFiRushCollisionLayer::PlayerAttack);
+
+		HealthComponent* health = monster.AddComponent<HealthComponent>(data.maxHealth);
+		GM_ASSERT_RETURN_VAL(health, false, "Monster HealthComponent 생성에 실패했습니다.");
+		health->SetInvincible(data.isInvincible);
+		GM_ASSERT_RETURN_VAL(monster.AddComponent<HurtBoxComponent>(L"HurtBox"), false, "Monster HurtBoxComponent 생성에 실패했습니다.");
+
+		NavMeshControllerComponent* navMeshController = monster.AddComponent<NavMeshControllerComponent>();
+		GM_ASSERT_RETURN_VAL(navMeshController, false, "Monster NavMeshControllerComponent 생성에 실패했습니다.");
+		navMeshController->SetGroundCollisionEnabled(true);
+
+		GM_ASSERT_RETURN_VAL(monster.AddComponent<CharacterMovementComponent>(data.moveSpeed, data.rotationInterpSpeed), false, "Monster CharacterMovementComponent 생성에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(monster.AddComponent<MonsterCombatComponent>(data.type, HiFiRushStatics::GetBeatSystem(), data.attackCooldownBeats), false, "MonsterCombatComponent 생성에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(monster.AddComponent<MonsterStateMachineComponent>(), false, "MonsterStateMachineComponent 생성에 실패했습니다.");
+		return true;
 	}
 }

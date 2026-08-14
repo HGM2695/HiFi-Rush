@@ -53,6 +53,12 @@
 	<Filter Include="Component\Environment">
 	  <UniqueIdentifier>{ec004ba5-5560-4c63-a73f-4894240920f2}</UniqueIdentifier>
 	</Filter>
+	<Filter Include="Component\Monster">
+	  <UniqueIdentifier>{d96df81a-9f42-4ecb-a1ef-977338f0863b}</UniqueIdentifier>
+	</Filter>
+	<Filter Include="Component\Monster\State">
+	  <UniqueIdentifier>{54066e82-a271-48a7-8c09-f50e435b12fb}</UniqueIdentifier>
+	</Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CombatTypes.h">
@@ -158,8 +164,23 @@
 	<ClInclude Include="MonsterResources.h">
 	  <Filter>Resource</Filter>
 	</ClInclude>
+	<ClInclude Include="MonsterCombatComponent.h">
+	  <Filter>Component\Monster</Filter>
+	</ClInclude>
 	<ClInclude Include="MonsterSpawner.h">
 	  <Filter>GameObject</Filter>
+	</ClInclude>
+	<ClInclude Include="MonsterState.h">
+	  <Filter>Component\Monster\State</Filter>
+	</ClInclude>
+	<ClInclude Include="MonsterStateContext.h">
+	  <Filter>Component\Monster\State</Filter>
+	</ClInclude>
+	<ClInclude Include="MonsterStateMachineComponent.h">
+	  <Filter>Component\Monster</Filter>
+	</ClInclude>
+	<ClInclude Include="MonsterStateTypes.h">
+	  <Filter>Component\Monster\State</Filter>
 	</ClInclude>
 	<ClInclude Include="MonsterTypes.h">
 	  <Filter>Util\Types</Filter>
@@ -345,8 +366,17 @@
 	<ClCompile Include="MonsterResources.cpp">
 	  <Filter>Resource</Filter>
 	</ClCompile>
+	<ClCompile Include="MonsterCombatComponent.cpp">
+	  <Filter>Component\Monster</Filter>
+	</ClCompile>
 	<ClCompile Include="MonsterSpawner.cpp">
 	  <Filter>GameObject</Filter>
+	</ClCompile>
+	<ClCompile Include="MonsterState.cpp">
+	  <Filter>Component\Monster\State</Filter>
+	</ClCompile>
+	<ClCompile Include="MonsterStateMachineComponent.cpp">
+	  <Filter>Component\Monster</Filter>
 	</ClCompile>
 	<ClCompile Include="PlayerRuntimeStateSyncComponent.cpp">
 		<Filter>Component\Player</Filter>
