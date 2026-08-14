@@ -10,14 +10,13 @@ namespace gm
 	class GameplayScene;
 	class Resources;
 	struct EnvironmentObjectData;
-	struct MapData;
 
 	class EnvironmentSpawner
 	{
 	public:
 		explicit EnvironmentSpawner(Resources& resources);
 
-		bool Spawn(GameplayScene& scene, const MapData& mapData) const;
+		bool Spawn(GameplayScene& scene, const std::vector<EnvironmentObjectData>& objectDatas) const;
 
 	private:
 		struct SpawnEntry

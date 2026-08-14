@@ -33,11 +33,11 @@ namespace gm
 		: _resources(resources), _componentFactory(resources, HiFiRushStatics::GetBeatSystem())
 	{}
 
-	bool EnvironmentSpawner::Spawn(GameplayScene& scene, const MapData& mapData) const
+	bool EnvironmentSpawner::Spawn(GameplayScene& scene, const std::vector<EnvironmentObjectData>& objectDatas) const
 	{
 		std::vector<SpawnEntry> spawnEntries;
-		spawnEntries.reserve(mapData.objects.size());
-		for (const EnvironmentObjectData& objectData : mapData.objects)
+		spawnEntries.reserve(objectDatas.size());
+		for (const EnvironmentObjectData& objectData : objectDatas)
 		{
 			SpawnEntry spawnEntry{};
 			if (SpawnObject(scene, objectData, spawnEntry) == false)
@@ -47,7 +47,7 @@ namespace gm
 		}
 
 		GM_ASSERT_RETURN_VAL(BuildTriggerSequences(scene, spawnEntries), false, "환경 오브젝트의 트리거 시퀀스 구성에 실패했습니다.");
-		GM_LOG("Environment objects spawned. count=%zu", mapData.objects.size());
+		GM_LOG("Environment objects spawned. count=%zu", objectDatas.size());
 		return true;
 	}
 

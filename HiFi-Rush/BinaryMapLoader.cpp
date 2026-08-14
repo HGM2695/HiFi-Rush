@@ -206,6 +206,17 @@ namespace gm
 		}
 	}
 
+	bool BinaryMapLoader::ReadMonsterSpawn(std::istream& inputStream, MonsterSpawnData& outSpawnData)
+	{
+		uint32 monsterType = 0;
+		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, monsterType), false, "Monster Type을 읽는 데 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(monsterType < static_cast<uint32>(MonsterType::Count), false, "지원하지 않는 Monster Type입니다. type=%u", monsterType);
+
+		outSpawnData.type = static_cast<MonsterType>(monsterType);
+		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSpawnData.world), false, "Monster World 행렬을 읽는 데 실패했습니다.");
+		return true;
+	}
+
 	bool BinaryMapLoader::ReadTriggerSequenceBinding(std::istream& inputStream, TriggerSequenceBindingData& outBinding)
 	{
 		GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, outBinding.sequenceId), false, "트리거 Sequence ID를 읽는 데 실패했습니다.");
@@ -229,6 +240,19 @@ namespace gm
 		{
 			EnvironmentObjectData& object = loadedData.objects[objectIndex];
 			GM_ASSERT_RETURN_VAL(ReadEnvironmentObject(inputStream, object), false, "환경 오브젝트 데이터를 읽는 데 실패했습니다. index=%u", objectIndex);
+		}
+
+		if (inputStream.peek() != std::char_traits<char>::eof())
+		{
+			uint32 monsterSpawnCount = 0;
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, monsterSpawnCount), false, "Monster Spawn 개수를 읽는 데 실패했습니다.");
+
+			loadedData.monsterSpawnDatas.resize(monsterSpawnCount);
+			for (uint32 spawnIndex = 0; spawnIndex < monsterSpawnCount; ++spawnIndex)
+			{
+				MonsterSpawnData& spawnData = loadedData.monsterSpawnDatas[spawnIndex];
+				GM_ASSERT_RETURN_VAL(ReadMonsterSpawn(inputStream, spawnData), false, "Monster Spawn 데이터를 읽는 데 실패했습니다. index=%u", spawnIndex);
+			}
 		}
 
 		GM_ASSERT_RETURN_VAL(inputStream.peek() == std::char_traits<char>::eof(), false, "맵 바이너리 끝에 해석되지 않은 데이터가 남아 있습니다. path=%ls", filePath.c_str());

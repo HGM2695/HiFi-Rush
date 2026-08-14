@@ -1,5 +1,12 @@
 #include "GameplayScene.h"
+#include "Application.h"
+#include "EnvironmentSpawner.h"
+#include "GMAssert.h"
 #include "HiFiRushStatics.h"
+#include "MapResource.h"
+#include "MonsterSpawner.h"
+#include "PlayerSpawner.h"
+#include "Resources.h"
 #include "TriggerSequenceSystem.h"
 
 #include <memory>
@@ -20,6 +27,28 @@ namespace gm
 	const TriggerSequenceSystem& GameplayScene::GetTriggerSequenceSystem() const
 	{
 		return *_triggerSequenceSystem;
+	}
+
+	bool GameplayScene::InitializeMap(const std::wstring& mapResourceKey)
+	{
+		const std::shared_ptr<MapResource> mapResource = APPLICATION.GetResources().Find<MapResource>(mapResourceKey);
+		GM_ASSERT_RETURN_VAL(mapResource, false, "MapResource가 로드되지 않았습니다. key=%ls", mapResourceKey.c_str());
+
+		const MapData& mapData = mapResource->GetData();
+
+		EnvironmentSpawner environmentSpawner(APPLICATION.GetResources());
+		GM_ASSERT_RETURN_VAL(environmentSpawner.Spawn(*this, mapData.objects), false, "환경 구성에 실패했습니다. key=%ls", mapResourceKey.c_str());
+
+		MonsterSpawner monsterSpawner(APPLICATION.GetResources());
+		GM_ASSERT_RETURN_VAL(monsterSpawner.Spawn(*this, mapData.monsterSpawnDatas), false, "Monster 구성에 실패했습니다. key=%ls", mapResourceKey.c_str());
+
+		return true;
+	}
+
+	bool GameplayScene::InitializePlayer(const PlayerSpawnDesc& desc)
+	{
+		PlayerSpawner playerSpawner(APPLICATION.GetResources());
+		return playerSpawner.Spawn(*this, desc, HiFiRushStatics::GetPlayerRuntimeState()) != nullptr;
 	}
 
 	void GameplayScene::OnUnload()

@@ -11,6 +11,7 @@ namespace gm
 	class IGraphicsResourceFactory;
 	class Resource;
 	class Resources;
+	enum class MonsterType : uint32;
 	struct RhythmBGMDesc;
 
 	class CommonLoadingScene : public Scene
@@ -52,6 +53,7 @@ namespace gm
 		static bool				LoadMeshTextures(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static bool				LoadMapResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory, const std::wstring& mapFileName);
 		static bool				LoadChiResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory);
+		static bool				LoadMonsterResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory, MonsterType monsterType);
 		static bool				LoadNavigationMesh(SceneLoadData& outLoadData, Resources& resources, const std::wstring& key, const std::wstring& fileName);
 		static bool				LoadRhythmBGM(SceneLoadData& outLoadData, Resources& resources, const RhythmBGMDesc& desc);
 

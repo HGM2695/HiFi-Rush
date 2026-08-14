@@ -11,8 +11,5 @@ namespace gm
 		virtual void OnExit() override;
 		virtual void OnInitialize() override;
 		virtual void OnTick(float deltaTime) override;
-
-	private:
-		void InitializeEnvironment();
 	};
 }

@@ -155,6 +155,15 @@
     <ClInclude Include="PlayerSpawner.h">
       <Filter>GameObject</Filter>
     </ClInclude>
+	<ClInclude Include="MonsterResources.h">
+	  <Filter>Resource</Filter>
+	</ClInclude>
+	<ClInclude Include="MonsterSpawner.h">
+	  <Filter>GameObject</Filter>
+	</ClInclude>
+	<ClInclude Include="MonsterTypes.h">
+	  <Filter>Util\Types</Filter>
+	</ClInclude>
 	<ClInclude Include="PlayerRuntimeState.h">
 		<Filter>Util\Types\Player</Filter>
 	</ClInclude>
@@ -333,6 +342,12 @@
     <ClCompile Include="PlayerSpawner.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
+	<ClCompile Include="MonsterResources.cpp">
+	  <Filter>Resource</Filter>
+	</ClCompile>
+	<ClCompile Include="MonsterSpawner.cpp">
+	  <Filter>GameObject</Filter>
+	</ClCompile>
 	<ClCompile Include="PlayerRuntimeStateSyncComponent.cpp">
 		<Filter>Component\Player</Filter>
 	</ClCompile>

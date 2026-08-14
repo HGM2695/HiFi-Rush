@@ -13,8 +13,6 @@ namespace gm
 		virtual void	OnTick(float deltaTime) override;
 
 	private:
-		void			InitializeEnvironment();
-		void			InitializePlayer();
 		void			InitializeSubObject();
 		void			InitializeStaticMeshTest();
 		void			InitializeSkeletalMeshTest();

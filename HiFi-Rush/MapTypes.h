@@ -2,6 +2,7 @@
 
 #include "EnvironmentComponentTypes.h"
 #include "MathTypes.h"
+#include "MonsterTypes.h"
 #include "Types.h"
 
 #include <vector>
@@ -27,5 +28,6 @@ namespace gm
 	struct MapData
 	{
 		std::vector<EnvironmentObjectData>	objects;
+		std::vector<MonsterSpawnData>		monsterSpawnDatas;
 	};
 }

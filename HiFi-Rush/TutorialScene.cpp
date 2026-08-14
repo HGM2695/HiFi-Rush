@@ -18,10 +18,7 @@
 #include "SkeletalMeshComponent.h"
 #include "SkeletalAnimationClip.h"
 #include "NavigationMesh.h"
-#include "EnvironmentSpawner.h"
 #include "HiFiRushAudio.h"
-#include "HiFiRushStatics.h"
-#include "MapResource.h"
 #include "PlayerSpawner.h"
 #include "SceneDebugTools.h"
 
@@ -48,34 +45,21 @@ namespace gm
 	void TutorialScene::OnInitialize()
 	{
 		//InitializeSubObject();
-		InitializeEnvironment();
-		InitializePlayer();
+		GM_ASSERT_RETURN(InitializeMap(L"TutorialMap"), "Tutorial Map 구성에 실패했습니다.");
+
+		PlayerSpawnDesc playerDesc{};
+		playerDesc.position = Vector3{ 3.f, 0.f, 0.f };
+		playerDesc.rotationY = Math::GM_PI;
+		playerDesc.cameraDistance = 3.5f;
+		playerDesc.cameraPitch = Math::DegreesToRadians(15.f);
+		GM_ASSERT_RETURN(InitializePlayer(playerDesc), "Tutorial Player 생성에 실패했습니다.");
+
 		GetCameraManager()->SetPixelSnapEnabled(false);
 	}
 
 	void TutorialScene::OnTick(float deltaTime)
 	{
 		TickSceneTransitionDebug();
-	}
-
-	void TutorialScene::InitializeEnvironment()
-	{
-		const std::shared_ptr<MapResource> mapResource = APPLICATION.GetResources().Find<MapResource>(L"TutorialMap");
-		GM_ASSERT_RETURN(mapResource, "Tutorial MapResource가 로드되지 않았습니다.");
-
-		EnvironmentSpawner spawner(APPLICATION.GetResources());
-		GM_ASSERT_RETURN(spawner.Spawn(*this, mapResource->GetData()), "Tutorial 환경 구성에 실패했습니다.");
-	}
-
-	void TutorialScene::InitializePlayer()
-	{
-		PlayerSpawner playerSpawner(APPLICATION.GetResources());
-		PlayerSpawnDesc playerDesc{};
-		playerDesc.position = Vector3{ 3.f, 0.f, 0.f };
-		playerDesc.rotationY = Math::GM_PI;
-		playerDesc.cameraDistance = 3.5f;
-		playerDesc.cameraPitch = Math::DegreesToRadians(15.f);
-		GM_ASSERT_RETURN(playerSpawner.Spawn(*this, playerDesc, HiFiRushStatics::GetPlayerRuntimeState()), "Tutorial Player 생성에 실패했습니다.");
 	}
 
 	void TutorialScene::InitializeSubObject()
@@ -136,5 +120,4 @@ namespace gm
 		animatorComponent->AddClip(L"Default", animationClip);
 		animatorComponent->Play(L"Default");
 	}
-
 }

@@ -13,6 +13,8 @@
 #include "ITextRenderer.h"
 #include "LoadingScreenWidget.h"
 #include "MapResource.h"
+#include "MonsterResources.h"
+#include "MonsterTypes.h"
 #include "NavigationMesh.h"
 #include "PathUtil.h"
 #include "Paths.h"
@@ -26,6 +28,7 @@
 #include "UIManager.h"
 
 #include <algorithm>
+#include <array>
 #include <chrono>
 #include <filesystem>
 
@@ -271,6 +274,28 @@ namespace gm
 			}
 		}
 
+		std::array<bool, static_cast<size_t>(MonsterType::Count)> requiredMonsterTypes{};
+		for (const MonsterSpawnData& spawnData : mapResource->GetData().monsterSpawnDatas)
+		{
+			const size_t monsterTypeIndex = static_cast<size_t>(spawnData.type);
+			if (monsterTypeIndex >= requiredMonsterTypes.size())
+			{
+				outLoadData.errorMessage = L"맵에 지원하지 않는 Monster Type이 포함되어 있습니다.";
+				return false;
+			}
+
+			requiredMonsterTypes[monsterTypeIndex] = true;
+		}
+
+		for (size_t monsterTypeIndex = 0; monsterTypeIndex < requiredMonsterTypes.size(); ++monsterTypeIndex)
+		{
+			if (requiredMonsterTypes[monsterTypeIndex] == false)
+				continue;
+
+			if (LoadMonsterResources(outLoadData, resources, resourceFactory, static_cast<MonsterType>(monsterTypeIndex)) == false)
+				return false;
+		}
+
 		return true;
 	}
 
@@ -326,6 +351,73 @@ namespace gm
 			if (animationId == ChiAnimationId::Idle && resources.Find<SkeletalAnimationClip>(L"chi.DefaultAnimation") == nullptr)
 				outLoadData.resources.push_back({ L"chi.DefaultAnimation", std::move(clip) });
 		}
+
+		return true;
+	}
+
+	bool CommonLoadingScene::LoadMonsterResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory, MonsterType monsterType)
+	{
+		const MonsterResourceInfo* resourceInfo = FindMonsterResourceInfo(monsterType);
+		if (resourceInfo == nullptr)
+		{
+			outLoadData.errorMessage = L"지원하지 않는 Monster Type입니다.";
+			return false;
+		}
+
+		const std::wstring defaultAnimationKey = GetMonsterDefaultAnimationResourceKey(monsterType);
+		if (resources.Find<SkeletalMesh>(resourceInfo->resourceKey) && resources.Find<SkeletalAnimationClip>(defaultAnimationKey))
+			return true;
+
+		BinaryModelLoader loader;
+		const std::wstring modelPath = GetModelPath(L"Binary/Monsters/" + std::wstring(resourceInfo->modelFileName));
+		ModelData modelData = loader.Load(modelPath);
+		if (modelData.type != ModelType::Skeletal || modelData.skinnedVertices.empty() || modelData.indices.empty() || modelData.animations.empty())
+		{
+			outLoadData.errorMessage = L"Monster 모델 데이터가 유효하지 않습니다. key=" + std::wstring(resourceInfo->resourceKey);
+			return false;
+		}
+
+		if (resourceInfo->defaultAnimationIndex >= modelData.animations.size())
+		{
+			outLoadData.errorMessage = L"Monster 기본 Animation Index가 유효하지 않습니다. key=" + std::wstring(resourceInfo->resourceKey);
+			return false;
+		}
+
+		if (resources.Find<SkeletalMesh>(resourceInfo->resourceKey) == nullptr)
+		{
+			std::shared_ptr<SkeletalMesh> skeletalMesh = SkeletalMesh::Create(modelData, resourceFactory);
+			if (skeletalMesh == nullptr)
+			{
+				outLoadData.errorMessage = L"Monster SkeletalMesh 생성에 실패했습니다. key=" + std::wstring(resourceInfo->resourceKey);
+				return false;
+			}
+
+			outLoadData.resources.push_back({ resourceInfo->resourceKey, std::move(skeletalMesh) });
+		}
+
+		std::shared_ptr<SkeletalAnimationClip> defaultAnimation;
+		for (uint32 animationIndex = 0; animationIndex < modelData.animations.size(); ++animationIndex)
+		{
+			const std::wstring animationKey = GetMonsterAnimationResourceKey(monsterType, animationIndex);
+			std::shared_ptr<SkeletalAnimationClip> animation = resources.Find<SkeletalAnimationClip>(animationKey);
+			if (animation == nullptr)
+			{
+				animation = SkeletalAnimationClip::Create(modelData.animations[animationIndex]);
+				if (animation == nullptr)
+				{
+					outLoadData.errorMessage = L"Monster SkeletalAnimationClip 생성에 실패했습니다. key=" + animationKey;
+					return false;
+				}
+
+				outLoadData.resources.push_back({ animationKey, animation });
+			}
+
+			if (animationIndex == resourceInfo->defaultAnimationIndex)
+				defaultAnimation = std::move(animation);
+		}
+
+		if (resources.Find<SkeletalAnimationClip>(defaultAnimationKey) == nullptr)
+			outLoadData.resources.push_back({ defaultAnimationKey, std::move(defaultAnimation) });
 
 		return true;
 	}
