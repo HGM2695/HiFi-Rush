@@ -15,6 +15,7 @@
 #include "Resources.h"
 #include "Rigidbody3DComponent.h"
 #include "Scene.h"
+#include "SjangoStateMachineComponent.h"
 #include "SkeletalAnimationClip.h"
 #include "SkeletalAnimatorComponent.h"
 #include "SkeletalMesh.h"
@@ -111,7 +112,24 @@ namespace gm
 
 		GM_ASSERT_RETURN_VAL(monster.AddComponent<CharacterMovementComponent>(data.moveSpeed, data.rotationInterpSpeed), false, "Monster CharacterMovementComponent 생성에 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(monster.AddComponent<MonsterCombatComponent>(data.type, HiFiRushStatics::GetBeatSystem(), data.attackCooldownBeats), false, "MonsterCombatComponent 생성에 실패했습니다.");
-		GM_ASSERT_RETURN_VAL(monster.AddComponent<MonsterStateMachineComponent>(), false, "MonsterStateMachineComponent 생성에 실패했습니다.");
+		MonsterStateMachineComponent* stateMachine = nullptr;
+		switch (data.type)
+		{
+		case MonsterType::Sjango:
+			rigidbody->SetKinematic(true);
+			stateMachine = monster.AddComponent<SjangoStateMachineComponent>();
+			break;
+
+		case MonsterType::Sword:
+		case MonsterType::Gunner:
+			stateMachine = monster.AddComponent<MonsterStateMachineComponent>();
+			break;
+
+		default:
+			return false;
+		}
+
+		GM_ASSERT_RETURN_VAL(stateMachine, false, "MonsterStateMachineComponent 생성에 실패했습니다.");
 		return true;
 	}
 }

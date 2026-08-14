@@ -224,6 +224,9 @@
 	<ClInclude Include="MonsterStateMachineComponent.h" />
 	<ClInclude Include="MonsterStateTypes.h" />
 	<ClInclude Include="MonsterTypes.h" />
+	<ClInclude Include="SjangoAnimationTypes.h" />
+	<ClInclude Include="SjangoState.h" />
+	<ClInclude Include="SjangoStateMachineComponent.h" />
     <ClInclude Include="OutsideScene.h" />
     <ClInclude Include="PlayerRuntimeState.h" />
     <ClInclude Include="PlayerRuntimeStateSyncComponent.h" />
@@ -289,6 +292,8 @@
 	<ClCompile Include="MonsterSpawner.cpp" />
 	<ClCompile Include="MonsterState.cpp" />
 	<ClCompile Include="MonsterStateMachineComponent.cpp" />
+	<ClCompile Include="SjangoState.cpp" />
+	<ClCompile Include="SjangoStateMachineComponent.cpp" />
     <ClCompile Include="OutsideScene.cpp" />
     <ClCompile Include="PlayerSpawner.cpp" />
     <ClCompile Include="QamilScene.cpp" />

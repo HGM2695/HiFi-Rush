@@ -59,6 +59,12 @@
 	<Filter Include="Component\Monster\State">
 	  <UniqueIdentifier>{54066e82-a271-48a7-8c09-f50e435b12fb}</UniqueIdentifier>
 	</Filter>
+	<Filter Include="Component\Monster\Sjango">
+	  <UniqueIdentifier>{5745d930-c750-4987-afc2-8315383f9d35}</UniqueIdentifier>
+	</Filter>
+	<Filter Include="Component\Monster\Sjango\State">
+	  <UniqueIdentifier>{84d14362-3002-4b3e-816e-6f8e5735e7cd}</UniqueIdentifier>
+	</Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CombatTypes.h">
@@ -184,6 +190,15 @@
 	</ClInclude>
 	<ClInclude Include="MonsterTypes.h">
 	  <Filter>Util\Types</Filter>
+	</ClInclude>
+	<ClInclude Include="SjangoAnimationTypes.h">
+	  <Filter>Component\Monster\Sjango</Filter>
+	</ClInclude>
+	<ClInclude Include="SjangoState.h">
+	  <Filter>Component\Monster\Sjango\State</Filter>
+	</ClInclude>
+	<ClInclude Include="SjangoStateMachineComponent.h">
+	  <Filter>Component\Monster\Sjango</Filter>
 	</ClInclude>
 	<ClInclude Include="PlayerRuntimeState.h">
 		<Filter>Util\Types\Player</Filter>
@@ -377,6 +392,12 @@
 	</ClCompile>
 	<ClCompile Include="MonsterStateMachineComponent.cpp">
 	  <Filter>Component\Monster</Filter>
+	</ClCompile>
+	<ClCompile Include="SjangoState.cpp">
+	  <Filter>Component\Monster\Sjango\State</Filter>
+	</ClCompile>
+	<ClCompile Include="SjangoStateMachineComponent.cpp">
+	  <Filter>Component\Monster\Sjango</Filter>
 	</ClCompile>
 	<ClCompile Include="PlayerRuntimeStateSyncComponent.cpp">
 		<Filter>Component\Player</Filter>

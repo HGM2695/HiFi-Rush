@@ -13,7 +13,7 @@ namespace gm
 	class MonsterState;
 	struct HitEvent;
 
-	class MonsterStateMachineComponent final : public Component
+	class MonsterStateMachineComponent : public Component
 	{
 	public:
 		MonsterStateMachineComponent();

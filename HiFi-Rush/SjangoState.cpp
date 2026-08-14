@@ -1,0 +1,35 @@
+#include "SjangoState.h"
+
+#include "CombatTypes.h"
+#include "MonsterStateMachineComponent.h"
+#include "SjangoAnimationTypes.h"
+
+namespace gm
+{
+	void SjangoState::OnDamaged(MonsterStateContext& context, const HitEvent& event)
+	{
+		const DamageState damageState = event.damageResult.state;
+		if (damageState != DamageState::Applied && damageState != DamageState::Blocked)
+			return;
+
+		context.stateMachine->ChangeState(MonsterStateId::Damage, true);
+	}
+
+	// Idle /////////////////////////////////////////////////////////////////////////
+	void SjangoIdleState::Enter(MonsterStateContext& context)
+	{
+		PlayAnimation(context, GetSjangoAnimationName(SjangoAnimationId::Idle), true);
+	}
+
+	// Damage /////////////////////////////////////////////////////////////////////////
+	void SjangoDamageState::Enter(MonsterStateContext& context)
+	{
+		PlayAnimation(context, GetSjangoAnimationName(SjangoAnimationId::Damage), false);
+	}
+
+	void SjangoDamageState::Tick(MonsterStateContext& context, float)
+	{
+		if (IsAnimationCompleted(context))
+			context.stateMachine->ChangeState(MonsterStateId::Idle);
+	}
+}
