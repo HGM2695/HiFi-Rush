@@ -197,6 +197,9 @@
     <ClInclude Include="MovementComponent.h">
       <Filter>Engine Component\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="CharacterMovementComponent.h">
+      <Filter>Engine Component\Physics</Filter>
+    </ClInclude>
     <ClInclude Include="NavMeshSystem.h">
       <Filter>Engine Component\Physics</Filter>
     </ClInclude>
@@ -556,6 +559,9 @@
       <Filter>Resource\Navigation</Filter>
     </ClCompile>
     <ClCompile Include="MovementComponent.cpp">
+      <Filter>Engine Component\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterMovementComponent.cpp">
       <Filter>Engine Component\Physics</Filter>
     </ClCompile>
     <ClCompile Include="NavMeshSystem.cpp">
