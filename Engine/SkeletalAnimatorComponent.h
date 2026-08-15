@@ -45,6 +45,7 @@ namespace gm
 		float									GetPlayTime() const;
 		float									GetPlayRate() const;
 		bool									IsLoop() const;
+		bool									HasLooped() const;
 
 	protected:
 		virtual void							OnInitialize() override;

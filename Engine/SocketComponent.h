@@ -1,17 +1,21 @@
 #pragma once
 
 #include "Component.h"
+
+#include <string>
 #include <unordered_map>
 
 namespace gm
 {
+	class SkeletalMeshComponent;
 	class TransformComponent;
 
 	struct Socket
 	{
-		Vector3		position{};
-		Quaternion	rotation{ 0.f, 0.f, 0.f, 1.f };
-		Vector3		scale{ 1.f, 1.f, 1.f };
+		Vector3			position{};
+		Quaternion		rotation{ 0.f, 0.f, 0.f, 1.f };
+		Vector3			scale{ 1.f, 1.f, 1.f };
+		std::wstring	boneName{};
 
 		Matrix GetLocalMatrix() const;
 	};
@@ -33,5 +37,6 @@ namespace gm
 	private:
 		std::unordered_map<std::wstring, Socket>	_sockets;
 		TransformComponent*							_ownerTransform = nullptr;
+		SkeletalMeshComponent*						_skeletalMeshComponent = nullptr;
 	};
 }

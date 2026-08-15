@@ -16,6 +16,7 @@ namespace gm
 
         _state = AnimationState::Playing;
         _currentTime = std::max(0.0f, option.startTime);
+        _hasLooped = false;
 
         return true;
     }
@@ -24,6 +25,7 @@ namespace gm
     {
         _state = AnimationState::Init;
         _currentTime = 0.f;
+        _hasLooped = false;
     }
 
     void AnimationController::Pause()
@@ -40,6 +42,8 @@ namespace gm
 
     void AnimationController::Tick(float deltaTime)
     {
+        _hasLooped = false;
+
         if (_state != AnimationState::Playing)
             return;
 
@@ -50,6 +54,7 @@ namespace gm
 
         if (_isLoop)
         {
+            _hasLooped = true;
             _currentTime = std::fmod(_currentTime, _clipLength);
             return;
         }
@@ -67,6 +72,7 @@ namespace gm
     void AnimationController::SetPlayTime(float playTime)
     {
         GM_ASSERT_RETURN(playTime >= 0.f, "Animation 재생 시각은 0 이상이어야 합니다.");
+        _hasLooped = false;
 
         if (_clipLength <= 0.f)
         {
@@ -76,7 +82,9 @@ namespace gm
 
         if (_isLoop)
         {
-            _currentTime = std::fmod(playTime, _clipLength);
+            const float nextTime = std::fmod(playTime, _clipLength);
+            _hasLooped = nextTime < _currentTime;
+            _currentTime = nextTime;
             return;
         }
 

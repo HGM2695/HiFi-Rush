@@ -13,11 +13,12 @@
 #include "ITextRenderer.h"
 #include "LoadingScreenWidget.h"
 #include "MapResource.h"
-#include "MonsterResources.h"
+#include "MonsterResourceInfo.h"
 #include "MonsterTypes.h"
 #include "NavigationMesh.h"
 #include "PathUtil.h"
 #include "Paths.h"
+#include "PlayerResources.h"
 #include "Resources.h"
 #include "SceneManager.h"
 #include "SkeletalAnimationClip.h"
@@ -301,8 +302,9 @@ namespace gm
 
 	bool CommonLoadingScene::LoadChiResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory)
 	{
-		bool hasAllResources = resources.Find<SkeletalMesh>(L"chi") != nullptr;
-		hasAllResources &= resources.Find<SkeletalAnimationClip>(L"chi.DefaultAnimation") != nullptr;
+		bool hasAllResources = resources.Find<SkeletalMesh>(ChiSkeletalMeshResourceKey) != nullptr;
+		hasAllResources &= resources.Find<SkeletalAnimationClip>(ChiDefaultAnimationResourceKey) != nullptr;
+		hasAllResources &= resources.Find<StaticMesh>(ChiGuitarResourceKey) != nullptr;
 		for (uint32 animationIndex = 0; animationIndex < ChiAnimationIdCount; ++animationIndex)
 			hasAllResources &= resources.Find<SkeletalAnimationClip>(GetChiAnimationKey(static_cast<ChiAnimationId>(animationIndex))) != nullptr;
 
@@ -312,7 +314,7 @@ namespace gm
 		BinaryModelLoader loader;
 		ModelData modelData = loader.Load(GetModelPath(L"Binary/Characters/Chi.bin"));
 
-		if (resources.Find<SkeletalMesh>(L"chi") == nullptr)
+		if (resources.Find<SkeletalMesh>(ChiSkeletalMeshResourceKey) == nullptr)
 		{
 			std::shared_ptr<SkeletalMesh> skeletalMesh = SkeletalMesh::Create(modelData, resourceFactory);
 			if (skeletalMesh == nullptr)
@@ -321,7 +323,7 @@ namespace gm
 				return false;
 			}
 
-			outLoadData.resources.push_back({ L"chi", std::move(skeletalMesh) });
+			outLoadData.resources.push_back({ ChiSkeletalMeshResourceKey, std::move(skeletalMesh) });
 		}
 
 		if (modelData.animations.size() != ChiAnimationIdCount)
@@ -348,8 +350,27 @@ namespace gm
 				outLoadData.resources.push_back({ animationKey, clip });
 			}
 
-			if (animationId == ChiAnimationId::Idle && resources.Find<SkeletalAnimationClip>(L"chi.DefaultAnimation") == nullptr)
-				outLoadData.resources.push_back({ L"chi.DefaultAnimation", std::move(clip) });
+			if (animationId == ChiAnimationId::Idle && resources.Find<SkeletalAnimationClip>(ChiDefaultAnimationResourceKey) == nullptr)
+				outLoadData.resources.push_back({ ChiDefaultAnimationResourceKey, std::move(clip) });
+		}
+
+		if (resources.Find<StaticMesh>(ChiGuitarResourceKey) == nullptr)
+		{
+			ModelData guitarModelData = loader.Load(GetModelPath(L"Binary/Weapon/Guitar.bin"));
+			if (guitarModelData.type != ModelType::Static || guitarModelData.vertices.empty() || guitarModelData.indices.empty())
+			{
+				outLoadData.errorMessage = L"Chi Guitar 모델 데이터가 유효하지 않습니다.";
+				return false;
+			}
+
+			std::shared_ptr<StaticMesh> guitarMesh = StaticMesh::Create(guitarModelData, resourceFactory);
+			if (guitarMesh == nullptr)
+			{
+				outLoadData.errorMessage = L"Chi Guitar StaticMesh 생성에 실패했습니다.";
+				return false;
+			}
+
+			outLoadData.resources.push_back({ ChiGuitarResourceKey, std::move(guitarMesh) });
 		}
 
 		return true;
@@ -357,15 +378,16 @@ namespace gm
 
 	bool CommonLoadingScene::LoadMonsterResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory, MonsterType monsterType)
 	{
-		const MonsterResourceInfo* resourceInfo = FindMonsterResourceInfo(monsterType);
+		const MonsterResourceInfo* resourceInfo = GetMonsterResourceInfo(monsterType);
 		if (resourceInfo == nullptr)
 		{
 			outLoadData.errorMessage = L"지원하지 않는 Monster Type입니다.";
 			return false;
 		}
 
-		const std::wstring defaultAnimationKey = GetMonsterDefaultAnimationResourceKey(monsterType);
-		if (resources.Find<SkeletalMesh>(resourceInfo->resourceKey) && resources.Find<SkeletalAnimationClip>(defaultAnimationKey))
+		const std::wstring defaultAnimationKey = GetMonsterDefaultAnimationClipKey(monsterType);
+		const bool hasRequiredWeapon = resourceInfo->weaponResourceKey == nullptr || resources.Find<StaticMesh>(resourceInfo->weaponResourceKey) != nullptr;
+		if (resources.Find<SkeletalMesh>(resourceInfo->commonResourceKey) && resources.Find<SkeletalAnimationClip>(defaultAnimationKey) && hasRequiredWeapon)
 			return true;
 
 		BinaryModelLoader loader;
@@ -373,32 +395,32 @@ namespace gm
 		ModelData modelData = loader.Load(modelPath);
 		if (modelData.type != ModelType::Skeletal || modelData.skinnedVertices.empty() || modelData.indices.empty() || modelData.animations.empty())
 		{
-			outLoadData.errorMessage = L"Monster 모델 데이터가 유효하지 않습니다. key=" + std::wstring(resourceInfo->resourceKey);
+			outLoadData.errorMessage = L"Monster 모델 데이터가 유효하지 않습니다. key=" + std::wstring(resourceInfo->commonResourceKey);
 			return false;
 		}
 
 		if (resourceInfo->defaultAnimationIndex >= modelData.animations.size())
 		{
-			outLoadData.errorMessage = L"Monster 기본 Animation Index가 유효하지 않습니다. key=" + std::wstring(resourceInfo->resourceKey);
+			outLoadData.errorMessage = L"Monster 기본 Animation Index가 유효하지 않습니다. key=" + std::wstring(resourceInfo->commonResourceKey);
 			return false;
 		}
 
-		if (resources.Find<SkeletalMesh>(resourceInfo->resourceKey) == nullptr)
+		if (resources.Find<SkeletalMesh>(resourceInfo->commonResourceKey) == nullptr)
 		{
 			std::shared_ptr<SkeletalMesh> skeletalMesh = SkeletalMesh::Create(modelData, resourceFactory);
 			if (skeletalMesh == nullptr)
 			{
-				outLoadData.errorMessage = L"Monster SkeletalMesh 생성에 실패했습니다. key=" + std::wstring(resourceInfo->resourceKey);
+				outLoadData.errorMessage = L"Monster SkeletalMesh 생성에 실패했습니다. key=" + std::wstring(resourceInfo->commonResourceKey);
 				return false;
 			}
 
-			outLoadData.resources.push_back({ resourceInfo->resourceKey, std::move(skeletalMesh) });
+			outLoadData.resources.push_back({ resourceInfo->commonResourceKey, std::move(skeletalMesh) });
 		}
 
 		std::shared_ptr<SkeletalAnimationClip> defaultAnimation;
 		for (uint32 animationIndex = 0; animationIndex < modelData.animations.size(); ++animationIndex)
 		{
-			const std::wstring animationKey = GetMonsterAnimationResourceKey(monsterType, animationIndex);
+			const std::wstring animationKey = GetMonsterAnimationClipKey(monsterType, animationIndex);
 			std::shared_ptr<SkeletalAnimationClip> animation = resources.Find<SkeletalAnimationClip>(animationKey);
 			if (animation == nullptr)
 			{
@@ -418,6 +440,25 @@ namespace gm
 
 		if (resources.Find<SkeletalAnimationClip>(defaultAnimationKey) == nullptr)
 			outLoadData.resources.push_back({ defaultAnimationKey, std::move(defaultAnimation) });
+
+		if (resourceInfo->weaponResourceKey != nullptr && resources.Find<StaticMesh>(resourceInfo->weaponResourceKey) == nullptr)
+		{
+			ModelData weaponModelData = loader.Load(GetModelPath(L"Binary/Weapon/" + std::wstring(resourceInfo->weaponModelFileName)));
+			if (weaponModelData.type != ModelType::Static || weaponModelData.vertices.empty() || weaponModelData.indices.empty())
+			{
+				outLoadData.errorMessage = L"Monster Weapon 모델 데이터가 유효하지 않습니다. key=" + std::wstring(resourceInfo->weaponResourceKey);
+				return false;
+			}
+
+			std::shared_ptr<StaticMesh> weaponMesh = StaticMesh::Create(weaponModelData, resourceFactory);
+			if (weaponMesh == nullptr)
+			{
+				outLoadData.errorMessage = L"Monster Weapon StaticMesh 생성에 실패했습니다. key=" + std::wstring(resourceInfo->weaponResourceKey);
+				return false;
+			}
+
+			outLoadData.resources.push_back({ resourceInfo->weaponResourceKey, std::move(weaponMesh) });
+		}
 
 		return true;
 	}

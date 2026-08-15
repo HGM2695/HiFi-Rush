@@ -23,6 +23,7 @@ namespace gm
         bool            IsPlaying() const { return _state == AnimationState::Playing; }
         bool            IsPaused() const { return _state == AnimationState::Paused; }
         bool            IsLoop() const { return _isLoop; }
+        bool            HasLooped() const { return _hasLooped; }
 
     private:
         AnimationState  _state = AnimationState::Init;
@@ -30,5 +31,6 @@ namespace gm
         float           _clipLength = 0.f;
         float           _playRate = 1.f;
         bool            _isLoop = true;
+        bool            _hasLooped = false;
     };
 }

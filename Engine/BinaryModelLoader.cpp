@@ -123,6 +123,15 @@ namespace gm
 			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, animationClip.duration), false, "Animation Duration 읽기에 실패했습니다.");
 			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, animationClip.ticksPerSecond), false, "Animation TicksPerSecond 읽기에 실패했습니다.");
 
+			uint32 notifyCount = 0;
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, notifyCount), false, "Animation Notify 개수 읽기에 실패했습니다.");
+			animationClip.notifyEvents.resize(notifyCount);
+			for (AnimationNotifyData& notifyEvent : animationClip.notifyEvents)
+			{
+				GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, notifyEvent.time), false, "Animation Notify Time 읽기에 실패했습니다.");
+				GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, notifyEvent.name), false, "Animation Notify 이름 읽기에 실패했습니다.");
+			}
+
 			uint32 channelCount = 0;
 			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, channelCount), false, "Animation Channel 개수 읽기에 실패했습니다.");
 

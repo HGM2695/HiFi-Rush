@@ -231,4 +231,9 @@ namespace gm
 	{
 		return _animationController->IsLoop();
 	}
+
+	bool SkeletalAnimatorComponent::HasLooped() const
+	{
+		return _animationController->HasLooped();
+	}
 }

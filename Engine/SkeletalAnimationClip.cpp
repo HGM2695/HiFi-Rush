@@ -16,6 +16,9 @@ namespace gm
 		clip->_length = data.ticksPerSecond > 0.f ? data.duration / data.ticksPerSecond : data.duration;
 		clip->_frameCount = 0;
 
+		for (const AnimationNotifyData& notifyEvent : data.notifyEvents)
+			clip->AddNotify(notifyEvent.time, notifyEvent.name);
+
 		for (const AnimationChannelData& channel : clip->_channels)
 		{
 			clip->_frameCount = std::max(clip->_frameCount, static_cast<uint32>(channel.keyFrames.size()));

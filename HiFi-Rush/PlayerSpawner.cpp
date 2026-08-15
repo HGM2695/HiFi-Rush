@@ -19,6 +19,7 @@
 #include "NavMeshControllerComponent.h"
 #include "PlayerRuntimeState.h"
 #include "PlayerRuntimeStateSyncComponent.h"
+#include "PlayerResources.h"
 #include "Resources.h"
 #include "Rigidbody3DComponent.h"
 #include "Scene.h"
@@ -26,6 +27,9 @@
 #include "SkeletalMesh.h"
 #include "SkeletalMeshComponent.h"
 #include "SocketComponent.h"
+#include "SocketFollowComponent.h"
+#include "StaticMesh.h"
+#include "StaticMeshComponent.h"
 #include "TransformComponent.h"
 
 namespace gm
@@ -37,8 +41,10 @@ namespace gm
 
 	GameObject* PlayerSpawner::Spawn(Scene& scene, const PlayerSpawnDesc& desc, PlayerRuntimeState& runtimeState) const
 	{
-		std::shared_ptr<SkeletalMesh> skeletalMesh = _resources.Find<SkeletalMesh>(L"chi");
+		std::shared_ptr<SkeletalMesh> skeletalMesh = _resources.Find<SkeletalMesh>(ChiSkeletalMeshResourceKey);
 		GM_ASSERT_RETURN_VAL(skeletalMesh, nullptr, "chi SkeletalMesh가 로드되지 않았습니다.");
+		std::shared_ptr<StaticMesh> guitarMesh = _resources.Find<StaticMesh>(ChiGuitarResourceKey);
+		GM_ASSERT_RETURN_VAL(guitarMesh, nullptr, "Chi Guitar StaticMesh가 로드되지 않았습니다.");
 
 		GameObject* player = scene.SpawnGameObject<GameObject>(desc.position);
 		player->GetTransform()->SetRotationY(desc.rotationY);
@@ -79,6 +85,20 @@ namespace gm
 		Socket cameraSocket{};
 		cameraSocket.position = Vector3{ 0.f, 1.2f, 0.f };
 		socketComponent->AddSocket(L"Player.Camera", cameraSocket);
+		Socket weaponSocket{};
+		weaponSocket.boneName = L"r_attach_hand_00";
+		weaponSocket.rotation = Quaternion::CreateFromYawPitchRoll(Math::GM_PI * 0.5f, Math::GM_PI, -Math::GM_PI * 0.5f);
+		socketComponent->AddSocket(L"Player.Weapon", weaponSocket);
+
+		GameObject* weapon = scene.SpawnGameObject<GameObject>();
+		GM_ASSERT_RETURN_VAL(weapon, nullptr, "Player Weapon GameObject 생성에 실패했습니다.");
+		StaticMeshComponent* weaponMeshComponent = weapon->AddComponent<StaticMeshComponent>();
+		GM_ASSERT_RETURN_VAL(weaponMeshComponent, nullptr, "Player Weapon StaticMeshComponent 생성에 실패했습니다.");
+		weaponMeshComponent->SetStaticMesh(guitarMesh);
+		SocketFollowComponent* weaponFollowComponent = weapon->AddComponent<SocketFollowComponent>();
+		GM_ASSERT_RETURN_VAL(weaponFollowComponent, nullptr, "Player Weapon SocketFollowComponent 생성에 실패했습니다.");
+		weaponFollowComponent->SetTarget(*player, L"Player.Weapon");
+		weaponFollowComponent->SetDestroyWithTarget(true);
 
 		player->AddComponent<ChiStateMachineComponent>();
 

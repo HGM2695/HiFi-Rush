@@ -216,7 +216,7 @@
     <ClInclude Include="HiFiRushStatics.h" />
     <ClInclude Include="LoadingScreenWidget.h" />
     <ClInclude Include="MainHUDWidget.h" />
-	<ClInclude Include="MonsterResources.h" />
+    <ClInclude Include="MonsterResourceInfo.h" />
 	<ClInclude Include="MonsterCombatComponent.h" />
 	<ClInclude Include="MonsterSpawner.h" />
 	<ClInclude Include="MonsterState.h" />
@@ -229,6 +229,7 @@
 	<ClInclude Include="SjangoStateMachineComponent.h" />
     <ClInclude Include="OutsideScene.h" />
     <ClInclude Include="PlayerRuntimeState.h" />
+	<ClInclude Include="PlayerResources.h" />
     <ClInclude Include="PlayerRuntimeStateSyncComponent.h" />
     <ClInclude Include="PlayerSpawner.h" />
     <ClInclude Include="QamilScene.h" />
@@ -287,7 +288,7 @@
     <ClCompile Include="LoadingScreenWidget.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainHUDWidget.cpp" />
-	<ClCompile Include="MonsterResources.cpp" />
+	<ClCompile Include="MonsterResourceInfo.cpp" />
 	<ClCompile Include="MonsterCombatComponent.cpp" />
 	<ClCompile Include="MonsterSpawner.cpp" />
 	<ClCompile Include="MonsterState.cpp" />

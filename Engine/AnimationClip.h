@@ -15,6 +15,7 @@ namespace gm
 		uint32										GetFrameCount() const { return _frameCount; }
 		bool										IsLoop() const { return _isLoop; }
 		const std::vector<AnimationNotifyEvent>&	GetNotifyEvents() const { return _notifyEvents; }
+		const AnimationNotifyEvent*				FindNotify(const std::wstring& name) const;
 
 		void										AddNotify(float time, const std::wstring& name);
 		void										SetLoop(bool isLoop) { _isLoop = isLoop; }

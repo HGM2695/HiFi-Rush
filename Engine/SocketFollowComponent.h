@@ -16,6 +16,7 @@ namespace gm
 
 		void						SetTarget(const GameObject& target, const std::wstring& socketName);
 		void						ClearTarget();
+		void						SetDestroyWithTarget(bool destroyWithTarget) { _destroyWithTarget = destroyWithTarget; }
 
 		const WeakGameObjectPtr&	GetTargetObject() const { return _target; }
 		const std::wstring&			GetFollowSocketName() const { return _followSocketName; }
@@ -29,5 +30,6 @@ namespace gm
 		WeakGameObjectPtr		_target;
 		const SocketComponent*	_targetSocketComponent = nullptr;
 		std::wstring			_followSocketName;
+		bool					_destroyWithTarget = false;
 	};
 }

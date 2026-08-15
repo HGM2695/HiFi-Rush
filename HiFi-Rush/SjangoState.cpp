@@ -18,13 +18,13 @@ namespace gm
 	// Idle /////////////////////////////////////////////////////////////////////////
 	void SjangoIdleState::Enter(MonsterStateContext& context)
 	{
-		PlayAnimation(context, GetSjangoAnimationName(SjangoAnimationId::Idle), true);
+		PlayAnimation(context, GetSjangoAnimationClipName(SjangoAnimationId::Idle), true);
 	}
 
 	// Damage /////////////////////////////////////////////////////////////////////////
 	void SjangoDamageState::Enter(MonsterStateContext& context)
 	{
-		PlayAnimation(context, GetSjangoAnimationName(SjangoAnimationId::Damage), false);
+		PlayAnimation(context, GetSjangoAnimationClipName(SjangoAnimationId::Damage), false);
 	}
 
 	void SjangoDamageState::Tick(MonsterStateContext& context, float)

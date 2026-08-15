@@ -31,11 +31,18 @@ namespace gm
 		std::vector<KeyFrameData>	keyFrames;
 	};
 
+	struct AnimationNotifyData
+	{
+		float			time = 0.f;
+		std::wstring	name;
+	};
+
 	struct SkeletalAnimationClipData
 	{
 		std::wstring						name;
 		float								duration = 0.f;
 		float								ticksPerSecond = 0.f;
+		std::vector<AnimationNotifyData>	notifyEvents;
 		std::vector<AnimationChannelData>	channels;
 	};
 

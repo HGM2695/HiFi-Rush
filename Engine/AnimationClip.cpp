@@ -4,6 +4,16 @@
 
 namespace gm
 {
+	const AnimationNotifyEvent* AnimationClip::FindNotify(const std::wstring& name) const
+	{
+		const auto iter = std::find_if(_notifyEvents.begin(), _notifyEvents.end(),
+			[&name](const AnimationNotifyEvent& notifyEvent)
+			{
+				return notifyEvent.name == name;
+			});
+		return iter != _notifyEvents.end() ? &(*iter) : nullptr;
+	}
+
 	void AnimationClip::AddNotify(float time, const std::wstring& name)
 	{
 		GM_ASSERT_RETURN(time >= 0.f, "AnimationNotify의 time은 0 이상이어야 합니다.");

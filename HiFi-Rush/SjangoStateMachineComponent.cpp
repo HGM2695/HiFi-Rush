@@ -2,7 +2,7 @@
 
 #include "GameObject.h"
 #include "MonsterCombatComponent.h"
-#include "MonsterResources.h"
+#include "MonsterResourceInfo.h"
 #include "SjangoAnimationTypes.h"
 #include "SjangoState.h"
 #include "SkeletalAnimatorComponent.h"
@@ -30,12 +30,12 @@ namespace gm
 		for (uint32 animationIndex = 0; animationIndex < SjangoAnimationIdCount; ++animationIndex)
 		{
 			const SjangoAnimationId animationId = static_cast<SjangoAnimationId>(animationIndex);
-			const std::wstring animationName = GetSjangoAnimationName(animationId);
-			if (animator->HasClip(animationName))
+			const std::wstring clipName = GetSjangoAnimationClipName(animationId);
+			if (animator->HasClip(clipName))
 				continue;
 
-			const std::wstring animationKey = GetMonsterAnimationResourceKey(MonsterType::Sjango, animationIndex);
-			GM_ASSERT_RETURN_VAL(animator->AddClip(animationName, animationKey), false, "Sjango Animation Clip을 찾을 수 없습니다. key=%ls", animationKey.c_str());
+			const std::wstring animationKey = GetMonsterAnimationClipKey(MonsterType::Sjango, animationIndex);
+			GM_ASSERT_RETURN_VAL(animator->AddClip(clipName, animationKey), false, "Sjango Animation Clip을 찾을 수 없습니다. key=%ls", animationKey.c_str());
 		}
 
 		return true;

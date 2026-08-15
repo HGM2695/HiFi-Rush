@@ -7,8 +7,9 @@
 #include "HiFiRushCollisionLayers.h"
 #include "HiFiRushStatics.h"
 #include "HurtBoxComponent.h"
+#include "MathUtil.h"
 #include "MonsterCombatComponent.h"
-#include "MonsterResources.h"
+#include "MonsterResourceInfo.h"
 #include "MonsterStateMachineComponent.h"
 #include "MonsterTypes.h"
 #include "NavMeshControllerComponent.h"
@@ -20,6 +21,10 @@
 #include "SkeletalAnimatorComponent.h"
 #include "SkeletalMesh.h"
 #include "SkeletalMeshComponent.h"
+#include "SocketComponent.h"
+#include "SocketFollowComponent.h"
+#include "StaticMesh.h"
+#include "StaticMeshComponent.h"
 #include "TransformComponent.h"
 
 namespace gm
@@ -41,13 +46,13 @@ namespace gm
 
 	GameObject* MonsterSpawner::Spawn(Scene& scene, const MonsterSpawnData& data) const
 	{
-		const MonsterResourceInfo* resourceInfo = FindMonsterResourceInfo(data.type);
+		const MonsterResourceInfo* resourceInfo = GetMonsterResourceInfo(data.type);
 		GM_ASSERT_RETURN_VAL(resourceInfo, nullptr, "지원하지 않는 Monster Type입니다.");
 
-		const std::shared_ptr<SkeletalMesh> skeletalMesh = _resources.Find<SkeletalMesh>(resourceInfo->resourceKey);
-		GM_ASSERT_RETURN_VAL(skeletalMesh, nullptr, "Monster SkeletalMesh가 로드되지 않았습니다. key=%ls", resourceInfo->resourceKey);
+		const std::shared_ptr<SkeletalMesh> skeletalMesh = _resources.Find<SkeletalMesh>(resourceInfo->commonResourceKey);
+		GM_ASSERT_RETURN_VAL(skeletalMesh, nullptr, "Monster SkeletalMesh가 로드되지 않았습니다. key=%ls", resourceInfo->commonResourceKey);
 
-		const std::wstring defaultAnimationKey = GetMonsterDefaultAnimationResourceKey(data.type);
+		const std::wstring defaultAnimationKey = GetMonsterDefaultAnimationClipKey(data.type);
 		const std::shared_ptr<SkeletalAnimationClip> defaultAnimation = _resources.Find<SkeletalAnimationClip>(defaultAnimationKey);
 		GM_ASSERT_RETURN_VAL(defaultAnimation, nullptr, "Monster 기본 Animation이 로드되지 않았습니다. key=%ls", defaultAnimationKey.c_str());
 
@@ -67,6 +72,23 @@ namespace gm
 		playOption.loopOverride = true;
 		GM_ASSERT_RETURN_VAL(animator->Play(L"Default", playOption), nullptr, "Monster 기본 Animation 재생에 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(AddCommonComponents(*monster, data), nullptr, "Monster 공통 Component 구성에 실패했습니다.");
+
+		if (data.type == MonsterType::Sword)
+		{
+			const std::shared_ptr<StaticMesh> weaponMesh = _resources.Find<StaticMesh>(resourceInfo->weaponResourceKey);
+			GM_ASSERT_RETURN_VAL(weaponMesh, nullptr, "Sword Weapon StaticMesh가 로드되지 않았습니다.");
+
+			GameObject* weapon = scene.SpawnGameObject<GameObject>();
+			GM_ASSERT_RETURN_VAL(weapon, nullptr, "Sword Weapon GameObject 생성에 실패했습니다.");
+			StaticMeshComponent* weaponMeshComponent = weapon->AddComponent<StaticMeshComponent>();
+			GM_ASSERT_RETURN_VAL(weaponMeshComponent, nullptr, "Sword Weapon StaticMeshComponent 생성에 실패했습니다.");
+			weaponMeshComponent->SetStaticMesh(weaponMesh);
+
+			SocketFollowComponent* socketFollow = weapon->AddComponent<SocketFollowComponent>();
+			GM_ASSERT_RETURN_VAL(socketFollow, nullptr, "Sword Weapon SocketFollowComponent 생성에 실패했습니다.");
+			socketFollow->SetTarget(*monster, L"Sword.Weapon");
+			socketFollow->SetDestroyWithTarget(true);
+		}
 
 		return monster;
 	}
@@ -121,6 +143,18 @@ namespace gm
 			break;
 
 		case MonsterType::Sword:
+		{
+			SocketComponent* socketComponent = monster.AddComponent<SocketComponent>();
+			GM_ASSERT_RETURN_VAL(socketComponent, false, "Sword SocketComponent 생성에 실패했습니다.");
+			Socket weaponSocket{};
+			weaponSocket.boneName = L"r_hand_attach_00";
+			weaponSocket.rotation = Quaternion::CreateFromAxisAngle(Vector3{ 0.f, 1.f, 0.f }, Math::GM_PI);
+			socketComponent->AddSocket(L"Sword.Weapon", weaponSocket);
+
+			stateMachine = monster.AddComponent<MonsterStateMachineComponent>();
+			break;
+		}
+
 		case MonsterType::Gunner:
 			stateMachine = monster.AddComponent<MonsterStateMachineComponent>();
 			break;

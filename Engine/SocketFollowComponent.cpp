@@ -33,7 +33,14 @@ namespace gm
 
 	void SocketFollowComponent::OnTick(float deltaTime)
 	{
-		if (_ownerTransform == nullptr || _target.IsValid() == false || _targetSocketComponent == nullptr)
+		if (_target.IsValid() == false)
+		{
+			if (_destroyWithTarget)
+				GetOwner().Destroy();
+			return;
+		}
+
+		if (_ownerTransform == nullptr || _targetSocketComponent == nullptr)
 			return;
 
 		_ownerTransform->SetWorldMatrix(_targetSocketComponent->GetSocketWorldMatrix(_followSocketName));

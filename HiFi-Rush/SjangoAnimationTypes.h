@@ -22,14 +22,14 @@ namespace gm
 
 	inline constexpr uint32 SjangoAnimationIdCount = ToIndex(SjangoAnimationId::Count);
 
-	inline constexpr std::array<const wchar_t*, SjangoAnimationIdCount> SjangoAnimationNames =
+	inline constexpr std::array<const wchar_t*, SjangoAnimationIdCount> SjangoAnimationClipNames =
 	{
 		L"ANIM_IDLE",
 		L"ANIM_DAMAGE",
 	};
 
-	inline std::wstring GetSjangoAnimationName(SjangoAnimationId animationId)
+	inline std::wstring GetSjangoAnimationClipName(SjangoAnimationId animationId)
 	{
-		return SjangoAnimationNames[ToIndex(animationId)];
+		return SjangoAnimationClipNames[ToIndex(animationId)];
 	}
 }

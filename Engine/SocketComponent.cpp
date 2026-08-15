@@ -1,6 +1,9 @@
 #include "SocketComponent.h"
 #include "GameObject.h"
 #include "MathUtil.h"
+#include "SkeletalMesh.h"
+#include "SkeletalMeshComponent.h"
+#include "SkeletalPose.h"
 #include "TransformComponent.h"
 
 namespace gm
@@ -46,12 +49,38 @@ namespace gm
 		if (socket == nullptr)
 			return Math::IdentityMatrix();
 
-		return socket->GetLocalMatrix() * _ownerTransform->GetWorldMatrix();
+		Matrix parentMatrix = _ownerTransform->GetWorldMatrix();
+		if (socket->boneName.empty() == false && _skeletalMeshComponent != nullptr)
+		{
+			const std::shared_ptr<SkeletalMesh>& skeletalMesh = _skeletalMeshComponent->GetSkeletalMesh();
+			const std::vector<Matrix>& boneModelMatrices = _skeletalMeshComponent->GetPose().GetBoneModelMatrices();
+			if (skeletalMesh != nullptr)
+			{
+				const std::vector<BoneData>& bones = skeletalMesh->GetBones();
+				for (uint32 boneIndex = 0; boneIndex < bones.size(); ++boneIndex)
+				{
+					if (bones[boneIndex].name != socket->boneName || boneIndex >= boneModelMatrices.size())
+						continue;
+
+					Matrix boneMatrix = boneModelMatrices[boneIndex] * _skeletalMeshComponent->GetPreTransform();
+					Vector3 boneScale{};
+					Quaternion boneRotation{};
+					Vector3 bonePosition{};
+					boneMatrix.Decompose(boneScale, boneRotation, bonePosition);
+					boneMatrix = Math::CreateTransformMatrix(bonePosition, boneRotation, Vector3{ 1.f, 1.f, 1.f });
+					parentMatrix = boneMatrix * parentMatrix;
+					break;
+				}
+			}
+		}
+
+		return socket->GetLocalMatrix() * parentMatrix;
 	}
 
 	void SocketComponent::OnInitialize()
 	{
 		_ownerTransform = GetOwner().GetTransform();
 		GM_ASSERT_RETURN(_ownerTransform, "SocketComponent 소유자의 Transform이 존재하지 않습니다.");
+		_skeletalMeshComponent = GetOwner().GetComponent<SkeletalMeshComponent>();
 	}
 }
