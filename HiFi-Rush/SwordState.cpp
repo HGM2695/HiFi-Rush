@@ -21,21 +21,6 @@ namespace gm
 		constexpr float SwordDashFrontDistance = 6.f;
 	}
 
-	/// SwordState //////////////////////////////////////////////////////////////////////////////
-	void SwordState::FaceTarget(MonsterStateContext& context, float deltaTime) const
-	{
-		if (context.combatComponent == nullptr || context.moveComponent == nullptr)
-			return;
-
-		context.moveComponent->FaceDirection(context.combatComponent->GetTargetDirection(), deltaTime);
-	}
-
-	void SwordState::SetRootMotionEnabled(MonsterStateContext& context, bool enabled) const
-	{
-		if (context.moveComponent != nullptr)
-			context.moveComponent->SetRootMotionEnabled(enabled);
-	}
-
 	// SwordIdleState /////////////////////////////////////////////////////////////////////////
 	void SwordIdleState::Enter(MonsterStateContext& context)
 	{
@@ -222,9 +207,6 @@ namespace gm
 		const std::shared_ptr<SkeletalAnimationClip> clip = context.animatorComponent->GetCurrentClip();
 		GM_ASSERT_RETURN(clip, "Sword Attack Animation Clip이 없습니다.");
 		const AnimationNotifyEvent* hitStartNotify = clip->FindNotify(HiFiRushAnimationNotifyNames::HitStart);
-		const AnimationNotifyEvent* hitEndNotify = clip->FindNotify(HiFiRushAnimationNotifyNames::HitEnd);
-		GM_ASSERT_RETURN(hitStartNotify && hitEndNotify && hitStartNotify->time < hitEndNotify->time, "Sword Attack Animation Clip의 HitStart와 HitEnd Notify가 유효하지 않습니다. clip=%ls", context.animatorComponent->GetCurrentClipName().c_str());
-
 		SkeletalAnimatorComponent* animator = context.animatorComponent;
 		animator->GetNotifyEvent().Subscribe(_notifyConnection,
 			[this, animator](const AnimationNotifyEvent& event)

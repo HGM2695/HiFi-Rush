@@ -1,12 +1,28 @@
 #include "MonsterState.h"
 
 #include "AnimationTypes.h"
+#include "CharacterMovementComponent.h"
 #include "CombatTypes.h"
+#include "MonsterCombatComponent.h"
 #include "MonsterStateMachineComponent.h"
 #include "SkeletalAnimatorComponent.h"
 
 namespace gm
 {
+	void MonsterState::FaceTarget(MonsterStateContext& context, float deltaTime) const
+	{
+		if (context.combatComponent == nullptr || context.moveComponent == nullptr)
+			return;
+
+		context.moveComponent->FaceDirection(context.combatComponent->GetTargetDirection(), deltaTime);
+	}
+
+	void MonsterState::SetRootMotionEnabled(MonsterStateContext& context, bool enabled) const
+	{
+		if (context.moveComponent != nullptr)
+			context.moveComponent->SetRootMotionEnabled(enabled);
+	}
+
 	void MonsterState::OnDamaged(MonsterStateContext& context, const HitEvent& event)
 	{
 		if (event.damageResult.state != DamageState::Applied)

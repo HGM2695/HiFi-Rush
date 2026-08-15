@@ -4,6 +4,8 @@
 #include "BoxCollider3DComponent.h"
 #include "CharacterMovementComponent.h"
 #include "GameObject.h"
+#include "GunnerAnimationTypes.h"
+#include "GunnerStateMachineComponent.h"
 #include "HealthComponent.h"
 #include "HiFiRushCollisionLayers.h"
 #include "HiFiRushStatics.h"
@@ -190,8 +192,26 @@ namespace gm
 		}
 
 		case MonsterType::Gunner:
-			stateMachine = monster.AddComponent<MonsterStateMachineComponent>();
+		{
+			rigidbody->SetKinematic(true);
+			GM_ASSERT_RETURN_VAL(data.attackDamage > 0, false, "Gunner Monster Attack Damage는 0보다 커야 합니다.");
+			GM_ASSERT_RETURN_VAL(data.attackRangeMax > data.attackRangeMin, false, "Gunner Monster Attack Range가 유효하지 않습니다.");
+
+			SkeletalAnimatorComponent* animator = monster.GetComponent<SkeletalAnimatorComponent>();
+			GM_ASSERT_RETURN_VAL(animator, false, "Gunner Monster에 SkeletalAnimatorComponent가 없습니다.");
+			BeatSkeletalAnimationSyncDesc animationSyncDesc{};
+			BeatSkeletalAnimationSyncComponent* animationSync = monster.AddComponent<BeatSkeletalAnimationSyncComponent>(HiFiRushStatics::GetBeatSystem(), *animator, animationSyncDesc);
+			GM_ASSERT_RETURN_VAL(animationSync, false, "Gunner BeatSkeletalAnimationSyncComponent 생성에 실패했습니다.");
+			const BeatSkeletalAnimationSyncDesc twoBeatSync{ .cycleBeats = 2.f };
+			GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetGunnerAnimationClipName(GunnerAnimationId::Idle), twoBeatSync), false, "Gunner Idle Animation 동기화 규칙 등록에 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetGunnerAnimationClipName(GunnerAnimationId::WalkFront), twoBeatSync), false, "Gunner WalkFront Animation 동기화 규칙 등록에 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetGunnerAnimationClipName(GunnerAnimationId::WalkBack), twoBeatSync), false, "Gunner WalkBack Animation 동기화 규칙 등록에 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetGunnerAnimationClipName(GunnerAnimationId::WalkLeft), twoBeatSync), false, "Gunner WalkLeft Animation 동기화 규칙 등록에 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetGunnerAnimationClipName(GunnerAnimationId::WalkRight), twoBeatSync), false, "Gunner WalkRight Animation 동기화 규칙 등록에 실패했습니다.");
+
+			stateMachine = monster.AddComponent<GunnerStateMachineComponent>(data.attackRangeMin, data.attackRangeMax, data.attackDamage);
 			break;
+		}
 
 		default:
 			return false;

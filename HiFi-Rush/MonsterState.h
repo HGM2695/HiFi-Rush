@@ -23,6 +23,8 @@ namespace gm
 		virtual void Exit(MonsterStateContext& context) {}
 
 	protected:
+		void FaceTarget(MonsterStateContext& context, float deltaTime) const;
+		void SetRootMotionEnabled(MonsterStateContext& context, bool enabled) const;
 		bool PlayAnimation(MonsterStateContext& context, const std::wstring& clipName, bool isLoop, float blendDuration = MonsterDefaultBlendDuration) const;
 		bool IsAnimationCompleted(const MonsterStateContext& context) const;
 	};

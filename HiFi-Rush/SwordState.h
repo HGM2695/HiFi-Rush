@@ -9,16 +9,8 @@ namespace gm
 	class HitBoxComponent;
 	class SkeletalAnimatorComponent;
 
-	/// SwordState //////////////////////////////////////////////////////////////////////////////
-	class SwordState : public MonsterState
-	{
-	protected:
-		void FaceTarget(MonsterStateContext& context, float deltaTime) const;
-		void SetRootMotionEnabled(MonsterStateContext& context, bool enabled) const;
-	};
-
 	/// SwordIdleState //////////////////////////////////////////////////////////////////////////////
-	class SwordIdleState final : public SwordState
+	class SwordIdleState final : public MonsterState
 	{
 	public:
 		MonsterStateId	GetStateId() const override { return MonsterStateId::Idle; }
@@ -27,7 +19,7 @@ namespace gm
 	};
 
 	/// SwordMoveState //////////////////////////////////////////////////////////////////////////////
-	class SwordMoveState final : public SwordState
+	class SwordMoveState final : public MonsterState
 	{
 	public:
 		SwordMoveState(float attackRangeMin, float attackRangeMax);
@@ -62,7 +54,7 @@ namespace gm
 	};
 
 	/// SwordAttackState //////////////////////////////////////////////////////////////////////////////
-	class SwordAttackState final : public SwordState
+	class SwordAttackState final : public MonsterState
 	{
 	public:
 		explicit SwordAttackState(HitBoxComponent& hitBox);
@@ -82,7 +74,7 @@ namespace gm
 	};
 
 	/// SwordDamageState //////////////////////////////////////////////////////////////////////////////
-	class SwordDamageState final : public SwordState
+	class SwordDamageState final : public MonsterState
 	{
 	public:
 		MonsterStateId	GetStateId() const override { return MonsterStateId::Damage; }
@@ -92,7 +84,7 @@ namespace gm
 	};
 
 	/// SwordDeadState //////////////////////////////////////////////////////////////////////////////
-	class SwordDeadState final : public SwordState
+	class SwordDeadState final : public MonsterState
 	{
 	public:
 		MonsterStateId	GetStateId() const override { return MonsterStateId::Dead; }

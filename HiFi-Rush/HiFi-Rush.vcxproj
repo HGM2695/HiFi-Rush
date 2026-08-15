@@ -182,6 +182,7 @@
     <ClInclude Include="HealthComponent.h" />
     <ClInclude Include="HiFiRushCollisionLayers.h" />
     <ClInclude Include="HitBoxComponent.h" />
+	<ClInclude Include="TemporaryBoxHitBoxObject.h" />
 	<ClInclude Include="HitReactionComponent.h" />
     <ClInclude Include="HurtBoxComponent.h" />
     <ClInclude Include="SceneTransitionTriggerComponent.h" />
@@ -210,6 +211,9 @@
     <ClInclude Include="BeatSystem.h" />
     <ClInclude Include="BeatTransformComponent.h" />
     <ClInclude Include="BeatTriggeredRotationComponent.h" />
+	<ClInclude Include="GunnerAnimationTypes.h" />
+	<ClInclude Include="GunnerState.h" />
+	<ClInclude Include="GunnerStateMachineComponent.h" />
     <ClInclude Include="HiFiRushAudio.h" />
 	<ClInclude Include="HiFiRushAnimationNotifyNames.h" />
     <ClInclude Include="LoadResources.h" />
@@ -262,6 +266,7 @@
     <ClCompile Include="PlayerRuntimeStateSyncComponent.cpp" />
     <ClCompile Include="SceneTransitionTriggerComponent.cpp" />
     <ClCompile Include="HitBoxComponent.cpp" />
+	<ClCompile Include="TemporaryBoxHitBoxObject.cpp" />
 	<ClCompile Include="HitReactionComponent.cpp" />
     <ClCompile Include="HurtBoxComponent.cpp" />
     <ClCompile Include="CommonLoadingScene.cpp" />
@@ -285,6 +290,8 @@
     <ClCompile Include="BeatSystem.cpp" />
     <ClCompile Include="BeatTransformComponent.cpp" />
     <ClCompile Include="BeatTriggeredRotationComponent.cpp" />
+	<ClCompile Include="GunnerState.cpp" />
+	<ClCompile Include="GunnerStateMachineComponent.cpp" />
     <ClCompile Include="HiFiRushAudio.cpp" />
     <ClCompile Include="HiFiRushGameInstance.cpp" />
     <ClCompile Include="HiFiRushStatics.cpp" />
