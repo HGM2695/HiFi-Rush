@@ -65,6 +65,12 @@
 	<Filter Include="Component\Monster\Sjango\State">
 	  <UniqueIdentifier>{84d14362-3002-4b3e-816e-6f8e5735e7cd}</UniqueIdentifier>
 	</Filter>
+	<Filter Include="Component\Monster\Sword">
+	  <UniqueIdentifier>{63cf6569-4123-4cbe-a68e-9077214f917d}</UniqueIdentifier>
+	</Filter>
+	<Filter Include="Component\Monster\Sword\State">
+	  <UniqueIdentifier>{5d0d6950-55b2-4548-aa47-654616443c46}</UniqueIdentifier>
+	</Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CombatTypes.h">
@@ -158,6 +164,9 @@
       <Filter>Component\01. Behavior\3D</Filter>
     </ClInclude>
     <ClInclude Include="HiFiRushAudio.h" />
+	<ClInclude Include="HiFiRushAnimationNotifyNames.h">
+	  <Filter>Util\Types</Filter>
+	</ClInclude>
     <ClInclude Include="TutorialScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
@@ -202,6 +211,15 @@
 	</ClInclude>
 	<ClInclude Include="SjangoStateMachineComponent.h">
 	  <Filter>Component\Monster\Sjango</Filter>
+	</ClInclude>
+	<ClInclude Include="SwordAnimationTypes.h">
+	  <Filter>Component\Monster\Sword</Filter>
+	</ClInclude>
+	<ClInclude Include="SwordState.h">
+	  <Filter>Component\Monster\Sword\State</Filter>
+	</ClInclude>
+	<ClInclude Include="SwordStateMachineComponent.h">
+	  <Filter>Component\Monster\Sword</Filter>
 	</ClInclude>
 	<ClInclude Include="PlayerRuntimeState.h">
 		<Filter>Util\Types\Player</Filter>
@@ -401,6 +419,12 @@
 	</ClCompile>
 	<ClCompile Include="SjangoStateMachineComponent.cpp">
 	  <Filter>Component\Monster\Sjango</Filter>
+	</ClCompile>
+	<ClCompile Include="SwordState.cpp">
+	  <Filter>Component\Monster\Sword\State</Filter>
+	</ClCompile>
+	<ClCompile Include="SwordStateMachineComponent.cpp">
+	  <Filter>Component\Monster\Sword</Filter>
 	</ClCompile>
 	<ClCompile Include="PlayerRuntimeStateSyncComponent.cpp">
 		<Filter>Component\Player</Filter>

@@ -211,6 +211,7 @@
     <ClInclude Include="BeatTransformComponent.h" />
     <ClInclude Include="BeatTriggeredRotationComponent.h" />
     <ClInclude Include="HiFiRushAudio.h" />
+	<ClInclude Include="HiFiRushAnimationNotifyNames.h" />
     <ClInclude Include="LoadResources.h" />
     <ClInclude Include="HiFiRushGameInstance.h" />
     <ClInclude Include="HiFiRushStatics.h" />
@@ -227,6 +228,9 @@
 	<ClInclude Include="SjangoAnimationTypes.h" />
 	<ClInclude Include="SjangoState.h" />
 	<ClInclude Include="SjangoStateMachineComponent.h" />
+	<ClInclude Include="SwordAnimationTypes.h" />
+	<ClInclude Include="SwordState.h" />
+	<ClInclude Include="SwordStateMachineComponent.h" />
     <ClInclude Include="OutsideScene.h" />
     <ClInclude Include="PlayerRuntimeState.h" />
 	<ClInclude Include="PlayerResources.h" />
@@ -295,6 +299,8 @@
 	<ClCompile Include="MonsterStateMachineComponent.cpp" />
 	<ClCompile Include="SjangoState.cpp" />
 	<ClCompile Include="SjangoStateMachineComponent.cpp" />
+	<ClCompile Include="SwordState.cpp" />
+	<ClCompile Include="SwordStateMachineComponent.cpp" />
     <ClCompile Include="OutsideScene.cpp" />
     <ClCompile Include="PlayerSpawner.cpp" />
     <ClCompile Include="QamilScene.cpp" />

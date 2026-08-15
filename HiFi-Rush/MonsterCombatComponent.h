@@ -15,6 +15,7 @@ namespace gm
 		MonsterCombatComponent(MonsterType monsterType, const BeatSystem& beatSystem, float attackCooldownBeats);
 
 		MonsterType	GetMonsterType() const { return _monsterType; }
+		const BeatSystem& GetBeatSystem() const { return _beatSystem; }
 		void		SetTarget(const GameObject& target);
 		void		ClearTarget() { _target.Reset(); }
 		GameObject*	GetTarget() const { return _target.Get(); }

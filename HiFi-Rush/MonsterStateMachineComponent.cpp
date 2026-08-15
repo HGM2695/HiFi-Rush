@@ -50,6 +50,8 @@ namespace gm
 	{
 		_context.stateMachine = this;
 		_context.combatComponent = GetOwner().GetComponent<MonsterCombatComponent>();
+		if (_context.combatComponent != nullptr)
+			_context.beatSystem = &_context.combatComponent->GetBeatSystem();
 		_context.moveComponent = GetOwner().GetComponent<CharacterMovementComponent>();
 		_context.healthComponent = GetOwner().GetComponent<HealthComponent>();
 		_context.animatorComponent = GetOwner().GetComponent<SkeletalAnimatorComponent>();

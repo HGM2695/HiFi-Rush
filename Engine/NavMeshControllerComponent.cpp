@@ -71,13 +71,13 @@ namespace gm
 		if (_groundCollisionEnabled)
 		{
 			const float dropDistance = currentPosition.y - groundHeight;
-			if (_isGrounded && dropDistance > _maxGroundSnapDownDistance)
+			if (_groundState == GroundState::Grounded && dropDistance > _maxGroundSnapDownDistance)
 			{
 				result.position.y = currentPosition.y;
-				_isGrounded = false;
+				_groundState = GroundState::Airborne;
 				hasStartedFalling = _rigidbody == nullptr || _rigidbody->GetVelocity().y <= 0.f;
 			}
-			else if (_isGrounded == false)
+			else if (_groundState != GroundState::Grounded)
 			{
 				result.position.y = currentPosition.y;
 			}
@@ -99,23 +99,20 @@ namespace gm
 
 	void NavMeshControllerComponent::CheckGroundCollision()
 	{
-		const bool wasGroundStateInitialized = _isGroundStateInitialized;
-		const bool wasGrounded = _isGrounded;
-		_isGrounded = false;
-		if (_groundCollisionEnabled == false || _transform == nullptr || _rigidbody == nullptr || _rigidbody->IsEnabled() == false || _rigidbody->IsKinematic())
+		const GroundState previousGroundState = _groundState;
+		_groundState = GroundState::Airborne;
+		if (_groundCollisionEnabled == false || _transform == nullptr || _rigidbody == nullptr || _rigidbody->IsEnabled() == false)
 		{
-			_isGroundStateInitialized = false;
+			_groundState = GroundState::Uninitialized;
 			return;
 		}
 
 		NavMeshSystem& navMeshSystem = APPLICATION.GetPhysicsSystem().GetNavMeshSystem();
 		if (navMeshSystem.HasActiveNavigationMesh() == false)
 		{
-			_isGroundStateInitialized = false;
+			_groundState = GroundState::Uninitialized;
 			return;
 		}
-
-		_isGroundStateInitialized = true;
 
 		Vector3 position = _transform->GetPosition();
 		const NavigationGroundResult groundResult = navMeshSystem.QueryActiveNavigationGround(_currentCellIndex, position);
@@ -135,9 +132,9 @@ namespace gm
 		Vector3 resolvedVelocity = velocity;
 		resolvedVelocity.y = 0.f;
 		_rigidbody->SetVelocity(resolvedVelocity);
-		_isGrounded = true;
+		_groundState = GroundState::Grounded;
 
-		if (wasGroundStateInitialized && wasGrounded == false)
+		if (previousGroundState == GroundState::Airborne)
 		{
 			NavigationGroundContactEvent event{};
 			event.position = position;

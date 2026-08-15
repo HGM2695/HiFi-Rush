@@ -23,14 +23,22 @@ namespace gm
 
 	class NavMeshControllerComponent : public Component
 	{
+	private:
+		enum class GroundState
+		{
+			Uninitialized,
+			Airborne,
+			Grounded,
+		};
+
 	public:
 		virtual TickGroup	GetTickGroup() const override { return TickGroup::PostPhysics; }
 
 		void				SetMovementEnabled(bool enabled) { _movementEnabled = enabled; }
 		bool				IsMovementEnabled() const { return IsEnabled() && _movementEnabled; }
-		void				SetGroundCollisionEnabled(bool enabled) { _groundCollisionEnabled = enabled; _isGroundStateInitialized = false; _isGrounded = false; }
+		void				SetGroundCollisionEnabled(bool enabled) { _groundCollisionEnabled = enabled; _groundState = GroundState::Uninitialized; }
 		bool				IsGroundCollisionEnabled() const { return _groundCollisionEnabled; }
-		bool				IsGrounded() const { return _isGrounded; }
+		bool				IsGrounded() const { return _groundState == GroundState::Grounded; }
 		void				SetMaxGroundSnapDownDistance(float distance);
 		float				GetMaxGroundSnapDownDistance() const { return _maxGroundSnapDownDistance; }
 
@@ -54,9 +62,8 @@ namespace gm
 		Rigidbody3DComponent*	_rigidbody = nullptr;
 		int32					_currentCellIndex = -1;
 		float					_maxGroundSnapDownDistance = 0.1f;
+		GroundState				_groundState = GroundState::Uninitialized;
 		bool					_movementEnabled = true;
 		bool					_groundCollisionEnabled = false;
-		bool					_isGroundStateInitialized = false;
-		bool					_isGrounded = false;
 	};
 }

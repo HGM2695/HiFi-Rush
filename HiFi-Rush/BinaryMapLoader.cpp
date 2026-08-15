@@ -221,6 +221,9 @@ namespace gm
 		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSpawnData.moveSpeed), false, "Monster Move Speed를 읽는 데 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSpawnData.rotationInterpSpeed), false, "Monster Rotation Interp Speed를 읽는 데 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSpawnData.attackCooldownBeats), false, "Monster Attack Cooldown을 읽는 데 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSpawnData.attackDamage), false, "Monster Attack Damage를 읽는 데 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSpawnData.attackRangeMin), false, "Monster Attack Range Min을 읽는 데 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSpawnData.attackRangeMax), false, "Monster Attack Range Max를 읽는 데 실패했습니다.");
 		return true;
 	}
 
