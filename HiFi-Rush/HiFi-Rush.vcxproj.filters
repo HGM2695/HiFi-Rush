@@ -1,394 +1,370 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="리소스 파일">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Application">
+      <UniqueIdentifier>{43f43941-f43b-4ae5-8f8c-4c3d14e99d1d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameObject">
-      <UniqueIdentifier>{a37b12d7-f04d-401a-b1f7-e49791646611}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene">
-      <UniqueIdentifier>{f0d27950-bd51-4ac4-bdc4-e9ad0944f534}</UniqueIdentifier>
-    </Filter>
-	<Filter Include="System">
-	  <UniqueIdentifier>{1308845f-ca55-4f93-8742-b1034798a67f}</UniqueIdentifier>
-	</Filter>
-    <Filter Include="Resource">
-      <UniqueIdentifier>{e5c6772b-27ce-4b61-bb93-b81bdd469848}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Component">
-      <UniqueIdentifier>{295c181e-3641-4f60-ae0d-61cc8b187a41}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Component\01. Behavior">
-      <UniqueIdentifier>{1a87d7a0-b72a-4ce3-8b37-954eff0d60cb}</UniqueIdentifier>
+    <Filter Include="Application\Audio">
+      <UniqueIdentifier>{622f83d6-7712-4d70-9e9e-5e89c5d2fc74}</UniqueIdentifier>
     </Filter>
     <Filter Include="Debug">
-      <UniqueIdentifier>{4a8e0696-15d0-455f-b9c1-5e7aee8f1d59}</UniqueIdentifier>
+      <UniqueIdentifier>{08b51748-230c-415c-afc3-e5a99a4c24d9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Util">
-      <UniqueIdentifier>{342b193f-f0ec-46c0-b857-0c2461dbbbe3}</UniqueIdentifier>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{62e28ec6-3e90-4889-9996-122028758b12}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Widget">
-      <UniqueIdentifier>{48b8e4ef-7ccd-43e7-9779-4e927165d517}</UniqueIdentifier>
+    <Filter Include="System">
+      <UniqueIdentifier>{8f2c7135-9131-4ee2-9814-e6ded236f014}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Util\Types">
-      <UniqueIdentifier>{62d80d39-6fd5-4cfa-a97d-e4fd08fd0d45}</UniqueIdentifier>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{97749f03-3305-4429-bd3e-f46a3881b926}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Util\Types\Player">
-      <UniqueIdentifier>{ca1ae7a3-cea6-4403-81a6-734ef101dda6}</UniqueIdentifier>
+    <Filter Include="Spawner">
+      <UniqueIdentifier>{331ad489-26e6-4cd8-bec7-034cf3d59c69}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Component\01. Behavior\3D">
-      <UniqueIdentifier>{bb1703b9-f6af-4a18-bf3e-e6d149b68f37}</UniqueIdentifier>
+    <Filter Include="Factory">
+      <UniqueIdentifier>{f1e0608d-6375-4627-a132-a06aa7a035fc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Component\01. Behavior\3D\State">
-      <UniqueIdentifier>{1fbc4598-ecac-4e3a-88fe-18ab9a71aa4a}</UniqueIdentifier>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{e1f81890-eab1-4c9d-ab3c-8f1b7d3b525c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{00ff942f-cce5-4326-8791-baf206597438}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Beat">
+      <UniqueIdentifier>{3783db94-d6f8-4853-8600-5ef65fa8b32e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Component\Combat">
-      <UniqueIdentifier>{6ee65bd6-c24d-4ace-86d2-d6dc7f6d9d91}</UniqueIdentifier>
+      <UniqueIdentifier>{f8820737-c2b6-4a5b-8554-8349abdc24c5}</UniqueIdentifier>
     </Filter>
-	<Filter Include="Component\Player">
-		<UniqueIdentifier>{d769ba45-2e60-4945-aef4-d2af76369bea}</UniqueIdentifier>
-	</Filter>
-	<Filter Include="Component\Environment">
-	  <UniqueIdentifier>{ec004ba5-5560-4c63-a73f-4894240920f2}</UniqueIdentifier>
-	</Filter>
-	<Filter Include="Component\Monster">
-	  <UniqueIdentifier>{d96df81a-9f42-4ecb-a1ef-977338f0863b}</UniqueIdentifier>
-	</Filter>
-	<Filter Include="Component\Monster\State">
-	  <UniqueIdentifier>{54066e82-a271-48a7-8c09-f50e435b12fb}</UniqueIdentifier>
-	</Filter>
-	<Filter Include="Component\Monster\Sjango">
-	  <UniqueIdentifier>{5745d930-c750-4987-afc2-8315383f9d35}</UniqueIdentifier>
-	</Filter>
-	<Filter Include="Component\Monster\Sjango\State">
-	  <UniqueIdentifier>{84d14362-3002-4b3e-816e-6f8e5735e7cd}</UniqueIdentifier>
-	</Filter>
-	<Filter Include="Component\Monster\Sword">
-	  <UniqueIdentifier>{63cf6569-4123-4cbe-a68e-9077214f917d}</UniqueIdentifier>
-	</Filter>
-	<Filter Include="Component\Monster\Sword\State">
-	  <UniqueIdentifier>{5d0d6950-55b2-4548-aa47-654616443c46}</UniqueIdentifier>
-	</Filter>
+    <Filter Include="Component\Environment">
+      <UniqueIdentifier>{e1fd7f3c-9071-4a74-960c-f4130dd10c9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Player">
+      <UniqueIdentifier>{e23e0ca6-c80e-45c1-a000-a7e8ced40b97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Player\State">
+      <UniqueIdentifier>{07853fa7-9afa-42fc-b449-a8f4bb7beef1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Monster">
+      <UniqueIdentifier>{d4cd7d63-1b11-4f0e-807c-ff3f53b3b5ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Monster\State">
+      <UniqueIdentifier>{2cb856a5-fabb-4c62-967c-64550be6823a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Monster\Sjango">
+      <UniqueIdentifier>{14fb582c-b9d9-4bb0-ad75-c78c5728ade6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Monster\Sjango\State">
+      <UniqueIdentifier>{815bb9b8-30c4-4fd2-aa28-c47f27bf9a82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Monster\Sword">
+      <UniqueIdentifier>{e024f27d-fc9e-4640-baff-b80717851904}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Monster\Sword\State">
+      <UniqueIdentifier>{592ba653-b795-4e09-bec7-dcb4a5752bba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Monster\Gunner">
+      <UniqueIdentifier>{52ac24f9-19da-42f4-9084-8bc564146700}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Monster\Gunner\State">
+      <UniqueIdentifier>{f5a696bb-3085-4cda-87f6-f0ded3d3a786}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget">
+      <UniqueIdentifier>{4119e629-6af0-465a-8d7c-d3f2ef37bb97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{5de7d524-483e-47d6-a959-a8bba6ac4bc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows">
+      <UniqueIdentifier>{71b0d04e-e9fc-42af-a5af-cbf0a36e42e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{c7deeb23-ab63-4b70-b6b9-9f8219501191}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CombatTypes.h">
-      <Filter>Component\Combat</Filter>
+    <ClInclude Include="HiFiRushGameInstance.h">
+      <Filter>Application</Filter>
     </ClInclude>
-    <ClInclude Include="HealthComponent.h">
-      <Filter>Component\Combat</Filter>
+    <ClInclude Include="HiFiRushStatics.h">
+      <Filter>Application</Filter>
     </ClInclude>
-    <ClInclude Include="HiFiRushCollisionLayers.h">
-      <Filter>Util\Types</Filter>
+    <ClInclude Include="HiFiRushAudio.h">
+      <Filter>Application\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="HitBoxComponent.h">
-      <Filter>Component\Combat</Filter>
-    </ClInclude>
-	<ClInclude Include="HitReactionComponent.h">
-	  <Filter>Component\Combat</Filter>
-	</ClInclude>
-    <ClInclude Include="HurtBoxComponent.h">
-      <Filter>Component\Combat</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneTransitionTriggerComponent.h">
-      <Filter>Component\Environment</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h" />
     <ClInclude Include="DebugEventPublisher.h">
       <Filter>Debug</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="BinaryMapLoader.h">
-      <Filter>Resource</Filter>
+    <ClInclude Include="DebugTextWidget.h">
+      <Filter>Debug</Filter>
     </ClInclude>
-    <ClInclude Include="MapTypes.h">
-      <Filter>Util\Types</Filter>
+    <ClInclude Include="SceneDebugTools.h">
+      <Filter>Debug</Filter>
     </ClInclude>
-	<ClInclude Include="EnvironmentComponentTypes.h">
-	  <Filter>Util\Types</Filter>
-	</ClInclude>
-    <ClInclude Include="MapResource.h">
-      <Filter>Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="EnvironmentSpawner.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
-	<ClInclude Include="GameplayScene.h">
-	  <Filter>Scene</Filter>
-	</ClInclude>
-	<ClInclude Include="EnvironmentComponentFactory.h">
-	  <Filter>GameObject</Filter>
-	</ClInclude>
     <ClInclude Include="FreeFlyMoveComponent.h">
-      <Filter>Component\01. Behavior\3D</Filter>
+      <Filter>Debug</Filter>
     </ClInclude>
-	<ClInclude Include="BeatVisibilityComponent.h">
-	  <Filter>Component\01. Behavior\3D</Filter>
-	</ClInclude>
-    <ClInclude Include="BeatMoveComponent.h">
-      <Filter>Component\01. Behavior\3D</Filter>
+    <ClInclude Include="CommonLoadingScene.h">
+      <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="IBeatTriggerAction.h">
-      <Filter>Component\01. Behavior\3D</Filter>
+    <ClInclude Include="GameplayScene.h">
+      <Filter>Scene</Filter>
     </ClInclude>
-	<ClInclude Include="TriggerSequenceSystem.h">
-	  <Filter>System</Filter>
-	</ClInclude>
-    <ClInclude Include="BeatOrbitComponent.h">
-      <Filter>Component\01. Behavior\3D</Filter>
+    <ClInclude Include="TitleScene.h">
+      <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="BeatAudioLevelMoveComponent.h">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="BeatMath.h">
-      <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="BeatStaticMeshCycleComponent.h">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="BeatPositionSequenceComponent.h">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="BeatSkeletalAnimationSyncComponent.h">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="BeatTriggeredSkeletalAnimationComponent.h">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="BeatSystem.h" />
-    <ClInclude Include="BeatTransformComponent.h">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="BeatTriggeredRotationComponent.h">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="HiFiRushAudio.h" />
-	<ClInclude Include="HiFiRushAnimationNotifyNames.h">
-	  <Filter>Util\Types</Filter>
-	</ClInclude>
     <ClInclude Include="TutorialScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="OutsideScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerSpawner.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
-	<ClInclude Include="MonsterResourceInfo.h">
-	  <Filter>Resource</Filter>
-	</ClInclude>
-	<ClInclude Include="PlayerResources.h">
-	  <Filter>Resource</Filter>
-	</ClInclude>
-	<ClInclude Include="MonsterCombatComponent.h">
-	  <Filter>Component\Monster</Filter>
-	</ClInclude>
-	<ClInclude Include="MonsterSpawner.h">
-	  <Filter>GameObject</Filter>
-	</ClInclude>
-	<ClInclude Include="MonsterState.h">
-	  <Filter>Component\Monster\State</Filter>
-	</ClInclude>
-	<ClInclude Include="MonsterStateContext.h">
-	  <Filter>Component\Monster\State</Filter>
-	</ClInclude>
-	<ClInclude Include="MonsterStateMachineComponent.h">
-	  <Filter>Component\Monster</Filter>
-	</ClInclude>
-	<ClInclude Include="MonsterStateTypes.h">
-	  <Filter>Component\Monster\State</Filter>
-	</ClInclude>
-	<ClInclude Include="MonsterTypes.h">
-	  <Filter>Util\Types</Filter>
-	</ClInclude>
-	<ClInclude Include="SjangoAnimationTypes.h">
-	  <Filter>Component\Monster\Sjango</Filter>
-	</ClInclude>
-	<ClInclude Include="SjangoState.h">
-	  <Filter>Component\Monster\Sjango\State</Filter>
-	</ClInclude>
-	<ClInclude Include="SjangoStateMachineComponent.h">
-	  <Filter>Component\Monster\Sjango</Filter>
-	</ClInclude>
-	<ClInclude Include="SwordAnimationTypes.h">
-	  <Filter>Component\Monster\Sword</Filter>
-	</ClInclude>
-	<ClInclude Include="SwordState.h">
-	  <Filter>Component\Monster\Sword\State</Filter>
-	</ClInclude>
-	<ClInclude Include="SwordStateMachineComponent.h">
-	  <Filter>Component\Monster\Sword</Filter>
-	</ClInclude>
-	<ClInclude Include="PlayerRuntimeState.h">
-		<Filter>Util\Types\Player</Filter>
-	</ClInclude>
-	<ClInclude Include="PlayerRuntimeStateSyncComponent.h">
-		<Filter>Component\Player</Filter>
-	</ClInclude>
     <ClInclude Include="QamilScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="TestScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="TitleScene.h">
-      <Filter>Scene</Filter>
+    <ClInclude Include="BeatSystem.h">
+      <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="MainHUDWidget.h">
-      <Filter>Widget</Filter>
+    <ClInclude Include="TriggerSequenceSystem.h">
+      <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="CommonLoadingScene.h">
-      <Filter>Scene</Filter>
+    <ClInclude Include="Resource.h">
+      <Filter>Resource</Filter>
     </ClInclude>
-    <ClInclude Include="Paths.h">
-      <Filter>Util</Filter>
+    <ClInclude Include="BinaryMapLoader.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="MapResource.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="MapTypes.h">
+      <Filter>Resource</Filter>
     </ClInclude>
     <ClInclude Include="LoadResources.h">
       <Filter>Resource</Filter>
     </ClInclude>
+    <ClInclude Include="MonsterResourceInfo.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerResources.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironmentSpawner.h">
+      <Filter>Spawner</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterSpawner.h">
+      <Filter>Spawner</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerSpawner.h">
+      <Filter>Spawner</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironmentComponentFactory.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="IBeatTriggerAction.h">
+      <Filter>Component\Beat</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatMath.h">
+      <Filter>Component\Beat</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatVisibilityComponent.h">
+      <Filter>Component\Beat</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatMoveComponent.h">
+      <Filter>Component\Beat</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatOrbitComponent.h">
+      <Filter>Component\Beat</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatAudioLevelMoveComponent.h">
+      <Filter>Component\Beat</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatStaticMeshCycleComponent.h">
+      <Filter>Component\Beat</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatPositionSequenceComponent.h">
+      <Filter>Component\Beat</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatSkeletalAnimationSyncComponent.h">
+      <Filter>Component\Beat</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatTriggeredSkeletalAnimationComponent.h">
+      <Filter>Component\Beat</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatTransformComponent.h">
+      <Filter>Component\Beat</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatTriggeredRotationComponent.h">
+      <Filter>Component\Beat</Filter>
+    </ClInclude>
+    <ClInclude Include="CombatTypes.h">
+      <Filter>Component\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthComponent.h">
+      <Filter>Component\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="HitBoxComponent.h">
+      <Filter>Component\Combat</Filter>
+    </ClInclude>
+	<ClInclude Include="TemporaryBoxHitBoxObject.h">
+	  <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="HurtBoxComponent.h">
+      <Filter>Component\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="HitReactionComponent.h">
+      <Filter>Component\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvironmentComponentTypes.h">
+      <Filter>Component\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneTransitionTriggerComponent.h">
+      <Filter>Component\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerRuntimeState.h">
+      <Filter>Component\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerRuntimeStateSyncComponent.h">
+      <Filter>Component\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiAnimationTypes.h">
+      <Filter>Component\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiMoveComponent.h">
+      <Filter>Component\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiStateMachineComponent.h">
+      <Filter>Component\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiState.h">
+      <Filter>Component\Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiStateContext.h">
+      <Filter>Component\Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiStateTypes.h">
+      <Filter>Component\Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiAttackState.h">
+      <Filter>Component\Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiDamageState.h">
+      <Filter>Component\Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiDashState.h">
+      <Filter>Component\Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiIdleRunState.h">
+      <Filter>Component\Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiJumpState.h">
+      <Filter>Component\Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiSpecialState.h">
+      <Filter>Component\Player\State</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterCombatComponent.h">
+      <Filter>Component\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterStateMachineComponent.h">
+      <Filter>Component\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterTypes.h">
+      <Filter>Component\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterState.h">
+      <Filter>Component\Monster\State</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterStateContext.h">
+      <Filter>Component\Monster\State</Filter>
+    </ClInclude>
+    <ClInclude Include="MonsterStateTypes.h">
+      <Filter>Component\Monster\State</Filter>
+    </ClInclude>
+    <ClInclude Include="SjangoAnimationTypes.h">
+      <Filter>Component\Monster\Sjango</Filter>
+    </ClInclude>
+    <ClInclude Include="SjangoStateMachineComponent.h">
+      <Filter>Component\Monster\Sjango</Filter>
+    </ClInclude>
+    <ClInclude Include="SjangoState.h">
+      <Filter>Component\Monster\Sjango\State</Filter>
+    </ClInclude>
+    <ClInclude Include="SwordAnimationTypes.h">
+      <Filter>Component\Monster\Sword</Filter>
+    </ClInclude>
+    <ClInclude Include="SwordStateMachineComponent.h">
+      <Filter>Component\Monster\Sword</Filter>
+    </ClInclude>
+    <ClInclude Include="SwordState.h">
+      <Filter>Component\Monster\Sword\State</Filter>
+    </ClInclude>
+    <ClInclude Include="GunnerAnimationTypes.h">
+      <Filter>Component\Monster\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="GunnerStateMachineComponent.h">
+      <Filter>Component\Monster\Gunner</Filter>
+    </ClInclude>
+    <ClInclude Include="GunnerState.h">
+      <Filter>Component\Monster\Gunner\State</Filter>
+    </ClInclude>
     <ClInclude Include="LoadingScreenWidget.h">
       <Filter>Widget</Filter>
     </ClInclude>
-    <ClInclude Include="HiFiRushGameInstance.h" />
-    <ClInclude Include="HiFiRushStatics.h" />
-    <ClInclude Include="SceneDebugTools.h">
-      <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugTextWidget.h">
+    <ClInclude Include="MainHUDWidget.h">
       <Filter>Widget</Filter>
     </ClInclude>
-    <ClInclude Include="ChiStateTypes.h">
-      <Filter>Util\Types\Player</Filter>
+    <ClInclude Include="Paths.h">
+      <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="ChiAnimationTypes.h">
-      <Filter>Util\Types\Player</Filter>
+    <ClInclude Include="HiFiRushCollisionLayers.h">
+      <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="ChiStateContext.h">
-      <Filter>Component\01. Behavior\3D</Filter>
+    <ClInclude Include="HiFiRushAnimationNotifyNames.h">
+      <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="ChiStateMachineComponent.h">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="ChiMoveComponent.h">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClInclude>
-    <ClInclude Include="ChiAttackState.h">
-      <Filter>Component\01. Behavior\3D\State</Filter>
-    </ClInclude>
-    <ClInclude Include="ChiDamageState.h">
-      <Filter>Component\01. Behavior\3D\State</Filter>
-    </ClInclude>
-    <ClInclude Include="ChiDashState.h">
-      <Filter>Component\01. Behavior\3D\State</Filter>
-    </ClInclude>
-    <ClInclude Include="ChiJumpState.h">
-      <Filter>Component\01. Behavior\3D\State</Filter>
-    </ClInclude>
-    <ClInclude Include="ChiIdleRunState.h">
-      <Filter>Component\01. Behavior\3D\State</Filter>
-    </ClInclude>
-    <ClInclude Include="ChiSpecialState.h">
-      <Filter>Component\01. Behavior\3D\State</Filter>
-    </ClInclude>
-    <ClInclude Include="ChiState.h">
-      <Filter>Component\01. Behavior\3D\State</Filter>
+    <ClInclude Include="targetver.h">
+      <Filter>Windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="HiFi-Rush.rc">
-      <Filter>리소스 파일</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="small.ico">
-      <Filter>리소스 파일</Filter>
-    </Image>
-    <Image Include="HiFi-Rush.ico">
-      <Filter>리소스 파일</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="HealthComponent.cpp">
-      <Filter>Component\Combat</Filter>
+    <ClCompile Include="main.cpp">
+      <Filter>Application</Filter>
     </ClCompile>
-    <ClCompile Include="SceneTransitionTriggerComponent.cpp">
-      <Filter>Component\Environment</Filter>
+    <ClCompile Include="HiFiRushGameInstance.cpp">
+      <Filter>Application</Filter>
     </ClCompile>
-    <ClCompile Include="HitBoxComponent.cpp">
-      <Filter>Component\Combat</Filter>
+    <ClCompile Include="HiFiRushStatics.cpp">
+      <Filter>Application</Filter>
     </ClCompile>
-	<ClCompile Include="HitReactionComponent.cpp">
-	  <Filter>Component\Combat</Filter>
-	</ClCompile>
-    <ClCompile Include="HurtBoxComponent.cpp">
-      <Filter>Component\Combat</Filter>
+    <ClCompile Include="HiFiRushAudio.cpp">
+      <Filter>Application\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="DebugEventPublisher.cpp">
       <Filter>Debug</Filter>
     </ClCompile>
-    <ClCompile Include="BinaryMapLoader.cpp">
-      <Filter>Resource</Filter>
+    <ClCompile Include="DebugTextWidget.cpp">
+      <Filter>Debug</Filter>
     </ClCompile>
-    <ClCompile Include="MapResource.cpp">
-      <Filter>Resource</Filter>
+    <ClCompile Include="SceneDebugTools.cpp">
+      <Filter>Debug</Filter>
     </ClCompile>
-	<ClCompile Include="EnvironmentComponentFactory.cpp">
-	  <Filter>GameObject</Filter>
-	</ClCompile>
-    <ClCompile Include="EnvironmentSpawner.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
-	<ClCompile Include="GameplayScene.cpp">
-	  <Filter>Scene</Filter>
-	</ClCompile>
     <ClCompile Include="FreeFlyMoveComponent.cpp">
-      <Filter>Component\01. Behavior\3D</Filter>
+      <Filter>Debug</Filter>
     </ClCompile>
-	<ClCompile Include="BeatVisibilityComponent.cpp">
-	  <Filter>Component\01. Behavior\3D</Filter>
-	</ClCompile>
-    <ClCompile Include="BeatMoveComponent.cpp">
-      <Filter>Component\01. Behavior\3D</Filter>
+    <ClCompile Include="CommonLoadingScene.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
-	<ClCompile Include="TriggerSequenceSystem.cpp">
-	  <Filter>System</Filter>
-	</ClCompile>
-    <ClCompile Include="BeatOrbitComponent.cpp">
-      <Filter>Component\01. Behavior\3D</Filter>
+    <ClCompile Include="GameplayScene.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="BeatAudioLevelMoveComponent.cpp">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="BeatStaticMeshCycleComponent.cpp">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="BeatPositionSequenceComponent.cpp">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="BeatSkeletalAnimationSyncComponent.cpp">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="BeatTriggeredSkeletalAnimationComponent.cpp">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="BeatSystem.cpp" />
-    <ClCompile Include="BeatTransformComponent.cpp">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="BeatTriggeredRotationComponent.cpp">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="HiFiRushAudio.cpp" />
-    <ClCompile Include="HiFiRushGameInstance.cpp" />
-    <ClCompile Include="HiFiRushStatics.cpp" />
-    <ClCompile Include="LoadResources.cpp">
-      <Filter>Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="LoadingScreenWidget.cpp">
-      <Filter>Widget</Filter>
+    <ClCompile Include="TitleScene.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="TutorialScene.cpp">
       <Filter>Scene</Filter>
@@ -396,86 +372,165 @@
     <ClCompile Include="OutsideScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerSpawner.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
-	<ClCompile Include="MonsterResourceInfo.cpp">
-	  <Filter>Resource</Filter>
-	</ClCompile>
-	<ClCompile Include="MonsterCombatComponent.cpp">
-	  <Filter>Component\Monster</Filter>
-	</ClCompile>
-	<ClCompile Include="MonsterSpawner.cpp">
-	  <Filter>GameObject</Filter>
-	</ClCompile>
-	<ClCompile Include="MonsterState.cpp">
-	  <Filter>Component\Monster\State</Filter>
-	</ClCompile>
-	<ClCompile Include="MonsterStateMachineComponent.cpp">
-	  <Filter>Component\Monster</Filter>
-	</ClCompile>
-	<ClCompile Include="SjangoState.cpp">
-	  <Filter>Component\Monster\Sjango\State</Filter>
-	</ClCompile>
-	<ClCompile Include="SjangoStateMachineComponent.cpp">
-	  <Filter>Component\Monster\Sjango</Filter>
-	</ClCompile>
-	<ClCompile Include="SwordState.cpp">
-	  <Filter>Component\Monster\Sword\State</Filter>
-	</ClCompile>
-	<ClCompile Include="SwordStateMachineComponent.cpp">
-	  <Filter>Component\Monster\Sword</Filter>
-	</ClCompile>
-	<ClCompile Include="PlayerRuntimeStateSyncComponent.cpp">
-		<Filter>Component\Player</Filter>
-	</ClCompile>
     <ClCompile Include="QamilScene.cpp">
       <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneDebugTools.cpp">
-      <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="TestScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="TitleScene.cpp">
-      <Filter>Scene</Filter>
+    <ClCompile Include="BeatSystem.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="TriggerSequenceSystem.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="BinaryMapLoader.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="MapResource.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadResources.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterResourceInfo.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentSpawner.cpp">
+      <Filter>Spawner</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterSpawner.cpp">
+      <Filter>Spawner</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerSpawner.cpp">
+      <Filter>Spawner</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvironmentComponentFactory.cpp">
+      <Filter>Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatVisibilityComponent.cpp">
+      <Filter>Component\Beat</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatMoveComponent.cpp">
+      <Filter>Component\Beat</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatOrbitComponent.cpp">
+      <Filter>Component\Beat</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatAudioLevelMoveComponent.cpp">
+      <Filter>Component\Beat</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatStaticMeshCycleComponent.cpp">
+      <Filter>Component\Beat</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatPositionSequenceComponent.cpp">
+      <Filter>Component\Beat</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatSkeletalAnimationSyncComponent.cpp">
+      <Filter>Component\Beat</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatTriggeredSkeletalAnimationComponent.cpp">
+      <Filter>Component\Beat</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatTransformComponent.cpp">
+      <Filter>Component\Beat</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatTriggeredRotationComponent.cpp">
+      <Filter>Component\Beat</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthComponent.cpp">
+      <Filter>Component\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="HitBoxComponent.cpp">
+      <Filter>Component\Combat</Filter>
+    </ClCompile>
+	<ClCompile Include="TemporaryBoxHitBoxObject.cpp">
+	  <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="HurtBoxComponent.cpp">
+      <Filter>Component\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="HitReactionComponent.cpp">
+      <Filter>Component\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneTransitionTriggerComponent.cpp">
+      <Filter>Component\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerRuntimeStateSyncComponent.cpp">
+      <Filter>Component\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiMoveComponent.cpp">
+      <Filter>Component\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiStateMachineComponent.cpp">
+      <Filter>Component\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiState.cpp">
+      <Filter>Component\Player\State</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiAttackState.cpp">
+      <Filter>Component\Player\State</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiDamageState.cpp">
+      <Filter>Component\Player\State</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiDashState.cpp">
+      <Filter>Component\Player\State</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiIdleRunState.cpp">
+      <Filter>Component\Player\State</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiJumpState.cpp">
+      <Filter>Component\Player\State</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiSpecialState.cpp">
+      <Filter>Component\Player\State</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterCombatComponent.cpp">
+      <Filter>Component\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterStateMachineComponent.cpp">
+      <Filter>Component\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterState.cpp">
+      <Filter>Component\Monster\State</Filter>
+    </ClCompile>
+    <ClCompile Include="SjangoStateMachineComponent.cpp">
+      <Filter>Component\Monster\Sjango</Filter>
+    </ClCompile>
+    <ClCompile Include="SjangoState.cpp">
+      <Filter>Component\Monster\Sjango\State</Filter>
+    </ClCompile>
+    <ClCompile Include="SwordStateMachineComponent.cpp">
+      <Filter>Component\Monster\Sword</Filter>
+    </ClCompile>
+    <ClCompile Include="SwordState.cpp">
+      <Filter>Component\Monster\Sword\State</Filter>
+    </ClCompile>
+    <ClCompile Include="GunnerStateMachineComponent.cpp">
+      <Filter>Component\Monster\Gunner</Filter>
+    </ClCompile>
+    <ClCompile Include="GunnerState.cpp">
+      <Filter>Component\Monster\Gunner\State</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadingScreenWidget.cpp">
+      <Filter>Widget</Filter>
     </ClCompile>
     <ClCompile Include="MainHUDWidget.cpp">
       <Filter>Widget</Filter>
     </ClCompile>
-    <ClCompile Include="CommonLoadingScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugTextWidget.cpp">
-      <Filter>Widget</Filter>
-    </ClCompile>
-    <ClCompile Include="ChiStateMachineComponent.cpp">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="ChiMoveComponent.cpp">
-      <Filter>Component\01. Behavior\3D</Filter>
-    </ClCompile>
-    <ClCompile Include="ChiAttackState.cpp">
-      <Filter>Component\01. Behavior\3D\State</Filter>
-    </ClCompile>
-    <ClCompile Include="ChiDamageState.cpp">
-      <Filter>Component\01. Behavior\3D\State</Filter>
-    </ClCompile>
-    <ClCompile Include="ChiDashState.cpp">
-      <Filter>Component\01. Behavior\3D\State</Filter>
-    </ClCompile>
-    <ClCompile Include="ChiIdleRunState.cpp">
-      <Filter>Component\01. Behavior\3D\State</Filter>
-    </ClCompile>
-    <ClCompile Include="ChiJumpState.cpp">
-      <Filter>Component\01. Behavior\3D\State</Filter>
-    </ClCompile>
-    <ClCompile Include="ChiSpecialState.cpp">
-      <Filter>Component\01. Behavior\3D\State</Filter>
-    </ClCompile>
-    <ClCompile Include="ChiState.cpp">
-      <Filter>Component\01. Behavior\3D\State</Filter>
-    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="HiFi-Rush.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="HiFi-Rush.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="small.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
 </Project>
