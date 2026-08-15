@@ -21,10 +21,16 @@ namespace gm
 		std::shared_ptr<NavigationMesh> GetActiveNavigationMesh() const { return _activeNavigationMesh; }
 
 #if GM_ENABLE_DEBUG_TOOLS
+		void							SetDebugDrawEnabled(bool isEnabled) { _isDebugDrawEnabled = isEnabled; }
+		bool							IsDebugDrawEnabled() const { return _isDebugDrawEnabled; }
 		void							DebugDraw(IDebugRenderer& debugRenderer) const;
 #endif
 
 	private:
 		std::shared_ptr<NavigationMesh> _activeNavigationMesh;
+
+#if GM_ENABLE_DEBUG_TOOLS
+		bool							_isDebugDrawEnabled = false;
+#endif
 	};
 }

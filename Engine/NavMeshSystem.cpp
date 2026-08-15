@@ -45,7 +45,7 @@ namespace gm
 #if GM_ENABLE_DEBUG_TOOLS
 	void NavMeshSystem::DebugDraw(IDebugRenderer& debugRenderer) const
 	{
-		if (_activeNavigationMesh == nullptr)
+		if (_isDebugDrawEnabled == false || _activeNavigationMesh == nullptr)
 			return;
 
 		_activeNavigationMesh->DebugDraw(debugRenderer);

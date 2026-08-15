@@ -4,6 +4,7 @@
 
 #include "Application.h"
 #include "BeatSystem.h"
+#include "NavMeshSystem.h"
 #include "PhysicsSystem.h"
 #include "Renderer.h"
 #include "TextBlock.h"
@@ -86,6 +87,7 @@ namespace gm
 
 		text << L"\nBounding Volume [B] : " << (renderer.IsBoundingVolumeDebugDrawEnabled() ? L"On" : L"Off");
 		text << L"\n3D Collider [C] : " << (physicsSystem.IsCollider3DDebugDrawEnabled() ? L"On" : L"Off");
+		text << L"\nNavigation Mesh [N] : " << (physicsSystem.GetNavMeshSystem().IsDebugDrawEnabled() ? L"On" : L"Off");
 		text << L"\nFrustum Culling [Ctrl+B] : " << (renderer.IsFrustumCullingEnabled() ? L"On" : L"Off");
 		text << L"\nStatic Mesh Instancing [Ctrl+I] : " << (renderer.IsStaticMeshInstancingEnabled() ? L"On" : L"Off");
 		text << L"\nStatic Mesh Batches : " << instancingStats.renderBatchCount;
