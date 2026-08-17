@@ -148,7 +148,7 @@ namespace gm
 
 	bool CommonLoadingScene::LoadGameplayUIResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory)
 	{
-		constexpr std::array<const wchar_t*, 22> texturePaths =
+		constexpr std::array<const wchar_t*, 43> texturePaths =
 		{{
 			L"UI/Bottom_Rhytm_Bar/T_Rhytm_Meter_Cat_Black.dds",
 			L"UI/Bottom_Rhytm_Bar/T_Rhytm_Meter_halftone_bg.dds",
@@ -172,6 +172,27 @@ namespace gm
 			L"UI/HP_Bar/Reverve_Full7.dds",
 			L"UI/HP_Bar/Reverve_Full8.dds",
 			L"UI/HP_Bar/AfterImage.dds",
+			L"UI/RhytmMeter/C_Gauge.dds",
+			L"UI/RhytmMeter/C_Shadow.dds",
+			L"UI/RhytmMeter/C_GradeMark.dds",
+			L"UI/RhytmMeter/C_BlackKeys.dds",
+			L"UI/RhytmMeter/B_Gauge.dds",
+			L"UI/RhytmMeter/B_Shadow.dds",
+			L"UI/RhytmMeter/B_GradeMark.dds",
+			L"UI/RhytmMeter/B_InnerSpike.dds",
+			L"UI/RhytmMeter/B_OuterSpike.dds",
+			L"UI/RhytmMeter/B_RadialEffect.dds",
+			L"UI/RhytmMeter/A_Gauge.dds",
+			L"UI/RhytmMeter/A_Shadow.dds",
+			L"UI/RhytmMeter/A_GradeMark.dds",
+			L"UI/RhytmMeter/A_InnerSpike.dds",
+			L"UI/RhytmMeter/A_OuterSpike.dds",
+			L"UI/RhytmMeter/A_BigRadialEffect.dds",
+			L"UI/RhytmMeter/A_Spark.dds",
+			L"UI/RhytmMeter/S_Gauge.dds",
+			L"UI/RhytmMeter/S_GradeMark.dds",
+			L"UI/RhytmMeter/S_Star.dds",
+			L"UI/RhytmMeter/S_Thunder.dds",
 		}};
 
 		for (const wchar_t* texturePath : texturePaths)

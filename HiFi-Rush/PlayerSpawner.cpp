@@ -24,6 +24,7 @@
 #include "Resources.h"
 #include "Rigidbody3DComponent.h"
 #include "ReverbComponent.h"
+#include "RhythmRankComponent.h"
 #include "Scene.h"
 #include "SkeletalAnimatorComponent.h"
 #include "SkeletalMesh.h"
@@ -115,6 +116,7 @@ namespace gm
 		weaponFollowComponent->SetDestroyWithTarget(true);
 
 		GM_ASSERT_RETURN_VAL(player->AddComponent<ChiStateMachineComponent>(weaponHitBox), nullptr, "Player ChiStateMachineComponent 생성에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(player->AddComponent<RhythmRankComponent>(), nullptr, "Player RhythmRankComponent 생성에 실패했습니다.");
 
 		BeatSkeletalAnimationSyncDesc animationSyncDesc{};
 		BeatSkeletalAnimationSyncComponent* animationSync = player->AddComponent<BeatSkeletalAnimationSyncComponent>(HiFiRushStatics::GetBeatSystem(), *animator, animationSyncDesc);

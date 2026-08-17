@@ -2,6 +2,8 @@
 #include "Application.h"
 #include "ChiStateMachineComponent.h"
 #include "RhythmBarWidget.h"
+#include "RhythmMeterWidget.h"
+#include "RhythmRankComponent.h"
 #include "EnvironmentSpawner.h"
 #include "GameObject.h"
 #include "GMAssert.h"
@@ -74,10 +76,13 @@ namespace gm
 		GM_ASSERT_RETURN(reverbComponent, "PlayerStatusWidget을 구성하려면 Player ReverbComponent가 필요합니다.");
 		ChiStateMachineComponent* stateMachine = player->GetComponent<ChiStateMachineComponent>();
 		GM_ASSERT_RETURN(stateMachine, "PlayerStatusWidget을 구성하려면 ChiStateMachineComponent가 필요합니다.");
+		RhythmRankComponent* rhythmRankComponent = player->GetComponent<RhythmRankComponent>();
+		GM_ASSERT_RETURN(rhythmRankComponent, "RhythmMeterWidget을 구성하려면 RhythmRankComponent가 필요합니다.");
 
 		UIManager& uiManager = APPLICATION.GetUIManager();
 		uiManager.ClearViewportWidgets();
 		uiManager.AddUserWidget<PlayerStatusWidget>(HiFiRushStatics::GetBeatSystem(), *healthComponent, *reverbComponent, *stateMachine);
+		uiManager.AddUserWidget<RhythmMeterWidget>(HiFiRushStatics::GetBeatSystem(), *rhythmRankComponent);
 		uiManager.AddUserWidget<RhythmBarWidget>(HiFiRushStatics::GetBeatSystem());
 	}
 

@@ -214,6 +214,12 @@
     <ClInclude Include="ReverbComponent.h">
       <Filter>Component\Player</Filter>
     </ClInclude>
+	<ClInclude Include="RhythmRankTypes.h">
+	  <Filter>Component\Player</Filter>
+	</ClInclude>
+	<ClInclude Include="RhythmRankComponent.h">
+	  <Filter>Component\Player</Filter>
+	</ClInclude>
     <ClInclude Include="HitBoxComponent.h">
       <Filter>Component\Combat</Filter>
     </ClInclude>
@@ -326,6 +332,9 @@
       <Filter>Widget</Filter>
     </ClInclude>
 	<ClInclude Include="RhythmBarWidget.h">
+	  <Filter>Widget</Filter>
+	</ClInclude>
+	<ClInclude Include="RhythmMeterWidget.h">
 	  <Filter>Widget</Filter>
 	</ClInclude>
 	<ClInclude Include="PlayerStatusWidget.h">
@@ -462,6 +471,9 @@
     <ClCompile Include="ReverbComponent.cpp">
       <Filter>Component\Player</Filter>
     </ClCompile>
+	<ClCompile Include="RhythmRankComponent.cpp">
+	  <Filter>Component\Player</Filter>
+	</ClCompile>
     <ClCompile Include="HitBoxComponent.cpp">
       <Filter>Component\Combat</Filter>
     </ClCompile>
@@ -541,6 +553,9 @@
       <Filter>Widget</Filter>
     </ClCompile>
 	<ClCompile Include="RhythmBarWidget.cpp">
+	  <Filter>Widget</Filter>
+	</ClCompile>
+	<ClCompile Include="RhythmMeterWidget.cpp">
 	  <Filter>Widget</Filter>
 	</ClCompile>
 	<ClCompile Include="PlayerStatusWidget.cpp">
