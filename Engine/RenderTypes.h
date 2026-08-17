@@ -27,6 +27,10 @@ namespace gm
 	{
 		Vector2 uvOffset{ 0.f, 0.f };
 		Vector2 uvScale{ 1.f, 1.f };
+		Color	blendColor = Colors::White;
+		float	blendRatio = 0.f;
+		float	opacity = 1.f;
+		Vector2 padding{};
 	};
 
 	struct ColorConstantPS

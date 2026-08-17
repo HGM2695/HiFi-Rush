@@ -7,6 +7,8 @@
 #include "Resources.h"
 #include "Texture.h"
 
+#include <algorithm>
+
 namespace gm
 {
 	Image::Image()
@@ -40,6 +42,25 @@ namespace gm
 	void Image::SetSamplerDesc(const SamplerDesc& desc)
 	{
 		_samplerDesc = desc;
+		UpdateMaterial();
+	}
+
+	void Image::SetOpacity(float opacity)
+	{
+		_opacity = std::clamp(opacity, 0.f, 1.f);
+		UpdateMaterial();
+	}
+
+	void Image::SetColorBlend(Color color, float ratio)
+	{
+		_blendColor = color;
+		_blendRatio = std::clamp(ratio, 0.f, 1.f);
+		UpdateMaterial();
+	}
+
+	void Image::SetColorBlendRatio(float ratio)
+	{
+		_blendRatio = std::clamp(ratio, 0.f, 1.f);
 		UpdateMaterial();
 	}
 
@@ -88,6 +109,9 @@ namespace gm
 		_material->SetSamplerDesc(TextureSlot::BaseColor, _samplerDesc);
 
 		SpriteConstantPS constant{};
+		constant.blendColor = _blendColor;
+		constant.blendRatio = _blendRatio;
+		constant.opacity = _opacity;
 		_material->SetConstantData(ShaderStage::Pixel, 0, constant);
 	}
 }
