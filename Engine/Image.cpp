@@ -14,7 +14,7 @@ namespace gm
 	Image::Image()
 	{
 		SetName(L"Image");
-		_samplerDesc.filter = TextureFilter::Point;
+		_samplerDesc.filter = TextureFilter::Linear;
 		CreateMaterial();
 	}
 
@@ -64,6 +64,12 @@ namespace gm
 		UpdateMaterial();
 	}
 
+	void Image::SetFillRatio(float ratio)
+	{
+		_fillRatio = std::clamp(ratio, 0.f, 1.f);
+		UpdateMaterial();
+	}
+
 	void Image::OnRender(const WidgetGeometry& geometry)
 	{
 		if (_texture == nullptr || geometry.size.x <= 0.f || geometry.size.y <= 0.f)
@@ -75,6 +81,7 @@ namespace gm
 		UIRenderItem item{};
 		item.screenCenter = geometry.center;
 		item.size = geometry.size;
+		item.rotation = geometry.rotation;
 		item.material = _material.get();
 
 		APPLICATION.GetRenderer().SubmitUI(item);
@@ -112,6 +119,7 @@ namespace gm
 		constant.blendColor = _blendColor;
 		constant.blendRatio = _blendRatio;
 		constant.opacity = _opacity;
+		constant.fillRatio = _fillRatio;
 		_material->SetConstantData(ShaderStage::Pixel, 0, constant);
 	}
 }

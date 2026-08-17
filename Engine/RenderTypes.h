@@ -30,7 +30,8 @@ namespace gm
 		Color	blendColor = Colors::White;
 		float	blendRatio = 0.f;
 		float	opacity = 1.f;
-		Vector2 padding{};
+		float	fillRatio = 1.f;
+		float	padding = 0.f;
 	};
 
 	struct ColorConstantPS
@@ -43,6 +44,7 @@ namespace gm
 	{
 		Vector2			screenCenter{};
 		Vector2			size{};
+		float			rotation = 0.f;
 		const Material*	material = nullptr;
 	};
 

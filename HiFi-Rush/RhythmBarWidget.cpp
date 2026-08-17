@@ -37,13 +37,6 @@ namespace gm
 		{
 			return from + (to - from) * ratio;
 		}
-
-		void SetLinearSampler(Image& image)
-		{
-			SamplerDesc samplerDesc{};
-			samplerDesc.filter = TextureFilter::Linear;
-			image.SetSamplerDesc(samplerDesc);
-		}
 	}
 
 	RhythmBarWidget::RhythmBarWidget(const BeatSystem& beatSystem)
@@ -59,18 +52,11 @@ namespace gm
 		_backCircleImage = root->AddNamedChild<Image>(L"BackCircle", BackCircleTextureKey);
 		_catImage = root->AddNamedChild<Image>(L"Cat", CatTextureKey);
 
-		SetLinearSampler(*_bigLineImage);
-		SetLinearSampler(*_smallLineImage);
-		SetLinearSampler(*_backCircleImage);
-		SetLinearSampler(*_catImage);
-
 		for (uint32 markerIndex = 0; markerIndex < BeatMarkerPairCount; ++markerIndex)
 		{
 			BeatMarkerPair& markerPair = _beatMarkerPairs[markerIndex];
 			markerPair.left = root->AddNamedChild<Image>(L"LeftMarker" + std::to_wstring(markerIndex), LeftMarkerTextureKey);
 			markerPair.right = root->AddNamedChild<Image>(L"RightMarker" + std::to_wstring(markerIndex), RightMarkerTextureKey);
-			SetLinearSampler(*markerPair.left);
-			SetLinearSampler(*markerPair.right);
 			markerPair.left->SetVisible(false);
 			markerPair.right->SetVisible(false);
 		}

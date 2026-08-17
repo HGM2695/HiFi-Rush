@@ -26,28 +26,18 @@ namespace gm
 
 		Vector2 ScreenToOrthoCenter(const Vector2& screenPosition, uint32 width, uint32 height)
 		{
-			return Vector2(
-				screenPosition.x - static_cast<float>(width) * 0.5f,
-				-screenPosition.y + static_cast<float>(height) * 0.5f
-			);
+			return Vector2(screenPosition.x - static_cast<float>(width) * 0.5f, -screenPosition.y + static_cast<float>(height) * 0.5f);
 		}
 
-		Matrix CreateUIWorldMatrix(const Vector2& screenCenter, const Vector2& size, uint32 width, uint32 height)
+		Matrix CreateUIWorldMatrix(const Vector2& screenCenter, const Vector2& size, float rotation, uint32 width, uint32 height)
 		{
 			const Vector2 orthoCenter = ScreenToOrthoCenter(screenCenter, width, height);
-			return Math::CreateTransformMatrix(
-				Vector3(orthoCenter.x, orthoCenter.y, 0.f),
-				Math::IdentityQuaternion(),
-				Vector3(size.x, size.y, 1.f)
-			);
+			return Math::CreateTransformMatrix(Vector3(orthoCenter.x, orthoCenter.y, 0.f), Quaternion::CreateFromAxisAngle(Vector3{ 0.f, 0.f, 1.f }, rotation), Vector3(size.x, size.y, 1.f));
 		}
 	}
 
 	UIRenderPass::UIRenderPass(Resources& resources, IGraphicsCommandContext& commandContext, IGraphicsResourceFactory& resourceFactory)
-		: _resources(resources)
-		, _commandContext(commandContext)
-		, _resourceFactory(resourceFactory)
-		, _constantBufferPool(resourceFactory)
+		: _resources(resources), _commandContext(commandContext), _resourceFactory(resourceFactory), _constantBufferPool(resourceFactory)
 	{
 	}
 
@@ -92,7 +82,7 @@ namespace gm
 				continue;
 
 			ObjectConstantVS objectConstantVS{};
-			objectConstantVS.world = CreateUIWorldMatrix(item.screenCenter, item.size, width, height);
+			objectConstantVS.world = CreateUIWorldMatrix(item.screenCenter, item.size, item.rotation, width, height);
 
 			ConstantBuffer* objectBuffer = _constantBufferPool.Acquire(sizeof(ObjectConstantVS));
 			GM_ASSERT_RETURN(objectBuffer, "UI ObjectConstantVS ConstantBuffer를 가져오지 못했습니다.");

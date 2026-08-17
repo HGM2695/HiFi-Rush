@@ -30,6 +30,8 @@ namespace gm
 		void						SetColorBlendRatio(float ratio);
 		Color						GetBlendColor() const { return _blendColor; }
 		float						GetColorBlendRatio() const { return _blendRatio; }
+		void						SetFillRatio(float ratio);
+		float						GetFillRatio() const { return _fillRatio; }
 
 	protected:
 		virtual void OnRender(const WidgetGeometry& geometry) override;
@@ -44,6 +46,7 @@ namespace gm
 		Color						_blendColor = Colors::White;
 		float						_blendRatio = 0.f;
 		float						_opacity = 1.f;
+		float						_fillRatio = 1.f;
 		std::unique_ptr<Material>	_material;
 	};
 }

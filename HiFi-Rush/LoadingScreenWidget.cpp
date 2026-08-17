@@ -40,13 +40,9 @@ namespace gm
 		const Vector2 catPosition{ 1392.4f, 705.3f };
 		const Vector2 catSize{ 306.4f, 323.f };
 
-		SamplerDesc samplerDesc{};
-		samplerDesc.filter = TextureFilter::Linear;
-
 		Image* catImage = root->AddNamedChild<Image>(L"Cat", LoadingScreenTextureKey);
 		catImage->SetPosition(catPosition);
 		catImage->SetSize(catSize);
-		catImage->SetSamplerDesc(samplerDesc);
 
 		const float noteSize = std::min(88.f, screenHeight * 0.1f);
 		const std::array<const wchar_t*, 3> noteKeys{ LoadingNote1TextureKey, LoadingNote2TextureKey, LoadingNote3TextureKey };
@@ -63,7 +59,6 @@ namespace gm
 			Image* noteImage = root->AddNamedChild<Image>(L"Note" + std::to_wstring(noteIndex + 1), noteKeys[noteIndex]);
 			noteImage->SetPosition(notePositions[noteIndex]);
 			noteImage->SetSize({ noteSize, noteSize });
-			noteImage->SetSamplerDesc(samplerDesc);
 			noteImages[noteIndex] = noteImage;
 		}
 

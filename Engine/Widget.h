@@ -12,6 +12,7 @@ namespace gm
 	{
 		Vector2 center{};
 		Vector2 size{};
+		float rotation = 0.f;
 	};
 
 	enum class WidgetSizeRule
@@ -88,6 +89,8 @@ namespace gm
 
 		void				SetSize(const Vector2& size) { _size = size; }
 		const Vector2&		GetSize() const { return _size; }
+		void				SetRotation(float rotation) { _rotation = rotation; }
+		float				GetRotation() const { return _rotation; }
 
 		template <typename T, typename... Args>
 		T* AddTween(Args&&... args)
@@ -147,6 +150,7 @@ namespace gm
 		std::wstring							_name = L"Widget";
 		Vector2									_position{};
 		Vector2									_size{};
+		float									_rotation = 0.f;
 		WidgetSizeRule							_sizeRule = WidgetSizeRule::Fixed;
 	};
 }

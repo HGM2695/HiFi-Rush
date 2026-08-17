@@ -8,7 +8,8 @@ cbuffer sprite : register(b0)
     float4 blendColor;
     float blendRatio;
     float opacity;
-    float2 padding;
+    float fillRatio;
+    float padding;
 }
 
 struct PSInput
@@ -19,6 +20,8 @@ struct PSInput
 
 float4 main(PSInput input) : SV_TARGET
 {   
+    clip(saturate(fillRatio) - input.texcoord.x);
+
     float2 uv = uvOffset + input.texcoord * uvScale;
     float4 color = g_texture.Sample(g_sampler, uv);
     clip(color.a - 0.001f);

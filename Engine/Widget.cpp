@@ -57,7 +57,8 @@ namespace gm
 		const WidgetGeometry geometry
 		{
 			parentGeometry.center + _position,
-			ResolveSize(parentGeometry)
+			ResolveSize(parentGeometry),
+			parentGeometry.rotation + _rotation
 		};
 
 		OnRender(geometry);
