@@ -1,5 +1,6 @@
 #include "GameplayScene.h"
 #include "Application.h"
+#include "RhythmBarWidget.h"
 #include "EnvironmentSpawner.h"
 #include "GameObject.h"
 #include "GMAssert.h"
@@ -9,6 +10,7 @@
 #include "PlayerSpawner.h"
 #include "Resources.h"
 #include "TriggerSequenceSystem.h"
+#include "UIManager.h"
 
 #include <memory>
 
@@ -55,6 +57,13 @@ namespace gm
 
 		_player = player->GetWeakPtr();
 		return true;
+	}
+
+	void GameplayScene::InitializeGameplayUI()
+	{
+		UIManager& uiManager = APPLICATION.GetUIManager();
+		uiManager.ClearViewportWidgets();
+		uiManager.AddUserWidget<RhythmBarWidget>(HiFiRushStatics::GetBeatSystem());
 	}
 
 	void GameplayScene::OnUnload()

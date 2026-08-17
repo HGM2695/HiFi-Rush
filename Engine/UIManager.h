@@ -21,6 +21,17 @@ namespace gm
 			return raw;
 		}
 
+		Widget* FindWidget(const std::wstring& name)
+		{
+			for (const auto& widget : _viewportWidgetList)
+			{
+				if (Widget* result = widget->FindWidget<Widget>(name))
+					return result;
+			}
+
+			return nullptr;
+		}
+
 		template <typename T, typename... Args>
 		T* AddDebugUserWidget(Args&&... args)
 		{

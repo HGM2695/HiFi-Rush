@@ -204,6 +204,7 @@
     <ClInclude Include="BeatOrbitComponent.h" />
     <ClInclude Include="BeatAudioLevelMoveComponent.h" />
     <ClInclude Include="BeatMath.h" />
+	<ClInclude Include="RhythmBarWidget.h" />
     <ClInclude Include="BeatStaticMeshCycleComponent.h" />
     <ClInclude Include="BeatPositionSequenceComponent.h" />
     <ClInclude Include="BeatSkeletalAnimationSyncComponent.h" />
@@ -289,6 +290,7 @@
     <ClCompile Include="BeatPositionSequenceComponent.cpp" />
     <ClCompile Include="BeatSkeletalAnimationSyncComponent.cpp" />
     <ClCompile Include="BeatTriggeredSkeletalAnimationComponent.cpp" />
+	<ClCompile Include="RhythmBarWidget.cpp" />
     <ClCompile Include="BeatSystem.cpp" />
 	<ClCompile Include="RhythmInputJudge.cpp" />
     <ClCompile Include="BeatTransformComponent.cpp" />

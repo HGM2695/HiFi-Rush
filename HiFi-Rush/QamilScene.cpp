@@ -24,6 +24,7 @@ namespace gm
 		APPLICATION.GetInput().SetCursorLocked(true);
 		GetCameraManager()->SetActiveCamera(PlayerCameraKey);
 		PlayRhythmBGM(HiFiRushBGM::Qamil);
+		InitializeGameplayUI();
 	}
 
 	void QamilScene::OnExit()

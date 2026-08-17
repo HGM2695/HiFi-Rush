@@ -24,6 +24,7 @@ namespace gm
 	protected:
 		bool InitializeMap(const std::wstring& mapResourceKey);
 		bool InitializePlayer(const PlayerSpawnDesc& desc);
+		void InitializeGameplayUI();
 		void OnUnload() override;
 
 	private:

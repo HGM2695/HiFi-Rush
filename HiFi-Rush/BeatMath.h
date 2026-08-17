@@ -38,9 +38,17 @@ namespace gm::BeatMath
 		return duration * EvaluateCycleRatio(currentBeat, cycleBeats, phaseOffsetBeats);
 	}
 
-	inline float EvaluateBeatPulse(float currentBeat, float cycleBeats, float phaseOffsetBeats = 0.f)
+	// Beat 경계에서 1, 주기의 중앙에서 0이 되는 Pulse입니다.
+	inline float EvaluateBeatBoundaryPulse(float currentBeat, float cycleBeats, float phaseOffsetBeats = 0.f)
 	{
 		const float cycleRatio = EvaluateCycleRatio(currentBeat, cycleBeats, phaseOffsetBeats);
 		return 0.5f * (std::cos(2.f * Math::GM_PI * cycleRatio) + 1.f);
+	}
+
+	// Beat 경계에서 0, 주기의 중앙에서 1이 되는 Pulse입니다.
+	inline float EvaluateBeatIntervalPulse(float currentBeat, float cycleBeats, float phaseOffsetBeats = 0.f)
+	{
+		const float cycleRatio = EvaluateCycleRatio(currentBeat, cycleBeats, phaseOffsetBeats);
+		return std::sin(Math::GM_PI * cycleRatio);
 	}
 }

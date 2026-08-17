@@ -322,6 +322,9 @@
     <ClInclude Include="LoadingScreenWidget.h">
       <Filter>Widget</Filter>
     </ClInclude>
+	<ClInclude Include="RhythmBarWidget.h">
+	  <Filter>Widget</Filter>
+	</ClInclude>
     <ClInclude Include="MainHUDWidget.h">
       <Filter>Widget</Filter>
     </ClInclude>
@@ -528,6 +531,9 @@
     <ClCompile Include="LoadingScreenWidget.cpp">
       <Filter>Widget</Filter>
     </ClCompile>
+	<ClCompile Include="RhythmBarWidget.cpp">
+	  <Filter>Widget</Filter>
+	</ClCompile>
     <ClCompile Include="MainHUDWidget.cpp">
       <Filter>Widget</Filter>
     </ClCompile>

@@ -7,7 +7,6 @@
 #include "Texture.h"
 #include "PhysicsSystem.h"
 #include "NavMeshSystem.h"
-#include "UIManager.h"
 #include "BoxCollider2DComponent.h"
 #include "CameraManager.h"
 #include "TransformComponent.h"
@@ -27,7 +26,6 @@ namespace gm
 	void TutorialScene::OnEnter()
 	{
 		APPLICATION.GetPhysicsSystem().SetPhysicsMode(PhysicsMode::Physics3D);
-		APPLICATION.GetUIManager().ClearViewportWidgets();
 		APPLICATION.GetInput().SetCursorLocked(true);
 
 		std::shared_ptr<NavigationMesh> navigationMesh = APPLICATION.GetResources().Find<NavigationMesh>(L"tutorial");
@@ -35,6 +33,7 @@ namespace gm
 		APPLICATION.GetPhysicsSystem().GetNavMeshSystem().SetActiveNavigationMesh(navigationMesh);
 		GetCameraManager()->SetActiveCamera(PlayerCameraKey);
 		PlayRhythmBGM(HiFiRushBGM::Tutorial);
+		InitializeGameplayUI();
 	}
 
 	void TutorialScene::OnExit()

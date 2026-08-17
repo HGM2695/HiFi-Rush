@@ -1,5 +1,6 @@
 #include "HiFiRushGameInstance.h"
 #include "Application.h"
+#include "RhythmBarWidget.h"
 #include "LoadResources.h"
 #include "Paths.h"
 #include "SceneManager.h"
@@ -9,11 +10,13 @@
 #include "TestScene.h"
 #include "TitleScene.h"
 #include "CommonLoadingScene.h"
+#include "GameplayScene.h"
+#include "Input.h"
+#include "UIManager.h"
 
 #if GM_ENABLE_DEBUG_TOOLS
 #include "DebugTextWidget.h"
 #include "SceneDebugTools.h"
-#include "UIManager.h"
 #endif
 
 namespace gm
@@ -45,6 +48,21 @@ namespace gm
 	void HiFiRushGameInstance::OnTick(float)
 	{
 		_beatSystem.Tick(APPLICATION.GetAudioSystem());
+
+		Input& input = APPLICATION.GetInput();
+		Scene* activeScene = APPLICATION.GetSceneManager().GetActiveScene();
+		GameplayScene* gameplayScene = dynamic_cast<GameplayScene*>(activeScene);
+		if (gameplayScene)
+		{
+			if (input.IsKeyDown(KeyCode::Tab))
+			{
+				Widget* rhythmBar = APPLICATION.GetUIManager().FindWidget(RhythmBarWidget::RootWidgetName);
+				if (rhythmBar)
+					rhythmBar->ToggleVisibility();
+			}
+			if (input.IsKeyDown(KeyCode::Escape))
+				input.SetCursorLocked(input.IsCursorLocked() == false);
+		}
 #if GM_ENABLE_DEBUG_TOOLS
 		_debugEventPublisher.Tick();
 #endif

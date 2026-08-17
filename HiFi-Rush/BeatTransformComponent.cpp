@@ -26,7 +26,7 @@ namespace gm
 		if (_transform == nullptr || _beatSystem.HasPlaybackTime() == false)
 			return;
 
-		const float ratio = BeatMath::EvaluateBeatPulse(_beatSystem.GetCurrentBeat(), _desc.cycleBeats, _desc.phaseOffsetBeats);
+		const float ratio = BeatMath::EvaluateBeatBoundaryPulse(_beatSystem.GetCurrentBeat(), _desc.cycleBeats, _desc.phaseOffsetBeats);
 		switch (_desc.type)
 		{
 		case BeatTransformType::PositionOffset:
