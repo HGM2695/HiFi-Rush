@@ -3,6 +3,7 @@
 #include "CombatTypes.h"
 #include "GameObject.h"
 
+#include <functional>
 #include <string>
 
 namespace gm
@@ -20,6 +21,7 @@ namespace gm
 		DamageInfo		damageInfo{};
 		float			rehitInterval = 0.f;
 		float			lifetime = 0.f;
+		std::function<void(const HitEvent&)> onHit{};
 	};
 
 	class TemporaryHitBoxObject final : public GameObject
@@ -32,6 +34,9 @@ namespace gm
 		void OnTick(float deltaTime) override;
 
 	private:
+		std::function<void(const HitEvent&)>	 _onHit{};
+		EventConnection							_hitConnection{};
+
 		HitBoxComponent*	_hitBox = nullptr;
 		float				_lifetime = 0.f;
 		float				_elapsedTime = 0.f;

@@ -17,6 +17,7 @@ namespace gm
 	class ChiMoveComponent;
 	class HealthComponent;
 	class HitBoxComponent;
+	class ReverbComponent;
 	class SkeletalAnimatorComponent;
 	struct NavigationGroundContactEvent;
 	struct NavigationGroundLostEvent;
@@ -57,10 +58,12 @@ namespace gm
 		EventConnection				_groundContactConnection{};
 		EventConnection				_groundLostConnection{};
 		EventConnection				_damagedConnection{};
+		EventConnection				_weaponHitConnection{};
 
 		SkeletalAnimatorComponent*	_animatorComponent = nullptr;
 		ChiMoveComponent*			_moveComponent = nullptr;
 		HealthComponent*			_healthComponent = nullptr;
+		ReverbComponent*			_reverbComponent = nullptr;
 		HitBoxComponent*			_weaponHitBox = nullptr;
 	};
 }

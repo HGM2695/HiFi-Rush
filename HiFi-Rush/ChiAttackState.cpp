@@ -9,6 +9,7 @@
 #include "HitBoxComponent.h"
 #include "Input.h"
 #include "Rigidbody3DComponent.h"
+#include "ReverbComponent.h"
 #include "Scene.h"
 #include "SkeletalAnimationClip.h"
 #include "SkeletalAnimatorComponent.h"
@@ -94,6 +95,8 @@ namespace gm
 			Scene* scene = owner.GetScene();
 			TransformComponent* transform = owner.GetTransform();
 			GM_ASSERT_RETURN_VAL(scene && transform, false, "Chi Temporary HitBox 생성에 필요한 Scene 또는 Transform이 없습니다.");
+			ReverbComponent* reverbComponent = owner.GetComponent<ReverbComponent>();
+			GM_ASSERT_RETURN_VAL(reverbComponent, false, "Chi Temporary HitBox의 적중 보상을 처리하려면 ReverbComponent가 필요합니다.");
 
 			TemporaryBoxHitBoxDesc desc{};
 			desc.world = transform->GetWorldMatrix();
@@ -104,6 +107,10 @@ namespace gm
 			desc.collisionMask = HiFiRushCollisionLayer::Monster;
 			desc.damageInfo.amount = setting.damage;
 			desc.damageInfo.hitReactionType = setting.hitReactionType;
+			desc.onHit = [reverbComponent](const HitEvent& event)
+			{
+				reverbComponent->HandleAttackHit(event);
+			};
 			desc.rehitInterval = setting.rehitInterval;
 			desc.lifetime = setting.lifetime;
 			return scene->SpawnGameObject<TemporaryHitBoxObject>(desc) != nullptr;

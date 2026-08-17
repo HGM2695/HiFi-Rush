@@ -180,6 +180,7 @@
   <ItemGroup>
     <ClInclude Include="CombatTypes.h" />
     <ClInclude Include="HealthComponent.h" />
+    <ClInclude Include="ReverbComponent.h" />
     <ClInclude Include="HiFiRushCollisionLayers.h" />
     <ClInclude Include="HitBoxComponent.h" />
 	<ClInclude Include="TemporaryBoxHitBoxObject.h" />
@@ -266,6 +267,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HealthComponent.cpp" />
+    <ClCompile Include="ReverbComponent.cpp" />
     <ClCompile Include="PlayerRuntimeStateSyncComponent.cpp" />
     <ClCompile Include="SceneTransitionTriggerComponent.cpp" />
     <ClCompile Include="HitBoxComponent.cpp" />

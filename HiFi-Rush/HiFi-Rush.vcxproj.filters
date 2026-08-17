@@ -211,6 +211,9 @@
     <ClInclude Include="HealthComponent.h">
       <Filter>Component\Combat</Filter>
     </ClInclude>
+    <ClInclude Include="ReverbComponent.h">
+      <Filter>Component\Player</Filter>
+    </ClInclude>
     <ClInclude Include="HitBoxComponent.h">
       <Filter>Component\Combat</Filter>
     </ClInclude>
@@ -452,6 +455,9 @@
     </ClCompile>
     <ClCompile Include="HealthComponent.cpp">
       <Filter>Component\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="ReverbComponent.cpp">
+      <Filter>Component\Player</Filter>
     </ClCompile>
     <ClCompile Include="HitBoxComponent.cpp">
       <Filter>Component\Combat</Filter>

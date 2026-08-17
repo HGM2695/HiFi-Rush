@@ -7,7 +7,7 @@
 namespace gm
 {
 	TemporaryHitBoxObject::TemporaryHitBoxObject(const TemporaryBoxHitBoxDesc& desc)
-		: _lifetime(desc.lifetime)
+		: _onHit(desc.onHit), _lifetime(desc.lifetime)
 	{
 		GM_ASSERT_RETURN(desc.lifetime > 0.f, "Temporary Box HitBox Lifetime은 0보다 커야 합니다.");
 
@@ -31,6 +31,8 @@ namespace gm
 	void TemporaryHitBoxObject::OnInitialize()
 	{
 		GM_ASSERT_RETURN(_hitBox, "TemporaryBoxHitBoxObject에 HitBoxComponent가 필요합니다.");
+		if (_onHit)
+			_hitBox->OnHit.Subscribe(_hitConnection, _onHit);
 		_hitBox->BeginAttack();
 	}
 

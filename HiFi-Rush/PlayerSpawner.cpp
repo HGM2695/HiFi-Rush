@@ -23,6 +23,7 @@
 #include "PlayerResources.h"
 #include "Resources.h"
 #include "Rigidbody3DComponent.h"
+#include "ReverbComponent.h"
 #include "Scene.h"
 #include "SkeletalAnimatorComponent.h"
 #include "SkeletalMesh.h"
@@ -77,7 +78,9 @@ namespace gm
 
 		HealthComponent* healthComponent = player->AddComponent<HealthComponent>(runtimeState.maxHealth);
 		GM_ASSERT_RETURN_VAL(healthComponent, nullptr, "Player HealthComponent 생성에 실패했습니다.");
-		//GM_ASSERT_RETURN_VAL(player->AddComponent<PlayerRuntimeStateSyncComponent>(runtimeState), nullptr, "PlayerRuntimeStateSyncComponent 생성에 실패했습니다.");
+		ReverbComponent* reverbComponent = player->AddComponent<ReverbComponent>(runtimeState.maxReverb);
+		GM_ASSERT_RETURN_VAL(reverbComponent, nullptr, "Player ReverbComponent 생성에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(player->AddComponent<PlayerRuntimeStateSyncComponent>(runtimeState), nullptr, "PlayerRuntimeStateSyncComponent 생성에 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(player->AddComponent<HurtBoxComponent>(L"HurtBox"), nullptr, "Player HurtBoxComponent 생성에 실패했습니다.");
 
 		NavMeshControllerComponent* navMeshController = player->AddComponent<NavMeshControllerComponent>();

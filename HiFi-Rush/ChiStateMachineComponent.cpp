@@ -11,9 +11,11 @@
 #include "ChiMoveComponent.h"
 #include "HealthComponent.h"
 #include "HiFiRushStatics.h"
+#include "HitBoxComponent.h"
 #include "Input.h"
 #include "NavMeshControllerComponent.h"
 #include "Rigidbody3DComponent.h"
+#include "ReverbComponent.h"
 #include "SkeletalAnimatorComponent.h"
 
 namespace gm
@@ -40,6 +42,8 @@ namespace gm
 
 		_healthComponent = GetOwner().GetComponent<HealthComponent>();
 		GM_ASSERT_RETURN(_healthComponent, "ChiStateMachineComponent는 HealthComponent가 필요합니다.");
+		_reverbComponent = GetOwner().GetComponent<ReverbComponent>();
+		GM_ASSERT_RETURN(_reverbComponent, "ChiStateMachineComponent는 ReverbComponent가 필요합니다.");
 
 		_context.stateMachine = this;
 		_context.beatSystem = &HiFiRushStatics::GetBeatSystem();
@@ -57,6 +61,14 @@ namespace gm
 			{
 				OnDamaged(event);
 			});
+		if (_weaponHitBox)
+		{
+			_weaponHitBox->OnHit.Subscribe(_weaponHitConnection,
+				[this](const HitEvent& event)
+				{
+					_reverbComponent->HandleAttackHit(event);
+				});
+		}
 
 		navMeshControllerComponent->OnGroundContact.Subscribe(_groundContactConnection,
 			[this](const NavigationGroundContactEvent& event)
