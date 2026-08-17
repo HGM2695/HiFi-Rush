@@ -12,6 +12,7 @@ namespace gm
 {
 	class MonsterState;
 	struct HitEvent;
+	struct NavigationGroundContactEvent;
 
 	class MonsterStateMachineComponent : public Component
 	{
@@ -34,6 +35,7 @@ namespace gm
 
 	private:
 		void			OnDamaged(const HitEvent& event);
+		void			OnGroundContact(const NavigationGroundContactEvent& event);
 		MonsterState*	FindState(MonsterStateId stateId) const;
 
 	private:
@@ -43,5 +45,6 @@ namespace gm
 		MonsterStateId		_initialStateId = MonsterStateId::None;
 		MonsterStateId		_currentStateId = MonsterStateId::None;
 		EventConnection		_damagedConnection{};
+		EventConnection		_groundContactConnection{};
 	};
 }

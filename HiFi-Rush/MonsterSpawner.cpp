@@ -4,7 +4,6 @@
 #include "BoxCollider3DComponent.h"
 #include "CharacterMovementComponent.h"
 #include "GameObject.h"
-#include "GunnerAnimationTypes.h"
 #include "GunnerStateMachineComponent.h"
 #include "HealthComponent.h"
 #include "HiFiRushCollisionLayers.h"
@@ -29,12 +28,25 @@
 #include "SocketFollowComponent.h"
 #include "StaticMesh.h"
 #include "StaticMeshComponent.h"
-#include "SwordAnimationTypes.h"
 #include "SwordStateMachineComponent.h"
 #include "TransformComponent.h"
 
+#include <array>
+
 namespace gm
 {
+	namespace
+	{
+		constexpr std::array<const wchar_t*, 5> BeatSyncedLocomotionClipNames =
+		{
+			L"ANIM_IDLE",
+			L"ANIM_WALK_FRONT",
+			L"ANIM_WALK_BACK",
+			L"ANIM_WALK_LEFT",
+			L"ANIM_WALK_RIGHT",
+		};
+	}
+
 	MonsterSpawner::MonsterSpawner(Resources& resources)
 		: _resources(resources)
 	{
@@ -111,6 +123,11 @@ namespace gm
 		GM_ASSERT_RETURN_VAL(data.attackDamage >= 0, false, "Monster Attack Damage는 0 이상이어야 합니다.");
 		GM_ASSERT_RETURN_VAL(data.attackRangeMin >= 0.f, false, "Monster Attack Range Min은 0 이상이어야 합니다.");
 		GM_ASSERT_RETURN_VAL(data.attackRangeMax >= data.attackRangeMin, false, "Monster Attack Range Max는 Min 이상이어야 합니다.");
+		if (data.type != MonsterType::Sjango)
+		{
+			GM_ASSERT_RETURN_VAL(data.attackDamage > 0, false, "Combat Monster Attack Damage는 0보다 커야 합니다.");
+			GM_ASSERT_RETURN_VAL(data.attackRangeMax > data.attackRangeMin, false, "Combat Monster Attack Range가 유효하지 않습니다.");
+		}
 
 		Rigidbody3DComponent* rigidbody = monster.AddComponent<Rigidbody3DComponent>();
 		GM_ASSERT_RETURN_VAL(rigidbody, false, "Monster Rigidbody3DComponent 생성에 실패했습니다.");
@@ -145,6 +162,20 @@ namespace gm
 
 		GM_ASSERT_RETURN_VAL(monster.AddComponent<CharacterMovementComponent>(data.moveSpeed, data.rotationInterpSpeed), false, "Monster CharacterMovementComponent 생성에 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(monster.AddComponent<MonsterCombatComponent>(data.type, HiFiRushStatics::GetBeatSystem(), data.attackCooldownBeats), false, "MonsterCombatComponent 생성에 실패했습니다.");
+		if (data.type != MonsterType::Sjango)
+		{
+			SkeletalAnimatorComponent* animator = monster.GetComponent<SkeletalAnimatorComponent>();
+			GM_ASSERT_RETURN_VAL(animator, false, "Combat Monster에 SkeletalAnimatorComponent가 없습니다.");
+
+			BeatSkeletalAnimationSyncDesc animationSyncDesc{};
+			BeatSkeletalAnimationSyncComponent* animationSync = monster.AddComponent<BeatSkeletalAnimationSyncComponent>(HiFiRushStatics::GetBeatSystem(), *animator, animationSyncDesc);
+			GM_ASSERT_RETURN_VAL(animationSync, false, "Combat Monster BeatSkeletalAnimationSyncComponent 생성에 실패했습니다.");
+
+			const BeatSkeletalAnimationSyncDesc twoBeatSync{ .cycleBeats = 2.f };
+			for (const wchar_t* clipName : BeatSyncedLocomotionClipNames)
+				GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(clipName, twoBeatSync), false, "Combat Monster 이동 Animation 동기화 규칙 등록에 실패했습니다. clip=%ls", clipName);
+		}
+
 		MonsterStateMachineComponent* stateMachine = nullptr;
 		switch (data.type)
 		{
@@ -166,18 +197,7 @@ namespace gm
 			HitBoxComponent* hitBox = monster.AddComponent<HitBoxComponent>(*attackCollider);
 			GM_ASSERT_RETURN_VAL(hitBox, false, "Sword HitBoxComponent 생성에 실패했습니다.");
 			hitBox->SetDamage(data.attackDamage);
-
-			SkeletalAnimatorComponent* animator = monster.GetComponent<SkeletalAnimatorComponent>();
-			GM_ASSERT_RETURN_VAL(animator, false, "Sword Monster에 SkeletalAnimatorComponent가 없습니다.");
-			BeatSkeletalAnimationSyncDesc animationSyncDesc{};
-			BeatSkeletalAnimationSyncComponent* animationSync = monster.AddComponent<BeatSkeletalAnimationSyncComponent>(HiFiRushStatics::GetBeatSystem(), *animator, animationSyncDesc);
-			GM_ASSERT_RETURN_VAL(animationSync, false, "Sword BeatSkeletalAnimationSyncComponent 생성에 실패했습니다.");
-			const BeatSkeletalAnimationSyncDesc twoBeatSync{ .cycleBeats = 2.f };
-			GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetSwordAnimationClipName(SwordAnimationId::Idle), twoBeatSync), false, "Sword Idle Animation 동기화 규칙 등록에 실패했습니다.");
-			GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetSwordAnimationClipName(SwordAnimationId::WalkFront), twoBeatSync), false, "Sword WalkFront Animation 동기화 규칙 등록에 실패했습니다.");
-			GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetSwordAnimationClipName(SwordAnimationId::WalkBack), twoBeatSync), false, "Sword WalkBack Animation 동기화 규칙 등록에 실패했습니다.");
-			GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetSwordAnimationClipName(SwordAnimationId::WalkLeft), twoBeatSync), false, "Sword WalkLeft Animation 동기화 규칙 등록에 실패했습니다.");
-			GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetSwordAnimationClipName(SwordAnimationId::WalkRight), twoBeatSync), false, "Sword WalkRight Animation 동기화 규칙 등록에 실패했습니다.");
+			hitBox->SetHitReactionType(HitReactionType::WeakKnockback);
 
 			SocketComponent* socketComponent = monster.AddComponent<SocketComponent>();
 			GM_ASSERT_RETURN_VAL(socketComponent, false, "Sword SocketComponent 생성에 실패했습니다.");
@@ -192,22 +212,6 @@ namespace gm
 
 		case MonsterType::Gunner:
 		{
-			rigidbody->SetKinematic(true);
-			GM_ASSERT_RETURN_VAL(data.attackDamage > 0, false, "Gunner Monster Attack Damage는 0보다 커야 합니다.");
-			GM_ASSERT_RETURN_VAL(data.attackRangeMax > data.attackRangeMin, false, "Gunner Monster Attack Range가 유효하지 않습니다.");
-
-			SkeletalAnimatorComponent* animator = monster.GetComponent<SkeletalAnimatorComponent>();
-			GM_ASSERT_RETURN_VAL(animator, false, "Gunner Monster에 SkeletalAnimatorComponent가 없습니다.");
-			BeatSkeletalAnimationSyncDesc animationSyncDesc{};
-			BeatSkeletalAnimationSyncComponent* animationSync = monster.AddComponent<BeatSkeletalAnimationSyncComponent>(HiFiRushStatics::GetBeatSystem(), *animator, animationSyncDesc);
-			GM_ASSERT_RETURN_VAL(animationSync, false, "Gunner BeatSkeletalAnimationSyncComponent 생성에 실패했습니다.");
-			const BeatSkeletalAnimationSyncDesc twoBeatSync{ .cycleBeats = 2.f };
-			GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetGunnerAnimationClipName(GunnerAnimationId::Idle), twoBeatSync), false, "Gunner Idle Animation 동기화 규칙 등록에 실패했습니다.");
-			GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetGunnerAnimationClipName(GunnerAnimationId::WalkFront), twoBeatSync), false, "Gunner WalkFront Animation 동기화 규칙 등록에 실패했습니다.");
-			GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetGunnerAnimationClipName(GunnerAnimationId::WalkBack), twoBeatSync), false, "Gunner WalkBack Animation 동기화 규칙 등록에 실패했습니다.");
-			GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetGunnerAnimationClipName(GunnerAnimationId::WalkLeft), twoBeatSync), false, "Gunner WalkLeft Animation 동기화 규칙 등록에 실패했습니다.");
-			GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetGunnerAnimationClipName(GunnerAnimationId::WalkRight), twoBeatSync), false, "Gunner WalkRight Animation 동기화 규칙 등록에 실패했습니다.");
-
 			stateMachine = monster.AddComponent<GunnerStateMachineComponent>(data.attackRangeMin, data.attackRangeMax, data.attackDamage);
 			break;
 		}

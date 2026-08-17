@@ -13,8 +13,6 @@ namespace gm
 	SwordStateMachineComponent::SwordStateMachineComponent(float attackRangeMin, float attackRangeMax)
 		: _attackRangeMin(attackRangeMin), _attackRangeMax(attackRangeMax)
 	{
-		GM_ASSERT(attackRangeMin >= 0.f, "Sword Attack Range Min은 0 이상이어야 합니다.");
-		GM_ASSERT(attackRangeMax >= attackRangeMin, "Sword Attack Range Max는 Min 이상이어야 합니다.");
 	}
 
 	void SwordStateMachineComponent::OnInitialize()
@@ -54,6 +52,15 @@ namespace gm
 		GM_ASSERT_RETURN_VAL(RegisterState(std::make_unique<SwordMoveState>(_attackRangeMin, _attackRangeMax)), false, "Sword Move State 등록에 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(RegisterState(std::make_unique<SwordAttackState>(hitBox)), false, "Sword Attack State 등록에 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(RegisterState(std::make_unique<SwordDamageState>()), false, "Sword Damage State 등록에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(RegisterState(std::make_unique<MonsterAirborneState>(
+			GetSwordAnimationClipName(SwordAnimationId::AirDamageStart),
+			GetSwordAnimationClipName(SwordAnimationId::AirDamageFall),
+			std::array<std::wstring, 3>{
+				GetSwordAnimationClipName(SwordAnimationId::AirDamage0),
+				GetSwordAnimationClipName(SwordAnimationId::AirDamage1),
+				GetSwordAnimationClipName(SwordAnimationId::AirDamage2) })), false, "Sword Airborne State 등록에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(RegisterState(std::make_unique<MonsterDownState>(GetSwordAnimationClipName(SwordAnimationId::DownFall))), false, "Sword Down State 등록에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(RegisterState(std::make_unique<MonsterWakeUpState>(GetSwordAnimationClipName(SwordAnimationId::DownWakeUp))), false, "Sword WakeUp State 등록에 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(RegisterState(std::make_unique<SwordDeadState>()), false, "Sword Dead State 등록에 실패했습니다.");
 		return true;
 	}

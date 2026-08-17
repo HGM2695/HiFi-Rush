@@ -38,6 +38,9 @@ namespace gm
 		Rigidbody3DComponent* rigidbodyComponent = GetOwner().GetRigidbody3D();
 		GM_ASSERT_RETURN(rigidbodyComponent, "ChiStateMachineComponent는 Rigidbody3DComponent가 필요합니다.");
 
+		_healthComponent = GetOwner().GetComponent<HealthComponent>();
+		GM_ASSERT_RETURN(_healthComponent, "ChiStateMachineComponent는 HealthComponent가 필요합니다.");
+
 		_context.stateMachine = this;
 		_context.beatSystem = &HiFiRushStatics::GetBeatSystem();
 		_context.animationSettings = &HiFiRushStatics::GetChiAnimationSettings();
@@ -48,6 +51,12 @@ namespace gm
 
 		RegisterAnimationClips();
 		RegisterStates();
+
+		_healthComponent->OnDamaged.Subscribe(_damagedConnection,
+			[this](const HitEvent& event)
+			{
+				OnDamaged(event);
+			});
 
 		navMeshControllerComponent->OnGroundContact.Subscribe(_groundContactConnection,
 			[this](const NavigationGroundContactEvent& event)
@@ -102,6 +111,34 @@ namespace gm
 		ChiState* currentState = FindState(_currentStateId);
 		if (currentState)
 			currentState->OnGroundLost(_context, event);
+	}
+
+	void ChiStateMachineComponent::OnDamaged(const HitEvent& event)
+	{
+		if (event.damageResult.state != DamageState::Applied)
+			return;
+
+		_moveComponent->FaceDirectionImmediate(-event.contact.normal);
+
+		if (event.damageResult.isDead)
+		{
+			ChangeState(ChiStateId::DamageDead);
+			return;
+		}
+
+		switch (event.damage.hitReactionType)
+		{
+		case HitReactionType::WeakKnockback:
+			ChangeState(ChiStateId::DamageWeakKnockback);
+			break;
+
+		case HitReactionType::StrongKnockback:
+			ChangeState(ChiStateId::DamageStrongKnockback);
+			break;
+
+		default:
+			break;
+		}
 	}
 
 	void ChiStateMachineComponent::ChangeState(ChiStateId nextStateId)

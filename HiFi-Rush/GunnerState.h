@@ -85,7 +85,9 @@ namespace gm
 		int32				_damage = 0;
 		AttackType			_attackType = AttackType::Ground;
 		AttackPhase			_attackPhase = AttackPhase::Ready;
+		bool				_previousUseGravity = true;
 		bool				_isFacingLocked = false;
+		bool				_overrodeSkyMovement = false;
 	};
 
 	// GunnerDamageState /////////////////////////////////////////////////////////////////////////

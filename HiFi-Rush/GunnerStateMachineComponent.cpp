@@ -50,6 +50,15 @@ namespace gm
 		GM_ASSERT_RETURN_VAL(RegisterState(std::make_unique<GunnerMoveState>(_attackRangeMin, _attackRangeMax)), false, "Gunner Move State 등록에 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(RegisterState(std::make_unique<GunnerAttackState>(_attackDamage)), false, "Gunner Attack State 등록에 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(RegisterState(std::make_unique<GunnerDamageState>()), false, "Gunner Damage State 등록에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(RegisterState(std::make_unique<MonsterAirborneState>(
+			GetGunnerAnimationClipName(GunnerAnimationId::AirDamageBasic),
+			GetGunnerAnimationClipName(GunnerAnimationId::AirDamageFall),
+			std::array<std::wstring, 3>{
+				GetGunnerAnimationClipName(GunnerAnimationId::AirDamage0),
+				GetGunnerAnimationClipName(GunnerAnimationId::AirDamage1),
+				GetGunnerAnimationClipName(GunnerAnimationId::AirDamage2) })), false, "Gunner Airborne State 등록에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(RegisterState(std::make_unique<MonsterDownState>(GetGunnerAnimationClipName(GunnerAnimationId::DownFall))), false, "Gunner Down State 등록에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(RegisterState(std::make_unique<MonsterWakeUpState>(GetGunnerAnimationClipName(GunnerAnimationId::DownWakeUp))), false, "Gunner WakeUp State 등록에 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(RegisterState(std::make_unique<GunnerDeadState>()), false, "Gunner Dead State 등록에 실패했습니다.");
 		return true;
 	}

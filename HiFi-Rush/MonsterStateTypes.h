@@ -10,6 +10,9 @@ namespace gm
 		Move,
 		Attack,
 		Damage,
+		Airborne,
+		Down,
+		WakeUp,
 		Dead,
 
 		Count,

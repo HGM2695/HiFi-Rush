@@ -11,6 +11,7 @@
 #include "MonsterCombatComponent.h"
 #include "MonsterStateMachineComponent.h"
 #include "Random.h"
+#include "Rigidbody3DComponent.h"
 #include "Scene.h"
 #include "SkeletalAnimationClip.h"
 #include "SkeletalAnimatorComponent.h"
@@ -208,6 +209,15 @@ namespace gm
 
 		_attackType = Math::RandomInt(0, 1) ? AttackType::Ground : AttackType::Sky;
 		_attackPhase = AttackPhase::Ready;
+		if (_attackType == AttackType::Sky)
+		{
+			Rigidbody3DComponent* rigidbody = context.stateMachine->GetOwner().GetRigidbody3D();
+			GM_ASSERT_RETURN(rigidbody, "Gunner Sky Attack에는 Rigidbody3DComponent가 필요합니다.");
+			_previousUseGravity = rigidbody->IsUseGravity();
+			rigidbody->SetUseGravity(false);
+			rigidbody->ClearVerticalVelocity();
+			_overrodeSkyMovement = true;
+		}
 		SetRootMotionEnabled(context, true);
 		const GunnerAnimationId animationId = _attackType == AttackType::Ground ? GunnerAnimationId::GroundAttackReady : GunnerAnimationId::SkyAttackReady;
 		PlayAnimation(context, GetGunnerAnimationClipName(animationId), false);
@@ -244,6 +254,13 @@ namespace gm
 		_isFacingLocked = false;
 		if (context.animatorComponent != nullptr)
 			context.animatorComponent->SetPlayRate(1.f);
+		if (_overrodeSkyMovement)
+		{
+			Rigidbody3DComponent* rigidbody = context.stateMachine->GetOwner().GetRigidbody3D();
+			if (rigidbody != nullptr)
+				rigidbody->SetUseGravity(_previousUseGravity);
+			_overrodeSkyMovement = false;
+		}
 		SetRootMotionEnabled(context, false);
 	}
 
@@ -251,7 +268,7 @@ namespace gm
 	{
 		_attackPhase = AttackPhase::Shoot;
 		const GunnerAnimationId animationId = _attackType == AttackType::Ground ? GunnerAnimationId::GroundAttackShoot : GunnerAnimationId::SkyAttackShoot;
-		PlayAnimation(context, GetGunnerAnimationClipName(animationId), false, 0.f);
+		PlayAnimation(context, GetGunnerAnimationClipName(animationId), false);
 
 		const std::shared_ptr<SkeletalAnimationClip> clip = context.animatorComponent->GetCurrentClip();
 		GM_ASSERT_RETURN(clip, "Gunner Shoot Animation Clip이 없습니다.");
@@ -274,7 +291,7 @@ namespace gm
 		if (context.animatorComponent != nullptr)
 			context.animatorComponent->SetPlayRate(1.f);
 		const GunnerAnimationId animationId = _attackType == AttackType::Ground ? GunnerAnimationId::GroundAttackLanding : GunnerAnimationId::SkyAttackLanding;
-		PlayAnimation(context, GetGunnerAnimationClipName(animationId), false, 0.f);
+		PlayAnimation(context, GetGunnerAnimationClipName(animationId), false);
 	}
 
 	void GunnerAttackState::HandleAnimationNotify(MonsterStateContext& context, SkeletalAnimatorComponent& animator, const AnimationNotifyEvent& event)
@@ -327,6 +344,7 @@ namespace gm
 		desc.collisionLayer = HiFiRushCollisionLayer::MonsterAttack;
 		desc.collisionMask = HiFiRushCollisionLayer::Player;
 		desc.damageInfo.amount = _damage;
+		desc.damageInfo.hitReactionType = HitReactionType::StrongKnockback;
 		desc.lifetime = GunnerLaserLifetime;
 		GM_ASSERT_RETURN(scene->SpawnGameObject<TemporaryHitBoxObject>(desc), "Gunner Laser GameObject 생성에 실패했습니다.");
 	}

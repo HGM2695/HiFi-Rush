@@ -5,6 +5,8 @@
 #include "HealthComponent.h"
 #include "MonsterCombatComponent.h"
 #include "MonsterState.h"
+#include "NavMeshControllerComponent.h"
+#include "Rigidbody3DComponent.h"
 #include "SkeletalAnimatorComponent.h"
 
 namespace gm
@@ -53,18 +55,27 @@ namespace gm
 		if (_context.combatComponent != nullptr)
 			_context.beatSystem = &_context.combatComponent->GetBeatSystem();
 		_context.moveComponent = GetOwner().GetComponent<CharacterMovementComponent>();
+		_context.rigidbodyComponent = GetOwner().GetRigidbody3D();
 		_context.healthComponent = GetOwner().GetComponent<HealthComponent>();
 		_context.animatorComponent = GetOwner().GetComponent<SkeletalAnimatorComponent>();
+		NavMeshControllerComponent* navMeshController = GetOwner().GetComponent<NavMeshControllerComponent>();
 
 		GM_ASSERT_RETURN(_context.combatComponent, "MonsterStateMachineComponent는 MonsterCombatComponent가 필요합니다.");
 		GM_ASSERT_RETURN(_context.moveComponent, "MonsterStateMachineComponent는 CharacterMovementComponent가 필요합니다.");
+		GM_ASSERT_RETURN(_context.rigidbodyComponent, "MonsterStateMachineComponent는 Rigidbody3DComponent가 필요합니다.");
 		GM_ASSERT_RETURN(_context.healthComponent, "MonsterStateMachineComponent는 HealthComponent가 필요합니다.");
 		GM_ASSERT_RETURN(_context.animatorComponent, "MonsterStateMachineComponent는 SkeletalAnimatorComponent가 필요합니다.");
+		GM_ASSERT_RETURN(navMeshController, "MonsterStateMachineComponent는 NavMeshControllerComponent가 필요합니다.");
 
 		_context.healthComponent->OnDamaged.Subscribe(_damagedConnection,
 			[this](const HitEvent& event)
 			{
 				OnDamaged(event);
+			});
+		navMeshController->OnGroundContact.Subscribe(_groundContactConnection,
+			[this](const NavigationGroundContactEvent& event)
+			{
+				OnGroundContact(event);
 			});
 
 		if (_initialStateId != MonsterStateId::None)
@@ -83,6 +94,13 @@ namespace gm
 		MonsterState* currentState = FindState(_currentStateId);
 		if (currentState)
 			currentState->OnDamaged(_context, event);
+	}
+
+	void MonsterStateMachineComponent::OnGroundContact(const NavigationGroundContactEvent& event)
+	{
+		MonsterState* currentState = FindState(_currentStateId);
+		if (currentState)
+			currentState->OnGroundContact(_context, event);
 	}
 
 	MonsterState* MonsterStateMachineComponent::FindState(MonsterStateId stateId) const
