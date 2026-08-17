@@ -2,13 +2,6 @@
 
 namespace gm
 {
-	enum class ChiGravityMode
-	{
-		UseGravity,
-		IgnoreGravity,
-		UseRootMotion,
-	};
-
 	enum class ChiStateId
 	{
 		None,
@@ -28,6 +21,7 @@ namespace gm
 		AttackStrong2,
 		AttackStrongToWeak1,
 		AttackStrongToWeak2,
+		AttackStrongToWeakBeatHit,
 		AttackWeakToStrong1,
 		AttackWeakToStrong2,
 		AttackDelayedWeak1,

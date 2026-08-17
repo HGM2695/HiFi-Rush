@@ -25,6 +25,7 @@ namespace gm
 		_hitBox = AddComponent<HitBoxComponent>(*collider);
 		GM_ASSERT_RETURN(_hitBox, "TemporaryBoxHitBoxObject의 HitBoxComponent 생성에 실패했습니다.");
 		_hitBox->SetDamageInfo(desc.damageInfo);
+		_hitBox->SetRehitInterval(desc.rehitInterval);
 	}
 
 	void TemporaryHitBoxObject::OnInitialize()

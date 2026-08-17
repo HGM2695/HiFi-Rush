@@ -14,28 +14,27 @@ namespace gm
 		InputOrFront,
 	};
 
-	class ChiDashState : public ChiClipState
+	class ChiDashState : public ChiState
 	{
 	public:
-		ChiDashState(ChiStateId stateId, ChiAnimationId animationId, ChiDashDirection direction, float dashSpeed, bool rotateToDashDirection, ChiStateId nextDashState = ChiStateId::None);
+		ChiDashState(ChiStateId stateId, ChiAnimationClipId animationClipId, ChiDashDirection direction, float dashSpeed, bool rotateToDashDirection, ChiStateId nextDashState = ChiStateId::None);
 
 		virtual void Enter(ChiStateContext& context) override;
 		virtual void Tick(ChiStateContext& context, float deltaTime) override;
-		virtual void Exit(ChiStateContext& context) override;
 
 	protected:
-		bool TryChangeDashAttack(ChiStateContext& context) const;
-		Vector3 GetDashDirection(ChiStateContext& context) const;
-		const Vector3& GetCachedDirection() const { return _cachedDirection; }
-		float GetDashSpeed() const { return _dashSpeed; }
+		bool			TryChangeDashAttack(ChiStateContext& context);
+		Vector3			GetDashDirection(ChiStateContext& context) const;
+		const Vector3&	GetCachedDirection() const { return _cachedDirection; }
+		float			GetDashSpeed() const { return _dashSpeed; }
 
 	private:
-		ChiDashDirection	_direction = ChiDashDirection::Front;
-		ChiStateId			_nextDashState = ChiStateId::None;
-		Vector3				_cachedDirection{};
-		float				_dashSpeed = 0.f;
-		bool				_rotateToDashDirection = false;
-		bool				_prevMoveEnabled = true;
+		ChiDashDirection					_direction = ChiDashDirection::Front;
+		ChiStateId							_nextDashState = ChiStateId::None;
+		Vector3								_cachedDirection{};
+		float								_dashSpeed = 0.f;
+		bool								_rotateToDashDirection = false;
+		std::optional<RhythmJudgeResult>	_bufferedAttackInput;
 	};
 
 	class ChiDashFrontState final : public ChiDashState
@@ -83,7 +82,7 @@ namespace gm
 	};
 
 	/// DashSkyFall //////////////////////////////////////////////////////////////////////////////
-	class ChiDashSkyFallState final : public ChiClipState
+	class ChiDashSkyFallState final : public ChiState
 	{
 	public:
 		ChiDashSkyFallState();

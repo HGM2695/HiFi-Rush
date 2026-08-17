@@ -1,27 +1,28 @@
 #include "ChiDashState.h"
 #include "Application.h"
+#include "BeatSystem.h"
+#include "ChiAnimationSettings.h"
 #include "ChiMoveComponent.h"
 #include "ChiStateMachineComponent.h"
 #include "Input.h"
 
 namespace gm
 {
+	namespace
+	{
+		constexpr float DashChainInputStartBeat = 0.5f;
+	}
+
 	/// Dash //////////////////////////////////////////////////////////////////////////////
-	ChiDashState::ChiDashState(ChiStateId stateId, ChiAnimationId animationId, ChiDashDirection direction, float dashSpeed, bool rotateToDashDirection, ChiStateId nextDashState)
-		: ChiClipState(stateId, animationId)
-		, _direction(direction)
-		, _nextDashState(nextDashState)
-		, _dashSpeed(dashSpeed)
-		, _rotateToDashDirection(rotateToDashDirection)
+	ChiDashState::ChiDashState(ChiStateId stateId, ChiAnimationClipId animationClipId, ChiDashDirection direction, float dashSpeed, bool rotateToDashDirection, ChiStateId nextDashState)
+		: ChiState(stateId, animationClipId), _direction(direction), _nextDashState(nextDashState), _dashSpeed(dashSpeed), _rotateToDashDirection(rotateToDashDirection)
 	{
 	}
 
 	void ChiDashState::Enter(ChiStateContext& context)
 	{
-		ChiClipState::Enter(context);
-
-		_prevMoveEnabled = context.moveComponent->IsMoveEnabled();
-		context.moveComponent->SetMoveEnabled(false);
+		ChiState::Enter(context);
+		_bufferedAttackInput.reset();
 
 		_cachedDirection = GetDashDirection(context);
 		if (_rotateToDashDirection)
@@ -35,43 +36,61 @@ namespace gm
 		if (TryChangeDashAttack(context))
 			return;
 
-		const Input& input = APPLICATION.GetInput();
-		if (input.IsKeyDown(KeyCode::Space))
+		if (context.jumpInput)
 		{
-			context.stateMachine->ChangeState(ChiStateId::JumpUp);
+			context.stateMachine->ChangeState(ChiStateId::JumpUp, context.jumpInput.value());
 			return;
 		}
 
-		if (_nextDashState != ChiStateId::None && input.IsKeyDown(KeyCode::LeftShift))
+		if (_nextDashState != ChiStateId::None && context.dashInput)
 		{
-			context.stateMachine->ChangeState(_nextDashState);
-			return;
+			const bool isOnBeat = context.dashInput->judgeGrade != RhythmJudgeGrade::OffBeat;
+			if (GetStateElapsedBeat(context) > DashChainInputStartBeat && isOnBeat)
+			{
+				context.stateMachine->ChangeState(_nextDashState, context.dashInput.value());
+				return;
+			}
 		}
 
 		if (IsAnimationCompleted(context))
 			ReturnToIdleOrRun(context);
 	}
 
-	void ChiDashState::Exit(ChiStateContext& context)
+	bool ChiDashState::TryChangeDashAttack(ChiStateContext& context)
 	{
-		ChiClipState::Exit(context);
-		context.moveComponent->SetMoveEnabled(_prevMoveEnabled);
-	}
+		if (_bufferedAttackInput.has_value() == false)
+		{
+			if (context.weakAttackInput)
+				_bufferedAttackInput = context.weakAttackInput;
+			else if (context.strongAttackInput)
+				_bufferedAttackInput = context.strongAttackInput;
+		}
 
-	bool ChiDashState::TryChangeDashAttack(ChiStateContext& context) const
-	{
-		const Input& input = APPLICATION.GetInput();
-		if (input.IsMouseDown(MouseButton::Left))
+		if (IsBlendCompleted(context) == false)
+			return false;
+
+		const float elapsedBeat = GetElapsedBeatAfterBlend(context);
+		if (_bufferedAttackInput && _bufferedAttackInput->type == RhythmInputType::WeakAttack)
 		{
 			context.moveComponent->FaceDirectionImmediate(_cachedDirection);
-			context.stateMachine->ChangeState(ChiStateId::AttackWeakDash);
+			context.stateMachine->ChangeState(elapsedBeat < 0.6f ? ChiStateId::AttackWeakDash : ChiStateId::AttackWeak0, _bufferedAttackInput.value());
 			return true;
 		}
 
-		if (input.IsMouseDown(MouseButton::Right))
+		if (_bufferedAttackInput && _bufferedAttackInput->type == RhythmInputType::StrongAttack)
 		{
 			context.moveComponent->FaceDirectionImmediate(_cachedDirection);
-			context.stateMachine->ChangeState(ChiStateId::AttackStrongDash);
+			if (elapsedBeat < 0.6f)
+			{
+				if (_direction == ChiDashDirection::Front)
+					context.stateMachine->ChangeState(ChiStateId::AttackStrongDash, 0.f, _bufferedAttackInput.value());
+				else
+					context.stateMachine->ChangeState(ChiStateId::AttackStrongDash, _bufferedAttackInput.value());
+			}
+			else
+			{
+				context.stateMachine->ChangeState(ChiStateId::AttackStrong0_0, _bufferedAttackInput.value());
+			}
 			return true;
 		}
 
@@ -104,38 +123,38 @@ namespace gm
 	}
 
 	ChiDashFrontState::ChiDashFrontState()
-		: ChiDashState(ChiStateId::DashFront, ChiAnimationId::DashFront, ChiDashDirection::Front, 0.f, false, ChiStateId::DashDouble)
+		: ChiDashState(ChiStateId::DashFront, ChiAnimationClipId::DashFront, ChiDashDirection::Front, 0.f, false, ChiStateId::DashDouble)
 	{
 	}
 
 	ChiDashBackState::ChiDashBackState()
-		: ChiDashState(ChiStateId::DashBack, ChiAnimationId::DashBack, ChiDashDirection::Back, 0.f, false, ChiStateId::DashDouble)
+		: ChiDashState(ChiStateId::DashBack, ChiAnimationClipId::DashBack, ChiDashDirection::Back, 0.f, false, ChiStateId::DashDouble)
 	{
 	}
 
 	ChiDashLeftState::ChiDashLeftState()
-		: ChiDashState(ChiStateId::DashLeft, ChiAnimationId::DashLeft, ChiDashDirection::Left, 0.f, false, ChiStateId::DashDouble)
+		: ChiDashState(ChiStateId::DashLeft, ChiAnimationClipId::DashLeft, ChiDashDirection::Left, 0.f, false, ChiStateId::DashDouble)
 	{
 	}
 
 	ChiDashRightState::ChiDashRightState()
-		: ChiDashState(ChiStateId::DashRight, ChiAnimationId::DashRight, ChiDashDirection::Right, 0.f, false, ChiStateId::DashDouble)
+		: ChiDashState(ChiStateId::DashRight, ChiAnimationClipId::DashRight, ChiDashDirection::Right, 0.f, false, ChiStateId::DashDouble)
 	{
 	}
 
 	ChiDashDoubleState::ChiDashDoubleState()
-		: ChiDashState(ChiStateId::DashDouble, ChiAnimationId::DashDouble, ChiDashDirection::InputOrFront, 0.f, true, ChiStateId::DashTriple)
+		: ChiDashState(ChiStateId::DashDouble, ChiAnimationClipId::DashDouble, ChiDashDirection::InputOrFront, 0.f, true, ChiStateId::DashTriple)
 	{
 	}
 
 	ChiDashTripleState::ChiDashTripleState()
-		: ChiDashState(ChiStateId::DashTriple, ChiAnimationId::DashTriple, ChiDashDirection::InputOrFront, 0.f, true)
+		: ChiDashState(ChiStateId::DashTriple, ChiAnimationClipId::DashTriple, ChiDashDirection::InputOrFront, 0.f, true)
 	{
 	}
 
 	/// DashSky //////////////////////////////////////////////////////////////////////////////
 	ChiDashSkyState::ChiDashSkyState()
-		: ChiDashState(ChiStateId::DashSky, ChiAnimationId::DashSky, ChiDashDirection::InputOrFront, 0.f, true)
+		: ChiDashState(ChiStateId::DashSky, ChiAnimationClipId::DashSky, ChiDashDirection::InputOrFront, 0.f, true)
 	{
 	}
 
@@ -143,17 +162,19 @@ namespace gm
 	{
 		context.moveComponent->MoveAlong(GetCachedDirection(), GetDashSpeed(), deltaTime, true);
 
-		const Input& input = APPLICATION.GetInput();
-		if (input.IsMouseDown(MouseButton::Left))
+		if (GetElapsedBeatAfterBlend(context) > 0.5f)
 		{
-			context.stateMachine->ChangeState(ChiStateId::AttackSky0);
-			return;
-		}
-
-		if (input.IsMouseDown(MouseButton::Right))
-		{
-			context.stateMachine->ChangeState(ChiStateId::AttackStump0);
-			return;
+			const Input& input = APPLICATION.GetInput();
+			if (context.strongAttackInput)
+			{
+				context.stateMachine->ChangeState(ChiStateId::AttackStump0, context.strongAttackInput.value());
+				return;
+			}
+			if (input.IsMouseRepeat(MouseButton::Left))
+			{
+				context.stateMachine->ChangeState(ChiStateId::AttackSky0);
+				return;
+			}
 		}
 
 		if (IsAnimationCompleted(context))
@@ -162,22 +183,21 @@ namespace gm
 
 	/// DashSkyFall //////////////////////////////////////////////////////////////////////////////
 	ChiDashSkyFallState::ChiDashSkyFallState()
-		: ChiClipState(ChiStateId::DashSkyFall, ChiAnimationId::DashSkyFall)
+		: ChiState(ChiStateId::DashSkyFall, ChiAnimationClipId::DashSkyFall)
 	{
 	}
 
 	void ChiDashSkyFallState::Tick(ChiStateContext& context, float deltaTime)
 	{
-		const Input& input = APPLICATION.GetInput();
-		if (input.IsMouseDown(MouseButton::Left))
+		if (GetStateElapsedBeat(context) > 0.1f && context.weakAttackInput)
 		{
-			context.stateMachine->ChangeState(ChiStateId::AttackSky0);
+			context.stateMachine->ChangeState(ChiStateId::AttackSky0, context.weakAttackInput.value());
 			return;
 		}
 
-		if (input.IsMouseDown(MouseButton::Right))
+		if (context.strongAttackInput)
 		{
-			context.stateMachine->ChangeState(ChiStateId::AttackStump0);
+			context.stateMachine->ChangeState(ChiStateId::AttackStump0, context.strongAttackInput.value());
 			return;
 		}
 	}

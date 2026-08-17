@@ -14,6 +14,7 @@
 #include "HealthComponent.h"
 #include "HiFiRushCollisionLayers.h"
 #include "HiFiRushStatics.h"
+#include "HitBoxComponent.h"
 #include "HurtBoxComponent.h"
 #include "MathUtil.h"
 #include "NavMeshControllerComponent.h"
@@ -96,17 +97,26 @@ namespace gm
 		StaticMeshComponent* weaponMeshComponent = weapon->AddComponent<StaticMeshComponent>();
 		GM_ASSERT_RETURN_VAL(weaponMeshComponent, nullptr, "Player Weapon StaticMeshComponent 생성에 실패했습니다.");
 		weaponMeshComponent->SetStaticMesh(guitarMesh);
+		BoxCollider3DComponent* weaponCollider = weapon->AddComponent<BoxCollider3DComponent>();
+		GM_ASSERT_RETURN_VAL(weaponCollider, nullptr, "Player Weapon Collider 생성에 실패했습니다.");
+		weaponCollider->SetColliderId(L"WeaponAttack");
+		weaponCollider->SetLocalCenter(Vector3{ 0.f, 0.5f, 0.f });
+		weaponCollider->SetSize(Vector3{ 0.8f, 1.5f, 0.8f });
+		weaponCollider->SetCollisionLayer(HiFiRushCollisionLayer::PlayerAttack);
+		weaponCollider->SetCollisionMask(HiFiRushCollisionLayer::Monster);
+		HitBoxComponent* weaponHitBox = weapon->AddComponent<HitBoxComponent>(*weaponCollider);
+		GM_ASSERT_RETURN_VAL(weaponHitBox, nullptr, "Player Weapon HitBoxComponent 생성에 실패했습니다.");
 		SocketFollowComponent* weaponFollowComponent = weapon->AddComponent<SocketFollowComponent>();
 		GM_ASSERT_RETURN_VAL(weaponFollowComponent, nullptr, "Player Weapon SocketFollowComponent 생성에 실패했습니다.");
 		weaponFollowComponent->SetTarget(*player, L"Player.Weapon");
 		weaponFollowComponent->SetDestroyWithTarget(true);
 
-		player->AddComponent<ChiStateMachineComponent>();
+		GM_ASSERT_RETURN_VAL(player->AddComponent<ChiStateMachineComponent>(weaponHitBox), nullptr, "Player ChiStateMachineComponent 생성에 실패했습니다.");
 
 		BeatSkeletalAnimationSyncDesc animationSyncDesc{};
 		BeatSkeletalAnimationSyncComponent* animationSync = player->AddComponent<BeatSkeletalAnimationSyncComponent>(HiFiRushStatics::GetBeatSystem(), *animator, animationSyncDesc);
-		GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetChiAnimationName(ChiAnimationId::Idle), BeatSkeletalAnimationSyncDesc{ .cycleBeats = 4.f }), nullptr, "플레이어 Idle 애니메이션 비트 동기화 규칙 등록에 실패했습니다.");
-		GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetChiAnimationName(ChiAnimationId::RunFront), BeatSkeletalAnimationSyncDesc{ .cycleBeats = 2.f }), nullptr, "플레이어 Run 애니메이션 비트 동기화 규칙 등록에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetChiAnimationClipName(ChiAnimationClipId::Idle), BeatSkeletalAnimationSyncDesc{ .cycleBeats = 4.f }), nullptr, "플레이어 Idle 애니메이션 비트 동기화 규칙 등록에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(animationSync->AddClipSyncRule(GetChiAnimationClipName(ChiAnimationClipId::RunFront), BeatSkeletalAnimationSyncDesc{ .cycleBeats = 2.f }), nullptr, "플레이어 Run 애니메이션 비트 동기화 규칙 등록에 실패했습니다.");
 
 		GameObject* cameraObject = scene.SpawnGameObject<GameObject>();
 		CameraFollowComponent* followComponent = cameraObject->AddComponent<CameraFollowComponent>();

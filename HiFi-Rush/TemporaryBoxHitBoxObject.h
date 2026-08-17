@@ -18,6 +18,7 @@ namespace gm
 		CollisionLayer	collisionLayer = DefaultCollisionLayer;
 		CollisionMask	collisionMask = AllCollisionLayers;
 		DamageInfo		damageInfo{};
+		float			rehitInterval = 0.f;
 		float			lifetime = 0.f;
 	};
 

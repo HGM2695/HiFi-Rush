@@ -1,155 +1,59 @@
 #include "ChiState.h"
 #include "Application.h"
+#include "BeatSystem.h"
+#include "ChiAnimationSettings.h"
 #include "ChiMoveComponent.h"
 #include "ChiStateMachineComponent.h"
 #include "Input.h"
 #include "Rigidbody3DComponent.h"
 #include "SkeletalAnimatorComponent.h"
 
+#include <algorithm>
 #include <cmath>
 
 namespace gm
 {
-	namespace
+	ChiState::ChiState(ChiStateId stateId, ChiAnimationClipId animationClipId, bool isLoop)
+		: _stateId(stateId), _animationClipId(animationClipId)
 	{
-		AnimationPlayOption MakePlayOption(bool isLoop)
-		{
-			AnimationPlayOption playOption{};
-			playOption.loopOverride = isLoop;
-			playOption.blendDuration = ChiDefaultBlendDuration;
-			return playOption;
-		}
-
-		bool IsMoveInputPressed(const Input& input)
-		{
-			return input.IsKeyRepeat(KeyCode::W) || input.IsKeyRepeat(KeyCode::A) || input.IsKeyRepeat(KeyCode::S) || input.IsKeyRepeat(KeyCode::D);
-		}
-
-		bool IsMovementLockedState(ChiStateId stateId)
-		{
-			switch (stateId)
-			{
-			case ChiStateId::AttackWeakDash:
-			case ChiStateId::AttackStrongDash:
-			case ChiStateId::AttackWeak0:
-			case ChiStateId::AttackWeak1:
-			case ChiStateId::AttackWeak2:
-			case ChiStateId::AttackWeak3:
-			case ChiStateId::AttackStrong0_0:
-			case ChiStateId::AttackStrong0_1:
-			case ChiStateId::AttackStrong1:
-			case ChiStateId::AttackStrong2:
-			case ChiStateId::AttackStrongToWeak1:
-			case ChiStateId::AttackStrongToWeak2:
-			case ChiStateId::AttackWeakToStrong1:
-			case ChiStateId::AttackWeakToStrong2:
-			case ChiStateId::AttackDelayedWeak1:
-			case ChiStateId::AttackDelayedWeak2:
-			case ChiStateId::AttackStump0:
-			case ChiStateId::AttackStump1:
-			case ChiStateId::AttackStump2:
-			case ChiStateId::AttackSky0:
-			case ChiStateId::AttackSky1:
-			case ChiStateId::AttackSky2:
-			case ChiStateId::AttackSky3:
-			case ChiStateId::DamageStrongKnockback:
-			case ChiStateId::DamageWeakKnockback:
-			case ChiStateId::DamageDead:
-			case ChiStateId::HibikiReady:
-			case ChiStateId::HibikiAttack:
-				return true;
-			default:
-				return false;
-			}
-		}
-
-		bool UsesRootMotionState(ChiStateId stateId)
-		{
-			switch (stateId)
-			{
-			case ChiStateId::DashFront:
-			case ChiStateId::DashBack:
-			case ChiStateId::DashLeft:
-			case ChiStateId::DashRight:
-			case ChiStateId::DashDouble:
-			case ChiStateId::DashTriple:
-			case ChiStateId::DashSky:
-			case ChiStateId::DashSkyFall:
-			case ChiStateId::AttackWeakDash:
-			case ChiStateId::AttackStrongDash:
-			case ChiStateId::AttackWeak0:
-			case ChiStateId::AttackWeak1:
-			case ChiStateId::AttackWeak2:
-			case ChiStateId::AttackWeak3:
-			case ChiStateId::AttackStrong0_0:
-			case ChiStateId::AttackStrong0_1:
-			case ChiStateId::AttackStrong1:
-			case ChiStateId::AttackStrong2:
-			case ChiStateId::AttackStrongToWeak1:
-			case ChiStateId::AttackStrongToWeak2:
-			case ChiStateId::AttackWeakToStrong1:
-			case ChiStateId::AttackWeakToStrong2:
-			case ChiStateId::AttackDelayedWeak1:
-			case ChiStateId::AttackDelayedWeak2:
-			case ChiStateId::AttackStump0:
-			case ChiStateId::AttackStump1:
-			case ChiStateId::AttackStump2:
-			case ChiStateId::AttackSky0:
-			case ChiStateId::AttackSky1:
-			case ChiStateId::AttackSky2:
-			case ChiStateId::AttackSky3:
-			case ChiStateId::DamageStrongKnockback:
-			case ChiStateId::DamageWeakKnockback:
-			case ChiStateId::HibikiReady:
-			case ChiStateId::HibikiAttack:
-				return true;
-			default:
-				return false;
-			}
-		}
-
-		ChiGravityMode GetGravityMode(ChiStateId stateId)
-		{
-			switch (stateId)
-			{
-			case ChiStateId::DashSky:
-			case ChiStateId::AttackSky0:
-			case ChiStateId::AttackSky1:
-			case ChiStateId::AttackSky2:
-			case ChiStateId::AttackSky3:
-			case ChiStateId::AttackStump0:
-				return ChiGravityMode::IgnoreGravity;
-
-			case ChiStateId::AttackStrongDash:
-			case ChiStateId::AttackDelayedWeak2:
-				return ChiGravityMode::UseRootMotion;
-
-			default:
-				return ChiGravityMode::UseGravity;
-			}
-		}
-
-		void StopVerticalPhysics(Rigidbody3DComponent& rigidbody)
-		{
-			Vector3 velocity = rigidbody.GetVelocity();
-			velocity.y = 0.f;
-			rigidbody.SetVelocity(velocity);
-		}
+		_playOption.loopOverride = isLoop;
 	}
 
-	void ChiState::PlayAnimation(ChiStateContext& context, ChiAnimationId animationId, bool isLoop) const
+	ChiState::ChiState(ChiStateId stateId, ChiAnimationClipId animationClipId, const AnimationPlayOption& playOption)
+		: _stateId(stateId), _animationClipId(animationClipId), _playOption(playOption)
+	{}
+
+	void ChiState::Enter(ChiStateContext& context)
 	{
-		PlayAnimation(context, animationId, MakePlayOption(isLoop));
+		const ChiAnimationSetting& setting = context.animationSettings->Get(_animationClipId);
+		const float blendDuration = context.blendDuration.value_or(setting.blendDuration);
+		AnimationPlayOption playOption = _playOption;
+		playOption.blendDuration = blendDuration;
+		InitializeBeatTiming(context, blendDuration);
+		PlayAnimation(context, _animationClipId, playOption);
 	}
 
-	void ChiState::PlayAnimation(ChiStateContext& context, ChiAnimationId animationId, const AnimationPlayOption& playOption) const
+	void ChiState::PlayAnimation(ChiStateContext& context, ChiAnimationClipId animationClipId, const AnimationPlayOption& playOption) const
 	{
-		context.animatorComponent->Play(GetChiAnimationName(animationId), playOption);
+		const ChiAnimationSetting& settings = context.animationSettings->Get(animationClipId);
+		context.moveComponent->SetMoveEnabled(settings.lockInputMovement == false);
+		context.moveComponent->SetRootMotionWeight(settings.rootMotionWeight);
+		context.rigidbodyComponent->SetUseGravity(settings.useGravity);
+		if (settings.useGravity == false)
+			context.rigidbodyComponent->ClearVerticalVelocity();
+
+		context.animatorComponent->Play(GetChiAnimationClipName(animationClipId), playOption);
+	}
+
+	bool ChiState::IsMoveInputPressed() const
+	{
+		const Input& input = APPLICATION.GetInput();
+		return input.IsKeyRepeat(KeyCode::W) || input.IsKeyRepeat(KeyCode::A) || input.IsKeyRepeat(KeyCode::S) || input.IsKeyRepeat(KeyCode::D);
 	}
 
 	void ChiState::ReturnToIdleOrRun(ChiStateContext& context) const
 	{
-		if (IsMoveInputPressed(APPLICATION.GetInput()))
+		if (IsMoveInputPressed())
 			context.stateMachine->ChangeState(ChiStateId::Run);
 		else
 			context.stateMachine->ChangeState(ChiStateId::Idle);
@@ -170,12 +74,20 @@ namespace gm
 		return context.animatorComponent->GetState() == AnimationState::Completed;
 	}
 
-	void ChiState::ChangeDashStateByInput(ChiStateContext& context) const
+	void ChiState::ChangeDashStateByInput(ChiStateContext& context, const RhythmJudgeResult* judgeResult) const
 	{
+		auto changeState = [&context, judgeResult](ChiStateId stateId)
+			{
+				if (judgeResult)
+					context.stateMachine->ChangeState(stateId, *judgeResult);
+				else
+					context.stateMachine->ChangeState(stateId);
+			};
+
 		const Vector3 inputDirection = context.moveComponent->GetInputMoveDirection();
 		if (inputDirection.LengthSquared() <= 0.f)
 		{
-			context.stateMachine->ChangeState(ChiStateId::DashFront);
+			changeState(ChiStateId::DashFront);
 			return;
 		}
 
@@ -183,37 +95,77 @@ namespace gm
 		const float rightAmount = inputDirection.Dot(context.moveComponent->GetRightDirection());
 		if (std::abs(rightAmount) > std::abs(forwardAmount))
 		{
-			context.stateMachine->ChangeState(rightAmount > 0.f ? ChiStateId::DashRight : ChiStateId::DashLeft);
+			changeState(rightAmount > 0.f ? ChiStateId::DashRight : ChiStateId::DashLeft);
 			return;
 		}
 
-		context.stateMachine->ChangeState(forwardAmount < 0.f ? ChiStateId::DashBack : ChiStateId::DashFront);
+		changeState(forwardAmount < 0.f ? ChiStateId::DashBack : ChiStateId::DashFront);
 	}
 
-	bool ChiState::TryChangeAirAction(ChiStateContext& context, bool canDoubleJump) const
+	bool ChiState::TryChangeGroundAction(ChiStateContext& context) const
 	{
-		const Input& input = APPLICATION.GetInput();
-		if (input.IsKeyDown(KeyCode::LeftShift))
+		if (TryChangeHibiki(context))
+			return true;
+
+		if (context.weakAttackInput)
 		{
-			context.stateMachine->ChangeState(ChiStateId::DashSky);
+			context.stateMachine->ChangeState(ChiStateId::AttackWeak0, context.weakAttackInput.value());
 			return true;
 		}
 
-		if (input.IsMouseDown(MouseButton::Right))
+		if (context.strongAttackInput)
 		{
-			context.stateMachine->ChangeState(ChiStateId::AttackStump0);
+			context.stateMachine->ChangeState(ChiStateId::AttackStrong0_0, context.strongAttackInput.value());
 			return true;
 		}
 
-		if (input.IsMouseDown(MouseButton::Left))
+		if (context.jumpInput)
 		{
-			context.stateMachine->ChangeState(ChiStateId::AttackSky0);
+			context.stateMachine->ChangeState(ChiStateId::JumpUp, context.jumpInput.value());
 			return true;
 		}
 
-		if (canDoubleJump && input.IsKeyDown(KeyCode::Space))
+		if (context.dashInput)
 		{
-			context.stateMachine->ChangeState(ChiStateId::JumpDoubleUp);
+			ChangeDashStateByInput(context, &context.dashInput.value());
+			return true;
+		}
+
+		return false;
+	}
+
+	bool ChiState::TryChangeAirDashOrStump(ChiStateContext& context) const
+	{
+		if (context.dashInput)
+		{
+			context.stateMachine->ChangeState(ChiStateId::DashSky, context.dashInput.value());
+			return true;
+		}
+
+		if (context.strongAttackInput)
+		{
+			context.stateMachine->ChangeState(ChiStateId::AttackStump0, context.strongAttackInput.value());
+			return true;
+		}
+
+		return false;
+	}
+
+	bool ChiState::TryChangeAirAction(ChiStateContext& context, bool canDoubleJump, std::optional<float> weakAttackStartBeat) const
+	{
+		if (TryChangeAirDashOrStump(context))
+			return true;
+
+		const bool canChangeWeakAttack = weakAttackStartBeat.has_value() == false || GetElapsedBeatAfterBlend(context) > weakAttackStartBeat.value();
+		if (canChangeWeakAttack && context.weakAttackInput)
+		{
+			context.stateMachine->ChangeState(ChiStateId::AttackSky0, context.weakAttackInput.value());
+			return true;
+		}
+
+		if (canDoubleJump && context.jumpInput)
+		{
+			context.stateMachine->ChangeState(ChiStateId::JumpDoubleUp, 0.f, context.jumpInput.value());
 			return true;
 		}
 
@@ -229,130 +181,27 @@ namespace gm
 		return true;
 	}
 
-	/// Clip //////////////////////////////////////////////////////////////////////////////
-	ChiClipState::ChiClipState(ChiStateId stateId, ChiAnimationId animationId, bool isLoop)
-		: ChiClipState(stateId, animationId, MakePlayOption(isLoop))
-	{}
-
-	ChiClipState::ChiClipState(ChiStateId stateId, ChiAnimationId animationId, const AnimationPlayOption& playOption)
-		: _stateId(stateId)
-		, _animationId(animationId)
-		, _playOption(playOption)
-	{}
-
-	void ChiClipState::Enter(ChiStateContext& context)
+	void ChiState::InitializeBeatTiming(ChiStateContext& context, float blendDuration)
 	{
-		PlayAnimation(context, _animationId, _playOption);
-
-		_enabledRootMotionOnEnter = UsesRootMotionState(_stateId);
-		if (_enabledRootMotionOnEnter)
-		{
-			_prevRootMotionEnabled = context.moveComponent->IsRootMotionEnabled();
-			context.moveComponent->SetRootMotionEnabled(true);
-		}
-
-		_gravityMode = GetGravityMode(_stateId);
-		if (_gravityMode != ChiGravityMode::UseGravity)
-		{
-			GM_ASSERT_RETURN(context.rigidbodyComponent, "중력 정책을 적용하려면 Rigidbody3DComponent가 필요합니다.");
-			_prevUseGravity = context.rigidbodyComponent->IsUseGravity();
-			context.rigidbodyComponent->SetUseGravity(false);
-			StopVerticalPhysics(*context.rigidbodyComponent);
-			_overrodeGravityOnEnter = true;
-		}
-
-		if (_gravityMode == ChiGravityMode::UseRootMotion)
-		{
-			_prevRootMotionYEnabled = context.moveComponent->IsRootMotionYEnabled();
-			context.moveComponent->SetRootMotionYEnabled(true);
-			_overrodeRootMotionYOnEnter = true;
-		}
-
-		_disabledMoveOnEnter = IsMovementLockedState(_stateId);
-		if (_disabledMoveOnEnter)
-		{
-			_prevMoveEnabled = context.moveComponent->IsMoveEnabled();
-			context.moveComponent->SetMoveEnabled(false);
-		}
+		_stateStartBeat = context.beatSystem->GetCurrentBeat();
+		const float secondsPerBeat = context.beatSystem->GetSecondsPerBeat();
+		const float blendDurationBeats = secondsPerBeat > 0.f ? blendDuration / secondsPerBeat : 0.f;
+		_blendEndBeat = _stateStartBeat + std::max(0.f, blendDurationBeats);
 	}
 
-	void ChiClipState::Tick(ChiStateContext& context, float deltaTime)
+	float ChiState::GetStateElapsedBeat(const ChiStateContext& context) const
 	{
-		const Input& input = APPLICATION.GetInput();
-
-		if (input.IsKeyDown(KeyCode::Space))
-		{
-			context.stateMachine->ChangeState(ChiStateId::JumpUp);
-			return;
-		}
-
-		if (input.IsKeyDown(KeyCode::LeftShift))
-		{
-			ChangeDashStateByInput(context);
-			return;
-		}
-
-		if (input.IsMouseDown(MouseButton::Left))
-		{
-			switch (_stateId)
-			{
-			case ChiStateId::AttackSky0:
-				context.stateMachine->ChangeState(ChiStateId::AttackSky1);
-				return;
-			case ChiStateId::AttackSky1:
-				context.stateMachine->ChangeState(ChiStateId::AttackSky2);
-				return;
-			case ChiStateId::AttackSky2:
-				context.stateMachine->ChangeState(ChiStateId::AttackSky3);
-				return;
-			default:
-				break;
-			}
-		}
-
-		if (input.IsMouseDown(MouseButton::Right))
-		{
-			switch (_stateId)
-			{
-			case ChiStateId::AttackStump0:
-				context.stateMachine->ChangeState(ChiStateId::AttackStump1);
-				return;
-			case ChiStateId::AttackStump1:
-				context.stateMachine->ChangeState(ChiStateId::AttackStump2);
-				return;
-			default:
-				break;
-			}
-		}
-
-		if (context.animatorComponent->IsLoop() == false && IsAnimationCompleted(context))
-			ReturnToIdleOrRun(context);
+		return context.beatSystem->GetCurrentBeat() - _stateStartBeat;
 	}
 
-	void ChiClipState::Exit(ChiStateContext& context)
+	float ChiState::GetElapsedBeatAfterBlend(const ChiStateContext& context) const
 	{
-		if (_overrodeGravityOnEnter)
-		{
-			context.rigidbodyComponent->SetUseGravity(_prevUseGravity);
-			_overrodeGravityOnEnter = false;
-		}
-
-		if (_overrodeRootMotionYOnEnter)
-		{
-			context.moveComponent->SetRootMotionYEnabled(_prevRootMotionYEnabled);
-			_overrodeRootMotionYOnEnter = false;
-		}
-
-		if (_enabledRootMotionOnEnter)
-		{
-			context.moveComponent->SetRootMotionEnabled(_prevRootMotionEnabled);
-			_enabledRootMotionOnEnter = false;
-		}
-
-		if (_disabledMoveOnEnter)
-		{
-			context.moveComponent->SetMoveEnabled(_prevMoveEnabled);
-			_disabledMoveOnEnter = false;
-		}
+		return context.beatSystem->GetCurrentBeat() - _blendEndBeat;
 	}
+
+	bool ChiState::IsBlendCompleted(const ChiStateContext& context) const
+	{
+		return context.beatSystem->GetCurrentBeat() >= _blendEndBeat;
+	}
+
 }

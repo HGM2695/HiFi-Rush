@@ -14,6 +14,12 @@ namespace gm
 		_collider.SetEnabled(false);
 	}
 
+	void HitBoxComponent::SetRehitInterval(float rehitInterval)
+	{
+		GM_ASSERT_RETURN(rehitInterval >= 0.f, "Rehit Interval은 0 이상이어야 합니다.");
+		_rehitInterval = rehitInterval;
+	}
+
 	void HitBoxComponent::SetDamage(int32 damage)
 	{
 		GM_ASSERT_RETURN(damage >= 0, "Damage는 0 이상이어야 합니다.");
@@ -57,6 +63,21 @@ namespace gm
 			});
 	}
 
+	void HitBoxComponent::OnTick(float deltaTime)
+	{
+		if (_isAttackActive == false || _rehitInterval <= 0.f)
+			return;
+
+		for (HitTarget& hitTarget : _hitTargets)
+			hitTarget.remainingTime -= deltaTime;
+
+		_hitTargets.erase(std::remove_if(_hitTargets.begin(), _hitTargets.end(),
+			[](const HitTarget& hitTarget)
+			{
+				return hitTarget.remainingTime <= 0.f || hitTarget.target.IsValid() == false;
+			}), _hitTargets.end());
+	}
+
 	void HitBoxComponent::HandleCollisionEvent(const Collision3DEvent& event)
 	{
 		if (_isAttackActive == false || IsEnabled() == false || event.type != CollisionType::Trigger || event.otherCollider == nullptr)
@@ -70,7 +91,7 @@ namespace gm
 		if (hurtBox == nullptr || hurtBox->IsEnabled() == false)
 			return;
 
-		_hitTargets.push_back(target);
+		_hitTargets.push_back({ target, _rehitInterval });
 
 		HitEvent hitEvent{};
 		hitEvent.hitBox = this;
@@ -104,6 +125,9 @@ namespace gm
 
 	bool HitBoxComponent::IsAlreadyHit(const WeakGameObjectPtr& target) const
 	{
-		return std::find(_hitTargets.begin(), _hitTargets.end(), target) != _hitTargets.end();
+		return std::find_if(_hitTargets.begin(), _hitTargets.end(), [&target](const HitTarget& hitTarget)
+		{
+			return hitTarget.target == target;
+		}) != _hitTargets.end();
 	}
 }

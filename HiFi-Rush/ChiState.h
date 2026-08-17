@@ -6,64 +6,48 @@
 #include "ChiStateTypes.h"
 #include "MathTypes.h"
 
+#include <optional>
+
 namespace gm
 {
-	inline constexpr float ChiDefaultBlendDuration = 0.15f;
 	struct NavigationGroundContactEvent;
 	struct NavigationGroundLostEvent;
 
 	class ChiState
 	{
 	public:
+		ChiState(ChiStateId stateId, ChiAnimationClipId animationClipId, bool isLoop = false);
+		ChiState(ChiStateId stateId, ChiAnimationClipId animationClipId, const AnimationPlayOption& playOption);
 		virtual ~ChiState() = default;
 
-		virtual ChiStateId GetStateId() const = 0;
-		virtual void Enter(ChiStateContext& context) {}
+		ChiStateId GetStateId() const { return _stateId; }
+		virtual void Enter(ChiStateContext& context);
 		virtual void Tick(ChiStateContext& context, float deltaTime) {}
 		virtual void OnGroundContact(ChiStateContext& context, const NavigationGroundContactEvent& event);
 		virtual void OnGroundLost(ChiStateContext& context, const NavigationGroundLostEvent& event);
 		virtual void Exit(ChiStateContext& context) {}
 
 	protected:
-		void	PlayAnimation(ChiStateContext& context, ChiAnimationId animationId, bool isLoop) const;
-		void	PlayAnimation(ChiStateContext& context, ChiAnimationId animationId, const AnimationPlayOption& playOption) const;
+		void	PlayAnimation(ChiStateContext& context, ChiAnimationClipId animationClipId, const AnimationPlayOption& playOption) const;
+		bool	IsMoveInputPressed() const;
 		void	ReturnToIdleOrRun(ChiStateContext& context) const;
 		bool	IsAnimationCompleted(const ChiStateContext& context) const;
-		void	ChangeDashStateByInput(ChiStateContext& context) const;
-		bool	TryChangeAirAction(ChiStateContext& context, bool canDoubleJump) const;
+		void	ChangeDashStateByInput(ChiStateContext& context, const RhythmJudgeResult* judgeResult = nullptr) const;
+		bool	TryChangeGroundAction(ChiStateContext& context) const;
+		bool	TryChangeAirDashOrStump(ChiStateContext& context) const;
+		bool	TryChangeAirAction(ChiStateContext& context, bool canDoubleJump, std::optional<float> weakAttackStartBeat = std::nullopt) const;
 		bool	TryChangeHibiki(ChiStateContext& context) const;
-	};
-
-	/// Clip //////////////////////////////////////////////////////////////////////////////
-	class ChiClipState : public ChiState
-	{
-	public:
-		ChiClipState(ChiStateId stateId, ChiAnimationId animationId, bool isLoop = false);
-		ChiClipState(ChiStateId stateId, ChiAnimationId animationId, const AnimationPlayOption& playOption);
-
-		virtual ChiStateId GetStateId() const override { return _stateId; }
-		virtual void Enter(ChiStateContext& context) override;
-		virtual void Tick(ChiStateContext& context, float deltaTime) override;
-		virtual void Exit(ChiStateContext& context) override;
-
-	protected:
-		ChiAnimationId GetAnimationId() const { return _animationId; }
+		void	InitializeBeatTiming(ChiStateContext& context, float blendDuration);
+		float	GetStateElapsedBeat(const ChiStateContext& context) const;
+		float	GetElapsedBeatAfterBlend(const ChiStateContext& context) const;
+		bool	IsBlendCompleted(const ChiStateContext& context) const;
+		ChiAnimationClipId GetAnimationClipId() const { return _animationClipId; }
 
 	private:
-		ChiStateId		_stateId = ChiStateId::None;
-		ChiAnimationId	_animationId = ChiAnimationId::Idle;
+		ChiStateId			_stateId = ChiStateId::None;
+		ChiAnimationClipId	_animationClipId = ChiAnimationClipId::Idle;
 		AnimationPlayOption _playOption{};
-
-		bool			_prevMoveEnabled = true;
-		bool			_disabledMoveOnEnter = false;
-
-		bool			_prevRootMotionEnabled = false;
-		bool			_enabledRootMotionOnEnter = false;
-		bool			_prevRootMotionYEnabled = true;
-		bool			_overrodeRootMotionYOnEnter = false;
-
-		ChiGravityMode	_gravityMode = ChiGravityMode::UseGravity;
-		bool			_prevUseGravity = true;
-		bool			_overrodeGravityOnEnter = false;
+		float				_stateStartBeat = 0.f;
+		float				_blendEndBeat = 0.f;
 	};
 }

@@ -3,8 +3,8 @@
 namespace gm
 {
 	/// Damage //////////////////////////////////////////////////////////////////////////////
-	ChiDamageState::ChiDamageState(ChiStateId stateId, ChiAnimationId animationId, bool returnToBaseMotion)
-		: ChiClipState(stateId, animationId)
+	ChiDamageState::ChiDamageState(ChiStateId stateId, ChiAnimationClipId animationClipId, bool returnToBaseMotion)
+		: ChiState(stateId, animationClipId)
 		, _returnToBaseMotion(returnToBaseMotion)
 	{
 	}
@@ -27,17 +27,17 @@ namespace gm
 	}
 
 	ChiWeakKnockbackDamageState::ChiWeakKnockbackDamageState()
-		: ChiDamageState(ChiStateId::DamageWeakKnockback, ChiAnimationId::DamageWeakKnockback, true)
+		: ChiDamageState(ChiStateId::DamageWeakKnockback, ChiAnimationClipId::DamageWeakKnockback, true)
 	{
 	}
 
 	ChiStrongKnockbackDamageState::ChiStrongKnockbackDamageState()
-		: ChiDamageState(ChiStateId::DamageStrongKnockback, ChiAnimationId::DamageStrongKnockback, true)
+		: ChiDamageState(ChiStateId::DamageStrongKnockback, ChiAnimationClipId::DamageStrongKnockback, true)
 	{
 	}
 
 	ChiDeadDamageState::ChiDeadDamageState()
-		: ChiDamageState(ChiStateId::DamageDead, ChiAnimationId::DamageDead, false)
+		: ChiDamageState(ChiStateId::DamageDead, ChiAnimationClipId::DamageDead, false)
 	{
 	}
 }

@@ -5,7 +5,7 @@
 namespace gm
 {
 	/// Jump //////////////////////////////////////////////////////////////////////////////
-	class ChiJumpUpState final : public ChiClipState
+	class ChiJumpUpState final : public ChiState
 	{
 	public:
 		ChiJumpUpState();
@@ -14,14 +14,14 @@ namespace gm
 		virtual void Exit(ChiStateContext& context) override;
 	};
 
-	class ChiJumpDownState final : public ChiClipState
+	class ChiJumpDownState final : public ChiState
 	{
 	public:
 		ChiJumpDownState();
 		virtual void Tick(ChiStateContext& context, float deltaTime) override;
 	};
 
-	class ChiJumpLandingState final : public ChiClipState
+	class ChiJumpLandingState final : public ChiState
 	{
 	public:
 		ChiJumpLandingState();
@@ -29,7 +29,7 @@ namespace gm
 	};
 
 	/// DoubleJump //////////////////////////////////////////////////////////////////////////////
-	class ChiJumpDoubleUpState final : public ChiClipState
+	class ChiJumpDoubleUpState final : public ChiState
 	{
 	public:
 		ChiJumpDoubleUpState();
@@ -38,7 +38,7 @@ namespace gm
 		virtual void Exit(ChiStateContext& context) override;
 	};
 
-	class ChiJumpDoubleDownState final : public ChiClipState
+	class ChiJumpDoubleDownState final : public ChiState
 	{
 	public:
 		ChiJumpDoubleDownState();

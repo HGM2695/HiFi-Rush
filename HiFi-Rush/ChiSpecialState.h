@@ -5,14 +5,14 @@
 namespace gm
 {
 	/// Hibiki //////////////////////////////////////////////////////////////////////////////
-	class ChiHibikiReadyState final : public ChiClipState
+	class ChiHibikiReadyState final : public ChiState
 	{
 	public:
 		ChiHibikiReadyState();
 		virtual void Tick(ChiStateContext& context, float deltaTime) override;
 	};
 
-	class ChiHibikiAttackState final : public ChiClipState
+	class ChiHibikiAttackState final : public ChiState
 	{
 	public:
 		ChiHibikiAttackState();

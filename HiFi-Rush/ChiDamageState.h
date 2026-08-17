@@ -5,10 +5,10 @@
 namespace gm
 {
 	/// Damage //////////////////////////////////////////////////////////////////////////////
-	class ChiDamageState : public ChiClipState
+	class ChiDamageState : public ChiState
 	{
 	public:
-		ChiDamageState(ChiStateId stateId, ChiAnimationId animationId, bool returnToBaseMotion);
+		ChiDamageState(ChiStateId stateId, ChiAnimationClipId animationClipId, bool returnToBaseMotion);
 
 		virtual void Tick(ChiStateContext& context, float deltaTime) override;
 		virtual void OnGroundContact(ChiStateContext& context, const NavigationGroundContactEvent& event) override;

@@ -1,4 +1,6 @@
 #include "ChiStateMachineComponent.h"
+#include "Application.h"
+#include "BeatSystem.h"
 #include "ChiAttackState.h"
 #include "ChiDamageState.h"
 #include "ChiDashState.h"
@@ -7,21 +9,19 @@
 #include "ChiSpecialState.h"
 #include "GameObject.h"
 #include "ChiMoveComponent.h"
+#include "HealthComponent.h"
+#include "HiFiRushStatics.h"
+#include "Input.h"
 #include "NavMeshControllerComponent.h"
 #include "Rigidbody3DComponent.h"
 #include "SkeletalAnimatorComponent.h"
 
 namespace gm
 {
-	namespace
+	ChiStateMachineComponent::ChiStateMachineComponent(HitBoxComponent* weaponHitBox)
+		: _weaponHitBox(weaponHitBox)
 	{
-		void RegisterClipState(std::unordered_map<ChiStateId, std::unique_ptr<ChiState>>& states, ChiStateId stateId, ChiAnimationId animationId, bool isLoop = false)
-		{
-			states.emplace(stateId, std::make_unique<ChiClipState>(stateId, animationId, isLoop));
-		}
 	}
-
-	ChiStateMachineComponent::ChiStateMachineComponent() = default;
 	ChiStateMachineComponent::~ChiStateMachineComponent() = default;
 
 	void ChiStateMachineComponent::OnInitialize()
@@ -39,6 +39,9 @@ namespace gm
 		GM_ASSERT_RETURN(rigidbodyComponent, "ChiStateMachineComponent는 Rigidbody3DComponent가 필요합니다.");
 
 		_context.stateMachine = this;
+		_context.beatSystem = &HiFiRushStatics::GetBeatSystem();
+		_context.animationSettings = &HiFiRushStatics::GetChiAnimationSettings();
+		_context.rhythmJudge = &HiFiRushStatics::GetRhythmJudge();
 		_context.moveComponent = _moveComponent;
 		_context.rigidbodyComponent = rigidbodyComponent;
 		_context.animatorComponent = _animatorComponent;
@@ -62,6 +65,24 @@ namespace gm
 
 	void ChiStateMachineComponent::OnTick(float deltaTime)
 	{
+		_context.weakAttackInput.reset();
+		_context.strongAttackInput.reset();
+		_context.jumpInput.reset();
+		_context.dashInput.reset();
+
+		const Input& input = APPLICATION.GetInput();
+		if (input.IsMouseDown(MouseButton::Left))
+			_context.weakAttackInput = _context.rhythmJudge->Judge(*_context.beatSystem, RhythmInputType::WeakAttack);
+
+		if (input.IsMouseDown(MouseButton::Right))
+			_context.strongAttackInput = _context.rhythmJudge->Judge(*_context.beatSystem, RhythmInputType::StrongAttack);
+
+		if (input.IsKeyDown(KeyCode::Space))
+			_context.jumpInput = _context.rhythmJudge->Judge(*_context.beatSystem, RhythmInputType::Jump);
+
+		if (input.IsKeyDown(KeyCode::LeftShift))
+			_context.dashInput = _context.rhythmJudge->Judge(*_context.beatSystem, RhythmInputType::Dash);
+
 		ChiState* currentState = FindState(_currentStateId);
 		if (currentState == nullptr)
 			return;
@@ -85,11 +106,47 @@ namespace gm
 
 	void ChiStateMachineComponent::ChangeState(ChiStateId nextStateId)
 	{
+		ResetTransitionOptions();
+		ChangeStateInternal(nextStateId);
+	}
+
+	void ChiStateMachineComponent::ChangeState(ChiStateId nextStateId, float blendDuration)
+	{
+		ResetTransitionOptions();
+		_context.blendDuration = blendDuration;
+		ChangeStateInternal(nextStateId);
+	}
+
+	void ChiStateMachineComponent::ChangeState(ChiStateId nextStateId, const RhythmJudgeResult& rhythmInput)
+	{
+		ResetTransitionOptions();
+		_context.transitionRhythmInput = rhythmInput;
+		ChangeStateInternal(nextStateId);
+	}
+
+	void ChiStateMachineComponent::ChangeState(ChiStateId nextStateId, float blendDuration, const RhythmJudgeResult& rhythmInput)
+	{
+		ResetTransitionOptions();
+		_context.blendDuration = blendDuration;
+		_context.transitionRhythmInput = rhythmInput;
+		ChangeStateInternal(nextStateId);
+	}
+
+	void ChiStateMachineComponent::ChangeStateInternal(ChiStateId nextStateId)
+	{
 		if (_currentStateId == nextStateId)
+		{
+			ResetTransitionOptions();
 			return;
+		}
 
 		ChiState* next = FindState(nextStateId);
-		GM_ASSERT_RETURN(next, "등록되지 않은 ChiState로 전환할 수 없습니다.");
+		if (next == nullptr)
+		{
+			ResetTransitionOptions();
+			GM_ASSERT(false, "등록되지 않은 ChiState로 전환할 수 없습니다.");
+			return;
+		}
 
 		ChiState* currentState = FindState(_currentStateId);
 		if (currentState)
@@ -97,19 +154,26 @@ namespace gm
 
 		_currentStateId = nextStateId;
 		next->Enter(_context);
+		ResetTransitionOptions();
+	}
+
+	void ChiStateMachineComponent::ResetTransitionOptions()
+	{
+		_context.blendDuration.reset();
+		_context.transitionRhythmInput.reset();
 	}
 
 	void ChiStateMachineComponent::RegisterAnimationClips()
 	{
-		for (uint32 animationIndex = 0; animationIndex < ChiAnimationIdCount; ++animationIndex)
+		for (uint32 animationClipIndex = 0; animationClipIndex < ChiAnimationClipIdCount; ++animationClipIndex)
 		{
-			const ChiAnimationId animationId = static_cast<ChiAnimationId>(animationIndex);
-			const std::wstring animationName = GetChiAnimationName(animationId);
+			const ChiAnimationClipId animationClipId = static_cast<ChiAnimationClipId>(animationClipIndex);
+			const std::wstring animationClipName = GetChiAnimationClipName(animationClipId);
 
-			if (_animatorComponent->HasClip(animationName))
+			if (_animatorComponent->HasClip(animationClipName))
 				continue;
 
-			_animatorComponent->AddClip(animationName, GetChiAnimationKey(animationId));
+			_animatorComponent->AddClip(animationClipName, GetChiAnimationClipKey(animationClipId));
 		}
 	}
 
@@ -129,9 +193,10 @@ namespace gm
 		_states.emplace(ChiStateId::AttackStrong1, std::make_unique<ChiStrong1AttackState>());
 		_states.emplace(ChiStateId::AttackStrong2, std::make_unique<ChiStrong2AttackState>());
 		_states.emplace(ChiStateId::AttackStrongToWeak1, std::make_unique<ChiStrongToWeak1AttackState>());
-		_states.emplace(ChiStateId::AttackStrongToWeak2, std::make_unique<ChiStrongToWeak2AttackState>());
+		_states.emplace(ChiStateId::AttackStrongToWeak2, std::make_unique<ChiStrongToWeak2AttackState>(_weaponHitBox));
+		_states.emplace(ChiStateId::AttackStrongToWeakBeatHit, std::make_unique<ChiStrongToWeakBeatHitAttackState>());
 		_states.emplace(ChiStateId::AttackWeakToStrong1, std::make_unique<ChiWeakToStrong1AttackState>());
-		_states.emplace(ChiStateId::AttackWeakToStrong2, std::make_unique<ChiWeakToStrong2AttackState>());
+		_states.emplace(ChiStateId::AttackWeakToStrong2, std::make_unique<ChiWeakToStrong2AttackState>(_weaponHitBox));
 		_states.emplace(ChiStateId::AttackDelayedWeak1, std::make_unique<ChiDelayedWeak1AttackState>());
 		_states.emplace(ChiStateId::AttackDelayedWeak2, std::make_unique<ChiDelayedWeak2AttackState>());
 		_states.emplace(ChiStateId::AttackStump0, std::make_unique<ChiStump0AttackState>());

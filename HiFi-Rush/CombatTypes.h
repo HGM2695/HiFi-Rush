@@ -8,10 +8,22 @@ namespace gm
 	class HitBoxComponent;
 	class HurtBoxComponent;
 
+	enum class HitReactionType
+	{
+		None,
+		WeakKnockback,
+		StrongKnockback,
+		Sky,
+		Airborne,
+
+		Count
+	};
+
 	struct DamageInfo
 	{
-		int32	amount = 0;
-		bool	ignoreInvincibility = false;
+		int32			amount = 0;
+		HitReactionType	hitReactionType = HitReactionType::None;
+		bool			ignoreInvincibility = false;
 	};
 
 	enum class DamageState

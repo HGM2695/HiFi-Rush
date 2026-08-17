@@ -19,8 +19,12 @@ namespace gm
 		void	BeginAttack();
 		void	EndAttack();
 		bool	IsAttackActive() const { return _isAttackActive; }
+		void	SetRehitInterval(float rehitInterval);
+		float	GetRehitInterval() const { return _rehitInterval; }
 		void	SetDamage(int32 damage);
 		int32	GetDamage() const { return _damageInfo.amount; }
+		void	SetHitReactionType(HitReactionType hitReactionType) { _damageInfo.hitReactionType = hitReactionType; }
+		HitReactionType GetHitReactionType() const { return _damageInfo.hitReactionType; }
 		void	SetIgnoreInvincibility(bool ignoreInvincibility) { _damageInfo.ignoreInvincibility = ignoreInvincibility; }
 		bool	IsIgnoreInvincibility() const { return _damageInfo.ignoreInvincibility; }
 		void	SetDamageInfo(const DamageInfo& damageInfo);
@@ -33,17 +37,25 @@ namespace gm
 
 	protected:
 		void OnInitialize() override;
+		void OnTick(float deltaTime) override;
 
 	private:
+		struct HitTarget
+		{
+			WeakGameObjectPtr	target{};
+			float				remainingTime = 0.f;
+		};
+
 		void				HandleCollisionEvent(const Collision3DEvent& event);
 		HurtBoxComponent*	FindHurtBox(Collider3DComponent& collider) const;
 		bool				IsAlreadyHit(const WeakGameObjectPtr& target) const;
 
 		Collider3DComponent&			_collider;
-		std::vector<WeakGameObjectPtr>	_hitTargets{};
+		std::vector<HitTarget>			_hitTargets{};
 		EventConnection					_collisionEnterConnection{};
 		EventConnection					_collisionStayConnection{};
 		DamageInfo						_damageInfo{};
+		float							_rehitInterval = 0.f;
 		bool							_isAttackActive = false;
 	};
 }

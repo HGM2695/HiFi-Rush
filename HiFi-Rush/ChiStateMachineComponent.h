@@ -11,9 +11,12 @@
 
 namespace gm
 {
+	struct HitEvent;
 	struct ChiStateContext;
 	class ChiState;
 	class ChiMoveComponent;
+	class HealthComponent;
+	class HitBoxComponent;
 	class SkeletalAnimatorComponent;
 	struct NavigationGroundContactEvent;
 	struct NavigationGroundLostEvent;
@@ -21,12 +24,15 @@ namespace gm
 	class ChiStateMachineComponent : public Component
 	{
 	public:
-		ChiStateMachineComponent();
+		explicit ChiStateMachineComponent(HitBoxComponent* weaponHitBox = nullptr);
 		virtual ~ChiStateMachineComponent();
 
 		virtual TickGroup GetTickGroup() const override { return TickGroup::GameLogic; }
 
 		void					ChangeState(ChiStateId nextStateId);
+		void					ChangeState(ChiStateId nextStateId, float blendDuration);
+		void					ChangeState(ChiStateId nextStateId, const RhythmJudgeResult& rhythmInput);
+		void					ChangeState(ChiStateId nextStateId, float blendDuration, const RhythmJudgeResult& rhythmInput);
 		ChiStateId				GetCurrentStateId() const { return _currentStateId; }
 
 	protected:
@@ -38,6 +44,9 @@ namespace gm
 		void					RegisterStates();
 		void					OnGroundContact(const NavigationGroundContactEvent& event);
 		void					OnGroundLost(const NavigationGroundLostEvent& event);
+		void					OnDamaged(const HitEvent& event);
+		void					ChangeStateInternal(ChiStateId nextStateId);
+		void					ResetTransitionOptions();
 		ChiState*				FindState(ChiStateId stateId) const;
 
 	private:
@@ -47,8 +56,11 @@ namespace gm
 		ChiStateContext				_context{};
 		EventConnection				_groundContactConnection{};
 		EventConnection				_groundLostConnection{};
+		EventConnection				_damagedConnection{};
 
 		SkeletalAnimatorComponent*	_animatorComponent = nullptr;
 		ChiMoveComponent*			_moveComponent = nullptr;
+		HealthComponent*			_healthComponent = nullptr;
+		HitBoxComponent*			_weaponHitBox = nullptr;
 	};
 }

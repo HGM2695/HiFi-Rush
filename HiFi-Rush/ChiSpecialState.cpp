@@ -5,7 +5,7 @@ namespace gm
 {
 	/// Hibiki //////////////////////////////////////////////////////////////////////////////
 	ChiHibikiReadyState::ChiHibikiReadyState()
-		: ChiClipState(ChiStateId::HibikiReady, ChiAnimationId::HibikiReady)
+		: ChiState(ChiStateId::HibikiReady, ChiAnimationClipId::HibikiReady)
 	{
 	}
 
@@ -16,7 +16,7 @@ namespace gm
 	}
 
 	ChiHibikiAttackState::ChiHibikiAttackState()
-		: ChiClipState(ChiStateId::HibikiAttack, ChiAnimationId::HibikiAttack)
+		: ChiState(ChiStateId::HibikiAttack, ChiAnimationClipId::HibikiAttack)
 	{
 	}
 

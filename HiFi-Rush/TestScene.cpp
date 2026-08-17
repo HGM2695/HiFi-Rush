@@ -119,8 +119,8 @@ namespace gm
 
 		BeatSkeletalAnimationSyncDesc animationSyncDesc{};
 		BeatSkeletalAnimationSyncComponent* animationSync = player->AddComponent<BeatSkeletalAnimationSyncComponent>(HiFiRushStatics::GetBeatSystem(), *animator, animationSyncDesc);
-		GM_ASSERT_RETURN(animationSync->AddClipSyncRule(GetChiAnimationName(ChiAnimationId::Idle), BeatSkeletalAnimationSyncDesc{ .cycleBeats = 4.f }), "플레이어 Idle 애니메이션 비트 동기화 규칙 등록에 실패했습니다.");
-		GM_ASSERT_RETURN(animationSync->AddClipSyncRule(GetChiAnimationName(ChiAnimationId::RunFront), BeatSkeletalAnimationSyncDesc{ .cycleBeats = 2.f }), "플레이어 Run 애니메이션 비트 동기화 규칙 등록에 실패했습니다.");
+		GM_ASSERT_RETURN(animationSync->AddClipSyncRule(GetChiAnimationClipName(ChiAnimationClipId::Idle), BeatSkeletalAnimationSyncDesc{ .cycleBeats = 4.f }), "플레이어 Idle 애니메이션 비트 동기화 규칙 등록에 실패했습니다.");
+		GM_ASSERT_RETURN(animationSync->AddClipSyncRule(GetChiAnimationClipName(ChiAnimationClipId::RunFront), BeatSkeletalAnimationSyncDesc{ .cycleBeats = 2.f }), "플레이어 Run 애니메이션 비트 동기화 규칙 등록에 실패했습니다.");
 
 		WidgetComponent* userWidget = player->AddComponent<WidgetComponent>();
 		userWidget->SetUserWidget<MainHUDWidget>();
