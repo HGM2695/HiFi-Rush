@@ -70,6 +70,22 @@ namespace gm
 		UpdateMaterial();
 	}
 
+	void Image::SetFillMode(ImageFillMode fillMode)
+	{
+		GM_ASSERT_RETURN(fillMode < ImageFillMode::Count, "지원하지 않는 Image Fill Mode입니다.");
+		_fillMode = fillMode;
+		UpdateMaterial();
+	}
+
+	void Image::SetRadialFill(float startAngle, float sweepAngle)
+	{
+		GM_ASSERT_RETURN(sweepAngle > 0.f, "Radial Fill의 Sweep Angle은 0보다 커야 합니다.");
+		_fillMode = ImageFillMode::Radial;
+		_radialStartAngle = startAngle;
+		_radialSweepAngle = sweepAngle;
+		UpdateMaterial();
+	}
+
 	void Image::OnRender(const WidgetGeometry& geometry)
 	{
 		if (_texture == nullptr || geometry.size.x <= 0.f || geometry.size.y <= 0.f)
@@ -120,6 +136,9 @@ namespace gm
 		constant.blendRatio = _blendRatio;
 		constant.opacity = _opacity;
 		constant.fillRatio = _fillRatio;
+		constant.fillMode = static_cast<uint32>(_fillMode);
+		constant.radialStartAngle = _radialStartAngle;
+		constant.radialSweepAngle = _radialSweepAngle;
 		_material->SetConstantData(ShaderStage::Pixel, 0, constant);
 	}
 }

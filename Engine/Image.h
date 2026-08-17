@@ -10,6 +10,14 @@ namespace gm
 	class Material;
 	class Texture;
 
+	enum class ImageFillMode
+	{
+		Horizontal,
+		Radial,
+
+		Count
+	};
+
 	class Image : public Widget
 	{
 	public:
@@ -32,6 +40,9 @@ namespace gm
 		float						GetColorBlendRatio() const { return _blendRatio; }
 		void						SetFillRatio(float ratio);
 		float						GetFillRatio() const { return _fillRatio; }
+		void						SetFillMode(ImageFillMode fillMode);
+		ImageFillMode				GetFillMode() const { return _fillMode; }
+		void						SetRadialFill(float startAngle, float sweepAngle);
 
 	protected:
 		virtual void OnRender(const WidgetGeometry& geometry) override;
@@ -47,6 +58,9 @@ namespace gm
 		float						_blendRatio = 0.f;
 		float						_opacity = 1.f;
 		float						_fillRatio = 1.f;
+		ImageFillMode				_fillMode = ImageFillMode::Horizontal;
+		float						_radialStartAngle = 0.f;
+		float						_radialSweepAngle = 0.f;
 		std::unique_ptr<Material>	_material;
 	};
 }

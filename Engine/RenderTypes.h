@@ -31,7 +31,10 @@ namespace gm
 		float	blendRatio = 0.f;
 		float	opacity = 1.f;
 		float	fillRatio = 1.f;
-		float	padding = 0.f;
+		uint32	fillMode = 0;
+		float	radialStartAngle = 0.f;
+		float	radialSweepAngle = 0.f;
+		Vector2 padding{};
 	};
 
 	struct ColorConstantPS

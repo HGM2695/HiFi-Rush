@@ -9,7 +9,10 @@ cbuffer sprite : register(b0)
     float blendRatio;
     float opacity;
     float fillRatio;
-    float padding;
+    uint fillMode;
+    float radialStartAngle;
+    float radialSweepAngle;
+    float2 padding;
 }
 
 struct PSInput
@@ -19,8 +22,25 @@ struct PSInput
 };
 
 float4 main(PSInput input) : SV_TARGET
-{   
-    clip(saturate(fillRatio) - input.texcoord.x);
+{
+    if (fillMode == 0)
+    {
+        clip(saturate(fillRatio) - input.texcoord.x);
+    }
+    else
+    {
+        static const float TwoPi = 6.28318530718f;
+        float2 direction = input.texcoord - float2(0.5f, 0.5f);
+        float angle = atan2(direction.y, direction.x);
+        if (angle < 0.f)
+            angle += TwoPi;
+
+        float deltaAngle = angle - radialStartAngle;
+        if (deltaAngle < 0.f)
+            deltaAngle += TwoPi;
+
+        clip(saturate(fillRatio) * radialSweepAngle - deltaAngle);
+    }
 
     float2 uv = uvOffset + input.texcoord * uvScale;
     float4 color = g_texture.Sample(g_sampler, uv);
