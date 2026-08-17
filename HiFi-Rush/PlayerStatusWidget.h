@@ -39,7 +39,7 @@ namespace gm
 
 		void HandleHealthChanged(const HealthChangedEvent& event);
 		void HandleReverbChanged(const ReverbChangedEvent& event);
-		void HandleRhythmInputJudged(const RhythmJudgeResult& result);
+		void HandleRhythmActionStarted(const RhythmJudgeResult& result);
 		void UpdateStatus(float deltaTime);
 		void UpdateShadow();
 		void UpdateThunder();
@@ -64,7 +64,7 @@ namespace gm
 		ChiStateMachineComponent& _stateMachine;
 		EventConnection		_healthChangedConnection;
 		EventConnection		_reverbChangedConnection;
-		EventConnection		_rhythmInputJudgedConnection;
+		EventConnection		_rhythmActionStartedConnection;
 
 		float	_healthRatio = 1.f;
 		float	_targetHealthRatio = 1.f;

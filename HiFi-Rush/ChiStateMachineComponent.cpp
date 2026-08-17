@@ -113,9 +113,7 @@ namespace gm
 
 	RhythmJudgeResult ChiStateMachineComponent::JudgeRhythmInput(RhythmInputType inputType)
 	{
-		const RhythmJudgeResult result = _context.rhythmJudge->Judge(*_context.beatSystem, inputType);
-		OnRhythmInputJudged.Publish(result);
-		return result;
+		return _context.rhythmJudge->Judge(*_context.beatSystem, inputType);
 	}
 
 	void ChiStateMachineComponent::OnGroundContact(const NavigationGroundContactEvent& event)
@@ -177,7 +175,8 @@ namespace gm
 	{
 		ResetTransitionOptions();
 		_context.transitionRhythmInput = rhythmInput;
-		ChangeStateInternal(nextStateId);
+		if (ChangeStateInternal(nextStateId))
+			OnRhythmActionStarted.Publish(rhythmInput);
 	}
 
 	void ChiStateMachineComponent::ChangeState(ChiStateId nextStateId, float blendDuration, const RhythmJudgeResult& rhythmInput)
@@ -185,15 +184,16 @@ namespace gm
 		ResetTransitionOptions();
 		_context.blendDuration = blendDuration;
 		_context.transitionRhythmInput = rhythmInput;
-		ChangeStateInternal(nextStateId);
+		if (ChangeStateInternal(nextStateId))
+			OnRhythmActionStarted.Publish(rhythmInput);
 	}
 
-	void ChiStateMachineComponent::ChangeStateInternal(ChiStateId nextStateId)
+	bool ChiStateMachineComponent::ChangeStateInternal(ChiStateId nextStateId)
 	{
 		if (_currentStateId == nextStateId)
 		{
 			ResetTransitionOptions();
-			return;
+			return false;
 		}
 
 		ChiState* next = FindState(nextStateId);
@@ -201,7 +201,7 @@ namespace gm
 		{
 			ResetTransitionOptions();
 			GM_ASSERT(false, "등록되지 않은 ChiState로 전환할 수 없습니다.");
-			return;
+			return false;
 		}
 
 		ChiState* currentState = FindState(_currentStateId);
@@ -211,6 +211,7 @@ namespace gm
 		_currentStateId = nextStateId;
 		next->Enter(_context);
 		ResetTransitionOptions();
+		return true;
 	}
 
 	void ChiStateMachineComponent::ResetTransitionOptions()

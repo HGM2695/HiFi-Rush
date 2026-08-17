@@ -135,10 +135,10 @@ namespace gm
 			{
 				HandleReverbChanged(event);
 			});
-		_stateMachine.OnRhythmInputJudged.Subscribe(_rhythmInputJudgedConnection,
+		_stateMachine.OnRhythmActionStarted.Subscribe(_rhythmActionStartedConnection,
 			[this](const RhythmJudgeResult& result)
 			{
-				HandleRhythmInputJudged(result);
+				HandleRhythmActionStarted(result);
 			});
 
 		_healthImage->SetFillRatio(_healthRatio);
@@ -163,7 +163,7 @@ namespace gm
 		_targetReverbRatio = event.maxReverb > 0.f ? event.currentReverb / event.maxReverb : 0.f;
 	}
 
-	void PlayerStatusWidget::HandleRhythmInputJudged(const RhythmJudgeResult& result)
+	void PlayerStatusWidget::HandleRhythmActionStarted(const RhythmJudgeResult& result)
 	{
 		if (result.judgeGrade != RhythmJudgeGrade::OffBeat)
 			PlayBeatFeedback();
