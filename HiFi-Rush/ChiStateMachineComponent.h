@@ -36,6 +36,8 @@ namespace gm
 		void					ChangeState(ChiStateId nextStateId, float blendDuration, const RhythmJudgeResult& rhythmInput);
 		ChiStateId				GetCurrentStateId() const { return _currentStateId; }
 
+		EventPublisher<ChiStateMachineComponent, RhythmJudgeResult> OnRhythmInputJudged;
+
 	protected:
 		virtual void			OnInitialize() override;
 		virtual void			OnTick(float deltaTime) override;
@@ -46,6 +48,7 @@ namespace gm
 		void					OnGroundContact(const NavigationGroundContactEvent& event);
 		void					OnGroundLost(const NavigationGroundLostEvent& event);
 		void					OnDamaged(const HitEvent& event);
+		RhythmJudgeResult		JudgeRhythmInput(RhythmInputType inputType);
 		void					ChangeStateInternal(ChiStateId nextStateId);
 		void					ResetTransitionOptions();
 		ChiState*				FindState(ChiStateId stateId) const;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Types.h"
+#include "Event.h"
 
 namespace gm
 {
@@ -21,7 +21,7 @@ namespace gm
 		OffBeat
 	};
 
-	struct RhythmJudgeResult
+	struct RhythmJudgeResult : EventType
 	{
 		RhythmInputType		type = RhythmInputType::WeakAttack;
 		RhythmJudgeGrade	judgeGrade = RhythmJudgeGrade::OffBeat;

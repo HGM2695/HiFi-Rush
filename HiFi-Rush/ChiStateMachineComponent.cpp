@@ -93,22 +93,29 @@ namespace gm
 
 		const Input& input = APPLICATION.GetInput();
 		if (input.IsMouseDown(MouseButton::Left))
-			_context.weakAttackInput = _context.rhythmJudge->Judge(*_context.beatSystem, RhythmInputType::WeakAttack);
+			_context.weakAttackInput = JudgeRhythmInput(RhythmInputType::WeakAttack);
 
 		if (input.IsMouseDown(MouseButton::Right))
-			_context.strongAttackInput = _context.rhythmJudge->Judge(*_context.beatSystem, RhythmInputType::StrongAttack);
+			_context.strongAttackInput = JudgeRhythmInput(RhythmInputType::StrongAttack);
 
 		if (input.IsKeyDown(KeyCode::Space))
-			_context.jumpInput = _context.rhythmJudge->Judge(*_context.beatSystem, RhythmInputType::Jump);
+			_context.jumpInput = JudgeRhythmInput(RhythmInputType::Jump);
 
 		if (input.IsKeyDown(KeyCode::LeftShift))
-			_context.dashInput = _context.rhythmJudge->Judge(*_context.beatSystem, RhythmInputType::Dash);
+			_context.dashInput = JudgeRhythmInput(RhythmInputType::Dash);
 
 		ChiState* currentState = FindState(_currentStateId);
 		if (currentState == nullptr)
 			return;
 
 		currentState->Tick(_context, deltaTime);
+	}
+
+	RhythmJudgeResult ChiStateMachineComponent::JudgeRhythmInput(RhythmInputType inputType)
+	{
+		const RhythmJudgeResult result = _context.rhythmJudge->Judge(*_context.beatSystem, inputType);
+		OnRhythmInputJudged.Publish(result);
+		return result;
 	}
 
 	void ChiStateMachineComponent::OnGroundContact(const NavigationGroundContactEvent& event)

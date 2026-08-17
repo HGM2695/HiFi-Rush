@@ -148,7 +148,7 @@ namespace gm
 
 	bool CommonLoadingScene::LoadGameplayUIResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory)
 	{
-		constexpr std::array<const wchar_t*, 6> texturePaths =
+		constexpr std::array<const wchar_t*, 22> texturePaths =
 		{{
 			L"UI/Bottom_Rhytm_Bar/T_Rhytm_Meter_Cat_Black.dds",
 			L"UI/Bottom_Rhytm_Bar/T_Rhytm_Meter_halftone_bg.dds",
@@ -156,6 +156,22 @@ namespace gm
 			L"UI/Bottom_Rhytm_Bar/T_Rhytm_Meter_BGline_Small.dds",
 			L"UI/Bottom_Rhytm_Bar/Left_Half_Circle.dds",
 			L"UI/Bottom_Rhytm_Bar/Right_Half_Circle.dds",
+			L"UI/HP_Bar/Background.dds",
+			L"UI/HP_Bar/Background_Full.dds",
+			L"UI/HP_Bar/Shadow.dds",
+			L"UI/HP_Bar/T_HealthBar_Bar_9.dds",
+			L"UI/HP_Bar/Mana_Bar.dds",
+			L"UI/HP_Bar/Mana_Bar_Full.dds",
+			L"UI/HP_Bar/Reverve_Full0.dds",
+			L"UI/HP_Bar/Reverve_Full1.dds",
+			L"UI/HP_Bar/Reverve_Full2.dds",
+			L"UI/HP_Bar/Reverve_Full3.dds",
+			L"UI/HP_Bar/Reverve_Full4.dds",
+			L"UI/HP_Bar/Reverve_Full5.dds",
+			L"UI/HP_Bar/Reverve_Full6.dds",
+			L"UI/HP_Bar/Reverve_Full7.dds",
+			L"UI/HP_Bar/Reverve_Full8.dds",
+			L"UI/HP_Bar/AfterImage.dds",
 		}};
 
 		for (const wchar_t* texturePath : texturePaths)
