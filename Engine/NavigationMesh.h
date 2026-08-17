@@ -20,6 +20,7 @@ namespace gm
 	struct NavigationMoveResult
 	{
 		Vector3 position{};
+		float	groundHeight = 0.f;
 		int32	cellIndex = -1;
 		bool	isOnMesh = false;
 		bool	isSliding = false;

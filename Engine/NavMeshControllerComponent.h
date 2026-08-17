@@ -34,10 +34,14 @@ namespace gm
 	public:
 		virtual TickGroup	GetTickGroup() const override { return TickGroup::PostPhysics; }
 
-		void				SetMovementEnabled(bool enabled) { _movementEnabled = enabled; }
-		bool				IsMovementEnabled() const { return IsEnabled() && _movementEnabled; }
-		void				SetGroundCollisionEnabled(bool enabled) { _groundCollisionEnabled = enabled; _groundState = GroundState::Uninitialized; }
-		bool				IsGroundCollisionEnabled() const { return _groundCollisionEnabled; }
+		void				SetUseGroundCollision(bool useGroundCollision)
+		{
+			_useGroundCollision = useGroundCollision;
+			_groundState = GroundState::Uninitialized;
+			_lastValidGroundCellIndex = -1;
+			_hasLastValidGroundPosition = false;
+		}
+		bool				IsUseGroundCollision() const { return _useGroundCollision; }
 		bool				IsGrounded() const { return _groundState == GroundState::Grounded; }
 		void				SetMaxGroundSnapDownDistance(float distance);
 		float				GetMaxGroundSnapDownDistance() const { return _maxGroundSnapDownDistance; }
@@ -56,14 +60,18 @@ namespace gm
 
 	private:
 		void				CheckGroundCollision();
+		void				UpdateLastValidGroundPosition(const Vector3& position, int32 cellIndex);
+		bool				RestoreLastValidGroundPosition(Vector3& position);
 
 	private:
 		TransformComponent*		_transform = nullptr;
 		Rigidbody3DComponent*	_rigidbody = nullptr;
 		int32					_currentCellIndex = -1;
 		float					_maxGroundSnapDownDistance = 0.1f;
+		Vector3					_lastValidGroundPosition{};
+		int32					_lastValidGroundCellIndex = -1;
 		GroundState				_groundState = GroundState::Uninitialized;
-		bool					_movementEnabled = true;
-		bool					_groundCollisionEnabled = false;
+		bool					_useGroundCollision = false;
+		bool					_hasLastValidGroundPosition = false;
 	};
 }

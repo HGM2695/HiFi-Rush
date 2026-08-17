@@ -115,6 +115,8 @@ namespace gm
 		Rigidbody3DComponent* rigidbody = monster.AddComponent<Rigidbody3DComponent>();
 		GM_ASSERT_RETURN_VAL(rigidbody, false, "Monster Rigidbody3DComponent 생성에 실패했습니다.");
 		rigidbody->SetGravityScale(3.f);
+		if (data.type != MonsterType::Sjango)
+			rigidbody->SetPositionConstraints(RigidbodyPositionConstraint::FreezeX | RigidbodyPositionConstraint::FreezeZ);
 
 		BoxCollider3DComponent* bodyCollider = monster.AddComponent<BoxCollider3DComponent>();
 		GM_ASSERT_RETURN_VAL(bodyCollider, false, "Monster Body Collider 생성에 실패했습니다.");
@@ -123,6 +125,7 @@ namespace gm
 		bodyCollider->SetSize(data.bodyColliderSize);
 		bodyCollider->SetCollisionLayer(HiFiRushCollisionLayer::Monster);
 		bodyCollider->SetCollisionMask(AllCollisionLayers & ~(HiFiRushCollisionLayer::PlayerAttack | HiFiRushCollisionLayer::MonsterAttack));
+		bodyCollider->SetCollisionResponseMode(CollisionResponseMode::Planar);
 
 		BoxCollider3DComponent* hurtCollider = monster.AddComponent<BoxCollider3DComponent>();
 		GM_ASSERT_RETURN_VAL(hurtCollider, false, "Monster Hurt Collider 생성에 실패했습니다.");
@@ -152,10 +155,6 @@ namespace gm
 
 		case MonsterType::Sword:
 		{
-			rigidbody->SetKinematic(true);
-			GM_ASSERT_RETURN_VAL(data.attackDamage > 0, false, "Sword Monster Attack Damage는 0보다 커야 합니다.");
-			GM_ASSERT_RETURN_VAL(data.attackRangeMax > data.attackRangeMin, false, "Sword Monster Attack Range가 유효하지 않습니다.");
-
 			BoxCollider3DComponent* attackCollider = monster.AddComponent<BoxCollider3DComponent>();
 			GM_ASSERT_RETURN_VAL(attackCollider, false, "Sword Attack Collider 생성에 실패했습니다.");
 			attackCollider->SetColliderId(L"Attack");
@@ -218,7 +217,7 @@ namespace gm
 		}
 
 		GM_ASSERT_RETURN_VAL(stateMachine, false, "MonsterStateMachineComponent 생성에 실패했습니다.");
-		navMeshController->SetGroundCollisionEnabled(true);
+		navMeshController->SetUseGroundCollision(true);
 		return true;
 	}
 }

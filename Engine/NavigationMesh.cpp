@@ -25,6 +25,8 @@ namespace gm
 		}
 
 #if GM_ENABLE_DEBUG_TOOLS
+		constexpr float NavigationDebugDrawHeightOffset = 0.01f;
+
 		Color GetNavigationCellDebugColor(NavigationCellType type)
 		{
 			switch (type)
@@ -210,11 +212,14 @@ namespace gm
 	void NavigationCell::DebugDraw(IDebugRenderer& debugRenderer) const
 	{
 		const Color color = GetNavigationCellDebugColor(_type);
-		debugRenderer.RequestDrawTriangle(_points[0], _points[1], _points[2], color);
-
 		Vector3 point0 = _points[0];
 		Vector3 point1 = _points[1];
 		Vector3 point2 = _points[2];
+		point0.y += NavigationDebugDrawHeightOffset;
+		point1.y += NavigationDebugDrawHeightOffset;
+		point2.y += NavigationDebugDrawHeightOffset;
+
+		debugRenderer.RequestDrawTriangle(point0, point1, point2, color);
 
 		const Color lineColor = Colors::Magenta;
 		debugRenderer.RequestDrawLine(point0, point1, lineColor);
@@ -269,7 +274,7 @@ namespace gm
 			{
 			case NavigationCellMoveState::TargetPosition:
 				result.position = targetPosition;
-				result.position.y = cell.CalcHeight(targetPosition);
+				result.groundHeight = cell.CalcHeight(targetPosition);
 				result.cellIndex = cellIndex;
 				result.isOnMesh = true;
 				return result;
@@ -281,7 +286,7 @@ namespace gm
 
 			case NavigationCellMoveState::SlidePosition:
 				result.position = queryResult.slidePosition;
-				result.position.y = cell.CalcHeight(queryResult.slidePosition);
+				result.groundHeight = cell.CalcHeight(queryResult.slidePosition);
 				result.cellIndex = cellIndex;
 				result.isOnMesh = true;
 				result.isSliding = true;
@@ -302,6 +307,7 @@ namespace gm
 		);
 
 		result.position = currentPosition;
+		result.groundHeight = _cells[startCellIndex].CalcHeight(currentPosition);
 		result.cellIndex = startCellIndex;
 		result.isOnMesh = true;
 		return result;

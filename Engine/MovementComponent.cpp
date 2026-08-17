@@ -9,18 +9,6 @@ namespace gm
 	MovementComponent::MovementComponent() = default;
 	MovementComponent::~MovementComponent() = default;
 
-	void MovementComponent::EnableNavigationMovement(bool enabled)
-	{
-		GM_ASSERT_RETURN(_navMeshController || enabled == false, "Navigation 이동을 활성화하려면 NavMeshControllerComponent가 필요합니다.");
-		if (_navMeshController)
-			_navMeshController->SetMovementEnabled(enabled);
-	}
-
-	bool MovementComponent::IsNavigationMovementEnabled() const
-	{
-		return _navMeshController && _navMeshController->IsMovementEnabled();
-	}
-
 	bool MovementComponent::RefreshNavigationCellIndex()
 	{
 		if (_navMeshController == nullptr)
@@ -38,7 +26,7 @@ namespace gm
 
 	void MovementComponent::Move(const Vector3& desiredDelta)
 	{
-		if (_navMeshController && _navMeshController->IsMovementEnabled())
+		if (_navMeshController && _navMeshController->IsEnabled())
 		{
 			_navMeshController->Move(desiredDelta);
 			return;

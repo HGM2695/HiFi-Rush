@@ -46,6 +46,8 @@ namespace gm
 
 		void					SetTrigger(bool isTrigger) { _isTrigger = isTrigger; }
 		bool					IsTrigger() const { return _isTrigger; }
+		void					SetCollisionResponseMode(CollisionResponseMode responseMode) { _collisionResponseMode = responseMode; }
+		CollisionResponseMode	GetCollisionResponseMode() const { return _collisionResponseMode; }
 
 		EventPublisher<Collider3DComponent, Collision3DEvent>	OnCollisionEnter;
 		EventPublisher<Collider3DComponent, Collision3DEvent>	OnCollisionStay;
@@ -58,11 +60,12 @@ namespace gm
 		virtual void UpdateWorldShape() = 0;
 		void DispatchCollisionEvent(CollisionState state, CollisionType type, const CollisionContact& contact, Collider3DComponent& otherCollider);
 
-		ColliderShape3DType	_shapeType;
-		std::wstring		_colliderId{};
-		Vector3				_localCenter{};
-		Quaternion			_localRotation{ 0.f, 0.f, 0.f, 1.f };
-		CollisionFilter		_collisionFilter{};
-		bool				_isTrigger = false;
+		ColliderShape3DType		_shapeType;
+		std::wstring			_colliderId{};
+		Vector3					_localCenter{};
+		Quaternion				_localRotation{ 0.f, 0.f, 0.f, 1.f };
+		CollisionFilter			_collisionFilter{};
+		CollisionResponseMode	_collisionResponseMode = CollisionResponseMode::Full;
+		bool					_isTrigger = false;
 	};
 }

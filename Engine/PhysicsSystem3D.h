@@ -73,6 +73,7 @@ namespace gm
 		bool	CheckBoxCollision(const BoxCollider3DComponent& lhs, const BoxCollider3DComponent& rhs, CollisionContact& outContact) const;
 		bool	CheckSphereCollision(const SphereCollider3DComponent& lhs, const SphereCollider3DComponent& rhs, CollisionContact& outContact) const;
 		bool	CheckSphereBoxCollision(const SphereCollider3DComponent& lhs, const BoxCollider3DComponent& rhs, CollisionContact& outContact) const;
+		bool	CalculatePlanarContact(const Collider3DComponent& lhs, const Collider3DComponent& rhs, CollisionContact& outContact) const;
 		void	ResolveCollision(Collider3DComponent& lhs, Collider3DComponent& rhs, const CollisionContact& contact) const;
 		void	UpdateWorldShapes(GameObject& gameObject) const;
 		void	AccumulateDetectedCollisions(std::vector<DetectedCollision>& accumulatedCollisions, const std::vector<DetectedCollision>& detectedCollisions) const;

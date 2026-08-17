@@ -76,15 +76,15 @@ namespace gm
 		{
 			_previousChiMoveEnabled = _chiMoveComponent->IsEnabled();
 			_previousStateMachineEnabled = _stateMachineComponent->IsEnabled();
-			_previousNavigationMovementEnabled = _navMeshController->IsMovementEnabled();
-			_previousGroundCollisionEnabled = _navMeshController->IsGroundCollisionEnabled();
+			_previousNavigationMovementEnabled = _navMeshController->IsEnabled();
+			_previousUseGroundCollision = _navMeshController->IsUseGroundCollision();
 			_previousUseGravity = _rigidbody->IsUseGravity();
 			_previousKinematic = _rigidbody->IsKinematic();
 
 			_chiMoveComponent->SetEnabled(false);
 			_stateMachineComponent->SetEnabled(false);
-			_navMeshController->SetMovementEnabled(false);
-			_navMeshController->SetGroundCollisionEnabled(false);
+			_navMeshController->SetEnabled(false);
+			_navMeshController->SetUseGroundCollision(false);
 			_rigidbody->SetUseGravity(false);
 			_rigidbody->SetKinematic(true);
 			_rigidbody->SetVelocity(Vector3{});
@@ -97,8 +97,8 @@ namespace gm
 		_rigidbody->ClearForces();
 		_rigidbody->SetUseGravity(_previousUseGravity);
 		_rigidbody->SetKinematic(_previousKinematic);
-		_navMeshController->SetGroundCollisionEnabled(_previousGroundCollisionEnabled);
-		_navMeshController->SetMovementEnabled(_previousNavigationMovementEnabled);
+		_navMeshController->SetUseGroundCollision(_previousUseGroundCollision);
+		_navMeshController->SetEnabled(_previousNavigationMovementEnabled);
 		_stateMachineComponent->SetEnabled(_previousStateMachineEnabled);
 		_chiMoveComponent->SetEnabled(_previousChiMoveEnabled);
 

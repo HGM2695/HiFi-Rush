@@ -126,6 +126,7 @@ namespace gm
 	{
 		TransformComponent* transform = gameObject.GetTransform();
 		GM_ASSERT_RETURN(transform, "Rigidbody3D를 가진 GameObject에 TransformComponent가 존재하지 않습니다.");
+		rigidbody._velocity = rigidbody.ApplyPositionConstraints(rigidbody._velocity);
 		transform->Translate(rigidbody._velocity * deltaTime);
 	}
 
@@ -435,8 +436,107 @@ namespace gm
 		return true;
 	}
 
+	bool PhysicsSystem3D::CalculatePlanarContact(const Collider3DComponent& lhs, const Collider3DComponent& rhs, CollisionContact& outContact) const
+	{
+		const auto getCenter = [](const Collider3DComponent& collider)
+		{
+			if (collider.GetShapeType() == ColliderShape3DType::Box)
+			{
+				const BoundingOrientedBox& box = static_cast<const BoxCollider3DComponent&>(collider).GetWorldShape();
+				return Vector3(box.Center.x, box.Center.y, box.Center.z);
+			}
+
+			const BoundingSphere& sphere = static_cast<const SphereCollider3DComponent&>(collider).GetWorldShape();
+			return Vector3(sphere.Center.x, sphere.Center.y, sphere.Center.z);
+		};
+
+		const auto calculateProjectionRadius = [](const Collider3DComponent& collider, const Vector3& axis)
+		{
+			if (collider.GetShapeType() == ColliderShape3DType::Sphere)
+				return static_cast<const SphereCollider3DComponent&>(collider).GetWorldShape().Radius;
+
+			const BoundingOrientedBox& box = static_cast<const BoxCollider3DComponent&>(collider).GetWorldShape();
+			const Quaternion rotation(box.Orientation.x, box.Orientation.y, box.Orientation.z, box.Orientation.w);
+			const Vector3 boxAxisX = Vector3::Transform(Vector3(1.f, 0.f, 0.f), rotation);
+			const Vector3 boxAxisY = Vector3::Transform(Vector3(0.f, 1.f, 0.f), rotation);
+			const Vector3 boxAxisZ = Vector3::Transform(Vector3(0.f, 0.f, 1.f), rotation);
+			return box.Extents.x * std::fabs(axis.Dot(boxAxisX)) +
+				box.Extents.y * std::fabs(axis.Dot(boxAxisY)) +
+				box.Extents.z * std::fabs(axis.Dot(boxAxisZ));
+		};
+
+		std::array<Vector3, 9> axes{};
+		size_t axisCount = 0;
+		const auto appendAxis = [&axes, &axisCount](Vector3 axis)
+		{
+			axis.y = 0.f;
+			const float axisLengthSquared = axis.LengthSquared();
+			if (axisLengthSquared <= CollisionEpsilon * CollisionEpsilon)
+				return;
+
+			axis *= 1.f / std::sqrt(axisLengthSquared);
+			for (size_t axisIndex = 0; axisIndex < axisCount; ++axisIndex)
+			{
+				if (std::fabs(axes[axisIndex].Dot(axis)) >= 1.f - CollisionEpsilon)
+					return;
+			}
+
+			axes[axisCount++] = axis;
+		};
+
+		const auto appendBoxAxes = [&appendAxis](const Collider3DComponent& collider)
+		{
+			if (collider.GetShapeType() != ColliderShape3DType::Box)
+				return;
+
+			const BoundingOrientedBox& box = static_cast<const BoxCollider3DComponent&>(collider).GetWorldShape();
+			const Quaternion rotation(box.Orientation.x, box.Orientation.y, box.Orientation.z, box.Orientation.w);
+			appendAxis(Vector3::Transform(Vector3(1.f, 0.f, 0.f), rotation));
+			appendAxis(Vector3::Transform(Vector3(0.f, 1.f, 0.f), rotation));
+			appendAxis(Vector3::Transform(Vector3(0.f, 0.f, 1.f), rotation));
+		};
+
+		const Vector3 lhsCenter = getCenter(lhs);
+		const Vector3 rhsCenter = getCenter(rhs);
+		Vector3 centerDelta = lhsCenter - rhsCenter;
+		centerDelta.y = 0.f;
+
+		appendAxis(Vector3(1.f, 0.f, 0.f));
+		appendAxis(Vector3(0.f, 0.f, 1.f));
+		appendAxis(centerDelta);
+		appendBoxAxes(lhs);
+		appendBoxAxes(rhs);
+
+		float minimumPenetration = std::numeric_limits<float>::max();
+		Vector3 minimumAxis{};
+		for (size_t axisIndex = 0; axisIndex < axisCount; ++axisIndex)
+		{
+			const Vector3& axis = axes[axisIndex];
+			const float lhsRadius = calculateProjectionRadius(lhs, axis);
+			const float rhsRadius = calculateProjectionRadius(rhs, axis);
+			const float centerDistance = centerDelta.Dot(axis);
+			const float penetration = lhsRadius + rhsRadius - std::fabs(centerDistance);
+			if (penetration <= 0.f)
+				return false;
+
+			if (penetration < minimumPenetration)
+			{
+				minimumPenetration = penetration;
+				minimumAxis = centerDistance < 0.f ? -axis : axis;
+			}
+		}
+
+		outContact.normal = minimumAxis;
+		outContact.penetrationDepth = minimumPenetration;
+		return true;
+	}
+
 	void PhysicsSystem3D::ResolveCollision(Collider3DComponent& lhs, Collider3DComponent& rhs, const CollisionContact& contact) const
 	{
+		CollisionContact responseContact = contact;
+		if (lhs.GetCollisionResponseMode() == CollisionResponseMode::Planar && rhs.GetCollisionResponseMode() == CollisionResponseMode::Planar && CalculatePlanarContact(lhs, rhs, responseContact) == false)
+			return;
+
 		Rigidbody3DComponent* lhsRigidbody = lhs.GetOwner().GetRigidbody3D();
 		Rigidbody3DComponent* rhsRigidbody = rhs.GetOwner().GetRigidbody3D();
 
@@ -444,18 +544,21 @@ namespace gm
 		const bool isRhsDynamic = rhsRigidbody != nullptr && rhsRigidbody->IsEnabled() && rhsRigidbody->IsKinematic() == false;
 		const float lhsInverseMass = isLhsDynamic ? 1.f / lhsRigidbody->_mass : 0.f;
 		const float rhsInverseMass = isRhsDynamic ? 1.f / rhsRigidbody->_mass : 0.f;
-		const float totalInverseMass = lhsInverseMass + rhsInverseMass;
-		if (totalInverseMass <= 0.f)
+		const Vector3 lhsResponseNormal = isLhsDynamic ? lhsRigidbody->ApplyPositionConstraints(responseContact.normal) : Vector3{};
+		const Vector3 rhsResponseNormal = isRhsDynamic ? rhsRigidbody->ApplyPositionConstraints(responseContact.normal) : Vector3{};
+		const float lhsEffectiveInverseMass = lhsInverseMass * responseContact.normal.Dot(lhsResponseNormal);
+		const float rhsEffectiveInverseMass = rhsInverseMass * responseContact.normal.Dot(rhsResponseNormal);
+		const float totalEffectiveInverseMass = lhsEffectiveInverseMass + rhsEffectiveInverseMass;
+		if (totalEffectiveInverseMass <= 0.f)
 			return;
 
-		const float correctionDepth = (std::max)(contact.penetrationDepth - CollisionEpsilon, 0.f);
+		const float correctionDepth = (std::max)(responseContact.penetrationDepth - CollisionEpsilon, 0.f);
 		if (correctionDepth > 0.f)
 		{
-			const Vector3 correction = contact.normal * correctionDepth;
 			if (isLhsDynamic)
-				lhs.GetOwner().GetTransform()->Translate(correction * (lhsInverseMass / totalInverseMass));
+				lhs.GetOwner().GetTransform()->Translate(lhsResponseNormal * (correctionDepth * lhsInverseMass / totalEffectiveInverseMass));
 			if (isRhsDynamic)
-				rhs.GetOwner().GetTransform()->Translate(-correction * (rhsInverseMass / totalInverseMass));
+				rhs.GetOwner().GetTransform()->Translate(-rhsResponseNormal * (correctionDepth * rhsInverseMass / totalEffectiveInverseMass));
 
 			if (isLhsDynamic)
 				UpdateWorldShapes(lhs.GetOwner());
@@ -465,15 +568,15 @@ namespace gm
 
 		const Vector3 lhsVelocity = lhsRigidbody != nullptr && lhsRigidbody->IsEnabled() ? lhsRigidbody->_velocity : Vector3{};
 		const Vector3 rhsVelocity = rhsRigidbody != nullptr && rhsRigidbody->IsEnabled() ? rhsRigidbody->_velocity : Vector3{};
-		const float closingSpeed = (lhsVelocity - rhsVelocity).Dot(contact.normal);
+		const float closingSpeed = (lhsVelocity - rhsVelocity).Dot(responseContact.normal);
 		if (closingSpeed >= 0.f)
 			return;
 
-		const float impulseMagnitude = -closingSpeed / totalInverseMass;
+		const float impulseMagnitude = -closingSpeed / totalEffectiveInverseMass;
 		if (isLhsDynamic)
-			lhsRigidbody->_velocity += contact.normal * (impulseMagnitude * lhsInverseMass);
+			lhsRigidbody->_velocity += lhsResponseNormal * (impulseMagnitude * lhsInverseMass);
 		if (isRhsDynamic)
-			rhsRigidbody->_velocity -= contact.normal * (impulseMagnitude * rhsInverseMass);
+			rhsRigidbody->_velocity -= rhsResponseNormal * (impulseMagnitude * rhsInverseMass);
 	}
 
 	void PhysicsSystem3D::UpdateWorldShapes(GameObject& gameObject) const

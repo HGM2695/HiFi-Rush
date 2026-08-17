@@ -42,7 +42,7 @@ namespace gm
 		bool			_previousChiMoveEnabled = true;
 		bool			_previousStateMachineEnabled = true;
 		bool			_previousNavigationMovementEnabled = true;
-		bool			_previousGroundCollisionEnabled = true;
+		bool			_previousUseGroundCollision = true;
 		bool			_previousUseGravity = true;
 		bool			_previousKinematic = false;
 	};

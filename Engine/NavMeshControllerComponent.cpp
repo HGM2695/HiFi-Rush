@@ -20,7 +20,7 @@ namespace gm
 		GM_ASSERT_RETURN(_transform, "NavMeshControllerComponent는 TransformComponent가 필요합니다.");
 
 		_rigidbody = GetOwner().GetRigidbody3D();
-		GM_ASSERT_RETURN(_groundCollisionEnabled == false || _rigidbody, "NavMesh 바닥 충돌에는 Rigidbody3DComponent가 필요합니다.");
+		GM_ASSERT_RETURN(_useGroundCollision == false || _rigidbody, "NavMesh Ground Collision에는 Rigidbody3DComponent가 필요합니다.");
 	}
 
 	void NavMeshControllerComponent::OnTick(float)
@@ -52,7 +52,7 @@ namespace gm
 
 	bool NavMeshControllerComponent::Move(const Vector3& desiredDelta)
 	{
-		if (IsMovementEnabled() == false || _transform == nullptr)
+		if (IsEnabled() == false || _transform == nullptr)
 			return false;
 
 		NavMeshSystem& navMeshSystem = APPLICATION.GetPhysicsSystem().GetNavMeshSystem();
@@ -67,23 +67,30 @@ namespace gm
 		_currentCellIndex = result.cellIndex;
 
 		bool hasStartedFalling = false;
-		const float groundHeight = result.position.y;
-		if (_groundCollisionEnabled)
+		const float groundHeight = result.groundHeight;
+		if (_useGroundCollision)
 		{
 			const float dropDistance = currentPosition.y - groundHeight;
-			if (_groundState == GroundState::Grounded && dropDistance > _maxGroundSnapDownDistance)
+			const bool isMovingUpward = desiredDelta.y > GroundContactEpsilon;
+			if (_groundState == GroundState::Grounded && isMovingUpward)
+			{
+				_groundState = GroundState::Airborne;
+			}
+			else if (_groundState == GroundState::Grounded && dropDistance > _maxGroundSnapDownDistance)
 			{
 				result.position.y = currentPosition.y;
 				_groundState = GroundState::Airborne;
 				hasStartedFalling = _rigidbody == nullptr || _rigidbody->GetVelocity().y <= 0.f;
 			}
-			else if (_groundState != GroundState::Grounded)
+			else if (_groundState == GroundState::Grounded)
 			{
-				result.position.y = currentPosition.y;
+				result.position.y = groundHeight;
 			}
 		}
 
 		_transform->SetPosition(result.position);
+		if (_useGroundCollision && _groundState == GroundState::Grounded)
+			UpdateLastValidGroundPosition(result.position, result.cellIndex);
 
 		if (hasStartedFalling)
 		{
@@ -101,7 +108,7 @@ namespace gm
 	{
 		const GroundState previousGroundState = _groundState;
 		_groundState = GroundState::Airborne;
-		if (_groundCollisionEnabled == false || _transform == nullptr || _rigidbody == nullptr || _rigidbody->IsEnabled() == false)
+		if (_useGroundCollision == false || _transform == nullptr || _rigidbody == nullptr || _rigidbody->IsEnabled() == false)
 		{
 			_groundState = GroundState::Uninitialized;
 			return;
@@ -115,7 +122,9 @@ namespace gm
 		}
 
 		Vector3 position = _transform->GetPosition();
-		const NavigationGroundResult groundResult = navMeshSystem.QueryActiveNavigationGround(_currentCellIndex, position);
+		NavigationGroundResult groundResult = navMeshSystem.QueryActiveNavigationGround(_currentCellIndex, position);
+		if (groundResult.hasGround == false && RestoreLastValidGroundPosition(position))
+			groundResult = navMeshSystem.QueryActiveNavigationGround(_currentCellIndex, position);
 		if (groundResult.hasGround == false)
 			return;
 
@@ -128,11 +137,14 @@ namespace gm
 
 		position.y = groundResult.height;
 		_transform->SetPosition(position);
+		if (velocity.y > 0.f)
+			return;
 
 		Vector3 resolvedVelocity = velocity;
 		resolvedVelocity.y = 0.f;
 		_rigidbody->SetVelocity(resolvedVelocity);
 		_groundState = GroundState::Grounded;
+		UpdateLastValidGroundPosition(position, groundResult.cellIndex);
 
 		if (previousGroundState == GroundState::Airborne)
 		{
@@ -141,5 +153,24 @@ namespace gm
 			event.cellIndex = groundResult.cellIndex;
 			OnGroundContact.Publish(event);
 		}
+	}
+
+	void NavMeshControllerComponent::UpdateLastValidGroundPosition(const Vector3& position, int32 cellIndex)
+	{
+		_lastValidGroundPosition = position;
+		_lastValidGroundCellIndex = cellIndex;
+		_hasLastValidGroundPosition = true;
+	}
+
+	bool NavMeshControllerComponent::RestoreLastValidGroundPosition(Vector3& position)
+	{
+		if (_hasLastValidGroundPosition == false || _transform == nullptr)
+			return false;
+
+		position.x = _lastValidGroundPosition.x;
+		position.z = _lastValidGroundPosition.z;
+		_currentCellIndex = _lastValidGroundCellIndex;
+		_transform->SetPosition(position);
+		return true;
 	}
 }

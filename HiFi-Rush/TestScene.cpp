@@ -9,6 +9,7 @@
 #include "Resources.h"
 #include "GameObject.h"
 #include "HiFiRushStatics.h"
+#include "HealthComponent.h"
 #include "SpriteComponent.h"
 #include "Texture.h"
 #include "CameraComponent.h"
@@ -106,7 +107,8 @@ namespace gm
 		Rigidbody3DComponent* rigidbody = player->AddComponent<Rigidbody3DComponent>();
 		rigidbody->SetGravityScale(3.f);
 		NavMeshControllerComponent* navMeshController = player->AddComponent<NavMeshControllerComponent>();
-		navMeshController->SetGroundCollisionEnabled(true);
+		navMeshController->SetUseGroundCollision(true);
+		player->AddComponent<HealthComponent>(100);
 
 		SocketComponent* socketComponent = player->AddComponent<SocketComponent>();
 		Socket socket{};

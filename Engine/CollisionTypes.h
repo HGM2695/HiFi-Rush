@@ -32,6 +32,12 @@ namespace gm
 		Trigger,
 	};
 
+	enum class CollisionResponseMode
+	{
+		Full,
+		Planar,
+	};
+
 	enum class CollisionState
 	{
 		Enter,

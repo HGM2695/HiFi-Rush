@@ -64,6 +64,7 @@ namespace gm
 		bodyCollider->SetSize(Vector3{ 0.8f, 1.8f, 0.8f });
 		bodyCollider->SetCollisionLayer(HiFiRushCollisionLayer::Player);
 		bodyCollider->SetCollisionMask(AllCollisionLayers & ~(HiFiRushCollisionLayer::PlayerAttack | HiFiRushCollisionLayer::MonsterAttack));
+		bodyCollider->SetCollisionResponseMode(CollisionResponseMode::Planar);
 
 		BoxCollider3DComponent* hurtCollider = player->AddComponent<BoxCollider3DComponent>();
 		GM_ASSERT_RETURN_VAL(hurtCollider, nullptr, "Player Hurt Collider 생성에 실패했습니다.");
@@ -79,7 +80,7 @@ namespace gm
 		GM_ASSERT_RETURN_VAL(player->AddComponent<HurtBoxComponent>(L"HurtBox"), nullptr, "Player HurtBoxComponent 생성에 실패했습니다.");
 
 		NavMeshControllerComponent* navMeshController = player->AddComponent<NavMeshControllerComponent>();
-		navMeshController->SetGroundCollisionEnabled(true);
+		navMeshController->SetUseGroundCollision(true);
 
 		SocketComponent* socketComponent = player->AddComponent<SocketComponent>();
 		Socket cameraSocket{};
