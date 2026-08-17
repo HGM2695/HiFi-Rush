@@ -7,7 +7,7 @@
 
 namespace gm
 {
-	enum class ChiAnimationId
+	enum class ChiAnimationClipId
 	{
 		AttackWeakDash,
 		AttackStrongDash,
@@ -76,14 +76,14 @@ namespace gm
 		Count
 	};
 
-	inline constexpr uint32 ToIndex(ChiAnimationId animationId)
+	inline constexpr uint32 ToIndex(ChiAnimationClipId animationClipId)
 	{
-		return static_cast<uint32>(animationId);
+		return static_cast<uint32>(animationClipId);
 	}
 
-	inline constexpr uint32 ChiAnimationIdCount = ToIndex(ChiAnimationId::Count);
+	inline constexpr uint32 ChiAnimationClipIdCount = ToIndex(ChiAnimationClipId::Count);
 
-	inline constexpr std::array<const wchar_t*, ChiAnimationIdCount> ChiAnimationNames =
+	inline constexpr std::array<const wchar_t*, ChiAnimationClipIdCount> ChiAnimationClipNames =
 	{
 		L"ANIM_ATTACK_WEAK_DASH",
 		L"ANIM_ATTACK_STRONG_DASH",
@@ -150,13 +150,13 @@ namespace gm
 		L"ANIM_HIBIKI_ATTACK",
 	};
 
-	inline std::wstring GetChiAnimationName(ChiAnimationId animationId)
+	inline std::wstring GetChiAnimationClipName(ChiAnimationClipId animationClipId)
 	{
-		return ChiAnimationNames[ToIndex(animationId)];
+		return ChiAnimationClipNames[ToIndex(animationClipId)];
 	}
 
-	inline std::wstring GetChiAnimationKey(ChiAnimationId animationId)
+	inline std::wstring GetChiAnimationClipKey(ChiAnimationClipId animationClipId)
 	{
-		return std::wstring(L"chi.") + ChiAnimationNames[ToIndex(animationId)];
+		return std::wstring(L"chi.") + ChiAnimationClipNames[ToIndex(animationClipId)];
 	}
 }

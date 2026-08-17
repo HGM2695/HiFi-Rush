@@ -22,10 +22,8 @@ namespace gm
 		bool			IsMovementEnabled() const { return IsEnabled() && _movementEnabled; }
 		void			SetRootMotionEnabled(bool enabled) { _rootMotionEnabled = enabled; }
 		bool			IsRootMotionEnabled() const { return _rootMotionEnabled; }
-		void			SetRootMotionWeight(float weight) { _rootMotionWeight = weight; }
-		float			GetRootMotionWeight() const { return _rootMotionWeight; }
-		void			SetRootMotionYEnabled(bool enabled) { _rootMotionYEnabled = enabled; }
-		bool			IsRootMotionYEnabled() const { return _rootMotionYEnabled; }
+		void			SetRootMotionWeight(const Vector3& weight) { _rootMotionWeight = weight; }
+		const Vector3&	GetRootMotionWeight() const { return _rootMotionWeight; }
 
 		void			MoveAlong(const Vector3& direction, float deltaTime, bool updateRotation = true);
 		void			MoveAlong(const Vector3& direction, float speed, float deltaTime, bool updateRotation);
@@ -47,10 +45,9 @@ namespace gm
 		float						_moveSpeed = 0.f;
 		float						_rotationInterpSpeed = 0.f;
 		float						_rotationYawOffset = 0.f;
-		float						_rootMotionWeight = 1.f;
+		Vector3						_rootMotionWeight{ 1.f, 1.f, 1.f };
 		bool						_isMoving = false;
 		bool						_movementEnabled = true;
-		bool						_rootMotionEnabled = false;
-		bool						_rootMotionYEnabled = true;
+		bool						_rootMotionEnabled = true;
 	};
 }

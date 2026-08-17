@@ -1,6 +1,7 @@
 #include "HiFiRushGameInstance.h"
 #include "Application.h"
 #include "LoadResources.h"
+#include "Paths.h"
 #include "SceneManager.h"
 #include "TutorialScene.h"
 #include "OutsideScene.h"
@@ -20,14 +21,19 @@ namespace gm
 	namespace
 	{
 		constexpr float DefaultBPM = 136.f;
+		constexpr float InputCalibrationOffsetSeconds = 0.f;
 	}
 
 	bool HiFiRushGameInstance::OnInitialize()
 	{
+		if (_chiAnimationSettings.Load(GetResourcePath(ChiAnimationSettingsFilePath)) == false)
+			return false;
+
 		if (LoadResources() == false)
 			return false;
 
 		_beatSystem.SetBPM(DefaultBPM);
+		_rhythmJudge.SetInputOffset(InputCalibrationOffsetSeconds);
 #if GM_ENABLE_DEBUG_TOOLS
 		_debugEventPublisher.Initialize();
 #endif

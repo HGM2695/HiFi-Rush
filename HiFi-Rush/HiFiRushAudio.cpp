@@ -10,12 +10,12 @@ namespace gm
 {
 	void PlayRhythmBGM(const RhythmBGMDesc& desc)
 	{
-		const std::shared_ptr<SoundWave> sound = APPLICATION.GetResources().Find<SoundWave>(desc.resourceKey);
-		GM_ASSERT_RETURN(sound, "BGM SoundWave 리소스가 존재하지 않습니다. key=%ls", desc.resourceKey);
+		const std::shared_ptr<SoundWave> sound = APPLICATION.GetResources().Find<SoundWave>(desc.commonResourceKey);
+		GM_ASSERT_RETURN(sound, "BGM SoundWave 리소스가 존재하지 않습니다. key=%ls", desc.commonResourceKey);
 
 		FMOD::Channel* channel = APPLICATION.GetAudioSystem().PlayBGM(*sound, desc.volume);
-		GM_ASSERT_RETURN(channel, "BGM 재생에 실패했습니다. key=%ls", desc.resourceKey);
+		GM_ASSERT_RETURN(channel, "BGM 재생에 실패했습니다. key=%ls", desc.commonResourceKey);
 
-		HiFiRushStatics::GetBeatSystem().SetBPM(desc.bpm, desc.playbackOffsetSeconds);
+		HiFiRushStatics::GetBeatSystem().SetBPM(desc.bpm, desc.songOffsetSeconds);
 	}
 }

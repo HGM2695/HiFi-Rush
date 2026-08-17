@@ -14,6 +14,16 @@ namespace gm
 		return GetGameInstance().GetBeatSystem();
 	}
 
+	const ChiAnimationSettings& HiFiRushStatics::GetChiAnimationSettings()
+	{
+		return GetGameInstance().GetChiAnimationSettings();
+	}
+
+	const RhythmJudge& HiFiRushStatics::GetRhythmJudge()
+	{
+		return GetGameInstance().GetRhythmJudge();
+	}
+
 	PlayerRuntimeState& HiFiRushStatics::GetPlayerRuntimeState()
 	{
 		return GetGameInstance().GetPlayerRuntimeState();

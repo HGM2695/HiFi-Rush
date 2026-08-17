@@ -130,6 +130,9 @@
     <ClInclude Include="BeatSystem.h">
       <Filter>System</Filter>
     </ClInclude>
+	<ClInclude Include="RhythmInputJudge.h">
+	  <Filter>System</Filter>
+	</ClInclude>
     <ClInclude Include="TriggerSequenceSystem.h">
       <Filter>System</Filter>
     </ClInclude>
@@ -235,6 +238,9 @@
     <ClInclude Include="ChiAnimationTypes.h">
       <Filter>Component\Player</Filter>
     </ClInclude>
+	<ClInclude Include="ChiAnimationSettings.h">
+	  <Filter>Component\Player</Filter>
+	</ClInclude>
     <ClInclude Include="ChiMoveComponent.h">
       <Filter>Component\Player</Filter>
     </ClInclude>
@@ -381,6 +387,9 @@
     <ClCompile Include="BeatSystem.cpp">
       <Filter>System</Filter>
     </ClCompile>
+	<ClCompile Include="RhythmInputJudge.cpp">
+	  <Filter>System</Filter>
+	</ClCompile>
     <ClCompile Include="TriggerSequenceSystem.cpp">
       <Filter>System</Filter>
     </ClCompile>
@@ -462,6 +471,9 @@
     <ClCompile Include="ChiMoveComponent.cpp">
       <Filter>Component\Player</Filter>
     </ClCompile>
+	<ClCompile Include="ChiAnimationSettings.cpp">
+	  <Filter>Component\Player</Filter>
+	</ClCompile>
     <ClCompile Include="ChiStateMachineComponent.cpp">
       <Filter>Component\Player</Filter>
     </ClCompile>

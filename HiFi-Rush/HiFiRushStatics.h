@@ -3,6 +3,8 @@
 namespace gm
 {
 	class BeatSystem;
+	class ChiAnimationSettings;
+	class RhythmJudge;
 #if GM_ENABLE_DEBUG_TOOLS
 	class DebugEventPublisher;
 #endif
@@ -12,9 +14,11 @@ namespace gm
 	class HiFiRushStatics
 	{
 	public:
-		static HiFiRushGameInstance&	GetGameInstance();
-		static BeatSystem&				GetBeatSystem();
-		static PlayerRuntimeState&		GetPlayerRuntimeState();
+		static HiFiRushGameInstance&				GetGameInstance();
+		static BeatSystem&						GetBeatSystem();
+		static const ChiAnimationSettings&	GetChiAnimationSettings();
+		static const RhythmJudge&				GetRhythmJudge();
+		static PlayerRuntimeState&				GetPlayerRuntimeState();
 #if GM_ENABLE_DEBUG_TOOLS
 		static DebugEventPublisher&		GetDebugEventPublisher();
 #endif

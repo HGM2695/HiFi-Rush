@@ -38,8 +38,9 @@ namespace gm::BeatMath
 		return duration * EvaluateCycleRatio(currentBeat, cycleBeats, phaseOffsetBeats);
 	}
 
-	inline float EvaluateSinePulse(float currentBeat, float cycleBeats, float phaseOffsetBeats = 0.f)
+	inline float EvaluateBeatPulse(float currentBeat, float cycleBeats, float phaseOffsetBeats = 0.f)
 	{
-		return std::sin(Math::GM_PI * EvaluateCycleRatio(currentBeat, cycleBeats, phaseOffsetBeats));
+		const float cycleRatio = EvaluateCycleRatio(currentBeat, cycleBeats, phaseOffsetBeats);
+		return 0.5f * (std::cos(2.f * Math::GM_PI * cycleRatio) + 1.f);
 	}
 }

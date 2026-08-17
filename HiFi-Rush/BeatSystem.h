@@ -9,12 +9,13 @@ namespace gm
 	class BeatSystem
 	{
 	public:
-		void	SetBPM(float bpm, float offsetSeconds = 0.f);
+		void	SetBPM(float bpm, float songOffsetSeconds = 0.f);
 		void	Tick(const AudioSystem& audioSystem);
 
 		float	GetBPM() const { return _bpm; }
 		float	GetSecondsPerBeat() const { return _secondsPerBeat; }
 		float	GetPlaybackTime() const { return _playbackTime; }
+		float	GetSongOffset() const { return _songOffsetSeconds; }
 		float	GetCurrentBeat() const { return _currentBeat; }
 		int64	GetCurrentBeatIndex() const { return _currentIntegerBeat; }
 		float	GetBeatProgress() const { return _beatProgress; }
@@ -28,7 +29,7 @@ namespace gm
 	private:
 		float	_bpm = 0.f;
 		float	_secondsPerBeat = 0.f;
-		float	_offsetSeconds = 0.f;
+		float	_songOffsetSeconds = 0.f;
 		float	_playbackTime = 0.f;
 		float	_currentBeat = 0.f;
 		int64	_currentIntegerBeat = 0;

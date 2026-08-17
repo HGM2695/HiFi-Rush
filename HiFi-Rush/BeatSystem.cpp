@@ -4,13 +4,13 @@
 
 namespace gm
 {
-	void BeatSystem::SetBPM(float bpm, float offsetSeconds)
+	void BeatSystem::SetBPM(float bpm, float songOffsetSeconds)
 	{
 		GM_ASSERT_RETURN(bpm > 0.f, "BPM은 0보다 커야 합니다.");
 
 		_bpm = bpm;
 		_secondsPerBeat = 60.f / bpm;
-		_offsetSeconds = offsetSeconds;
+		_songOffsetSeconds = songOffsetSeconds;
 		ResetPlaybackState();
 	}
 
@@ -28,7 +28,7 @@ namespace gm
 		const int64 previousBeatIndex = _currentIntegerBeat;
 
 		_playbackTime = playbackTime;
-		_currentBeat = (_playbackTime + _offsetSeconds) / _secondsPerBeat;
+		_currentBeat = (_playbackTime + _songOffsetSeconds) / _secondsPerBeat;
 		const float currentBeatFloor = std::floor(_currentBeat);
 		_currentIntegerBeat = static_cast<int64>(currentBeatFloor);
 		_beatProgress = _currentBeat - currentBeatFloor;

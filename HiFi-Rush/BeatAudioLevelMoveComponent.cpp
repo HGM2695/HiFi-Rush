@@ -28,11 +28,10 @@ namespace gm
 		if (_transform == nullptr || _beatSystem.HasPlaybackTime() == false)
 			return;
 
-		const float wave = BeatMath::EvaluateSinePulse(_beatSystem.GetCurrentBeat(), _desc.cycleBeats, _desc.phaseOffsetBeats);
+		const float wave = BeatMath::EvaluateBeatPulse(_beatSystem.GetCurrentBeat(), _desc.cycleBeats, _desc.phaseOffsetBeats);
 		float musicPeakSq = _beatSystem.GetMusicPeak();
 		musicPeakSq *= musicPeakSq;
 		const float distance = wave * musicPeakSq * _desc.maxDistance * 13.f;
-		GM_LOG("% f", _desc.maxDistance);
 		_transform->SetPosition(_initialPosition + _direction * distance);
 	}
 }

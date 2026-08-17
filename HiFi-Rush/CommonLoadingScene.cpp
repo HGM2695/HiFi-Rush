@@ -305,8 +305,8 @@ namespace gm
 		bool hasAllResources = resources.Find<SkeletalMesh>(ChiSkeletalMeshResourceKey) != nullptr;
 		hasAllResources &= resources.Find<SkeletalAnimationClip>(ChiDefaultAnimationResourceKey) != nullptr;
 		hasAllResources &= resources.Find<StaticMesh>(ChiGuitarResourceKey) != nullptr;
-		for (uint32 animationIndex = 0; animationIndex < ChiAnimationIdCount; ++animationIndex)
-			hasAllResources &= resources.Find<SkeletalAnimationClip>(GetChiAnimationKey(static_cast<ChiAnimationId>(animationIndex))) != nullptr;
+		for (uint32 animationClipIndex = 0; animationClipIndex < ChiAnimationClipIdCount; ++animationClipIndex)
+			hasAllResources &= resources.Find<SkeletalAnimationClip>(GetChiAnimationClipKey(static_cast<ChiAnimationClipId>(animationClipIndex))) != nullptr;
 
 		if (hasAllResources)
 			return true;
@@ -326,18 +326,18 @@ namespace gm
 			outLoadData.resources.push_back({ ChiSkeletalMeshResourceKey, std::move(skeletalMesh) });
 		}
 
-		if (modelData.animations.size() != ChiAnimationIdCount)
+		if (modelData.animations.size() != ChiAnimationClipIdCount)
 		{
-			outLoadData.errorMessage = L"Chi 애니메이션 개수가 ChiAnimationId와 일치하지 않습니다.";
+			outLoadData.errorMessage = L"Chi 애니메이션 개수가 ChiAnimationClipId와 일치하지 않습니다.";
 			return false;
 		}
 
-		for (uint32 animationIndex = 0; animationIndex < modelData.animations.size(); ++animationIndex)
+		for (uint32 animationClipIndex = 0; animationClipIndex < modelData.animations.size(); ++animationClipIndex)
 		{
-			const SkeletalAnimationClipData& clipData = modelData.animations[animationIndex];
-			const ChiAnimationId animationId = static_cast<ChiAnimationId>(animationIndex);
-			const std::wstring animationKey = GetChiAnimationKey(animationId);
-			std::shared_ptr<SkeletalAnimationClip> clip = resources.Find<SkeletalAnimationClip>(animationKey);
+			const SkeletalAnimationClipData& clipData = modelData.animations[animationClipIndex];
+			const ChiAnimationClipId animationClipId = static_cast<ChiAnimationClipId>(animationClipIndex);
+			const std::wstring animationClipKey = GetChiAnimationClipKey(animationClipId);
+			std::shared_ptr<SkeletalAnimationClip> clip = resources.Find<SkeletalAnimationClip>(animationClipKey);
 			if (clip == nullptr)
 			{
 				clip = SkeletalAnimationClip::Create(clipData);
@@ -347,10 +347,10 @@ namespace gm
 					return false;
 				}
 
-				outLoadData.resources.push_back({ animationKey, clip });
+				outLoadData.resources.push_back({ animationClipKey, clip });
 			}
 
-			if (animationId == ChiAnimationId::Idle && resources.Find<SkeletalAnimationClip>(ChiDefaultAnimationResourceKey) == nullptr)
+			if (animationClipId == ChiAnimationClipId::Idle && resources.Find<SkeletalAnimationClip>(ChiDefaultAnimationResourceKey) == nullptr)
 				outLoadData.resources.push_back({ ChiDefaultAnimationResourceKey, std::move(clip) });
 		}
 
@@ -488,7 +488,7 @@ namespace gm
 
 	bool CommonLoadingScene::LoadRhythmBGM(SceneLoadData& outLoadData, Resources& resources, const RhythmBGMDesc& desc)
 	{
-		if (resources.Find<SoundWave>(desc.resourceKey))
+		if (resources.Find<SoundWave>(desc.commonResourceKey))
 			return true;
 
 		SoundWaveDesc soundDesc{};
@@ -497,11 +497,11 @@ namespace gm
 		std::shared_ptr<SoundWave> sound = SoundWave::Create(soundDesc);
 		if (sound == nullptr)
 		{
-			outLoadData.errorMessage = L"BGM SoundWave 생성에 실패했습니다. key=" + std::wstring(desc.resourceKey);
+			outLoadData.errorMessage = L"BGM SoundWave 생성에 실패했습니다. key=" + std::wstring(desc.commonResourceKey);
 			return false;
 		}
 
-		outLoadData.resources.push_back({ desc.resourceKey, std::move(sound) });
+		outLoadData.resources.push_back({ desc.commonResourceKey, std::move(sound) });
 		return true;
 	}
 

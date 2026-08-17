@@ -111,7 +111,6 @@ namespace gm
 		MovementComponent::OnInitialize();
 		_animatorComponent = GetOwner().GetComponent<SkeletalAnimatorComponent>();
 		GM_ASSERT_RETURN(_animatorComponent, "CharacterMovementComponent는 SkeletalAnimatorComponent가 필요합니다.");
-		EnableNavigationMovement(true);
 	}
 
 	void CharacterMovementComponent::OnTick(float)
@@ -123,10 +122,7 @@ namespace gm
 		if (_rootMotionEnabled == false || IsMovementEnabled() == false || GetOwnerTransform() == nullptr)
 			return;
 
-		if (_rootMotionYEnabled == false)
-			rootMotionDelta.y = 0.f;
-
-		rootMotionDelta *= _rootMotionWeight;
+		rootMotionDelta = Vector3{rootMotionDelta.x * _rootMotionWeight.x, rootMotionDelta.y * _rootMotionWeight.y, rootMotionDelta.z * _rootMotionWeight.z};
 		rootMotionDelta = Vector3::Transform(rootMotionDelta, GetOwnerTransform()->GetRotation());
 		Move(rootMotionDelta);
 	}

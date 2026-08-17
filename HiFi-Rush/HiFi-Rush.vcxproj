@@ -209,6 +209,7 @@
     <ClInclude Include="BeatSkeletalAnimationSyncComponent.h" />
     <ClInclude Include="BeatTriggeredSkeletalAnimationComponent.h" />
     <ClInclude Include="BeatSystem.h" />
+	<ClInclude Include="RhythmInputJudge.h" />
     <ClInclude Include="BeatTransformComponent.h" />
     <ClInclude Include="BeatTriggeredRotationComponent.h" />
 	<ClInclude Include="GunnerAnimationTypes.h" />
@@ -245,6 +246,7 @@
     <ClInclude Include="TutorialScene.h" />
     <ClInclude Include="TestScene.h" />
     <ClInclude Include="Paths.h" />
+	<ClInclude Include="ChiAnimationSettings.h" />
     <ClInclude Include="ChiAnimationTypes.h" />
     <ClInclude Include="ChiAttackState.h" />
     <ClInclude Include="ChiDamageState.h" />
@@ -288,6 +290,7 @@
     <ClCompile Include="BeatSkeletalAnimationSyncComponent.cpp" />
     <ClCompile Include="BeatTriggeredSkeletalAnimationComponent.cpp" />
     <ClCompile Include="BeatSystem.cpp" />
+	<ClCompile Include="RhythmInputJudge.cpp" />
     <ClCompile Include="BeatTransformComponent.cpp" />
     <ClCompile Include="BeatTriggeredRotationComponent.cpp" />
 	<ClCompile Include="GunnerState.cpp" />
@@ -314,6 +317,7 @@
     <ClCompile Include="SceneDebugTools.cpp" />
     <ClCompile Include="TutorialScene.cpp" />
     <ClCompile Include="TestScene.cpp" />
+	<ClCompile Include="ChiAnimationSettings.cpp" />
     <ClCompile Include="ChiAttackState.cpp" />
     <ClCompile Include="ChiDamageState.cpp" />
     <ClCompile Include="ChiDashState.cpp" />
