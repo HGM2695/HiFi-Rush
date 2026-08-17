@@ -340,6 +340,9 @@
 	<ClInclude Include="GameplayAnnouncementWidget.h">
 	  <Filter>Widget</Filter>
 	</ClInclude>
+	<ClInclude Include="ComboResultWidget.h">
+	  <Filter>Widget</Filter>
+	</ClInclude>
 	<ClInclude Include="PlayerStatusWidget.h">
 	  <Filter>Widget</Filter>
 	</ClInclude>
@@ -562,6 +565,9 @@
 	  <Filter>Widget</Filter>
 	</ClCompile>
 	<ClCompile Include="GameplayAnnouncementWidget.cpp">
+	  <Filter>Widget</Filter>
+	</ClCompile>
+	<ClCompile Include="ComboResultWidget.cpp">
 	  <Filter>Widget</Filter>
 	</ClCompile>
 	<ClCompile Include="PlayerStatusWidget.cpp">

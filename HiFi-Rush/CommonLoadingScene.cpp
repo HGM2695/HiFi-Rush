@@ -148,7 +148,7 @@ namespace gm
 
 	bool CommonLoadingScene::LoadGameplayUIResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory)
 	{
-		constexpr std::array<const wchar_t*, 45> texturePaths =
+		constexpr std::array<const wchar_t*, 54> texturePaths =
 		{{
 			L"UI/Bottom_Rhytm_Bar/T_Rhytm_Meter_Cat_Black.dds",
 			L"UI/Bottom_Rhytm_Bar/T_Rhytm_Meter_halftone_bg.dds",
@@ -195,6 +195,15 @@ namespace gm
 			L"UI/RhytmMeter/S_Thunder.dds",
 			L"UI/Fight/T_VFX_tk_word_FIGHT.dds",
 			L"UI/Yeah/Font_Yeah.dds",
+			L"UI/Combo/Humburker.dds",
+			L"UI/Combo/GrandSlam.dds",
+			L"UI/Combo/BreakDown.dds",
+			L"UI/Combo/Tremolo.dds",
+			L"UI/Combo/DashAttack.dds",
+			L"UI/Combo/AirLaunch.dds",
+			L"UI/Combo/RiseUp.dds",
+			L"UI/Combo/HammerOn.dds",
+			L"UI/Combo/AirCountDown.dds",
 		}};
 
 		for (const wchar_t* texturePath : texturePaths)

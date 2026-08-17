@@ -210,6 +210,7 @@
 	<ClInclude Include="RhythmBarWidget.h" />
 	<ClInclude Include="RhythmMeterWidget.h" />
 	<ClInclude Include="GameplayAnnouncementWidget.h" />
+	<ClInclude Include="ComboResultWidget.h" />
 	<ClInclude Include="PlayerStatusWidget.h" />
     <ClInclude Include="BeatStaticMeshCycleComponent.h" />
     <ClInclude Include="BeatPositionSequenceComponent.h" />
@@ -301,6 +302,7 @@
 	<ClCompile Include="RhythmBarWidget.cpp" />
 	<ClCompile Include="RhythmMeterWidget.cpp" />
 	<ClCompile Include="GameplayAnnouncementWidget.cpp" />
+	<ClCompile Include="ComboResultWidget.cpp" />
 	<ClCompile Include="PlayerStatusWidget.cpp" />
     <ClCompile Include="BeatSystem.cpp" />
 	<ClCompile Include="RhythmInputJudge.cpp" />

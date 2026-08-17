@@ -1,6 +1,7 @@
 #include "GameplayScene.h"
 #include "Application.h"
 #include "ChiStateMachineComponent.h"
+#include "ComboResultWidget.h"
 #include "GameplayAnnouncementWidget.h"
 #include "RhythmBarWidget.h"
 #include "RhythmMeterWidget.h"
@@ -91,6 +92,7 @@ namespace gm
 		uiManager.AddUserWidget<PlayerStatusWidget>(HiFiRushStatics::GetBeatSystem(), *healthComponent, *reverbComponent, *stateMachine);
 		uiManager.AddUserWidget<RhythmMeterWidget>(HiFiRushStatics::GetBeatSystem(), *rhythmRankComponent);
 		uiManager.AddUserWidget<RhythmBarWidget>(HiFiRushStatics::GetBeatSystem());
+		uiManager.AddUserWidget<ComboResultWidget>(*stateMachine);
 		_announcementWidget = uiManager.AddUserWidget<GameplayAnnouncementWidget>(HiFiRushStatics::GetBeatSystem());
 	}
 
