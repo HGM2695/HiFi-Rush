@@ -1,6 +1,7 @@
 #include "GameplayScene.h"
 #include "Application.h"
 #include "ChiStateMachineComponent.h"
+#include "GameplayAnnouncementWidget.h"
 #include "RhythmBarWidget.h"
 #include "RhythmMeterWidget.h"
 #include "RhythmRankComponent.h"
@@ -36,6 +37,12 @@ namespace gm
 	const TriggerSequenceSystem& GameplayScene::GetTriggerSequenceSystem() const
 	{
 		return *_triggerSequenceSystem;
+	}
+
+	void GameplayScene::PlayAnnouncement(GameplayAnnouncementType type)
+	{
+		GM_ASSERT_RETURN(_announcementWidget, "Gameplay Announcement Widget이 구성되지 않았습니다.");
+		_announcementWidget->Play(type);
 	}
 
 	bool GameplayScene::InitializeMap(const std::wstring& mapResourceKey)
@@ -84,11 +91,13 @@ namespace gm
 		uiManager.AddUserWidget<PlayerStatusWidget>(HiFiRushStatics::GetBeatSystem(), *healthComponent, *reverbComponent, *stateMachine);
 		uiManager.AddUserWidget<RhythmMeterWidget>(HiFiRushStatics::GetBeatSystem(), *rhythmRankComponent);
 		uiManager.AddUserWidget<RhythmBarWidget>(HiFiRushStatics::GetBeatSystem());
+		_announcementWidget = uiManager.AddUserWidget<GameplayAnnouncementWidget>(HiFiRushStatics::GetBeatSystem());
 	}
 
 	void GameplayScene::OnUnload()
 	{
 		_player.Reset();
+		_announcementWidget = nullptr;
 		_triggerSequenceSystem->Clear();
 	}
 }

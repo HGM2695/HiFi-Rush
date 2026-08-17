@@ -5,6 +5,7 @@
 #include "Application.h"
 #include "DebugInputHandler.h"
 #include "GameObject.h"
+#include "GameplayAnnouncementWidget.h"
 #include "GameplayScene.h"
 #include "HiFiRushCollisionLayers.h"
 #include "IDebugRenderer.h"
@@ -46,6 +47,15 @@ namespace gm
 			desc.damageInfo.amount = 10;
 			desc.lifetime = DebugAttackDuration;
 			scene->SpawnGameObject<TemporaryHitBoxObject>(desc);
+		}
+
+		void PlayDebugAnnouncement(GameplayAnnouncementType type)
+		{
+			GameplayScene* scene = dynamic_cast<GameplayScene*>(APPLICATION.GetSceneManager().GetActiveScene());
+			if (scene == nullptr)
+				return;
+
+			scene->PlayAnnouncement(type);
 		}
 	}
 
@@ -124,6 +134,12 @@ namespace gm
 
 		if (DebugInputHandler::IsTriggered(DebugInputType, KeyCode::H))
 			SpawnPlayerDebugAttack();
+
+		if (DebugInputHandler::IsTriggered(DebugInputType, KeyCode::D1))
+			PlayDebugAnnouncement(GameplayAnnouncementType::Fight);
+
+		if (DebugInputHandler::IsTriggered(DebugInputType, KeyCode::D2))
+			PlayDebugAnnouncement(GameplayAnnouncementType::Yeah);
 	}
 }
 
