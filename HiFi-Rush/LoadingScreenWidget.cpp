@@ -3,7 +3,6 @@
 #include "Border.h"
 #include "CanvasPanel.h"
 #include "Image.h"
-#include "LoadResources.h"
 #include "WidgetTween.h"
 
 #include <algorithm>
@@ -13,6 +12,10 @@ namespace gm
 {
 	namespace
 	{
+		constexpr wchar_t LoadingScreenTextureKey[] = L"T_loading_screen_808";
+		constexpr wchar_t LoadingNote1TextureKey[] = L"T_loading_screen_note_1";
+		constexpr wchar_t LoadingNote2TextureKey[] = L"T_loading_screen_note_2";
+		constexpr wchar_t LoadingNote3TextureKey[] = L"T_loading_screen_note_3";
 		constexpr float NoteRevealInterval = 0.18f;
 		constexpr float NotePopDuration = 0.16f;
 		constexpr float NoteHideTime = 0.9f;
@@ -40,13 +43,13 @@ namespace gm
 		SamplerDesc samplerDesc{};
 		samplerDesc.filter = TextureFilter::Linear;
 
-		Image* catImage = root->AddNamedChild<Image>(L"Cat", LoadingTextureKey::Screen);
+		Image* catImage = root->AddNamedChild<Image>(L"Cat", LoadingScreenTextureKey);
 		catImage->SetPosition(catPosition);
 		catImage->SetSize(catSize);
 		catImage->SetSamplerDesc(samplerDesc);
 
 		const float noteSize = std::min(88.f, screenHeight * 0.1f);
-		const std::array<const wchar_t*, 3> noteKeys{ LoadingTextureKey::Note1, LoadingTextureKey::Note2, LoadingTextureKey::Note3 };
+		const std::array<const wchar_t*, 3> noteKeys{ LoadingNote1TextureKey, LoadingNote2TextureKey, LoadingNote3TextureKey };
 		const std::array<Vector2, 3> notePositions
 		{
 			Vector2{ 1185.7f, 652.9f },

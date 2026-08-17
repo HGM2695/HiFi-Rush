@@ -1,6 +1,7 @@
 #include "LoadResources.h"
 #include "Application.h"
 #include "IGraphicsResourceFactory.h"
+#include "PathUtil.h"
 #include "Paths.h"
 #include "Resources.h"
 #include "Texture.h"
@@ -11,42 +12,37 @@ namespace gm
 {
 	namespace
 	{
-		struct TextureLoadEntry
+		bool LoadTexture(Resources& resources, IGraphicsResourceFactory& resourceFactory, const std::wstring& relativePath)
 		{
-			const wchar_t* key = nullptr;
-			const wchar_t* fileName = nullptr;
-		};
-
-		bool LoadTexture(Resources& resources, IGraphicsResourceFactory& resourceFactory, const TextureLoadEntry& entry)
-		{
-			if (resources.Find<Texture>(entry.key))
+			const std::wstring key = GetFileNameWithoutExtension(relativePath);
+			if (resources.Find<Texture>(key))
 				return true;
 
 			TextureDesc desc{};
-			desc.path = GetTexturePath(std::wstring(L"UI/Loading/") + entry.fileName);
+			desc.path = GetTexturePath(relativePath);
 
 			std::shared_ptr<Texture> texture = resourceFactory.CreateTexture(desc);
-			GM_ASSERT_RETURN_VAL(texture, false, "로딩 화면 Texture 생성에 실패했습니다. key=%ls", entry.key);
-			GM_ASSERT_RETURN_VAL(resources.Add(entry.key, texture), false, "로딩 화면 Texture 등록에 실패했습니다. key=%ls", entry.key);
+			GM_ASSERT_RETURN_VAL(texture, false, "UI Texture 생성에 실패했습니다. key=%ls", key.c_str());
+			GM_ASSERT_RETURN_VAL(resources.Add(key, texture), false, "UI Texture 등록에 실패했습니다. key=%ls", key.c_str());
 			return true;
 		}
 	}
 
 	bool LoadResources()
 	{
-		constexpr std::array<TextureLoadEntry, 4> loadingTextures =
+		constexpr std::array<const wchar_t*, 4> loadingScreenTextures =
 		{{
-			{ LoadingTextureKey::Screen, L"T_loading_screen_808.dds" },
-			{ LoadingTextureKey::Note1, L"T_loading_screen_note_1.dds" },
-			{ LoadingTextureKey::Note2, L"T_loading_screen_note_2.dds" },
-			{ LoadingTextureKey::Note3, L"T_loading_screen_note_3.dds" },
+			L"UI/Loading/T_loading_screen_808.dds",
+			L"UI/Loading/T_loading_screen_note_1.dds",
+			L"UI/Loading/T_loading_screen_note_2.dds",
+			L"UI/Loading/T_loading_screen_note_3.dds",
 		}};
 
 		Resources& resources = APPLICATION.GetResources();
 		IGraphicsResourceFactory& resourceFactory = APPLICATION.GetGraphicsResourceFactory();
-		for (const TextureLoadEntry& entry : loadingTextures)
+		for (const wchar_t* relativePath : loadingScreenTextures)
 		{
-			if (LoadTexture(resources, resourceFactory, entry) == false)
+			if (LoadTexture(resources, resourceFactory, relativePath) == false)
 				return false;
 		}
 

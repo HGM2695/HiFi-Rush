@@ -124,6 +124,9 @@ namespace gm
 	{
 		SceneLoadData result{};
 
+		if (LoadGameplayUIResources(result, resources, resourceFactory) == false)
+			return result;
+
 		if (LoadMeshTextures(result, resources, resourceFactory) == false)
 			return result;
 
@@ -141,6 +144,40 @@ namespace gm
 
 		result.succeeded = true;
 		return result;
+	}
+
+	bool CommonLoadingScene::LoadGameplayUIResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory)
+	{
+		constexpr std::array<const wchar_t*, 6> texturePaths =
+		{{
+			L"UI/Bottom_Rhytm_Bar/T_Rhytm_Meter_Cat_Black.dds",
+			L"UI/Bottom_Rhytm_Bar/T_Rhytm_Meter_halftone_bg.dds",
+			L"UI/Bottom_Rhytm_Bar/T_Rhytm_Meter_BGline.dds",
+			L"UI/Bottom_Rhytm_Bar/T_Rhytm_Meter_BGline_Small.dds",
+			L"UI/Bottom_Rhytm_Bar/Left_Half_Circle.dds",
+			L"UI/Bottom_Rhytm_Bar/Right_Half_Circle.dds",
+		}};
+
+		for (const wchar_t* texturePath : texturePaths)
+		{
+			const std::wstring textureKey = GetFileNameWithoutExtension(texturePath);
+			if (resources.Find<Texture>(textureKey))
+				continue;
+
+			TextureDesc desc{};
+			desc.path = GetTexturePath(texturePath);
+
+			std::shared_ptr<Texture> texture = resourceFactory.CreateTexture(desc);
+			if (texture == nullptr)
+			{
+				outLoadData.errorMessage = L"Gameplay UI Texture 생성에 실패했습니다. key=" + textureKey;
+				return false;
+			}
+
+			outLoadData.resources.push_back({ textureKey, std::move(texture) });
+		}
+
+		return true;
 	}
 
 	bool CommonLoadingScene::LoadMeshTextures(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory)
@@ -509,6 +546,9 @@ namespace gm
 	{
 		SceneLoadData result{};
 
+		if (LoadGameplayUIResources(result, resources, resourceFactory) == false)
+			return result;
+
 		if (LoadMeshTextures(result, resources, resourceFactory) == false)
 			return result;
 
@@ -531,6 +571,9 @@ namespace gm
 	CommonLoadingScene::SceneLoadData CommonLoadingScene::LoadQamilSceneResources(Resources& resources, IGraphicsResourceFactory& resourceFactory)
 	{
 		SceneLoadData result{};
+
+		if (LoadGameplayUIResources(result, resources, resourceFactory) == false)
+			return result;
 
 		if (LoadMeshTextures(result, resources, resourceFactory) == false)
 			return result;

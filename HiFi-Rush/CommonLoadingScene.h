@@ -50,6 +50,7 @@ namespace gm
 		static SceneLoadData	LoadTutorialSceneResources(Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static SceneLoadData	LoadOutsideSceneResources(Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static SceneLoadData	LoadQamilSceneResources(Resources& resources, IGraphicsResourceFactory& resourceFactory);
+		static bool				LoadGameplayUIResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static bool				LoadMeshTextures(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static bool				LoadMapResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory, const std::wstring& mapFileName);
 		static bool				LoadChiResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory);
