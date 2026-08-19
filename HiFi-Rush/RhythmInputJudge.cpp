@@ -18,8 +18,7 @@ namespace gm
 		RhythmJudgeResult command{};
 		command.type = inputType;
 		const float secondsPerBeat = beatSystem.GetSecondsPerBeat();
-		const float inputOffsetBeats = secondsPerBeat > 0.f ? _settings.inputOffsetSeconds / secondsPerBeat : 0.f;
-		command.inputBeat = beatSystem.GetCurrentBeat() + inputOffsetBeats;
+		command.inputBeat = CalculateInputBeat(beatSystem);
 		command.judgedBeatIndex = static_cast<int64>(std::round(command.inputBeat));
 		command.beatError = command.inputBeat - static_cast<float>(command.judgedBeatIndex);
 		command.secError = command.beatError * secondsPerBeat;
@@ -35,4 +34,29 @@ namespace gm
 		return command;
 	}
 
+	bool RhythmJudge::HasPassedInputDeadline(const BeatSystem& beatSystem, float targetBeat) const
+	{
+		const float secondsPerBeat = beatSystem.GetSecondsPerBeat();
+		if (secondsPerBeat <= 0.f)
+			return false;
+
+		const float goodWindowBeats = _settings.goodWindowSeconds / secondsPerBeat;
+		return CalculateInputBeat(beatSystem) > targetBeat + goodWindowBeats;
+	}
+
+	float RhythmJudge::GetRawInputBeat(const BeatSystem& beatSystem, const RhythmJudgeResult& result) const
+	{
+		return result.inputBeat - CalculateInputOffsetBeats(beatSystem);
+	}
+
+	float RhythmJudge::CalculateInputBeat(const BeatSystem& beatSystem) const
+	{
+		return beatSystem.GetCurrentBeat() + CalculateInputOffsetBeats(beatSystem);
+	}
+
+	float RhythmJudge::CalculateInputOffsetBeats(const BeatSystem& beatSystem) const
+	{
+		const float secondsPerBeat = beatSystem.GetSecondsPerBeat();
+		return secondsPerBeat > 0.f ? _settings.inputOffsetSeconds / secondsPerBeat : 0.f;
+	}
 }

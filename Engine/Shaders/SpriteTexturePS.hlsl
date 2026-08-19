@@ -13,6 +13,11 @@ cbuffer sprite : register(b0)
     float radialStartAngle;
     float radialSweepAngle;
     float2 padding;
+    float4 redChannelColor;
+    float4 greenChannelColor;
+    float4 blueChannelColor;
+    float channelColorMappingRatio;
+    float3 channelColorPadding;
 }
 
 struct PSInput
@@ -46,6 +51,8 @@ float4 main(PSInput input) : SV_TARGET
     float4 color = g_texture.Sample(g_sampler, uv);
     clip(color.a - 0.001f);
 
+    float3 channelMappedColor = color.r * redChannelColor.rgb + color.g * greenChannelColor.rgb + color.b * blueChannelColor.rgb;
+    color.rgb = lerp(color.rgb, channelMappedColor, saturate(channelColorMappingRatio));
     color.rgb = lerp(color.rgb, blendColor.rgb, saturate(blendRatio));
     color.a *= saturate(opacity);
 

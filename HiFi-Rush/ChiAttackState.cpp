@@ -1,20 +1,16 @@
 #include "ChiAttackState.h"
-#include "Application.h"
 #include "BeatSystem.h"
 #include "ChiAnimationSettings.h"
+#include "ChiAttackHitBoxSpawner.h"
+#include "ChiBeatHitBoxSpawner.h"
+#include "ChiMoveComponent.h"
 #include "ChiStateMachineComponent.h"
-#include "GameObject.h"
 #include "HiFiRushAnimationNotifyNames.h"
-#include "HiFiRushCollisionLayers.h"
 #include "HitBoxComponent.h"
 #include "PlayerTargetingComponent.h"
 #include "Rigidbody3DComponent.h"
-#include "ReverbComponent.h"
-#include "Scene.h"
 #include "SkeletalAnimationClip.h"
 #include "SkeletalAnimatorComponent.h"
-#include "TemporaryBoxHitBoxObject.h"
-#include "TransformComponent.h"
 
 #include <algorithm>
 #include <cmath>
@@ -25,96 +21,12 @@ namespace gm
 	{
 		constexpr float AnimationTicksPerBeat = 15.f;
 		constexpr float StumpDownImpulse = 45.f;
-		constexpr float AirAttackLandingBlendDuration = 0.132f;
+		constexpr float OnePassAirActionBufferStartBeat = 1.f + 9.f / AnimationTicksPerBeat;
+		constexpr float OnePassAirActionStartBeat = 2.f;
 		constexpr int32 RightStartAttachedDamage = 5;
 		constexpr int32 LeftStartAttachedDamage = 20;
 		constexpr float RightStartAttachedRehitInterval = 0.15f;
-
-		struct TemporaryHitBoxSetting
-		{
-			Vector3	localCenter{};
-			Vector3	size{ 1.f, 1.f, 1.f };
-			int32	damage = 0;
-			HitReactionType hitReactionType = HitReactionType::None;
-			float	lifetime = 0.05f;
-			float	rehitInterval = 0.f;
-		};
-
-		const TemporaryHitBoxSetting WeakAttackHitBox{ Vector3{ 0.f, 0.75f, 0.6f }, Vector3{ 1.4f, 1.5f, 1.6f }, 10, HitReactionType::WeakKnockback };
-		const TemporaryHitBoxSetting WeakDashAttackHitBox{ Vector3{ 0.f, 0.75f, 0.9f }, Vector3{ 1.4f, 1.5f, 2.8f }, 10, HitReactionType::WeakKnockback };
-		const TemporaryHitBoxSetting StrongAttackHitBox{ Vector3{ 0.f, 0.75f, 1.1f }, Vector3{ 2.4f, 1.5f, 2.2f }, 20, HitReactionType::StrongKnockback };
-		const TemporaryHitBoxSetting AirborneAttackHitBox{ Vector3{ 0.f, 0.75f, 1.1f }, Vector3{ 1.6f, 1.5f, 1.6f }, 10, HitReactionType::Airborne };
-		const TemporaryHitBoxSetting StrongDashAttackHitBox{ Vector3{ 0.f, 0.75f, 1.1f }, Vector3{ 1.6f, 1.5f, 1.6f }, 20, HitReactionType::Airborne };
-		const TemporaryHitBoxSetting DelayedWeakAttackHitBox{ Vector3{ 0.f, 0.75f, 1.f }, Vector3{ 1.4f, 1.5f, 2.4f }, 5, HitReactionType::StrongKnockback, 0.2f, 0.1f };
-		const TemporaryHitBoxSetting AirAttackHitBox{ Vector3{ 0.f, 0.75f, 1.1f }, Vector3{ 1.6f, 2.f, 1.6f }, 10, HitReactionType::Sky };
-		const TemporaryHitBoxSetting StumpAttackHitBox{ Vector3{ 0.f, 0.75f, 0.f }, Vector3{ 3.f, 1.5f, 3.f }, 20, HitReactionType::StrongKnockback };
-
-		const TemporaryHitBoxSetting* FindTemporaryHitBoxSetting(ChiAnimationClipId animationClipId)
-		{
-			switch (animationClipId)
-			{
-			case ChiAnimationClipId::AttackWeakDash:
-				return &WeakDashAttackHitBox;
-
-			case ChiAnimationClipId::AttackWeak0:
-			case ChiAnimationClipId::AttackWeak1:
-			case ChiAnimationClipId::AttackWeak2:
-			case ChiAnimationClipId::AttackWeak3:
-				return &WeakAttackHitBox;
-
-			case ChiAnimationClipId::AttackStrong0_1:
-			case ChiAnimationClipId::AttackStrong1:
-			case ChiAnimationClipId::AttackStrong2:
-			case ChiAnimationClipId::AttackStrongToWeak1:
-			case ChiAnimationClipId::AttackWeakToStrong1:
-				return &StrongAttackHitBox;
-
-			case ChiAnimationClipId::AttackStrongDash:
-				return &StrongDashAttackHitBox;
-
-			case ChiAnimationClipId::AttackDelayedWeak1:
-				return &DelayedWeakAttackHitBox;
-
-			case ChiAnimationClipId::AttackDelayedWeak2:
-				return &AirborneAttackHitBox;
-
-			case ChiAnimationClipId::AttackSky0:
-			case ChiAnimationClipId::AttackSky1:
-			case ChiAnimationClipId::AttackSky2:
-			case ChiAnimationClipId::AttackSky3:
-				return &AirAttackHitBox;
-
-			default:
-				return nullptr;
-			}
-		}
-
-		bool SpawnTemporaryHitBox(ChiStateContext& context, const TemporaryHitBoxSetting& setting)
-		{
-			GameObject& owner = context.stateMachine->GetOwner();
-			Scene* scene = owner.GetScene();
-			TransformComponent* transform = owner.GetTransform();
-			GM_ASSERT_RETURN_VAL(scene && transform, false, "Chi Temporary HitBox 생성에 필요한 Scene 또는 Transform이 없습니다.");
-			ReverbComponent* reverbComponent = owner.GetComponent<ReverbComponent>();
-			GM_ASSERT_RETURN_VAL(reverbComponent, false, "Chi Temporary HitBox의 적중 보상을 처리하려면 ReverbComponent가 필요합니다.");
-
-			TemporaryBoxHitBoxDesc desc{};
-			desc.world = transform->GetWorldMatrix();
-			desc.colliderId = L"Attack";
-			desc.localCenter = setting.localCenter;
-			desc.size = setting.size;
-			desc.collisionLayer = HiFiRushCollisionLayer::PlayerAttack;
-			desc.collisionMask = HiFiRushCollisionLayer::Monster;
-			desc.damageInfo.amount = setting.damage;
-			desc.damageInfo.hitReactionType = setting.hitReactionType;
-			desc.onHit = [reverbComponent](const HitEvent& event)
-			{
-				reverbComponent->HandleAttackHit(event);
-			};
-			desc.rehitInterval = setting.rehitInterval;
-			desc.lifetime = setting.lifetime;
-			return scene->SpawnGameObject<TemporaryHitBoxObject>(desc) != nullptr;
-		}
+		constexpr uint32 BeatHitTargetOffset = 2;
 
 		float GetEarliestReachableTargetBeat(float currentBeat, const std::optional<RhythmJudgeResult>& rhythmInput, float animationBeatsUntilImpact, float maxPlaybackRateScale)
 		{
@@ -138,6 +50,8 @@ namespace gm
 	void ChiAttackState::Enter(ChiStateContext& context)
 	{
 		_temporaryHitBoxNotifyConnection.Disconnect();
+		_beatHitStartNotifyConnection.Disconnect();
+		_beatHitResultConnection.Disconnect();
 		_bufferedRhythmInput.reset();
 		_basePlayRate = 1.f;
 		_syncPlayRate = 1.f;
@@ -190,7 +104,7 @@ namespace gm
 
 		PlayAnimation(context, GetAnimationClipId(), playOption);
 
-		if (FindTemporaryHitBoxSetting(GetAnimationClipId()))
+		if (ChiAttackHitBoxSpawner::IsSpawnedByHitStartNotify(GetAnimationClipId()))
 		{
 			GM_ASSERT_RETURN(clip->FindNotify(HiFiRushAnimationNotifyNames::HitStart), "Chi Temporary HitBox 공격에 HitStart Notify가 없습니다.");
 			context.animatorComponent->GetNotifyEvent().Subscribe(_temporaryHitBoxNotifyConnection,
@@ -199,11 +113,28 @@ namespace gm
 					HandleTemporaryHitBoxNotify(context, event);
 				});
 		}
+
+		if (clip->FindNotify(HiFiRushAnimationNotifyNames::BeatHitStart))
+		{
+			context.animatorComponent->GetNotifyEvent().Subscribe(_beatHitStartNotifyConnection,
+				[this, &context](const AnimationNotifyEvent& event)
+				{
+					HandleBeatHitStartNotify(context, event);
+				});
+
+			context.stateMachine->OnBeatHitResult.Subscribe(_beatHitResultConnection,
+				[this, &context](const BeatHitResultEvent& event)
+				{
+					HandleBeatHitResult(context, event);
+				});
+		}
 	}
 
 	void ChiAttackState::Exit(ChiStateContext& context)
 	{
 		_temporaryHitBoxNotifyConnection.Disconnect();
+		_beatHitStartNotifyConnection.Disconnect();
+		_beatHitResultConnection.Disconnect();
 		context.animatorComponent->SetPlayRate(1.f);
 	}
 
@@ -212,9 +143,20 @@ namespace gm
 		if (event.name != HiFiRushAnimationNotifyNames::HitStart)
 			return;
 
-		const TemporaryHitBoxSetting* setting = FindTemporaryHitBoxSetting(GetAnimationClipId());
-		GM_ASSERT_RETURN(setting, "Chi Temporary HitBox 설정을 찾을 수 없습니다.");
-		GM_ASSERT(SpawnTemporaryHitBox(context, *setting), "Chi Temporary HitBox GameObject 생성에 실패했습니다.");
+		GM_ASSERT(ChiAttackHitBoxSpawner::SpawnForAnimation(context, GetAnimationClipId()), "Chi Attack HitBox GameObject 생성에 실패했습니다.");
+	}
+
+	void ChiAttackState::HandleBeatHitStartNotify(ChiStateContext& context, const AnimationNotifyEvent& event)
+	{
+		if (event.name != HiFiRushAnimationNotifyNames::BeatHitStart)
+			return;
+
+		context.stateMachine->BeginBeatHit(BeatHitInputType::AnyAttack, BeatHitTargetOffset);
+	}
+
+	void ChiAttackState::HandleBeatHitResult(ChiStateContext& context, const BeatHitResultEvent& event)
+	{
+		GM_ASSERT(ChiBeatHitBoxSpawner::Spawn(context, GetAnimationClipId(), event), "Chi Beat HitBox GameObject 생성에 실패했습니다.");
 	}
 
 	void ChiAttackState::RestoreBasePlayRateAfterImpact(ChiStateContext& context)
@@ -473,10 +415,10 @@ namespace gm
 		}
 		else if (GetStateId() == ChiStateId::AttackStrong1)
 		{
-			BufferMouseInput(context, 1.2f, false, _nextStrongAttackState != ChiStateId::None);
+			BufferMouseInput(context, 1.4f, false, _nextStrongAttackState != ChiStateId::None);
 			if (TryCancelAttack(context))
 				return;
-			if (GetStateElapsedBeat(context) >= 1.8f && HasBufferedStrongInput() && _nextStrongAttackState != ChiStateId::None)
+			if (GetStateElapsedBeat(context) >= 2.f && HasBufferedStrongInput() && _nextStrongAttackState != ChiStateId::None)
 			{
 				ChangeStateWithBufferedInput(context, _nextStrongAttackState);
 				return;
@@ -521,18 +463,42 @@ namespace gm
 	{
 	}
 
+	void ChiStrongDashAttackState::Enter(ChiStateContext& context)
+	{
+		ChiAttackState::Enter(context);
+		_fallStartRequested = false;
+
+		const std::shared_ptr<SkeletalAnimationClip> clip = context.animatorComponent->FindClip(GetChiAnimationClipName(GetAnimationClipId()));
+		GM_ASSERT_RETURN(clip && clip->FindNotify(HiFiRushAnimationNotifyNames::FallStart), "Chi Strong Dash 공격에 FallStart Notify가 없습니다.");
+		context.animatorComponent->GetNotifyEvent().Subscribe(_fallStartNotifyConnection,
+			[this](const AnimationNotifyEvent& event)
+			{
+				if (event.name == HiFiRushAnimationNotifyNames::FallStart)
+					_fallStartRequested = true;
+			});
+	}
+
 	void ChiStrongDashAttackState::Tick(ChiStateContext& context, float)
 	{
 		RestoreBasePlayRateAfterImpact(context);
 		if (GetAnimationBeat(context) >= 1.4f && TryChangeAirAction(context, false))
 			return;
-		if (GetAnimationBeat(context) >= 2.f + 14.f / 15.f)
+
+		if (_fallStartRequested)
 		{
 			context.stateMachine->ChangeState(ChiStateId::JumpDown);
 			return;
 		}
+
 		if (TryCancelAttack(context))
 			return;
+	}
+
+	void ChiStrongDashAttackState::Exit(ChiStateContext& context)
+	{
+		_fallStartNotifyConnection.Disconnect();
+		_fallStartRequested = false;
+		ChiAttackState::Exit(context);
 	}
 
 	/// BranchAttack //////////////////////////////////////////////////////////////////////////////
@@ -585,26 +551,18 @@ namespace gm
 	{
 	}
 
-	void ChiStrongToWeak2AttackState::Enter(ChiStateContext& context)
-	{
-		_hasCheckedBeatHit = false;
-		ChiWeaponHitBoxAttackState::Enter(context);
-	}
-
 	void ChiStrongToWeak2AttackState::Tick(ChiStateContext& context, float)
 	{
 		RestoreBasePlayRateAfterImpact(context);
-		if (_hasCheckedBeatHit == false && GetAnimationBeat(context) >= 3.f)
+		if (context.beatHitInput)
 		{
-			_hasCheckedBeatHit = true;
-			if (context.stateMachine->IsInputEnabled() && (APPLICATION.GetInput().IsMouseRepeat(MouseButton::Left) || APPLICATION.GetInput().IsMouseRepeat(MouseButton::Right)))
-			{
-				context.stateMachine->ChangeState(ChiStateId::AttackStrongToWeakBeatHit);
-				return;
-			}
+			context.stateMachine->ChangeState(ChiStateId::AttackStrongToWeakBeatHit, context.beatHitInput.value());
+			return;
 		}
+
 		if (TryCancelAttack(context))
 			return;
+
 		if (IsAnimationCompleted(context))
 			ReturnToIdleOrRun(context);
 	}
@@ -649,18 +607,58 @@ namespace gm
 	{
 	}
 
+	void ChiDelayedWeak2AttackState::Enter(ChiStateContext& context)
+	{
+		ChiAttackState::Enter(context);
+		_jumpDownTransitionRequested = false;
+
+		const std::shared_ptr<SkeletalAnimationClip> clip = context.animatorComponent->FindClip(GetChiAnimationClipName(GetAnimationClipId()));
+		GM_ASSERT_RETURN(clip && clip->FindNotify(HiFiRushAnimationNotifyNames::JumpDownTransition), "Chi One Pass 공격에 JumpDownTransition Notify가 없습니다.");
+		context.animatorComponent->GetNotifyEvent().Subscribe(_jumpDownTransitionNotifyConnection,
+			[this](const AnimationNotifyEvent& event)
+			{
+				if (event.name == HiFiRushAnimationNotifyNames::JumpDownTransition)
+					_jumpDownTransitionRequested = true;
+			});
+	}
+
 	void ChiDelayedWeak2AttackState::Tick(ChiStateContext& context, float)
 	{
 		RestoreBasePlayRateAfterImpact(context);
-		if (GetAnimationBeat(context) >= 2.f && TryChangeAirAction(context, false))
-			return;
-		if (GetAnimationBeat(context) >= 2.f + 14.f / 15.f)
+		const float animationBeat = GetAnimationBeat(context);
+		if (animationBeat >= OnePassAirActionBufferStartBeat)
+			BufferMouseInput(context, -1.f);
+
+		if (animationBeat >= OnePassAirActionStartBeat)
+		{
+			if (HasBufferedWeakInput())
+			{
+				ChangeStateWithBufferedInput(context, ChiStateId::AttackSky0);
+				return;
+			}
+			if (HasBufferedStrongInput())
+			{
+				ChangeStateWithBufferedInput(context, ChiStateId::AttackStump0);
+				return;
+			}
+			if (TryChangeAirDashOrStump(context))
+				return;
+		}
+
+		if (_jumpDownTransitionRequested)
 		{
 			context.stateMachine->ChangeState(ChiStateId::JumpDown);
 			return;
 		}
 		if (TryCancelAttack(context))
 			return;
+	}
+
+	void ChiDelayedWeak2AttackState::Exit(ChiStateContext& context)
+	{
+		_jumpDownTransitionNotifyConnection.Disconnect();
+		_jumpDownTransitionRequested = false;
+		ChiAttackState::Exit(context);
 	}
 
 	/// AirAttack //////////////////////////////////////////////////////////////////////////////
@@ -687,7 +685,7 @@ namespace gm
 		}
 
 		if (IsAnimationCompleted(context))
-			context.stateMachine->ChangeState(ChiStateId::JumpDoubleDown, AirAttackLandingBlendDuration);
+			context.stateMachine->ChangeState(ChiStateId::JumpDoubleDown);
 	}
 
 	ChiSky0AttackState::ChiSky0AttackState()
@@ -740,7 +738,7 @@ namespace gm
 
 	void ChiStump1AttackState::OnGroundContact(ChiStateContext& context)
 	{
-		GM_ASSERT(SpawnTemporaryHitBox(context, StumpAttackHitBox), "Chi Stump HitBox GameObject 생성에 실패했습니다.");
+		GM_ASSERT(ChiAttackHitBoxSpawner::SpawnForAnimation(context, GetAnimationClipId()), "Chi Stump HitBox GameObject 생성에 실패했습니다.");
 		context.stateMachine->ChangeState(ChiStateId::AttackStump2);
 	}
 

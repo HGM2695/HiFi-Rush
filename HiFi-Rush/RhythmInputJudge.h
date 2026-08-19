@@ -45,10 +45,14 @@ namespace gm
 
 		void							SetInputOffset(float offsetSeconds) { _settings.inputOffsetSeconds = offsetSeconds; }
 		RhythmJudgeResult				Judge(const BeatSystem& beatSystem, RhythmInputType inputType) const;
-		const RhythmJudgeSettings&		GetSettings() const { return _settings; }
+		bool							HasPassedInputDeadline(const BeatSystem& beatSystem, float targetBeat) const;
+		float							GetRawInputBeat(const BeatSystem& beatSystem, const RhythmJudgeResult& result) const;
 
 	private:
-		RhythmJudgeSettings			_settings{};
+		float							CalculateInputBeat(const BeatSystem& beatSystem) const;
+		float							CalculateInputOffsetBeats(const BeatSystem& beatSystem) const;
+
+		RhythmJudgeSettings				_settings{};
 	};
 
 }

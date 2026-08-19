@@ -33,6 +33,7 @@ namespace gm
 		std::optional<RhythmJudgeResult>	strongAttackInput;
 		std::optional<RhythmJudgeResult>	jumpInput;
 		std::optional<RhythmJudgeResult>	dashInput;
+		std::optional<RhythmJudgeResult>	beatHitInput;
 		std::optional<RhythmJudgeResult>	transitionRhythmInput;
 	};
 }

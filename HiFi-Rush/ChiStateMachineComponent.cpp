@@ -19,6 +19,8 @@
 #include "ReverbComponent.h"
 #include "SkeletalAnimatorComponent.h"
 
+#include <cmath>
+
 namespace gm
 {
 	ChiStateMachineComponent::ChiStateMachineComponent(HitBoxComponent* weaponHitBox)
@@ -103,6 +105,7 @@ namespace gm
 		_context.strongAttackInput.reset();
 		_context.jumpInput.reset();
 		_context.dashInput.reset();
+		_context.beatHitInput.reset();
 
 		if (_inputEnabled)
 		{
@@ -120,6 +123,8 @@ namespace gm
 				_context.dashInput = JudgeRhythmInput(RhythmInputType::Dash);
 		}
 
+		UpdateBeatHit();
+
 		ChiState* currentState = FindState(_currentStateId);
 		if (currentState == nullptr)
 			return;
@@ -132,7 +137,89 @@ namespace gm
 		return _context.rhythmJudge->Judge(*_context.beatSystem, inputType);
 	}
 
-	void ChiStateMachineComponent::OnGroundContact(const NavigationGroundContactEvent& event)
+	bool ChiStateMachineComponent::BeginBeatHit(BeatHitInputType inputType, uint32 targetBeatOffset)
+	{
+		GM_ASSERT_RETURN_VAL(targetBeatOffset > 0, false, "Beat Hit 목표 Beat Offset은 0보다 커야 합니다.");
+		GM_ASSERT_RETURN_VAL(_context.beatSystem->HasPlaybackTime(), false, "Beat 재생 중에만 Beat Hit을 시작할 수 있습니다.");
+
+		CancelBeatHit();
+
+		ActiveBeatHit beatHit{};
+		beatHit.inputType = inputType;
+		beatHit.ownerStateId = _currentStateId;
+		beatHit.targetBeatIndex = static_cast<int64>(std::round(_context.beatSystem->GetCurrentBeat())) + targetBeatOffset;
+		beatHit.approachDurationBeats = static_cast<float>(targetBeatOffset);
+		_activeBeatHit = beatHit;
+
+		BeatHitStartedEvent event{};
+		event.targetBeat = static_cast<float>(beatHit.targetBeatIndex);
+		event.approachDurationBeats = beatHit.approachDurationBeats;
+		OnBeatHitStarted.Publish(event);
+		return true;
+	}
+
+	void ChiStateMachineComponent::SetInputEnabled(bool enabled)
+	{
+		_inputEnabled = enabled;
+		if (_inputEnabled == false)
+			CancelBeatHit();
+	}
+
+	void ChiStateMachineComponent::CompleteDeathAnimation()
+	{
+		PlayerDeathAnimationCompletedEvent event{};
+		OnDeathAnimationCompleted.Publish(event);
+	}
+
+	void ChiStateMachineComponent::UpdateBeatHit()
+	{
+		if (_activeBeatHit.has_value() == false)
+			return;
+
+		const ActiveBeatHit& beatHit = _activeBeatHit.value();
+		const RhythmJudgeResult* acceptedInput = nullptr;
+		if (beatHit.inputType != BeatHitInputType::StrongAttack && IsAcceptedBeatHitInput(_context.weakAttackInput, beatHit.targetBeatIndex))
+			acceptedInput = &_context.weakAttackInput.value();
+		else if (beatHit.inputType != BeatHitInputType::WeakAttack && IsAcceptedBeatHitInput(_context.strongAttackInput, beatHit.targetBeatIndex))
+			acceptedInput = &_context.strongAttackInput.value();
+
+		if (acceptedInput)
+		{
+			FinishBeatHit(BeatHitResult::Success, acceptedInput);
+			return;
+		}
+
+		if (_context.rhythmJudge->HasPassedInputDeadline(*_context.beatSystem, static_cast<float>(beatHit.targetBeatIndex)))
+			FinishBeatHit(BeatHitResult::Miss);
+	}
+
+	bool ChiStateMachineComponent::IsAcceptedBeatHitInput(const std::optional<RhythmJudgeResult>& input, int64 targetBeatIndex) const
+	{
+		return input.has_value() && input->judgeGrade != RhythmJudgeGrade::OffBeat && input->judgedBeatIndex == targetBeatIndex;
+	}
+
+	void ChiStateMachineComponent::FinishBeatHit(BeatHitResult result, const RhythmJudgeResult* rhythmInput)
+	{
+		if (_activeBeatHit.has_value() == false)
+			return;
+
+		const float targetBeat = static_cast<float>(_activeBeatHit->targetBeatIndex);
+		_activeBeatHit.reset();
+		if (result == BeatHitResult::Success && rhythmInput)
+			_context.beatHitInput = *rhythmInput;
+
+		BeatHitResultEvent event{};
+		event.result = result;
+		event.targetBeat = targetBeat;
+		OnBeatHitResult.Publish(event);
+	}
+
+	void ChiStateMachineComponent::CancelBeatHit()
+	{
+		FinishBeatHit(BeatHitResult::Cancelled);
+	}
+
+	void ChiStateMachineComponent::OnGroundContact()
 	{
 		ChiState* currentState = FindState(_currentStateId);
 		if (currentState)
@@ -219,6 +306,9 @@ namespace gm
 			GM_ASSERT(false, "등록되지 않은 ChiState로 전환할 수 없습니다.");
 			return false;
 		}
+
+		if (_activeBeatHit && _activeBeatHit->ownerStateId == _currentStateId)
+			CancelBeatHit();
 
 		ChiState* currentState = FindState(_currentStateId);
 		if (currentState)

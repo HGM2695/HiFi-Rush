@@ -5,6 +5,7 @@
 #include "ChiMoveComponent.h"
 #include "ChiStateMachineComponent.h"
 #include "Input.h"
+#include "ReverbComponent.h"
 #include "Rigidbody3DComponent.h"
 #include "SkeletalAnimatorComponent.h"
 
@@ -178,6 +179,10 @@ namespace gm
 	bool ChiState::TryChangeHibiki(ChiStateContext& context) const
 	{
 		if (context.stateMachine->IsInputEnabled() == false || APPLICATION.GetInput().IsKeyDown(KeyCode::R) == false)
+			return false;
+		if (context.reverbComponent == nullptr || context.reverbComponent->IsFull() == false)
+			return false;
+		if (context.reverbComponent->ConsumeReverb(context.reverbComponent->GetMaxReverb()) == false)
 			return false;
 
 		context.stateMachine->ChangeState(ChiStateId::HibikiReady);

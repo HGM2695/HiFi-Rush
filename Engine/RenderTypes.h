@@ -35,6 +35,11 @@ namespace gm
 		float	radialStartAngle = 0.f;
 		float	radialSweepAngle = 0.f;
 		Vector2 padding{};
+		Color	redChannelColor = Colors::Red;
+		Color	greenChannelColor = Colors::Green;
+		Color	blueChannelColor = Colors::Blue;
+		float	channelColorMappingRatio = 0.f;
+		Vector3 channelColorPadding{};
 	};
 
 	struct ColorConstantPS

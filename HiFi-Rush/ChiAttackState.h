@@ -6,6 +6,7 @@
 namespace gm
 {
 	struct AnimationNotifyEvent;
+	struct BeatHitResultEvent;
 	class HitBoxComponent;
 	class SkeletalAnimatorComponent;
 
@@ -30,16 +31,20 @@ namespace gm
 		float	GetAnimationBeat(const ChiStateContext& context) const;
 
 	private:
-		void HandleTemporaryHitBoxNotify(ChiStateContext& context, const AnimationNotifyEvent& event);
+		void	HandleTemporaryHitBoxNotify(ChiStateContext& context, const AnimationNotifyEvent& event);
+		void	HandleBeatHitStartNotify(ChiStateContext& context, const AnimationNotifyEvent& event);
+		void	HandleBeatHitResult(ChiStateContext& context, const BeatHitResultEvent& event);
 
 		std::optional<RhythmJudgeResult>	_bufferedRhythmInput;
-		EventConnection					_temporaryHitBoxNotifyConnection{};
+		EventConnection						_temporaryHitBoxNotifyConnection{};
+		EventConnection						_beatHitStartNotifyConnection{};
+		EventConnection						_beatHitResultConnection{};
 
-		float	_animationSecondsPerBeat = 0.f;
-		float	_basePlayRate = 1.f;
-		float	_syncPlayRate = 1.f;
-		float	_impactMarkerBeat = 0.f;
-		bool	_hasRestoredBasePlayRate = true;
+		float								_animationSecondsPerBeat = 0.f;
+		float								_basePlayRate = 1.f;
+		float								_syncPlayRate = 1.f;
+		float								_impactMarkerBeat = 0.f;
+		bool								_hasRestoredBasePlayRate = true;
 	};
 
 	class ChiWeaponHitBoxAttackState : public ChiAttackState
@@ -145,7 +150,13 @@ namespace gm
 	{
 	public:
 		ChiStrongDashAttackState();
+		virtual void Enter(ChiStateContext& context) override;
 		virtual void Tick(ChiStateContext& context, float deltaTime) override;
+		virtual void Exit(ChiStateContext& context) override;
+
+	private:
+		EventConnection	_fallStartNotifyConnection{};
+		bool			_fallStartRequested = false;
 	};
 
 	/// BranchAttack //////////////////////////////////////////////////////////////////////////////
@@ -170,11 +181,7 @@ namespace gm
 	{
 	public:
 		explicit ChiStrongToWeak2AttackState(HitBoxComponent* weaponHitBox);
-		virtual void Enter(ChiStateContext& context) override;
 		virtual void Tick(ChiStateContext& context, float deltaTime) override;
-
-	private:
-		bool _hasCheckedBeatHit = false;
 	};
 
 	class ChiStrongToWeakBeatHitAttackState final : public ChiAttackState
@@ -207,7 +214,13 @@ namespace gm
 	{
 	public:
 		ChiDelayedWeak2AttackState();
+		virtual void Enter(ChiStateContext& context) override;
 		virtual void Tick(ChiStateContext& context, float deltaTime) override;
+		virtual void Exit(ChiStateContext& context) override;
+
+	private:
+		EventConnection	_jumpDownTransitionNotifyConnection{};
+		bool			_jumpDownTransitionRequested = false;
 	};
 
 	/// AirAttack //////////////////////////////////////////////////////////////////////////////

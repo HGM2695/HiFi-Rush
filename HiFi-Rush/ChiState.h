@@ -10,7 +10,6 @@
 
 namespace gm
 {
-	struct NavigationGroundContactEvent;
 	struct NavigationGroundLostEvent;
 
 	class ChiState

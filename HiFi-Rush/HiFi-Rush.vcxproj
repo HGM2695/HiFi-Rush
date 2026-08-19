@@ -214,6 +214,8 @@
 	<ClInclude Include="RhythmMeterWidget.h" />
 	<ClInclude Include="GameplayAnnouncementWidget.h" />
 	<ClInclude Include="ComboResultWidget.h" />
+	<ClInclude Include="BeatHitTypes.h" />
+	<ClInclude Include="BeatHitWidget.h" />
 	<ClInclude Include="RhythmTutorialTypes.h" />
 	<ClInclude Include="AttackGuideWidget.h" />
 	<ClInclude Include="RhythmTutorialWidget.h" />
@@ -269,7 +271,9 @@
     <ClInclude Include="Paths.h" />
 	<ClInclude Include="ChiAnimationSettings.h" />
     <ClInclude Include="ChiAnimationTypes.h" />
+	<ClInclude Include="ChiAttackHitBoxSpawner.h" />
     <ClInclude Include="ChiAttackState.h" />
+	<ClInclude Include="ChiBeatHitBoxSpawner.h" />
     <ClInclude Include="ChiDamageState.h" />
     <ClInclude Include="ChiDashState.h" />
     <ClInclude Include="ChiIdleRunState.h" />
@@ -321,6 +325,7 @@
 	<ClCompile Include="RhythmMeterWidget.cpp" />
 	<ClCompile Include="GameplayAnnouncementWidget.cpp" />
 	<ClCompile Include="ComboResultWidget.cpp" />
+	<ClCompile Include="BeatHitWidget.cpp" />
 	<ClCompile Include="AttackGuideWidget.cpp" />
 	<ClCompile Include="RhythmTutorialWidget.cpp" />
 	<ClCompile Include="DialogWidget.cpp" />
@@ -356,7 +361,9 @@
     <ClCompile Include="TutorialScene.cpp" />
     <ClCompile Include="TestScene.cpp" />
 	<ClCompile Include="ChiAnimationSettings.cpp" />
+	<ClCompile Include="ChiAttackHitBoxSpawner.cpp" />
     <ClCompile Include="ChiAttackState.cpp" />
+	<ClCompile Include="ChiBeatHitBoxSpawner.cpp" />
     <ClCompile Include="ChiDamageState.cpp" />
     <ClCompile Include="ChiDashState.cpp" />
     <ClCompile Include="ChiIdleRunState.cpp" />

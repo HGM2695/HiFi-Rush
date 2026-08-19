@@ -295,6 +295,12 @@
     <ClInclude Include="ChiAttackState.h">
       <Filter>Component\Player\State</Filter>
     </ClInclude>
+	<ClInclude Include="ChiAttackHitBoxSpawner.h">
+	  <Filter>Component\Player\State</Filter>
+	</ClInclude>
+	<ClInclude Include="ChiBeatHitBoxSpawner.h">
+	  <Filter>Component\Player\State</Filter>
+	</ClInclude>
     <ClInclude Include="ChiDamageState.h">
       <Filter>Component\Player\State</Filter>
     </ClInclude>
@@ -371,6 +377,12 @@
 	  <Filter>Widget</Filter>
 	</ClInclude>
 	<ClInclude Include="ComboResultWidget.h">
+	  <Filter>Widget</Filter>
+	</ClInclude>
+	<ClInclude Include="BeatHitTypes.h">
+	  <Filter>Component\Player</Filter>
+	</ClInclude>
+	<ClInclude Include="BeatHitWidget.h">
 	  <Filter>Widget</Filter>
 	</ClInclude>
 	<ClInclude Include="RhythmTutorialTypes.h">
@@ -573,6 +585,12 @@
     <ClCompile Include="ChiAttackState.cpp">
       <Filter>Component\Player\State</Filter>
     </ClCompile>
+	<ClCompile Include="ChiAttackHitBoxSpawner.cpp">
+	  <Filter>Component\Player\State</Filter>
+	</ClCompile>
+	<ClCompile Include="ChiBeatHitBoxSpawner.cpp">
+	  <Filter>Component\Player\State</Filter>
+	</ClCompile>
     <ClCompile Include="ChiDamageState.cpp">
       <Filter>Component\Player\State</Filter>
     </ClCompile>
@@ -631,6 +649,9 @@
 	  <Filter>Widget</Filter>
 	</ClCompile>
 	<ClCompile Include="ComboResultWidget.cpp">
+	  <Filter>Widget</Filter>
+	</ClCompile>
+	<ClCompile Include="BeatHitWidget.cpp">
 	  <Filter>Widget</Filter>
 	</ClCompile>
 	<ClCompile Include="AttackGuideWidget.cpp">

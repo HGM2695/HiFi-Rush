@@ -64,6 +64,15 @@ namespace gm
 		UpdateMaterial();
 	}
 
+	void Image::SetColorChannelMapping(Color redChannelColor, Color greenChannelColor, Color blueChannelColor, float ratio)
+	{
+		_redChannelColor = redChannelColor;
+		_greenChannelColor = greenChannelColor;
+		_blueChannelColor = blueChannelColor;
+		_channelColorMappingRatio = std::clamp(ratio, 0.f, 1.f);
+		UpdateMaterial();
+	}
+
 	void Image::SetFillRatio(float ratio)
 	{
 		_fillRatio = std::clamp(ratio, 0.f, 1.f);
@@ -139,6 +148,10 @@ namespace gm
 		constant.fillMode = static_cast<uint32>(_fillMode);
 		constant.radialStartAngle = _radialStartAngle;
 		constant.radialSweepAngle = _radialSweepAngle;
+		constant.redChannelColor = _redChannelColor;
+		constant.greenChannelColor = _greenChannelColor;
+		constant.blueChannelColor = _blueChannelColor;
+		constant.channelColorMappingRatio = _channelColorMappingRatio;
 		_material->SetConstantData(ShaderStage::Pixel, 0, constant);
 	}
 }

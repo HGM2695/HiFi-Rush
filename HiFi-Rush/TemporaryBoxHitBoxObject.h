@@ -4,6 +4,7 @@
 #include "GameObject.h"
 
 #include <functional>
+#include <optional>
 #include <string>
 
 namespace gm
@@ -20,6 +21,7 @@ namespace gm
 		CollisionMask	collisionMask = AllCollisionLayers;
 		DamageInfo		damageInfo{};
 		float			rehitInterval = 0.f;
+		float			activationDelayBeats = 0.f;
 		float			lifetime = 0.f;
 		std::function<void(const HitEvent&)> onHit{};
 	};
@@ -34,11 +36,14 @@ namespace gm
 		void OnTick(float deltaTime) override;
 
 	private:
-		std::function<void(const HitEvent&)>	 _onHit{};
+		std::function<void(const HitEvent&)>	_onHit{};
 		EventConnection							_hitConnection{};
 
-		HitBoxComponent*	_hitBox = nullptr;
-		float				_lifetime = 0.f;
-		float				_elapsedTime = 0.f;
+		HitBoxComponent*		_hitBox = nullptr;
+		std::optional<float>	_activationBeat{};
+		float					_lifetime = 0.f;
+		float					_elapsedTime = 0.f;
+		float					_activationDelayBeats = 0.f;
+		bool					_hasActivated = false;
 	};
 }

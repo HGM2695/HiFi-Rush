@@ -253,7 +253,7 @@ namespace gm
 		if (_playbackState == PlaybackState::Demonstration && elapsedBeat >= DemonstrationDurationBeats)
 			BeginInputPhase();
 		if (_playbackState == PlaybackState::Input)
-			CheckMissedInput(currentBeat);
+			CheckMissedInput();
 
 		if (elapsedBeat >= TutorialDurationBeats && _hasCompleted == false)
 			Complete();
@@ -369,15 +369,13 @@ namespace gm
 		OnInputPhaseChanged.Publish(event);
 	}
 
-	void RhythmTutorialWidget::CheckMissedInput(float currentBeat)
+	void RhythmTutorialWidget::CheckMissedInput()
 	{
 		if (_inputCount >= _targetCount)
 			return;
 
-		const float secondsPerBeat = _beatSystem.GetSecondsPerBeat();
-		const float goodWindowBeats = secondsPerBeat > 0.f ? _rhythmJudge.GetSettings().goodWindowSeconds / secondsPerBeat : 0.f;
 		const float expectedBeat = _startBeat + _targetBeatOffsets[_inputCount];
-		if (currentBeat > expectedBeat + goodWindowBeats)
+		if (_rhythmJudge.HasPassedInputDeadline(_beatSystem, expectedBeat))
 			FailTutorial();
 	}
 
@@ -444,9 +442,7 @@ namespace gm
 
 	float RhythmTutorialWidget::CalculateInputX(const RhythmJudgeResult& result) const
 	{
-		const float secondsPerBeat = _beatSystem.GetSecondsPerBeat();
-		const float inputOffsetBeats = secondsPerBeat > 0.f ? _rhythmJudge.GetSettings().inputOffsetSeconds / secondsPerBeat : 0.f;
-		const float inputBeat = result.inputBeat - inputOffsetBeats;
+		const float inputBeat = _rhythmJudge.GetRawInputBeat(_beatSystem, result);
 		const float inputPhaseBeat = inputBeat - _startBeat - BottomTimelineStartBeat;
 		return TimelineStartX + inputPhaseBeat * TimelinePixelsPerBeat;
 	}

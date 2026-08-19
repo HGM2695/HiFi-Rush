@@ -9,4 +9,12 @@ namespace gm::HiFiRushCollisionLayer
 	inline constexpr CollisionLayer Monster = 1u << 3;
 	inline constexpr CollisionLayer PlayerAttack = 1u << 4;
 	inline constexpr CollisionLayer MonsterAttack = 1u << 5;
+	inline constexpr CollisionLayer HittableEnvironment = 1u << 6;
+}
+
+namespace gm::HiFiRushCollisionMask
+{
+	inline constexpr CollisionMask PlayerAttackTargets =
+		HiFiRushCollisionLayer::Monster |
+		HiFiRushCollisionLayer::HittableEnvironment;
 }

@@ -68,7 +68,7 @@ namespace gm
 		void			ResetVisuals();
 		void			BeginInputPhase();
 		void			EndInputPhase();
-		void			CheckMissedInput(float currentBeat);
+		void			CheckMissedInput();
 		void			FailTutorial();
 		void			AddInputFeedback(uint32 inputIndex, RhythmJudgeGrade grade, float inputX);
 		void			AddMissingInputFeedback(uint32 inputIndex);
