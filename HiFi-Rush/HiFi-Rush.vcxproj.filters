@@ -148,7 +148,7 @@
 	<ClInclude Include="RhythmInputJudge.h">
 	  <Filter>System</Filter>
 	</ClInclude>
-    <ClInclude Include="TriggerSequenceSystem.h">
+    <ClInclude Include="TriggerSystem.h">
       <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
@@ -190,8 +190,8 @@
     <ClInclude Include="EnvironmentComponentFactory.h">
       <Filter>Factory</Filter>
     </ClInclude>
-    <ClInclude Include="IBeatTriggerAction.h">
-      <Filter>Component\Beat</Filter>
+	<ClInclude Include="TriggerBinding.h">
+	  <Filter>Component</Filter>
     </ClInclude>
     <ClInclude Include="BeatMath.h">
       <Filter>Component\Beat</Filter>
@@ -453,7 +453,7 @@
 	<ClCompile Include="RhythmInputJudge.cpp">
 	  <Filter>System</Filter>
 	</ClCompile>
-    <ClCompile Include="TriggerSequenceSystem.cpp">
+    <ClCompile Include="TriggerSystem.cpp">
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="BinaryMapLoader.cpp">
@@ -486,6 +486,9 @@
     <ClCompile Include="BeatMoveComponent.cpp">
       <Filter>Component\Beat</Filter>
     </ClCompile>
+	<ClCompile Include="TriggerBinding.cpp">
+	  <Filter>Component</Filter>
+	</ClCompile>
     <ClCompile Include="BeatOrbitComponent.cpp">
       <Filter>Component\Beat</Filter>
     </ClCompile>

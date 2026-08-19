@@ -1,6 +1,7 @@
 #include "BeatVisibilityComponent.h"
 #include "BeatSystem.h"
 #include "GameObject.h"
+#include "GameplayScene.h"
 
 namespace gm
 {
@@ -17,7 +18,7 @@ namespace gm
 		_state = VisibilityState::Scheduled;
 	}
 
-	void BeatVisibilityComponent::Reset()
+	void BeatVisibilityComponent::ResetAction()
 	{
 		GetOwner().SetRender(_desc.initialVisible);
 		_triggerBeat = 0.f;
@@ -26,7 +27,13 @@ namespace gm
 
 	void BeatVisibilityComponent::OnInitialize()
 	{
-		Reset();
+		ResetAction();
+
+		GameplayScene* scene = dynamic_cast<GameplayScene*>(GetOwner().GetScene());
+		GM_ASSERT_RETURN(scene, "BeatVisibilityComponent는 GameplayScene에서만 사용할 수 있습니다.");
+		GM_ASSERT_RETURN(_triggerBinding.Bind(scene->GetTriggerSystem(), _desc.triggerId, _desc.beatOffset,
+			[this](float startBeat) { Schedule(startBeat); },
+			[this]() { ResetAction(); }), "BeatVisibilityComponent의 Trigger Binding에 실패했습니다.");
 	}
 
 	void BeatVisibilityComponent::OnTick(float)

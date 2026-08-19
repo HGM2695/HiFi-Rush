@@ -10,9 +10,9 @@
 
 namespace gm
 {
-	struct TriggerSequenceBindingData
+	struct TriggerBindingData
 	{
-		std::wstring	sequenceId{};
+		std::wstring	triggerId{};
 		float			beatOffset = 0.f;
 	};
 
@@ -24,14 +24,14 @@ namespace gm
 
 	struct BeatMoveComponentData
 	{
-		TriggerSequenceBindingData	triggerBindingData{};
+		TriggerBindingData		triggerBindingData{};
 		Vector3						targetPosition{};
 		float						durationBeats = 1.f;
 	};
 
 	struct BeatTriggeredRotationComponentData
 	{
-		TriggerSequenceBindingData	triggerBindingData{};
+		TriggerBindingData		triggerBindingData{};
 		Vector3						axis{ 0.f, 0.f, 1.f };
 		float						angleDegrees = 90.f;
 		float						durationBeats = 0.25f;
@@ -46,7 +46,7 @@ namespace gm
 
 	struct BeatVisibilityComponentData
 	{
-		TriggerSequenceBindingData	triggerBindingData{};
+		TriggerBindingData		triggerBindingData{};
 		bool						initialVisible = false;
 		bool						visibleOnTrigger = true;
 	};
@@ -92,8 +92,11 @@ namespace gm
 
 	struct BeatTriggeredSkeletalAnimationComponentData
 	{
-		TriggerSequenceBindingData	triggerBindingData{};
-		std::wstring				clipName = L"Default";
+		TriggerBindingData	triggerBindingData{};
+		std::wstring			clipName = L"Default";
+		bool				initiallyVisible = false;
+		bool				hideWhenCompleted = true;
+		bool				disableCollidersWhenCompleted = false;
 	};
 
 	struct BoxCollider3DComponentData
@@ -128,7 +131,7 @@ namespace gm
 
 	struct HitReactionComponentData
 	{
-		std::wstring	completionSequenceId{};
+		std::wstring	completionTriggerId{};
 		std::wstring	reactionAnimationClipName{};
 	};
 

@@ -13,11 +13,8 @@
 #include "StaticMesh.h"
 #include "StaticMeshComponent.h"
 #include "TransformComponent.h"
-#include "TriggerSequenceSystem.h"
 
-#include <cmath>
 #include <string>
-#include <utility>
 
 namespace gm
 {
@@ -35,44 +32,15 @@ namespace gm
 
 	bool EnvironmentSpawner::Spawn(GameplayScene& scene, const std::vector<EnvironmentObjectData>& objectDatas) const
 	{
-		std::vector<SpawnEntry> spawnEntries;
-		spawnEntries.reserve(objectDatas.size());
 		for (const EnvironmentObjectData& objectData : objectDatas)
-		{
-			SpawnEntry spawnEntry{};
-			if (SpawnObject(scene, objectData, spawnEntry) == false)
+			if (SpawnObject(scene, objectData) == false)
 				return false;
 
-			spawnEntries.push_back(std::move(spawnEntry));
-		}
-
-		GM_ASSERT_RETURN_VAL(BuildTriggerSequences(scene, spawnEntries), false, "환경 오브젝트의 트리거 시퀀스 구성에 실패했습니다.");
 		GM_LOG("Environment objects spawned. count=%zu", objectDatas.size());
 		return true;
 	}
 
-	bool EnvironmentSpawner::BuildTriggerSequences(GameplayScene& scene, const std::vector<SpawnEntry>& spawnEntries) const
-	{
-		TriggerSequenceSystem& triggerSequenceSystem = scene.GetTriggerSequenceSystem();
-		for (const SpawnEntry& spawnEntry : spawnEntries)
-		{
-			GM_ASSERT_RETURN_VAL(spawnEntry.owner.IsValid(), false, "환경 오브젝트 Owner가 유효하지 않습니다.");
-			for (const EnvironmentTriggerAction& triggerAction : spawnEntry.triggerActions)
-			{
-				const TriggerSequenceBindingData& binding = triggerAction.triggerBindingData;
-				GM_ASSERT_RETURN_VAL(triggerAction.actionComponent, false, "환경 오브젝트에 유효하지 않은 Trigger Action이 있습니다. sequenceId=%ls", binding.sequenceId.c_str());
-				GM_ASSERT_RETURN_VAL(binding.sequenceId.empty() == false, false, "Trigger Action의 Sequence ID가 비어 있습니다.");
-				GM_ASSERT_RETURN_VAL(std::isfinite(binding.beatOffset) && binding.beatOffset >= 0.f, false, "Trigger Action의 Beat Offset이 유효하지 않습니다. sequenceId=%ls", binding.sequenceId.c_str());
-				GM_ASSERT_RETURN_VAL(
-					triggerSequenceSystem.RegisterAction(binding.sequenceId, binding.beatOffset, spawnEntry.owner, *triggerAction.actionComponent),
-					false, "Trigger Sequence Action 등록에 실패했습니다. sequenceId=%ls", binding.sequenceId.c_str());
-			}
-		}
-
-		return true;
-	}
-
-	bool EnvironmentSpawner::SpawnObject(GameplayScene& scene, const EnvironmentObjectData& objectData, SpawnEntry& outSpawnEntry) const
+	bool EnvironmentSpawner::SpawnObject(GameplayScene& scene, const EnvironmentObjectData& objectData) const
 	{
 		GameObject* gameObject = scene.SpawnGameObject<GameObject>();
 		GM_ASSERT_RETURN_VAL(gameObject, false, "환경 오브젝트 생성에 실패했습니다.");
@@ -108,9 +76,7 @@ namespace gm
 			}
 		}
 
-		std::vector<EnvironmentTriggerAction> triggerActions;
-		GM_ASSERT_RETURN_VAL(_componentFactory.AddComponents(*gameObject, objectData.components, triggerActions), false, "환경 오브젝트 Component 구성에 실패했습니다.");
-		outSpawnEntry = SpawnEntry{ gameObject->GetWeakPtr(), std::move(triggerActions) };
+		GM_ASSERT_RETURN_VAL(_componentFactory.AddComponents(*gameObject, objectData.components), false, "환경 오브젝트 Component 구성에 실패했습니다.");
 
 		return true;
 	}

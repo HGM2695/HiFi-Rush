@@ -11,13 +11,13 @@ namespace gm
 {
 	class HurtBoxComponent;
 	class SkeletalAnimatorComponent;
-	class TriggerSequenceSystem;
+	class TriggerSystem;
 	struct HitEvent;
 
 	class HitReactionComponent final : public Component
 	{
 	public:
-		HitReactionComponent(const std::wstring& completionSequenceId, const std::wstring& reactionAnimationClipName);
+		HitReactionComponent(const std::wstring& completionTriggerId, const std::wstring& reactionAnimationClipName);
 
 		TickGroup GetTickGroup() const override { return TickGroup::GameLogic; }
 
@@ -27,7 +27,7 @@ namespace gm
 
 	private:
 		void HandleHurt(const HitEvent& event);
-		void ActivateSequence();
+		void ActivateTrigger();
 
 		enum class State
 		{
@@ -37,10 +37,10 @@ namespace gm
 		};
 
 		std::vector<std::unique_ptr<EventConnection>>	_hurtConnections{};
-		std::wstring									_completionSequenceId{};
+		std::wstring									_completionTriggerId{};
 		std::wstring									_reactionAnimationClipName{};
 		SkeletalAnimatorComponent*						_animator = nullptr;
-		TriggerSequenceSystem*							_triggerSequenceSystem = nullptr;
+		TriggerSystem*									_triggerSystem = nullptr;
 		State											_state = State::WaitingForHit;
 	};
 }

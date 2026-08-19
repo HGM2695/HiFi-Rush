@@ -1,7 +1,6 @@
 #pragma once
 
 #include "EnvironmentComponentFactory.h"
-#include "WeakGameObjectPtr.h"
 
 #include <vector>
 
@@ -19,14 +18,7 @@ namespace gm
 		bool Spawn(GameplayScene& scene, const std::vector<EnvironmentObjectData>& objectDatas) const;
 
 	private:
-		struct SpawnEntry
-		{
-			WeakGameObjectPtr						owner{};
-			std::vector<EnvironmentTriggerAction>	triggerActions{};
-		};
-
-		bool BuildTriggerSequences(GameplayScene& scene, const std::vector<SpawnEntry>& spawnEntries) const;
-		bool SpawnObject(GameplayScene& scene, const EnvironmentObjectData& objectData, SpawnEntry& outSpawnEntry) const;
+		bool SpawnObject(GameplayScene& scene, const EnvironmentObjectData& objectData) const;
 
 	private:
 		Resources&					_resources;

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "IBeatTriggerAction.h"
 #include "Component.h"
+#include "TriggerBinding.h"
 
 namespace gm
 {
@@ -10,19 +10,18 @@ namespace gm
 
 	struct BeatTriggeredRotationDesc
 	{
-		Vector3	axis{ 0.f, 0.f, 1.f };
-		float	angleDegrees = 90.f;
-		float	durationBeats = 0.25f;
+		std::wstring	triggerId{};
+		float			beatOffset = 0.f;
+		Vector3			axis{ 0.f, 0.f, 1.f };
+		float			angleDegrees = 90.f;
+		float			durationBeats = 0.25f;
 	};
 
-	class BeatTriggeredRotationComponent : public Component, public IBeatTriggerAction
+	class BeatTriggeredRotationComponent : public Component
 	{
 	public:
 		BeatTriggeredRotationComponent(const BeatSystem& beatSystem, const BeatTriggeredRotationDesc& desc);
 
-		void Activate();
-		void Schedule(float startBeat) override;
-		void Reset() override;
 		bool IsActive() const { return _state == RotationState::Rotating; }
 
 	protected:
@@ -38,8 +37,13 @@ namespace gm
 		};
 
 	private:
+		void Schedule(float startBeat);
+		void ResetAction();
+
+	private:
 		const BeatSystem&			_beatSystem;
 		BeatTriggeredRotationDesc	_desc{};
+		TriggerBinding				_triggerBinding{};
 		TransformComponent*			_transform = nullptr;
 		Vector3						_rotationAxis{};
 		Quaternion					_initialRotation{};

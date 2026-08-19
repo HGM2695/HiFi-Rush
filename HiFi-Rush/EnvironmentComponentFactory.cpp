@@ -16,7 +16,6 @@
 #include "HealthComponent.h"
 #include "HitReactionComponent.h"
 #include "HurtBoxComponent.h"
-#include "IBeatTriggerAction.h"
 #include "Resources.h"
 #include "SceneTransitionTriggerComponent.h"
 #include "SkeletalAnimatorComponent.h"
@@ -35,19 +34,14 @@ namespace gm
 		: _resources(resources), _beatSystem(beatSystem)
 	{}
 
-	bool EnvironmentComponentFactory::AddComponents(
-		GameObject& gameObject,
-		const std::vector<EnvironmentComponentData>& components,
-		std::vector<EnvironmentTriggerAction>& outTriggerActions) const
+	bool EnvironmentComponentFactory::AddComponents(GameObject& gameObject, const std::vector<EnvironmentComponentData>& components) const
 	{
-		outTriggerActions.clear();
-
 		for (const EnvironmentComponentData& component : components)
 		{
 			const bool succeeded = std::visit(
-				[this, &gameObject, &outTriggerActions](const auto& data)
+				[this, &gameObject](const auto& data)
 				{
-					return CreateComponent(gameObject, data, outTriggerActions);
+					return CreateComponent(gameObject, data);
 				}, component);
 
 			if (succeeded == false)
@@ -57,7 +51,7 @@ namespace gm
 		return true;
 	}
 
-	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BoxCollider3DComponentData& data, std::vector<EnvironmentTriggerAction>&) const
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BoxCollider3DComponentData& data) const
 	{
 		const std::vector<Collider3DComponent*>& colliders = gameObject.GetColliders3D();
 		const bool hasDuplicateId = data.colliderId.empty() == false && std::any_of(colliders.begin(), colliders.end(),
@@ -83,7 +77,7 @@ namespace gm
 		return true;
 	}
 
-	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const SphereCollider3DComponentData& data, std::vector<EnvironmentTriggerAction>&) const
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const SphereCollider3DComponentData& data) const
 	{
 		const std::vector<Collider3DComponent*>& colliders = gameObject.GetColliders3D();
 		const bool hasDuplicateId = data.colliderId.empty() == false && std::any_of(colliders.begin(), colliders.end(),
@@ -105,7 +99,7 @@ namespace gm
 		return true;
 	}
 
-	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const HealthComponentData& data, std::vector<EnvironmentTriggerAction>&) const
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const HealthComponentData& data) const
 	{
 		GM_ASSERT_RETURN_VAL(gameObject.GetComponent<HealthComponent>() == nullptr, false, "환경 GameObject에는 HealthComponent를 하나만 추가할 수 있습니다.");
 		GM_ASSERT_RETURN_VAL(data.maxHealth > 0, false, "Health의 Max Health는 0보다 커야 합니다.");
@@ -117,7 +111,7 @@ namespace gm
 		return true;
 	}
 
-	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const HurtBoxComponentData& data, std::vector<EnvironmentTriggerAction>&) const
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const HurtBoxComponentData& data) const
 	{
 		GM_ASSERT_RETURN_VAL(data.colliderId.empty() == false, false, "HurtBox가 참조할 Collider ID는 비어 있을 수 없습니다.");
 		bool hasDuplicateReference = false;
@@ -132,17 +126,17 @@ namespace gm
 		return gameObject.AddComponent<HurtBoxComponent>(data.colliderId) != nullptr;
 	}
 
-	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const HitReactionComponentData& data, std::vector<EnvironmentTriggerAction>&) const
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const HitReactionComponentData& data) const
 	{
 		GM_ASSERT_RETURN_VAL(gameObject.GetComponent<HitReactionComponent>() == nullptr, false, "GameObject에는 HitReactionComponent를 하나만 추가할 수 있습니다.");
-		GM_ASSERT_RETURN_VAL(data.completionSequenceId.empty() == false, false, "HitReaction의 완료 Sequence ID가 비어 있습니다.");
+		GM_ASSERT_RETURN_VAL(data.completionTriggerId.empty() == false, false, "HitReaction의 완료 Trigger ID가 비어 있습니다.");
 
-		HitReactionComponent* component = gameObject.AddComponent<HitReactionComponent>(data.completionSequenceId, data.reactionAnimationClipName);
+		HitReactionComponent* component = gameObject.AddComponent<HitReactionComponent>(data.completionTriggerId, data.reactionAnimationClipName);
 		GM_ASSERT_RETURN_VAL(component, false, "HitReactionComponent 생성에 실패했습니다.");
 		return true;
 	}
 
-	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const SceneTransitionTriggerComponentData& data, std::vector<EnvironmentTriggerAction>&) const
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const SceneTransitionTriggerComponentData& data) const
 	{
 		GM_ASSERT_RETURN_VAL(gameObject.GetComponent<SceneTransitionTriggerComponent>() == nullptr, false, "GameObject에는 SceneTransitionTriggerComponent를 하나만 추가할 수 있습니다.");
 		GM_ASSERT_RETURN_VAL(data.colliderId.empty() == false, false, "Scene Transition이 참조할 Collider ID는 비어 있을 수 없습니다.");
@@ -151,30 +145,28 @@ namespace gm
 		return gameObject.AddComponent<SceneTransitionTriggerComponent>(data.colliderId, data.targetSceneName) != nullptr;
 	}
 
-	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatMoveComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatMoveComponentData& data) const
 	{
 		BeatMoveDesc desc{};
+		desc.triggerId = data.triggerBindingData.triggerId;
+		desc.beatOffset = data.triggerBindingData.beatOffset;
 		desc.targetPosition = data.targetPosition;
 		desc.durationBeats = data.durationBeats;
-		BeatMoveComponent* component = gameObject.AddComponent<BeatMoveComponent>(_beatSystem, desc);
-		GM_ASSERT_RETURN_VAL(component, false, "BeatMoveComponent 생성에 실패했습니다.");
-		outTriggerActions.push_back(EnvironmentTriggerAction{ data.triggerBindingData, component });
-		return true;
+		return gameObject.AddComponent<BeatMoveComponent>(_beatSystem, desc) != nullptr;
 	}
 
-	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatTriggeredRotationComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatTriggeredRotationComponentData& data) const
 	{
 		BeatTriggeredRotationDesc desc{};
+		desc.triggerId = data.triggerBindingData.triggerId;
+		desc.beatOffset = data.triggerBindingData.beatOffset;
 		desc.axis = data.axis;
 		desc.angleDegrees = data.angleDegrees;
 		desc.durationBeats = data.durationBeats;
-		BeatTriggeredRotationComponent* component = gameObject.AddComponent<BeatTriggeredRotationComponent>(_beatSystem, desc);
-		GM_ASSERT_RETURN_VAL(component, false, "BeatTriggeredRotationComponent 생성에 실패했습니다.");
-		outTriggerActions.push_back(EnvironmentTriggerAction{ data.triggerBindingData, component });
-		return true;
+		return gameObject.AddComponent<BeatTriggeredRotationComponent>(_beatSystem, desc) != nullptr;
 	}
 
-	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatPositionSequenceComponentData& data, std::vector<EnvironmentTriggerAction>&) const
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatPositionSequenceComponentData& data) const
 	{
 		BeatPositionSequenceDesc desc{};
 		desc.positionOffsets = data.positionOffsets;
@@ -184,18 +176,17 @@ namespace gm
 		return true;
 	}
 
-	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatVisibilityComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatVisibilityComponentData& data) const
 	{
 		BeatVisibilityDesc desc{};
+		desc.triggerId = data.triggerBindingData.triggerId;
+		desc.beatOffset = data.triggerBindingData.beatOffset;
 		desc.initialVisible = data.initialVisible;
 		desc.visibleOnTrigger = data.visibleOnTrigger;
-		BeatVisibilityComponent* component = gameObject.AddComponent<BeatVisibilityComponent>(_beatSystem, desc);
-		GM_ASSERT_RETURN_VAL(component, false, "BeatVisibilityComponent 생성에 실패했습니다.");
-		outTriggerActions.push_back(EnvironmentTriggerAction{ data.triggerBindingData, component });
-		return true;
+		return gameObject.AddComponent<BeatVisibilityComponent>(_beatSystem, desc) != nullptr;
 	}
 
-	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatTransformComponentData& data, std::vector<EnvironmentTriggerAction>&) const
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatTransformComponentData& data) const
 	{
 		TransformComponent* transform = gameObject.GetTransform();
 		GM_ASSERT_RETURN_VAL(transform, false, "BeatTransformComponent에 필요한 TransformComponent가 없습니다.");
@@ -212,7 +203,7 @@ namespace gm
 		return true;
 	}
 
-	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatOrbitComponentData& data, std::vector<EnvironmentTriggerAction>&) const
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatOrbitComponentData& data) const
 	{
 		BeatOrbitDesc desc{};
 		desc.center = data.center;
@@ -224,7 +215,7 @@ namespace gm
 		return true;
 	}
 
-	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatAudioLevelMoveComponentData& data, std::vector<EnvironmentTriggerAction>&) const
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatAudioLevelMoveComponentData& data) const
 	{
 		BeatAudioLevelMoveDesc desc{};
 		desc.direction = data.direction;
@@ -235,7 +226,7 @@ namespace gm
 		return true;
 	}
 
-	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatStaticMeshCycleComponentData& data, std::vector<EnvironmentTriggerAction>&) const
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatStaticMeshCycleComponentData& data) const
 	{
 		StaticMeshComponent* meshComponent = gameObject.GetComponent<StaticMeshComponent>();
 		GM_ASSERT_RETURN_VAL(meshComponent, false, "BeatStaticMeshCycleComponent에 필요한 StaticMeshComponent가 없습니다.");
@@ -255,7 +246,7 @@ namespace gm
 		return true;
 	}
 
-	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatSkeletalAnimationSyncComponentData& data, std::vector<EnvironmentTriggerAction>&) const
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatSkeletalAnimationSyncComponentData& data) const
 	{
 		SkeletalAnimatorComponent* animator = gameObject.GetComponent<SkeletalAnimatorComponent>();
 		GM_ASSERT_RETURN_VAL(animator, false, "BeatSkeletalAnimationSyncComponent에 필요한 SkeletalAnimatorComponent가 없습니다.");
@@ -267,16 +258,18 @@ namespace gm
 		return true;
 	}
 
-	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatTriggeredSkeletalAnimationComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatTriggeredSkeletalAnimationComponentData& data) const
 	{
 		SkeletalAnimatorComponent* animator = gameObject.GetComponent<SkeletalAnimatorComponent>();
 		GM_ASSERT_RETURN_VAL(animator, false, "BeatTriggeredSkeletalAnimationComponent에 필요한 SkeletalAnimatorComponent가 없습니다.");
 
 		BeatTriggeredSkeletalAnimationDesc desc{};
+		desc.triggerId = data.triggerBindingData.triggerId;
+		desc.beatOffset = data.triggerBindingData.beatOffset;
 		desc.clipName = data.clipName;
-		BeatTriggeredSkeletalAnimationComponent* component = gameObject.AddComponent<BeatTriggeredSkeletalAnimationComponent>(_beatSystem, *animator, std::move(desc));
-		GM_ASSERT_RETURN_VAL(component, false, "BeatTriggeredSkeletalAnimationComponent 생성에 실패했습니다.");
-		outTriggerActions.push_back(EnvironmentTriggerAction{ data.triggerBindingData, component });
-		return true;
+		desc.initiallyVisible = data.initiallyVisible;
+		desc.hideWhenCompleted = data.hideWhenCompleted;
+		desc.disableCollidersWhenCompleted = data.disableCollidersWhenCompleted;
+		return gameObject.AddComponent<BeatTriggeredSkeletalAnimationComponent>(_beatSystem, *animator, std::move(desc)) != nullptr;
 	}
 }

@@ -4,22 +4,21 @@
 #include "GameplayScene.h"
 #include "HurtBoxComponent.h"
 #include "SkeletalAnimatorComponent.h"
-#include "TriggerSequenceSystem.h"
+#include "TriggerSystem.h"
 
 namespace gm
 {
-	HitReactionComponent::HitReactionComponent(const std::wstring& completionSequenceId, const std::wstring& reactionAnimationClipName)
-		: _completionSequenceId(completionSequenceId), _reactionAnimationClipName(reactionAnimationClipName)
+	HitReactionComponent::HitReactionComponent(const std::wstring& completionTriggerId, const std::wstring& reactionAnimationClipName)
+		: _completionTriggerId(completionTriggerId), _reactionAnimationClipName(reactionAnimationClipName)
 	{
-		GM_ASSERT(completionSequenceId.empty() == false, "HitReactionComponent의 완료 Sequence ID는 비어 있을 수 없습니다.");
+		GM_ASSERT(completionTriggerId.empty() == false, "HitReactionComponent의 완료 Trigger ID는 비어 있을 수 없습니다.");
 	}
 
 	void HitReactionComponent::OnInitialize()
 	{
 		GameplayScene* scene = dynamic_cast<GameplayScene*>(GetOwner().GetScene());
 		GM_ASSERT_RETURN(scene, "HitReactionComponent는 GameplayScene에서만 사용할 수 있습니다.");
-		_triggerSequenceSystem = &scene->GetTriggerSequenceSystem();
-		GM_ASSERT_RETURN(_triggerSequenceSystem->HasSequence(_completionSequenceId), "HitReactionComponent가 참조하는 완료 Sequence가 없습니다. sequenceId=%ls", _completionSequenceId.c_str());
+		_triggerSystem = &scene->GetTriggerSystem();
 
 		if (_reactionAnimationClipName.empty() == false)
 		{
@@ -57,17 +56,17 @@ namespace gm
 		if (_state != State::PlayingAnimation || _animator == nullptr || _animator->GetState() != AnimationState::Completed)
 			return;
 
-		ActivateSequence();
+		ActivateTrigger();
 	}
 
 	void HitReactionComponent::HandleHurt(const HitEvent& event)
 	{
-		if (_state != State::WaitingForHit || event.damageResult.state != DamageState::Applied || _triggerSequenceSystem == nullptr)
+		if (_state != State::WaitingForHit || event.damageResult.state != DamageState::Applied || _triggerSystem == nullptr)
 			return;
 
 		if (_animator == nullptr)
 		{
-			ActivateSequence();
+			ActivateTrigger();
 			return;
 		}
 
@@ -77,10 +76,10 @@ namespace gm
 		_state = State::PlayingAnimation;
 	}
 
-	void HitReactionComponent::ActivateSequence()
+	void HitReactionComponent::ActivateTrigger()
 	{
-		GM_ASSERT_RETURN(_triggerSequenceSystem, "HitReactionComponent의 TriggerSequenceSystem이 유효하지 않습니다.");
-		GM_ASSERT_RETURN(_triggerSequenceSystem->Activate(_completionSequenceId), "HitReactionComponent의 완료 Sequence 실행에 실패했습니다. sequenceId=%ls", _completionSequenceId.c_str());
+		GM_ASSERT_RETURN(_triggerSystem, "HitReactionComponent의 TriggerSystem이 유효하지 않습니다.");
+		GM_ASSERT_RETURN(_triggerSystem->Activate(_completionTriggerId), "HitReactionComponent의 완료 Trigger 실행에 실패했습니다. triggerId=%ls", _completionTriggerId.c_str());
 		_state = State::Completed;
 	}
 }

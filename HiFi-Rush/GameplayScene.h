@@ -11,6 +11,7 @@ namespace gm
 	struct PlayerSpawnDesc;
 	class TriggerSequenceSystem;
 	class DialogComponent;
+	class TriggerSystem;
 	class GameplayAnnouncementWidget;
 	class PlayerStatusWidget;
 	class RhythmMeterWidget;
@@ -22,8 +23,8 @@ namespace gm
 		GameplayScene();
 		~GameplayScene() override;
 
-		TriggerSequenceSystem&			GetTriggerSequenceSystem();
-		const TriggerSequenceSystem&	GetTriggerSequenceSystem() const;
+		TriggerSystem&					GetTriggerSystem();
+		const TriggerSystem&			GetTriggerSystem() const;
 		const WeakGameObjectPtr&		GetPlayer() const { return _player; }
 		DialogComponent&				GetDialogComponent();
 		const DialogComponent&			GetDialogComponent() const;
@@ -39,7 +40,7 @@ namespace gm
 		void OnUnload() override;
 
 	private:
-		std::unique_ptr<TriggerSequenceSystem>	_triggerSequenceSystem;
+		std::unique_ptr<TriggerSystem>			_triggerSystem;
 		WeakGameObjectPtr						_player{};
 		GameplayAnnouncementWidget*			_announcementWidget = nullptr;
 		DialogComponent*						_dialogComponent = nullptr;

@@ -41,7 +41,7 @@ namespace gm
 		case EnvironmentComponentType::BeatMove:
 		{
 			BeatMoveComponentData data{};
-			GM_ASSERT_RETURN_VAL(ReadTriggerSequenceBinding(inputStream, data.triggerBindingData), false, "BeatMove 트리거 바인딩을 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadTriggerBinding(inputStream, data.triggerBindingData), false, "BeatMove 트리거 바인딩을 읽는 데 실패했습니다.");
 			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.targetPosition) && ReadBinary(inputStream, data.durationBeats), false, "BeatMove Component를 읽는 데 실패했습니다.");
 			outObject.components.emplace_back(std::move(data));
 			return true;
@@ -50,7 +50,7 @@ namespace gm
 		case EnvironmentComponentType::BeatTriggeredRotation:
 		{
 			BeatTriggeredRotationComponentData data{};
-			GM_ASSERT_RETURN_VAL(ReadTriggerSequenceBinding(inputStream, data.triggerBindingData), false, "BeatTriggeredRotation 트리거 바인딩을 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadTriggerBinding(inputStream, data.triggerBindingData), false, "BeatTriggeredRotation 트리거 바인딩을 읽는 데 실패했습니다.");
 			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.axis) && ReadBinary(inputStream, data.angleDegrees) && ReadBinary(inputStream, data.durationBeats), false, "BeatTriggeredRotation Component를 읽는 데 실패했습니다.");
 			outObject.components.emplace_back(std::move(data));
 			return true;
@@ -70,7 +70,7 @@ namespace gm
 		case EnvironmentComponentType::BeatVisibility:
 		{
 			BeatVisibilityComponentData data{};
-			GM_ASSERT_RETURN_VAL(ReadTriggerSequenceBinding(inputStream, data.triggerBindingData), false, "BeatVisibility 트리거 바인딩을 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadTriggerBinding(inputStream, data.triggerBindingData), false, "BeatVisibility 트리거 바인딩을 읽는 데 실패했습니다.");
 			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.initialVisible) && ReadBinary(inputStream, data.visibleOnTrigger), false, "BeatVisibility 표시 설정을 읽는 데 실패했습니다.");
 			outObject.components.emplace_back(data);
 			return true;
@@ -131,9 +131,12 @@ namespace gm
 		case EnvironmentComponentType::BeatTriggeredSkeletalAnimation:
 		{
 			BeatTriggeredSkeletalAnimationComponentData data{};
-			GM_ASSERT_RETURN_VAL(ReadTriggerSequenceBinding(inputStream, data.triggerBindingData), false, "BeatTriggeredSkeletalAnimation 트리거 바인딩을 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadTriggerBinding(inputStream, data.triggerBindingData), false, "BeatTriggeredSkeletalAnimation 트리거 바인딩을 읽는 데 실패했습니다.");
 			GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, data.clipName), false, "BeatTriggeredSkeletalAnimation Clip 이름을 읽는 데 실패했습니다.");
 			GM_ASSERT_RETURN_VAL(data.clipName.empty() == false, false, "BeatTriggeredSkeletalAnimation Clip 이름이 비어 있습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.initiallyVisible), false, "BeatTriggeredSkeletalAnimation 초기 표시 설정을 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.hideWhenCompleted), false, "BeatTriggeredSkeletalAnimation 완료 표시 설정을 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.disableCollidersWhenCompleted), false, "BeatTriggeredSkeletalAnimation 완료 Collider 설정을 읽는 데 실패했습니다.");
 			outObject.components.emplace_back(std::move(data));
 			return true;
 		}
@@ -183,8 +186,8 @@ namespace gm
 		case EnvironmentComponentType::HitReaction:
 		{
 			HitReactionComponentData data{};
-			GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, data.completionSequenceId), false, "HitReaction의 완료 Sequence ID를 읽는 데 실패했습니다.");
-			GM_ASSERT_RETURN_VAL(data.completionSequenceId.empty() == false, false, "HitReaction의 완료 Sequence ID가 비어 있습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, data.completionTriggerId), false, "HitReaction의 완료 Trigger ID를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(data.completionTriggerId.empty() == false, false, "HitReaction의 완료 Trigger ID가 비어 있습니다.");
 			GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, data.reactionAnimationClipName), false, "HitReaction의 반응 Animation Clip 이름을 읽는 데 실패했습니다.");
 			outObject.components.emplace_back(std::move(data));
 			return true;
@@ -227,10 +230,10 @@ namespace gm
 		return true;
 	}
 
-	bool BinaryMapLoader::ReadTriggerSequenceBinding(std::istream& inputStream, TriggerSequenceBindingData& outBinding)
+	bool BinaryMapLoader::ReadTriggerBinding(std::istream& inputStream, TriggerBindingData& outBinding)
 	{
-		GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, outBinding.sequenceId), false, "트리거 Sequence ID를 읽는 데 실패했습니다.");
-		GM_ASSERT_RETURN_VAL(outBinding.sequenceId.empty() == false, false, "트리거 Sequence ID가 비어 있습니다.");
+		GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, outBinding.triggerId), false, "Trigger ID를 읽는 데 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(outBinding.triggerId.empty() == false, false, "Trigger ID가 비어 있습니다.");
 		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outBinding.beatOffset), false, "트리거 Beat Offset을 읽는 데 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(std::isfinite(outBinding.beatOffset) && outBinding.beatOffset >= 0.f, false, "트리거 Beat Offset이 유효하지 않습니다.");
 		return true;

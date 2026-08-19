@@ -17,6 +17,7 @@ namespace gm
 		float	GetPlaybackTime() const { return _playbackTime; }
 		float	GetSongOffset() const { return _songOffsetSeconds; }
 		float	GetCurrentBeat() const { return _currentBeat; }
+		float	GetNextBeat() const { return static_cast<float>(_currentIntegerBeat + 1); }
 		int64	GetCurrentBeatIndex() const { return _currentIntegerBeat; }
 		float	GetBeatProgress() const { return _beatProgress; }
 		float	GetMusicPeak() const { return _musicPeak; }

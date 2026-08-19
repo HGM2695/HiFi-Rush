@@ -1,6 +1,7 @@
 #include "BeatTriggeredRotationComponent.h"
 #include "BeatSystem.h"
 #include "GameObject.h"
+#include "GameplayScene.h"
 #include "MathUtil.h"
 #include "TransformComponent.h"
 
@@ -11,16 +12,6 @@ namespace gm
 	BeatTriggeredRotationComponent::BeatTriggeredRotationComponent(const BeatSystem& beatSystem, const BeatTriggeredRotationDesc& desc)
 		: _beatSystem(beatSystem), _desc(desc)
 	{}
-
-	void BeatTriggeredRotationComponent::Activate()
-	{
-		GM_ASSERT_RETURN(_transform, "BeatTriggeredRotationComponent는 Initialize 이후 활성화해야 합니다.");
-
-		if (_state != RotationState::Inactive || _beatSystem.HasPlaybackTime() == false)
-			return;
-
-		Schedule(_beatSystem.GetCurrentBeat());
-	}
 
 	void BeatTriggeredRotationComponent::Schedule(float startBeat)
 	{
@@ -37,7 +28,7 @@ namespace gm
 		_state = RotationState::Rotating;
 	}
 
-	void BeatTriggeredRotationComponent::Reset()
+	void BeatTriggeredRotationComponent::ResetAction()
 	{
 		GM_ASSERT_RETURN(_transform, "BeatTriggeredRotationComponent는 Initialize 이후 초기화해야 합니다.");
 
@@ -61,6 +52,12 @@ namespace gm
 		_initialRotation = _transform->GetRotation();
 		_startRotation = _initialRotation;
 		_targetRotation = _initialRotation;
+
+		GameplayScene* scene = dynamic_cast<GameplayScene*>(GetOwner().GetScene());
+		GM_ASSERT_RETURN(scene, "BeatTriggeredRotationComponent는 GameplayScene에서만 사용할 수 있습니다.");
+		GM_ASSERT_RETURN(_triggerBinding.Bind(scene->GetTriggerSystem(), _desc.triggerId, _desc.beatOffset,
+			[this](float startBeat) { Schedule(startBeat); },
+			[this]() { ResetAction(); }), "BeatTriggeredRotationComponent의 Trigger Binding에 실패했습니다.");
 	}
 
 	void BeatTriggeredRotationComponent::OnTick(float)

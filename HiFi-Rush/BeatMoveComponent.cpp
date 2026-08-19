@@ -1,28 +1,17 @@
 #include "BeatMoveComponent.h"
 #include "BeatSystem.h"
 #include "GameObject.h"
+#include "GameplayScene.h"
 #include "MathUtil.h"
 #include "TransformComponent.h"
 
 #include <algorithm>
-#include <cmath>
 
 namespace gm
 {
 	BeatMoveComponent::BeatMoveComponent(const BeatSystem& beatSystem, const BeatMoveDesc& desc)
 		: _beatSystem(beatSystem), _desc(desc)
 	{}
-
-	void BeatMoveComponent::Activate()
-	{
-		GM_ASSERT_RETURN(_transform, "BeatMoveComponent는 Initialize 이후에 활성화해야 합니다.");
-
-		if (_state != MoveState::Inactive || _beatSystem.HasPlaybackTime() == false)
-			return;
-
-		if (_beatSystem.HasPlaybackTime())
-			Schedule(std::floor(_beatSystem.GetCurrentBeat()) + 1.f);
-	}
 
 	void BeatMoveComponent::Schedule(float startBeat)
 	{
@@ -36,7 +25,7 @@ namespace gm
 		_state = MoveState::Scheduled;
 	}
 
-	void BeatMoveComponent::Reset()
+	void BeatMoveComponent::ResetAction()
 	{
 		GM_ASSERT_RETURN(_transform, "BeatMoveComponent는 Initialize 이후에 초기화해야 합니다.");
 
@@ -53,6 +42,12 @@ namespace gm
 		_transform = GetOwner().GetTransform();
 		GM_ASSERT_RETURN(_transform, "BeatMoveComponent는 TransformComponent가 필요합니다.");
 		_initialPosition = _transform->GetPosition();
+
+		GameplayScene* scene = dynamic_cast<GameplayScene*>(GetOwner().GetScene());
+		GM_ASSERT_RETURN(scene, "BeatMoveComponent는 GameplayScene에서만 사용할 수 있습니다.");
+		GM_ASSERT_RETURN(_triggerBinding.Bind(scene->GetTriggerSystem(), _desc.triggerId, _desc.beatOffset,
+			[this](float startBeat) { Schedule(startBeat); },
+			[this]() { ResetAction(); }), "BeatMoveComponent의 Trigger Binding에 실패했습니다.");
 	}
 
 	void BeatMoveComponent::OnTick(float)

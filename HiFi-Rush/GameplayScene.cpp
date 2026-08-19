@@ -23,7 +23,7 @@
 #include "Resources.h"
 #include "ReverbComponent.h"
 #include "SoundWave.h"
-#include "TriggerSequenceSystem.h"
+#include "TriggerSystem.h"
 #include "UIManager.h"
 
 #include <memory>
@@ -31,19 +31,19 @@
 namespace gm
 {
 	GameplayScene::GameplayScene()
-		: _triggerSequenceSystem(std::make_unique<TriggerSequenceSystem>(HiFiRushStatics::GetBeatSystem()))
+		: _triggerSystem(std::make_unique<TriggerSystem>(HiFiRushStatics::GetBeatSystem()))
 	{}
 
 	GameplayScene::~GameplayScene() = default;
 
-	TriggerSequenceSystem& GameplayScene::GetTriggerSequenceSystem()
+	TriggerSystem& GameplayScene::GetTriggerSystem()
 	{
-		return *_triggerSequenceSystem;
+		return *_triggerSystem;
 	}
 
-	const TriggerSequenceSystem& GameplayScene::GetTriggerSequenceSystem() const
+	const TriggerSystem& GameplayScene::GetTriggerSystem() const
 	{
-		return *_triggerSequenceSystem;
+		return *_triggerSystem;
 	}
 
 	DialogComponent& GameplayScene::GetDialogComponent()
@@ -151,6 +151,6 @@ namespace gm
 		_announcementWidget = nullptr;
 		_playerStatusWidget = nullptr;
 		_rhythmMeterWidget = nullptr;
-		_triggerSequenceSystem->Clear();
+		_triggerSystem->Clear();
 	}
 }

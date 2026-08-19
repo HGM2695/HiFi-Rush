@@ -28,7 +28,7 @@
 #include "PlayerSpawner.h"
 #include "PlayerControlComponent.h"
 #include "SceneDebugTools.h"
-#include "TriggerSequenceSystem.h"
+#include "TriggerSystem.h"
 #include "UIManager.h"
 
 namespace gm
@@ -162,7 +162,7 @@ namespace gm
 			const BeatSystem& beatSystem = HiFiRushStatics::GetBeatSystem();
 			_roadUpBGMStartBeat = static_cast<float>(beatSystem.GetCurrentBeatIndex() + 1);
 			_isRoadUpBGMQueued = true;
-			GM_ASSERT_RETURN(GetTriggerSequenceSystem().Activate(RoadUpTriggerId), "Tutorial 바닥 상승 Trigger 실행에 실패했습니다.");
+			GM_ASSERT_RETURN(GetTriggerSystem().Activate(RoadUpTriggerId), "Tutorial 바닥 상승 Trigger 실행에 실패했습니다.");
 			_playerControlComponent->ReleaseControls(this);
 		}
 	}

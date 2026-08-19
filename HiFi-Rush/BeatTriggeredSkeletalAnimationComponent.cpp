@@ -1,7 +1,9 @@
 #include "BeatTriggeredSkeletalAnimationComponent.h"
 #include "AnimationTypes.h"
 #include "BeatSystem.h"
+#include "Collider3DComponent.h"
 #include "GameObject.h"
+#include "GameplayScene.h"
 #include "SkeletalAnimatorComponent.h"
 
 #include <utility>
@@ -21,9 +23,11 @@ namespace gm
 		_state = PlaybackState::Scheduled;
 	}
 
-	void BeatTriggeredSkeletalAnimationComponent::Reset()
+	void BeatTriggeredSkeletalAnimationComponent::ResetAction()
 	{
-		GetOwner().SetRender(false);
+		GetOwner().SetRender(_desc.initiallyVisible);
+		for (const ColliderState& colliderState : _colliderStates)
+			colliderState.collider->SetEnabled(colliderState.wasEnabled);
 		_animator.Reset();
 		_startBeat = 0.f;
 		_state = PlaybackState::Inactive;
@@ -33,7 +37,18 @@ namespace gm
 	{
 		GM_ASSERT_RETURN(_desc.clipName.empty() == false, "BeatTriggeredSkeletalAnimationComponent의 Clip 이름이 비어 있습니다.");
 		GM_ASSERT_RETURN(_animator.HasClip(_desc.clipName), "BeatTriggeredSkeletalAnimationComponent가 요청한 Clip이 없습니다. clip=%ls", _desc.clipName.c_str());
-		Reset();
+		if (_desc.disableCollidersWhenCompleted)
+		{
+			for (Collider3DComponent* collider : GetOwner().GetColliders3D())
+				_colliderStates.push_back({ collider, collider->IsEnabled() });
+		}
+		ResetAction();
+
+		GameplayScene* scene = dynamic_cast<GameplayScene*>(GetOwner().GetScene());
+		GM_ASSERT_RETURN(scene, "BeatTriggeredSkeletalAnimationComponent는 GameplayScene에서만 사용할 수 있습니다.");
+		GM_ASSERT_RETURN(_triggerBinding.Bind(scene->GetTriggerSystem(), _desc.triggerId, _desc.beatOffset,
+			[this](float startBeat) { Schedule(startBeat); },
+			[this]() { ResetAction(); }), "BeatTriggeredSkeletalAnimationComponent의 Trigger Binding에 실패했습니다.");
 	}
 
 	void BeatTriggeredSkeletalAnimationComponent::OnTick(float)
@@ -54,8 +69,13 @@ namespace gm
 		if (_state != PlaybackState::Playing || _animator.GetState() != AnimationState::Completed)
 			return;
 
-		GetOwner().SetRender(false);
-		_animator.Reset();
+		if (_desc.hideWhenCompleted)
+		{
+			GetOwner().SetRender(false);
+			_animator.Reset();
+		}
+		for (const ColliderState& colliderState : _colliderStates)
+			colliderState.collider->SetEnabled(false);
 		_state = PlaybackState::Inactive;
 	}
 }

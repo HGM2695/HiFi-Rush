@@ -6,42 +6,32 @@ namespace gm
 {
 	class BeatSystem;
 	class GameObject;
-	class IBeatTriggerAction;
 	class Resources;
-
-	struct EnvironmentTriggerAction
-	{
-		TriggerSequenceBindingData	triggerBindingData{};
-		IBeatTriggerAction*			actionComponent = nullptr;
-	};
 
 	class EnvironmentComponentFactory
 	{
 	public:
 		EnvironmentComponentFactory(Resources& resources, const BeatSystem& beatSystem);
 
-		bool AddComponents(
-			GameObject& gameObject,
-			const std::vector<EnvironmentComponentData>& components,
-			std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
+		bool AddComponents(GameObject& gameObject, const std::vector<EnvironmentComponentData>& components) const;
 
 	private:
-		bool CreateComponent(GameObject& gameObject, const BeatMoveComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
-		bool CreateComponent(GameObject& gameObject, const BeatTriggeredRotationComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
-		bool CreateComponent(GameObject& gameObject, const BeatPositionSequenceComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
-		bool CreateComponent(GameObject& gameObject, const BeatVisibilityComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
-		bool CreateComponent(GameObject& gameObject, const BeatTransformComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
-		bool CreateComponent(GameObject& gameObject, const BeatOrbitComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
-		bool CreateComponent(GameObject& gameObject, const BeatAudioLevelMoveComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
-		bool CreateComponent(GameObject& gameObject, const BeatStaticMeshCycleComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
-		bool CreateComponent(GameObject& gameObject, const BeatSkeletalAnimationSyncComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
-		bool CreateComponent(GameObject& gameObject, const BeatTriggeredSkeletalAnimationComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
-		bool CreateComponent(GameObject& gameObject, const BoxCollider3DComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
-		bool CreateComponent(GameObject& gameObject, const SphereCollider3DComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
-		bool CreateComponent(GameObject& gameObject, const HealthComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
-		bool CreateComponent(GameObject& gameObject, const HurtBoxComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
-		bool CreateComponent(GameObject& gameObject, const HitReactionComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
-		bool CreateComponent(GameObject& gameObject, const SceneTransitionTriggerComponentData& data, std::vector<EnvironmentTriggerAction>& outTriggerActions) const;
+		bool CreateComponent(GameObject& gameObject, const BeatMoveComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const BeatTriggeredRotationComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const BeatPositionSequenceComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const BeatVisibilityComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const BeatTransformComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const BeatOrbitComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const BeatAudioLevelMoveComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const BeatStaticMeshCycleComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const BeatSkeletalAnimationSyncComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const BeatTriggeredSkeletalAnimationComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const BoxCollider3DComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const SphereCollider3DComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const HealthComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const HurtBoxComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const HitReactionComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const SceneTransitionTriggerComponentData& data) const;
 
 	private:
 		Resources&			_resources;
