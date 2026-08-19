@@ -38,7 +38,7 @@ namespace gm
 
 		PlayerSpawnDesc playerDesc{};
 		playerDesc.position = Vector3{ -0.43f, 0.f, -6.13f };
-		playerDesc.cameraDistance = 9.f;
+		playerDesc.cameraDistance = 5.f;
 		playerDesc.cameraYaw = Math::DegreesToRadians(-90.f);
 		playerDesc.cameraPitch = Math::DegreesToRadians(10.f);
 		playerDesc.cameraHeight = 3.f;

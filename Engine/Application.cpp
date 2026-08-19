@@ -207,10 +207,12 @@ namespace gm
 #if GM_ENABLE_DEBUG_TOOLS
 		_physicsSystem->DebugRender(*activeScene, *_debugRenderer);
 		_renderer->DebugDraw(*_debugRenderer);
-		_debugRenderer->Render(viewInfo);
 #endif
 
 		_renderer->Render(viewInfo, GetWidth(), GetHeight());
+#if GM_ENABLE_DEBUG_TOOLS
+		_debugRenderer->Render(viewInfo);
+#endif
 		requestDrawFps();
 		_textRenderer->Render();
 
