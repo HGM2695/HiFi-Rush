@@ -34,5 +34,11 @@ namespace gm
 	{
 	public:
 		ChiDeadDamageState();
+
+		void Enter(ChiStateContext& context) override;
+		void Tick(ChiStateContext& context, float deltaTime) override;
+
+	private:
+		bool _isAnimationCompletionPublished = false;
 	};
 }

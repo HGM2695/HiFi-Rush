@@ -1,4 +1,5 @@
 #include "ChiDamageState.h"
+#include "ChiStateMachineComponent.h"
 
 namespace gm
 {
@@ -26,18 +27,36 @@ namespace gm
 	{
 	}
 
+	/// Weak //////////////////////////////////////////////////////////////////////////////
 	ChiWeakKnockbackDamageState::ChiWeakKnockbackDamageState()
 		: ChiDamageState(ChiStateId::DamageWeakKnockback, ChiAnimationClipId::DamageWeakKnockback, true)
 	{
 	}
 
+	/// Strong //////////////////////////////////////////////////////////////////////////////
 	ChiStrongKnockbackDamageState::ChiStrongKnockbackDamageState()
 		: ChiDamageState(ChiStateId::DamageStrongKnockback, ChiAnimationClipId::DamageStrongKnockback, true)
 	{
 	}
 
+	/// Dead //////////////////////////////////////////////////////////////////////////////
 	ChiDeadDamageState::ChiDeadDamageState()
 		: ChiDamageState(ChiStateId::DamageDead, ChiAnimationClipId::DamageDead, false)
 	{
+	}
+
+	void ChiDeadDamageState::Enter(ChiStateContext& context)
+	{
+		ChiDamageState::Enter(context);
+		_isAnimationCompletionPublished = false;
+	}
+
+	void ChiDeadDamageState::Tick(ChiStateContext& context, float)
+	{
+		if (_isAnimationCompletionPublished || IsAnimationCompleted(context) == false)
+			return;
+
+		_isAnimationCompletionPublished = true;
+		context.stateMachine->CompleteDeathAnimation();
 	}
 }

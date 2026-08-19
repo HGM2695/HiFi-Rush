@@ -176,12 +176,12 @@ namespace gm
 		switch (cell.GetType())
 		{
 		case NavigationCellType::Normal:
+		case NavigationCellType::Dead:
 			return true;
 
 		case NavigationCellType::Jump:
 			return targetPosition.y + JumpCellHeightEpsilon >= cell.CalcHeight(targetPosition);
 
-		case NavigationCellType::Dead:
 		case NavigationCellType::Dummy:
 		default:
 			return false;

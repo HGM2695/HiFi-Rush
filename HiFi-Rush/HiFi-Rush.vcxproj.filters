@@ -265,6 +265,15 @@
     <ClInclude Include="SceneTransitionTriggerComponent.h">
       <Filter>Component\Environment</Filter>
     </ClInclude>
+	<ClInclude Include="CollisionTriggerComponent.h">
+	  <Filter>Component\Environment</Filter>
+	</ClInclude>
+	<ClInclude Include="RespawnPointTriggerComponent.h">
+	  <Filter>Component\Environment</Filter>
+	</ClInclude>
+	<ClInclude Include="FallRespawnTriggerComponent.h">
+	  <Filter>Component\Environment</Filter>
+	</ClInclude>
     <ClInclude Include="PlayerRuntimeState.h">
       <Filter>Component\Player</Filter>
     </ClInclude>
@@ -374,6 +383,9 @@
 	  <Filter>Widget</Filter>
 	</ClInclude>
 	<ClInclude Include="GameplayAnnouncementWidget.h">
+	  <Filter>Widget</Filter>
+	</ClInclude>
+	<ClInclude Include="RespawnWipeWidget.h">
 	  <Filter>Widget</Filter>
 	</ClInclude>
 	<ClInclude Include="ComboResultWidget.h">
@@ -561,6 +573,15 @@
     <ClCompile Include="SceneTransitionTriggerComponent.cpp">
       <Filter>Component\Environment</Filter>
     </ClCompile>
+	<ClCompile Include="CollisionTriggerComponent.cpp">
+	  <Filter>Component\Environment</Filter>
+	</ClCompile>
+	<ClCompile Include="RespawnPointTriggerComponent.cpp">
+	  <Filter>Component\Environment</Filter>
+	</ClCompile>
+	<ClCompile Include="FallRespawnTriggerComponent.cpp">
+	  <Filter>Component\Environment</Filter>
+	</ClCompile>
     <ClCompile Include="PlayerRuntimeStateSyncComponent.cpp">
       <Filter>Component\Player</Filter>
     </ClCompile>
@@ -646,6 +667,9 @@
 	  <Filter>Widget</Filter>
 	</ClCompile>
 	<ClCompile Include="GameplayAnnouncementWidget.cpp">
+	  <Filter>Widget</Filter>
+	</ClCompile>
+	<ClCompile Include="RespawnWipeWidget.cpp">
 	  <Filter>Widget</Filter>
 	</ClCompile>
 	<ClCompile Include="ComboResultWidget.cpp">

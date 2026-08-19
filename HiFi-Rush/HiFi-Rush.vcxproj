@@ -189,6 +189,9 @@
 	<ClInclude Include="HitReactionComponent.h" />
     <ClInclude Include="HurtBoxComponent.h" />
     <ClInclude Include="SceneTransitionTriggerComponent.h" />
+	<ClInclude Include="CollisionTriggerComponent.h" />
+	<ClInclude Include="RespawnPointTriggerComponent.h" />
+	<ClInclude Include="FallRespawnTriggerComponent.h" />
     <ClInclude Include="CommonLoadingScene.h" />
     <ClInclude Include="BinaryMapLoader.h" />
     <ClInclude Include="DebugTextWidget.h" />
@@ -213,6 +216,7 @@
 	<ClInclude Include="RhythmBarWidget.h" />
 	<ClInclude Include="RhythmMeterWidget.h" />
 	<ClInclude Include="GameplayAnnouncementWidget.h" />
+	<ClInclude Include="RespawnWipeWidget.h" />
 	<ClInclude Include="ComboResultWidget.h" />
 	<ClInclude Include="BeatHitTypes.h" />
 	<ClInclude Include="BeatHitWidget.h" />
@@ -296,6 +300,9 @@
 	<ClCompile Include="PlayerControlComponent.cpp" />
 	<ClCompile Include="PlayerTargetingComponent.cpp" />
     <ClCompile Include="SceneTransitionTriggerComponent.cpp" />
+	<ClCompile Include="CollisionTriggerComponent.cpp" />
+	<ClCompile Include="RespawnPointTriggerComponent.cpp" />
+	<ClCompile Include="FallRespawnTriggerComponent.cpp" />
     <ClCompile Include="HitBoxComponent.cpp" />
 	<ClCompile Include="TemporaryBoxHitBoxObject.cpp" />
 	<ClCompile Include="HitReactionComponent.cpp" />
@@ -324,6 +331,7 @@
 	<ClCompile Include="RhythmBarWidget.cpp" />
 	<ClCompile Include="RhythmMeterWidget.cpp" />
 	<ClCompile Include="GameplayAnnouncementWidget.cpp" />
+	<ClCompile Include="RespawnWipeWidget.cpp" />
 	<ClCompile Include="ComboResultWidget.cpp" />
 	<ClCompile Include="BeatHitWidget.cpp" />
 	<ClCompile Include="AttackGuideWidget.cpp" />
