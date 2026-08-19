@@ -7,7 +7,7 @@
 #include "HiFiRushAnimationNotifyNames.h"
 #include "HiFiRushCollisionLayers.h"
 #include "HitBoxComponent.h"
-#include "Input.h"
+#include "PlayerTargetingComponent.h"
 #include "Rigidbody3DComponent.h"
 #include "ReverbComponent.h"
 #include "Scene.h"
@@ -143,6 +143,14 @@ namespace gm
 		_syncPlayRate = 1.f;
 		_impactMarkerBeat = 0.f;
 		_hasRestoredBasePlayRate = true;
+
+		if (UsesAutoTargeting())
+		{
+			context.targetingComponent->AcquireTarget(context.moveComponent->GetInputMoveDirection());
+			const Vector3 targetDirection = context.targetingComponent->GetTargetDirection();
+			if (targetDirection.LengthSquared() > 0.000001f)
+				context.moveComponent->FaceDirectionImmediate(targetDirection);
+		}
 
 		const ChiAnimationSetting& setting = context.animationSettings->Get(GetAnimationClipId());
 		const std::shared_ptr<SkeletalAnimationClip> clip = context.animatorComponent->FindClip(GetChiAnimationClipName(GetAnimationClipId()));

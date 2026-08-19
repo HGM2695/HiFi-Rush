@@ -5,6 +5,7 @@
 #include "BeatVisibilityComponent.h"
 #include "BoxCollider3DComponent.h"
 #include "CharacterMovementComponent.h"
+#include "CombatTargetComponent.h"
 #include "GameObject.h"
 #include "GunnerStateMachineComponent.h"
 #include "GunnerAnimationTypes.h"
@@ -191,6 +192,7 @@ namespace gm
 		GM_ASSERT_RETURN_VAL(health, false, "Monster HealthComponent 생성에 실패했습니다.");
 		health->SetInvincible(data.isInvincible);
 		GM_ASSERT_RETURN_VAL(monster.AddComponent<HurtBoxComponent>(L"HurtBox"), false, "Monster HurtBoxComponent 생성에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(monster.AddComponent<CombatTargetComponent>(data.bodyColliderCenter), false, "Monster CombatTargetComponent 생성에 실패했습니다.");
 
 		NavMeshControllerComponent* navMeshController = monster.AddComponent<NavMeshControllerComponent>();
 		GM_ASSERT_RETURN_VAL(navMeshController, false, "Monster NavMeshControllerComponent 생성에 실패했습니다.");

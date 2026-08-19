@@ -175,6 +175,9 @@
 	<ClInclude Include="PlayerControlTypes.h">
 	  <Filter>Component\Player</Filter>
 	</ClInclude>
+	<ClInclude Include="PlayerTargetingComponent.h">
+	  <Filter>Component\Player</Filter>
+	</ClInclude>
 	<ClInclude Include="PlayerControlComponent.h">
 	  <Filter>Component\Player</Filter>
 	</ClInclude>
@@ -227,6 +230,9 @@
       <Filter>Component\Beat</Filter>
     </ClInclude>
     <ClInclude Include="CombatTypes.h">
+      <Filter>Component\Combat</Filter>
+    </ClInclude>
+    <ClInclude Include="CombatTargetComponent.h">
       <Filter>Component\Combat</Filter>
     </ClInclude>
     <ClInclude Include="HealthComponent.h">
@@ -525,6 +531,9 @@
 	<ClCompile Include="RhythmRankComponent.cpp">
 	  <Filter>Component\Player</Filter>
 	</ClCompile>
+    <ClCompile Include="CombatTargetComponent.cpp">
+      <Filter>Component\Combat</Filter>
+    </ClCompile>
     <ClCompile Include="HitBoxComponent.cpp">
       <Filter>Component\Combat</Filter>
     </ClCompile>
@@ -543,6 +552,9 @@
     <ClCompile Include="PlayerRuntimeStateSyncComponent.cpp">
       <Filter>Component\Player</Filter>
     </ClCompile>
+	<ClCompile Include="PlayerTargetingComponent.cpp">
+	  <Filter>Component\Player</Filter>
+	</ClCompile>
 	<ClCompile Include="PlayerControlComponent.cpp">
 	  <Filter>Component\Player</Filter>
 	</ClCompile>

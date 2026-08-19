@@ -4,6 +4,7 @@
 #include "ChiAnimationTypes.h"
 #include "ChiStateMachineComponent.h"
 #include "ChiMoveComponent.h"
+#include "PlayerTargetingComponent.h"
 #include "Application.h"
 #include "Input.h"
 #include "Resources.h"
@@ -127,6 +128,7 @@ namespace gm
 		userWidget->SetScreenOffset(Vector2{ 0.f, -300.f });
 
 		CameraComponent* playerCamera = InitializeCamera(player);
+		GM_ASSERT_RETURN(player->AddComponent<PlayerTargetingComponent>(APPLICATION.GetPhysicsSystem().GetPhysicsSystem3D(), *playerCamera), "Test PlayerTargetingComponent 생성에 실패했습니다.");
 		moveComponent->SetMovementCamera(*playerCamera);
 	}
 

@@ -18,6 +18,8 @@ namespace gm
 		virtual void Exit(ChiStateContext& context) override;
 
 	protected:
+		virtual bool UsesAutoTargeting() const { return true; }
+
 		void	RestoreBasePlayRateAfterImpact(ChiStateContext& context);
 		void	BufferMouseInput(ChiStateContext& context, float bufferStartBeat, bool allowWeak = true, bool allowStrong = true);
 		bool	IsActionCancelAllowed(const ChiStateContext& context) const;

@@ -14,6 +14,7 @@
 #include "HitBoxComponent.h"
 #include "Input.h"
 #include "NavMeshControllerComponent.h"
+#include "PlayerTargetingComponent.h"
 #include "Rigidbody3DComponent.h"
 #include "ReverbComponent.h"
 #include "SkeletalAnimatorComponent.h"
@@ -34,6 +35,9 @@ namespace gm
 		_moveComponent = GetOwner().GetComponent<ChiMoveComponent>();
 		GM_ASSERT_RETURN(_moveComponent, "ChiStateMachineComponent는 ChiMoveComponent가 필요합니다.");
 
+		_targetingComponent = GetOwner().GetComponent<PlayerTargetingComponent>();
+		GM_ASSERT_RETURN(_targetingComponent, "ChiStateMachineComponent는 PlayerTargetingComponent가 필요합니다.");
+
 		NavMeshControllerComponent* navMeshControllerComponent = GetOwner().GetComponent<NavMeshControllerComponent>();
 		GM_ASSERT_RETURN(navMeshControllerComponent, "ChiStateMachineComponent는 NavMeshControllerComponent가 필요합니다.");
 
@@ -50,6 +54,8 @@ namespace gm
 		_context.animationSettings = &HiFiRushStatics::GetChiAnimationSettings();
 		_context.rhythmJudge = &HiFiRushStatics::GetRhythmJudge();
 		_context.moveComponent = _moveComponent;
+		_context.targetingComponent = _targetingComponent;
+		_context.reverbComponent = _reverbComponent;
 		_context.rigidbodyComponent = rigidbodyComponent;
 		_context.animatorComponent = _animatorComponent;
 

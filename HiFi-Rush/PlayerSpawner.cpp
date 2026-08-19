@@ -22,6 +22,8 @@
 #include "PlayerRuntimeStateSyncComponent.h"
 #include "PlayerControlComponent.h"
 #include "PlayerResources.h"
+#include "PlayerTargetingComponent.h"
+#include "PhysicsSystem.h"
 #include "Resources.h"
 #include "Rigidbody3DComponent.h"
 #include "ReverbComponent.h"
@@ -138,6 +140,7 @@ namespace gm
 		const float aspectRatio = static_cast<float>(APPLICATION.GetWidth()) / static_cast<float>(APPLICATION.GetHeight());
 		cameraComponent->SetPerspective(Math::GM_PI / 3.f, aspectRatio, 0.1f, 5000.f);
 		scene.GetCameraManager()->RegisterCamera(PlayerCameraKey, cameraComponent);
+		GM_ASSERT_RETURN_VAL(player->AddComponent<PlayerTargetingComponent>(APPLICATION.GetPhysicsSystem().GetPhysicsSystem3D(), *cameraComponent), nullptr, "PlayerTargetingComponent 생성에 실패했습니다.");
 		moveComponent->SetMovementCamera(*cameraComponent);
 		GM_ASSERT_RETURN_VAL(player->AddComponent<PlayerControlComponent>(*moveComponent, *stateMachineComponent, *followComponent), nullptr, "PlayerControlComponent 생성에 실패했습니다.");
 

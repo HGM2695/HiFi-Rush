@@ -240,6 +240,7 @@
     <ClInclude Include="MainHUDWidget.h" />
     <ClInclude Include="MonsterResourceInfo.h" />
 	<ClInclude Include="MonsterCombatComponent.h" />
+	<ClInclude Include="CombatTargetComponent.h" />
 	<ClInclude Include="MonsterCombatActivationComponent.h" />
 	<ClInclude Include="MonsterSpawner.h" />
 	<ClInclude Include="MonsterState.h" />
@@ -258,6 +259,7 @@
 	<ClInclude Include="PlayerResources.h" />
 	<ClInclude Include="PlayerControlTypes.h" />
 	<ClInclude Include="PlayerControlComponent.h" />
+	<ClInclude Include="PlayerTargetingComponent.h" />
     <ClInclude Include="PlayerRuntimeStateSyncComponent.h" />
     <ClInclude Include="PlayerSpawner.h" />
     <ClInclude Include="QamilScene.h" />
@@ -288,6 +290,7 @@
 	<ClCompile Include="RhythmRankComponent.cpp" />
     <ClCompile Include="PlayerRuntimeStateSyncComponent.cpp" />
 	<ClCompile Include="PlayerControlComponent.cpp" />
+	<ClCompile Include="PlayerTargetingComponent.cpp" />
     <ClCompile Include="SceneTransitionTriggerComponent.cpp" />
     <ClCompile Include="HitBoxComponent.cpp" />
 	<ClCompile Include="TemporaryBoxHitBoxObject.cpp" />
@@ -337,6 +340,7 @@
     <ClCompile Include="MainHUDWidget.cpp" />
 	<ClCompile Include="MonsterResourceInfo.cpp" />
 	<ClCompile Include="MonsterCombatComponent.cpp" />
+	<ClCompile Include="CombatTargetComponent.cpp" />
 	<ClCompile Include="MonsterCombatActivationComponent.cpp" />
 	<ClCompile Include="MonsterSpawner.cpp" />
 	<ClCompile Include="MonsterState.cpp" />

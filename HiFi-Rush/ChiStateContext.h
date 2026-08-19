@@ -10,6 +10,8 @@ namespace gm
 	class ChiMoveComponent;
 	class ChiAnimationSettings;
 	class ChiStateMachineComponent;
+	class PlayerTargetingComponent;
+	class ReverbComponent;
 	class RhythmJudge;
 	class Rigidbody3DComponent;
 	class SkeletalAnimatorComponent;
@@ -20,6 +22,8 @@ namespace gm
 		BeatSystem*							beatSystem = nullptr;
 		const ChiAnimationSettings*			animationSettings = nullptr;
 		ChiMoveComponent*					moveComponent = nullptr;
+		PlayerTargetingComponent*			targetingComponent = nullptr;
+		ReverbComponent*					reverbComponent = nullptr;
 		Rigidbody3DComponent*				rigidbodyComponent = nullptr;
 		SkeletalAnimatorComponent*			animatorComponent = nullptr;
 		std::optional<float>				blendDuration;

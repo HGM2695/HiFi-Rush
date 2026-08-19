@@ -17,9 +17,9 @@ namespace gm
 	class ChiMoveComponent;
 	class HealthComponent;
 	class HitBoxComponent;
+	class PlayerTargetingComponent;
 	class ReverbComponent;
 	class SkeletalAnimatorComponent;
-	struct NavigationGroundContactEvent;
 	struct NavigationGroundLostEvent;
 
 	class ChiStateMachineComponent : public Component
@@ -65,11 +65,12 @@ namespace gm
 		EventConnection				_damagedConnection{};
 		EventConnection				_weaponHitConnection{};
 
-		SkeletalAnimatorComponent*	_animatorComponent = nullptr;
-		ChiMoveComponent*			_moveComponent = nullptr;
-		HealthComponent*			_healthComponent = nullptr;
-		ReverbComponent*			_reverbComponent = nullptr;
-		HitBoxComponent*			_weaponHitBox = nullptr;
-		bool						_inputEnabled = true;
+		SkeletalAnimatorComponent*		_animatorComponent = nullptr;
+		ChiMoveComponent*				_moveComponent = nullptr;
+		PlayerTargetingComponent*		_targetingComponent = nullptr;
+		HealthComponent*				_healthComponent = nullptr;
+		ReverbComponent*				_reverbComponent = nullptr;
+		HitBoxComponent*				_weaponHitBox = nullptr;
+		bool							_inputEnabled = true;
 	};
 }
