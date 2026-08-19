@@ -13,10 +13,12 @@ namespace gm
 
 	namespace HiFiRushBGM
 	{
-		inline constexpr RhythmBGMDesc Tutorial{ L"Tutorial.BGM", L"metroSound.mp3", 136.f, -0.220588f, 1.f };
-		inline constexpr RhythmBGMDesc Outside{ L"Outside.BGM", L"OpenMapSound2.mp3", 136.f, 0.0857f, 1.f };
-		inline constexpr RhythmBGMDesc Qamil{ L"Qamil.BGM", L"TooBigToFail.mp3", 136.f, 0.056f, 0.35f };
+		inline constexpr RhythmBGMDesc Tutorial{ L"Tutorial.BGM", L"metroSound.mp3", 136.f, -0.17f, 1.f };
+		inline constexpr RhythmBGMDesc TutorialRoadUp{ L"Tutorial.RoadUp.BGM", L"TriggerStart.mp3", 136.f, -0.15f, 0.3f };
+		inline constexpr RhythmBGMDesc Outside{ L"Outside.BGM", L"OpenMapSound2.mp3", 136.f, 1.5f, 1.f };
+		inline constexpr RhythmBGMDesc Qamil{ L"Qamil.BGM", L"TooBigToFail.mp3", 136.f, 0.08f, 0.35f };
 	}
 
 	void PlayRhythmBGM(const RhythmBGMDesc& desc);
+	void TransitionRhythmBGM(const RhythmBGMDesc& desc);
 }

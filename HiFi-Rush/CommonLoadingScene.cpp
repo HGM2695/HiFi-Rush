@@ -145,6 +145,8 @@ namespace gm
 
 		if (LoadRhythmBGM(result, resources, HiFiRushBGM::Tutorial) == false)
 			return result;
+		if (LoadRhythmBGM(result, resources, HiFiRushBGM::TutorialRoadUp) == false)
+			return result;
 
 		result.succeeded = true;
 		return result;

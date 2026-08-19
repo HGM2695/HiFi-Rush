@@ -1,7 +1,10 @@
 #include "GameplayScene.h"
 #include "Application.h"
+#include "AudioComponent.h"
 #include "ChiStateMachineComponent.h"
 #include "ComboResultWidget.h"
+#include "DialogComponent.h"
+#include "DialogWidget.h"
 #include "GameplayAnnouncementWidget.h"
 #include "RhythmBarWidget.h"
 #include "RhythmMeterWidget.h"
@@ -11,12 +14,15 @@
 #include "GMAssert.h"
 #include "HealthComponent.h"
 #include "HiFiRushStatics.h"
+#include "HiFiRushDialogData.h"
 #include "MapResource.h"
 #include "MonsterSpawner.h"
+#include "PlayerControlComponent.h"
 #include "PlayerSpawner.h"
 #include "PlayerStatusWidget.h"
 #include "Resources.h"
 #include "ReverbComponent.h"
+#include "SoundWave.h"
 #include "TriggerSequenceSystem.h"
 #include "UIManager.h"
 
@@ -40,10 +46,41 @@ namespace gm
 		return *_triggerSequenceSystem;
 	}
 
+	DialogComponent& GameplayScene::GetDialogComponent()
+	{
+		GM_ASSERT_TERMINATE(_dialogComponent, "DialogComponent가 구성되지 않았습니다.");
+		return *_dialogComponent;
+	}
+
+	const DialogComponent& GameplayScene::GetDialogComponent() const
+	{
+		GM_ASSERT_TERMINATE(_dialogComponent, "DialogComponent가 구성되지 않았습니다.");
+		return *_dialogComponent;
+	}
+
+	bool GameplayScene::PlayDialogSequence(const std::wstring& sequenceId)
+	{
+		GM_ASSERT_RETURN_VAL(_dialogComponent, false, "DialogComponent가 구성되지 않았습니다.");
+		return _dialogComponent->PlaySequence(sequenceId);
+	}
+
+	bool GameplayScene::SelectDialogBranch(const std::wstring& branchKey)
+	{
+		GM_ASSERT_RETURN_VAL(_dialogComponent, false, "DialogComponent가 구성되지 않았습니다.");
+		return _dialogComponent->SelectBranch(branchKey);
+	}
+
 	void GameplayScene::PlayAnnouncement(GameplayAnnouncementType type)
 	{
 		GM_ASSERT_RETURN(_announcementWidget, "Gameplay Announcement Widget이 구성되지 않았습니다.");
 		_announcementWidget->Play(type);
+	}
+
+	void GameplayScene::SetGameplayStatusUIVisible(bool isVisible)
+	{
+		GM_ASSERT_RETURN(_playerStatusWidget && _rhythmMeterWidget, "Gameplay Status UI가 구성되지 않았습니다.");
+		_playerStatusWidget->SetVisible(isVisible);
+		_rhythmMeterWidget->SetVisible(isVisible);
 	}
 
 	bool GameplayScene::InitializeMap(const std::wstring& mapResourceKey)
@@ -86,20 +123,34 @@ namespace gm
 		GM_ASSERT_RETURN(stateMachine, "PlayerStatusWidget을 구성하려면 ChiStateMachineComponent가 필요합니다.");
 		RhythmRankComponent* rhythmRankComponent = player->GetComponent<RhythmRankComponent>();
 		GM_ASSERT_RETURN(rhythmRankComponent, "RhythmMeterWidget을 구성하려면 RhythmRankComponent가 필요합니다.");
+		PlayerControlComponent* playerControlComponent = player->GetComponent<PlayerControlComponent>();
+		GM_ASSERT_RETURN(playerControlComponent, "Dialog을 구성하려면 PlayerControlComponent가 필요합니다.");
 
 		UIManager& uiManager = APPLICATION.GetUIManager();
 		uiManager.ClearViewportWidgets();
-		uiManager.AddUserWidget<PlayerStatusWidget>(HiFiRushStatics::GetBeatSystem(), *healthComponent, *reverbComponent, *stateMachine);
-		uiManager.AddUserWidget<RhythmMeterWidget>(HiFiRushStatics::GetBeatSystem(), *rhythmRankComponent);
+
+		GameObject* dialogObject = SpawnGameObject<GameObject>();
+		AudioComponent* dialogAudio = dialogObject->AddComponent<AudioComponent>(std::shared_ptr<SoundWave>{});
+		GM_ASSERT_RETURN(dialogAudio, "Dialog AudioComponent 생성에 실패했습니다.");
+		_dialogComponent = dialogObject->AddComponent<DialogComponent>(*dialogAudio, *playerControlComponent);
+		GM_ASSERT_RETURN(_dialogComponent, "DialogComponent 생성에 실패했습니다.");
+		GM_ASSERT_RETURN(_dialogComponent->SetSequences(CreateHiFiRushDialogSequences()), "Hi-Fi RUSH Dialog Sequence 구성에 실패했습니다.");
+
+		_playerStatusWidget = uiManager.AddUserWidget<PlayerStatusWidget>(HiFiRushStatics::GetBeatSystem(), *healthComponent, *reverbComponent, *stateMachine);
+		_rhythmMeterWidget = uiManager.AddUserWidget<RhythmMeterWidget>(HiFiRushStatics::GetBeatSystem(), *rhythmRankComponent);
 		uiManager.AddUserWidget<RhythmBarWidget>(HiFiRushStatics::GetBeatSystem());
 		uiManager.AddUserWidget<ComboResultWidget>(*stateMachine);
 		_announcementWidget = uiManager.AddUserWidget<GameplayAnnouncementWidget>(HiFiRushStatics::GetBeatSystem());
+		uiManager.AddUserWidget<DialogWidget>(HiFiRushStatics::GetBeatSystem(), *_dialogComponent);
 	}
 
 	void GameplayScene::OnUnload()
 	{
 		_player.Reset();
+		_dialogComponent = nullptr;
 		_announcementWidget = nullptr;
+		_playerStatusWidget = nullptr;
+		_rhythmMeterWidget = nullptr;
 		_triggerSequenceSystem->Clear();
 	}
 }
