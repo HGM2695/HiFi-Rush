@@ -23,7 +23,7 @@ namespace gm
 		ChiStateId GetStateId() const { return _stateId; }
 		virtual void Enter(ChiStateContext& context);
 		virtual void Tick(ChiStateContext& context, float deltaTime) {}
-		virtual void OnGroundContact(ChiStateContext& context, const NavigationGroundContactEvent& event);
+		virtual void OnGroundContact(ChiStateContext& context);
 		virtual void OnGroundLost(ChiStateContext& context, const NavigationGroundLostEvent& event);
 		virtual void Exit(ChiStateContext& context) {}
 

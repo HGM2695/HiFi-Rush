@@ -50,6 +50,7 @@ namespace gm
 		MonsterStateId		_initialStateId = MonsterStateId::None;
 		MonsterStateId		_currentStateId = MonsterStateId::None;
 		EventConnection		_damagedConnection{};
-		EventConnection		_groundContactConnection{};
+		EventConnection		_navigationGroundContactConnection{};
+		EventConnection		_movementBaseContactConnection{};
 	};
 }

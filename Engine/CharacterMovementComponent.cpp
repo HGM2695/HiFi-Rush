@@ -2,6 +2,8 @@
 
 #include "GameObject.h"
 #include "MathUtil.h"
+#include "MovementBaseComponent.h"
+#include "NavMeshControllerComponent.h"
 #include "SkeletalAnimatorComponent.h"
 #include "TransformComponent.h"
 
@@ -106,6 +108,25 @@ namespace gm
 		return direction;
 	}
 
+	void CharacterMovementComponent::SetMovementBase(MovementBaseComponent& movementBase)
+	{
+		if (_movementBase == &movementBase)
+			return;
+
+		_movementBaseOwner = movementBase.GetOwner().GetWeakPtr();
+		_movementBase = &movementBase;
+
+		const NavMeshControllerComponent* navMeshController = GetOwner().GetComponent<NavMeshControllerComponent>();
+		if (navMeshController == nullptr || navMeshController->IsGrounded() == false)
+			OnMovementBaseContact.Publish(MovementBaseContactEvent{});
+	}
+
+	void CharacterMovementComponent::ClearMovementBase(const MovementBaseComponent& movementBase)
+	{
+		if (_movementBase == &movementBase)
+			ResetMovementBase();
+	}
+
 	void CharacterMovementComponent::OnInitialize()
 	{
 		MovementComponent::OnInitialize();
@@ -115,6 +136,8 @@ namespace gm
 
 	void CharacterMovementComponent::OnTick(float)
 	{
+		ApplyMovementBase();
+
 		if (_animatorComponent == nullptr)
 			return;
 
@@ -125,6 +148,26 @@ namespace gm
 		rootMotionDelta = Vector3{rootMotionDelta.x * _rootMotionWeight.x, rootMotionDelta.y * _rootMotionWeight.y, rootMotionDelta.z * _rootMotionWeight.z};
 		rootMotionDelta = Vector3::Transform(rootMotionDelta, GetOwnerTransform()->GetRotation());
 		Move(rootMotionDelta);
+	}
+
+	void CharacterMovementComponent::ApplyMovementBase()
+	{
+		if (_movementBase == nullptr)
+			return;
+
+		if (_movementBaseOwner.IsValid() == false || _movementBase->IsEnabled() == false || GetOwnerTransform() == nullptr)
+		{
+			ResetMovementBase();
+			return;
+		}
+
+		Translate(_movementBase->CalculateMovementDelta(GetOwnerTransform()->GetPosition()));
+	}
+
+	void CharacterMovementComponent::ResetMovementBase()
+	{
+		_movementBaseOwner.Reset();
+		_movementBase = nullptr;
 	}
 
 	void CharacterMovementComponent::ClearMovementState()

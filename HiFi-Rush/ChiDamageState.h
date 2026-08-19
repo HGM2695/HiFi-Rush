@@ -11,7 +11,7 @@ namespace gm
 		ChiDamageState(ChiStateId stateId, ChiAnimationClipId animationClipId, bool returnToBaseMotion);
 
 		virtual void Tick(ChiStateContext& context, float deltaTime) override;
-		virtual void OnGroundContact(ChiStateContext& context, const NavigationGroundContactEvent& event) override;
+		virtual void OnGroundContact(ChiStateContext& context) override;
 		virtual void OnGroundLost(ChiStateContext& context, const NavigationGroundLostEvent& event) override;
 
 	private:

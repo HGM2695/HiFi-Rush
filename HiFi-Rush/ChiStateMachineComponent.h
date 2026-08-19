@@ -47,7 +47,7 @@ namespace gm
 	private:
 		void					RegisterAnimationClips();
 		void					RegisterStates();
-		void					OnGroundContact(const NavigationGroundContactEvent& event);
+		void					OnGroundContact();
 		void					OnGroundLost(const NavigationGroundLostEvent& event);
 		void					OnDamaged(const HitEvent& event);
 		RhythmJudgeResult		JudgeRhythmInput(RhythmInputType inputType);

@@ -730,7 +730,7 @@ namespace gm
 	{
 	}
 
-	void ChiStump1AttackState::OnGroundContact(ChiStateContext& context, const NavigationGroundContactEvent&)
+	void ChiStump1AttackState::OnGroundContact(ChiStateContext& context)
 	{
 		GM_ASSERT(SpawnTemporaryHitBox(context, StumpAttackHitBox), "Chi Stump HitBox GameObject 생성에 실패했습니다.");
 		context.stateMachine->ChangeState(ChiStateId::AttackStump2);

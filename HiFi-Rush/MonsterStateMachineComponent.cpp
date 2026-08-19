@@ -79,10 +79,15 @@ namespace gm
 			{
 				OnDamaged(event);
 			});
-		navMeshController->OnGroundContact.Subscribe(_groundContactConnection,
-			[this](const NavigationGroundContactEvent& event)
+		navMeshController->OnGroundContact.Subscribe(_navigationGroundContactConnection,
+			[this](const NavigationGroundContactEvent&)
 			{
-				OnGroundContact(event);
+				OnGroundContact();
+			});
+		_context.moveComponent->OnMovementBaseContact.Subscribe(_movementBaseContactConnection,
+			[this](const MovementBaseContactEvent&)
+			{
+				OnGroundContact();
 			});
 
 		if (_initialStateId != MonsterStateId::None)

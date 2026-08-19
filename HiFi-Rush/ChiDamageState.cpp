@@ -18,7 +18,7 @@ namespace gm
 			ReturnToIdleOrRun(context);
 	}
 
-	void ChiDamageState::OnGroundContact(ChiStateContext&, const NavigationGroundContactEvent&)
+	void ChiDamageState::OnGroundContact(ChiStateContext&)
 	{
 	}
 

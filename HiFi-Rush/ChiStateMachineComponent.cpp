@@ -70,11 +70,18 @@ namespace gm
 				});
 		}
 
-		navMeshControllerComponent->OnGroundContact.Subscribe(_groundContactConnection,
-			[this](const NavigationGroundContactEvent& event)
+		navMeshControllerComponent->OnGroundContact.Subscribe(_navigationGroundContactConnection,
+			[this](const NavigationGroundContactEvent&)
 			{
-				OnGroundContact(event);
+				OnGroundContact();
 			});
+
+		_moveComponent->OnMovementBaseContact.Subscribe(_movementBaseContactConnection,
+			[this](const MovementBaseContactEvent&)
+			{
+				OnGroundContact();
+			});
+
 		navMeshControllerComponent->OnGroundLost.Subscribe(_groundLostConnection,
 			[this](const NavigationGroundLostEvent& event)
 			{
@@ -123,7 +130,7 @@ namespace gm
 	{
 		ChiState* currentState = FindState(_currentStateId);
 		if (currentState)
-			currentState->OnGroundContact(_context, event);
+			currentState->OnGroundContact(_context);
 	}
 
 	void ChiStateMachineComponent::OnGroundLost(const NavigationGroundLostEvent& event)

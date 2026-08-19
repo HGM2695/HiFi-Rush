@@ -1,10 +1,16 @@
 #pragma once
 
+#include "Event.h"
 #include "MovementComponent.h"
+#include "WeakGameObjectPtr.h"
 
 namespace gm
 {
+	class MovementBaseComponent;
 	class SkeletalAnimatorComponent;
+	struct MovementBaseContactEvent final : EventType
+	{
+	};
 
 	class CharacterMovementComponent : public MovementComponent
 	{
@@ -38,6 +44,11 @@ namespace gm
 		const Vector3&	GetMoveDirection() const { return _moveDirection; }
 		Vector3			GetForwardDirection() const;
 		Vector3			GetRightDirection() const;
+		void			SetMovementBase(MovementBaseComponent& movementBase);
+		void			ClearMovementBase(const MovementBaseComponent& movementBase);
+		const MovementBaseComponent* GetMovementBase() const { return _movementBaseOwner.IsValid() ? _movementBase : nullptr; }
+
+		EventPublisher<CharacterMovementComponent, MovementBaseContactEvent> OnMovementBaseContact;
 
 	protected:
 		void			OnInitialize() override;
@@ -45,7 +56,13 @@ namespace gm
 		void			ClearMovementState();
 
 	private:
+		void			ApplyMovementBase();
+		void			ResetMovementBase();
+
+	private:
 		SkeletalAnimatorComponent*	_animatorComponent = nullptr;
+		WeakGameObjectPtr			_movementBaseOwner{};
+		MovementBaseComponent*		_movementBase = nullptr;
 		Vector3						_moveDirection{};
 		float						_moveSpeed = 0.f;
 		float						_rotationInterpSpeed = 0.f;

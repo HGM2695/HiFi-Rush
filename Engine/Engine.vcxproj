@@ -235,6 +235,7 @@
     <ClInclude Include="NavMeshControllerComponent.h" />
     <ClInclude Include="NavMeshSystem.h" />
     <ClInclude Include="CharacterMovementComponent.h" />
+    <ClInclude Include="MovementBaseComponent.h" />
     <ClInclude Include="MovementComponent.h" />
     <ClInclude Include="NavigationMesh.h" />
     <ClInclude Include="NavigationTypes.h" />
@@ -348,6 +349,7 @@
     <ClCompile Include="NavMeshControllerComponent.cpp" />
     <ClCompile Include="NavMeshSystem.cpp" />
     <ClCompile Include="CharacterMovementComponent.cpp" />
+    <ClCompile Include="MovementBaseComponent.cpp" />
     <ClCompile Include="MovementComponent.cpp" />
     <ClCompile Include="NavigationMesh.cpp" />
     <ClCompile Include="StaticMesh.cpp" />

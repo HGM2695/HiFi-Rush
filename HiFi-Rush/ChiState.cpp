@@ -62,7 +62,7 @@ namespace gm
 			context.stateMachine->ChangeState(ChiStateId::Idle);
 	}
 
-	void ChiState::OnGroundContact(ChiStateContext& context, const NavigationGroundContactEvent&)
+	void ChiState::OnGroundContact(ChiStateContext& context)
 	{
 		context.stateMachine->ChangeState(ChiStateId::JumpLanding);
 	}
