@@ -542,12 +542,12 @@ namespace gm
 
 		const bool isLhsDynamic = lhsRigidbody != nullptr && lhsRigidbody->IsEnabled() && lhsRigidbody->IsKinematic() == false;
 		const bool isRhsDynamic = rhsRigidbody != nullptr && rhsRigidbody->IsEnabled() && rhsRigidbody->IsKinematic() == false;
-		const float lhsInverseMass = isLhsDynamic ? 1.f / lhsRigidbody->_mass : 0.f;
-		const float rhsInverseMass = isRhsDynamic ? 1.f / rhsRigidbody->_mass : 0.f;
+		const float lhsResponseInverseMass = isLhsDynamic ? 1.f / (lhsRigidbody->_mass * lhsRigidbody->_collisionResponseWeight) : 0.f;
+		const float rhsResponseInverseMass = isRhsDynamic ? 1.f / (rhsRigidbody->_mass * rhsRigidbody->_collisionResponseWeight) : 0.f;
 		const Vector3 lhsResponseNormal = isLhsDynamic ? lhsRigidbody->ApplyPositionConstraints(responseContact.normal) : Vector3{};
 		const Vector3 rhsResponseNormal = isRhsDynamic ? rhsRigidbody->ApplyPositionConstraints(responseContact.normal) : Vector3{};
-		const float lhsEffectiveInverseMass = lhsInverseMass * responseContact.normal.Dot(lhsResponseNormal);
-		const float rhsEffectiveInverseMass = rhsInverseMass * responseContact.normal.Dot(rhsResponseNormal);
+		const float lhsEffectiveInverseMass = lhsResponseInverseMass * responseContact.normal.Dot(lhsResponseNormal);
+		const float rhsEffectiveInverseMass = rhsResponseInverseMass * responseContact.normal.Dot(rhsResponseNormal);
 		const float totalEffectiveInverseMass = lhsEffectiveInverseMass + rhsEffectiveInverseMass;
 		if (totalEffectiveInverseMass <= 0.f)
 			return;
@@ -556,9 +556,9 @@ namespace gm
 		if (correctionDepth > 0.f)
 		{
 			if (isLhsDynamic)
-				lhs.GetOwner().GetTransform()->Translate(lhsResponseNormal * (correctionDepth * lhsInverseMass / totalEffectiveInverseMass));
+				lhs.GetOwner().GetTransform()->Translate(lhsResponseNormal * (correctionDepth * lhsResponseInverseMass / totalEffectiveInverseMass));
 			if (isRhsDynamic)
-				rhs.GetOwner().GetTransform()->Translate(-rhsResponseNormal * (correctionDepth * rhsInverseMass / totalEffectiveInverseMass));
+				rhs.GetOwner().GetTransform()->Translate(-rhsResponseNormal * (correctionDepth * rhsResponseInverseMass / totalEffectiveInverseMass));
 
 			if (isLhsDynamic)
 				UpdateWorldShapes(lhs.GetOwner());
@@ -574,9 +574,9 @@ namespace gm
 
 		const float impulseMagnitude = -closingSpeed / totalEffectiveInverseMass;
 		if (isLhsDynamic)
-			lhsRigidbody->_velocity += lhsResponseNormal * (impulseMagnitude * lhsInverseMass);
+			lhsRigidbody->_velocity += lhsResponseNormal * (impulseMagnitude * lhsResponseInverseMass);
 		if (isRhsDynamic)
-			rhsRigidbody->_velocity -= rhsResponseNormal * (impulseMagnitude * rhsInverseMass);
+			rhsRigidbody->_velocity -= rhsResponseNormal * (impulseMagnitude * rhsResponseInverseMass);
 	}
 
 	void PhysicsSystem3D::UpdateWorldShapes(GameObject& gameObject) const

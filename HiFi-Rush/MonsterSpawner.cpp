@@ -43,6 +43,8 @@ namespace gm
 {
 	namespace
 	{
+		constexpr float MonsterCollisionResponseWeight = 100.f;
+
 		constexpr std::array<const wchar_t*, 5> BeatSyncedLocomotionClipNames =
 		{
 			L"ANIM_IDLE",
@@ -166,8 +168,7 @@ namespace gm
 		Rigidbody3DComponent* rigidbody = monster.AddComponent<Rigidbody3DComponent>();
 		GM_ASSERT_RETURN_VAL(rigidbody, false, "Monster Rigidbody3DComponent 생성에 실패했습니다.");
 		rigidbody->SetGravityScale(3.f);
-		if (data.type != MonsterType::Sjango)
-			rigidbody->SetPositionConstraints(RigidbodyPositionConstraint::FreezeX | RigidbodyPositionConstraint::FreezeZ);
+		rigidbody->SetCollisionResponseWeight(MonsterCollisionResponseWeight);
 
 		BoxCollider3DComponent* bodyCollider = monster.AddComponent<BoxCollider3DComponent>();
 		GM_ASSERT_RETURN_VAL(bodyCollider, false, "Monster Body Collider 생성에 실패했습니다.");

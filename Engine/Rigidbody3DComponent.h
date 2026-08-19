@@ -42,6 +42,13 @@ namespace gm
 		}
 		float					GetMass() const { return _mass; }
 
+		void					SetCollisionResponseWeight(float weight)
+		{
+			GM_ASSERT_RETURN(weight > 0.f, "Collision Response Weight는 0보다 커야 합니다.");
+			_collisionResponseWeight = weight;
+		}
+		float					GetCollisionResponseWeight() const { return _collisionResponseWeight; }
+
 		void					SetGravityScale(float gravityScale) { _gravityScale = gravityScale; }
 		float					GetGravityScale() const { return _gravityScale; }
 
@@ -95,6 +102,7 @@ namespace gm
 		Vector3					_velocity{};
 		Vector3					_accumulatedForce{};
 		float					_mass = 1.f;
+		float					_collisionResponseWeight = 1.f;
 		float					_gravityScale = 1.f;
 		float					_linearDamping = 0.f;
 		float					_maxSpeed = 0.f;
