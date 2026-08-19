@@ -11,8 +11,7 @@ namespace gm
 		auto root = CreateNamedRootWidget<CanvasPanel>(L"Root");
 
 		Border* border = root->AddNamedChild<Border>(L"MainPanel");
-		border->SetPosition({ 0.f, -125.f });
-		border->SetSize({ 460.f, 110.f });
+		border->SetGeometry({ 0.f, -125.f }, { 460.f, 110.f });
 		border->SetBackgroundColor(ColorFromRGBA(24, 24, 24, 220));
 		border->SetOutlineColor(Colors::Red);
 		border->SetBorderThickness(2.f);

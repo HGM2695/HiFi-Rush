@@ -36,7 +36,6 @@
 		void UpdateBeatMarkers();
 		void SpawnBeatMarkerPair(int64 beatIndex);
 		void ResetBeatMarkers();
-		void ApplyImageGeometry(Image& image, const Vector2& center, const Vector2& size) const;
 
 	private:
 		static constexpr uint32								BeatMarkerPairCount = 3;

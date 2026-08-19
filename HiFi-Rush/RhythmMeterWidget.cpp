@@ -124,10 +124,10 @@ namespace gm
 		_gaugeFillImage->SetRadialFill(info.radialStartAngle, info.radialSweepAngle);
 		_gradeMarkImage->SetTexture(info.gradeMarkTextureKey);
 
-		SetImageGeometry(*_shadowImage, info.shadowCenter, info.shadowSize);
-		SetImageGeometry(*_gaugeBackgroundImage, info.gaugeCenter, info.gaugeSize);
-		SetImageGeometry(*_gaugeFillImage, info.gaugeCenter, info.gaugeSize);
-		SetImageGeometry(*_gradeMarkImage, info.gradeMarkCenter, info.gradeMarkSize);
+		_shadowImage->SetGeometry(info.shadowCenter, info.shadowSize);
+		_gaugeBackgroundImage->SetGeometry(info.gaugeCenter, info.gaugeSize);
+		_gaugeFillImage->SetGeometry(info.gaugeCenter, info.gaugeSize);
+		_gradeMarkImage->SetGeometry(info.gradeMarkCenter, info.gradeMarkSize);
 
 		const bool isAtLeastB = rank >= RhythmRank::B;
 		const bool isAtLeastA = rank >= RhythmRank::A;
@@ -144,23 +144,23 @@ namespace gm
 		{
 			_outerSpikeImage->SetTexture(L"A_OuterSpike");
 			_innerSpikeImage->SetTexture(L"A_InnerSpike");
-			SetImageGeometry(*_outerSpikeImage, AOuterSpikeCenter, AOuterSpikeSize);
-			SetImageGeometry(*_innerSpikeImage, AInnerSpikeCenter, AInnerSpikeSize);
+			_outerSpikeImage->SetGeometry(AOuterSpikeCenter, AOuterSpikeSize);
+			_innerSpikeImage->SetGeometry(AInnerSpikeCenter, AInnerSpikeSize);
 		}
 		else
 		{
 			_outerSpikeImage->SetTexture(L"B_OuterSpike");
 			_innerSpikeImage->SetTexture(L"B_InnerSpike");
-			SetImageGeometry(*_outerSpikeImage, BOuterSpikeCenter, BOuterSpikeSize);
-			SetImageGeometry(*_innerSpikeImage, BInnerSpikeCenter, BInnerSpikeSize);
+			_outerSpikeImage->SetGeometry(BOuterSpikeCenter, BOuterSpikeSize);
+			_innerSpikeImage->SetGeometry(BInnerSpikeCenter, BInnerSpikeSize);
 		}
 
-		SetImageGeometry(*_blackKeysImage, BlackKeysCenter, BlackKeysSize);
-		SetImageGeometry(*_radialEffectImage, RadialEffectCenter, RadialEffectSize);
-		SetImageGeometry(*_bigRadialEffectImage, BigRadialEffectCenter, BigRadialEffectSize);
-		SetImageGeometry(*_sparkImage, SparkCenter, SparkSize);
-		SetImageGeometry(*_starImage, StarCenter, StarSize);
-		SetImageGeometry(*_thunderImage, ThunderCenter, ThunderSize);
+		_blackKeysImage->SetGeometry(BlackKeysCenter, BlackKeysSize);
+		_radialEffectImage->SetGeometry(RadialEffectCenter, RadialEffectSize);
+		_bigRadialEffectImage->SetGeometry(BigRadialEffectCenter, BigRadialEffectSize);
+		_sparkImage->SetGeometry(SparkCenter, SparkSize);
+		_starImage->SetGeometry(StarCenter, StarSize);
+		_thunderImage->SetGeometry(ThunderCenter, ThunderSize);
 	}
 
 	void RhythmMeterWidget::UpdateBeatAnimation()
@@ -192,14 +192,8 @@ namespace gm
 		}
 	}
 
-	void RhythmMeterWidget::SetImageGeometry(Image& image, const Vector2& center, const Vector2& size) const
-	{
-		image.SetPosition(center);
-		image.SetSize(size);
-	}
-
 	void RhythmMeterWidget::SetScaledImageGeometry(Image& image, const Vector2& center, const Vector2& size, float scale) const
 	{
-		SetImageGeometry(image, center, size * scale);
+		image.SetGeometry(center, size * scale);
 	}
 }

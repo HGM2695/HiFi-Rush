@@ -81,10 +81,10 @@ namespace gm
 		const float backCircleSize = Lerp(BackCircleMinSize, BackCircleMaxSize, pulse);
 		const float catSize = Lerp(CatMinSize, CatMaxSize, pulse);
 
-		ApplyImageGeometry(*_bigLineImage, center, BigLineSize);
-		ApplyImageGeometry(*_smallLineImage, center, Vector2{ smallLineWidth, SmallLineMinSize.y });
-		ApplyImageGeometry(*_backCircleImage, center, Vector2{ backCircleSize, backCircleSize });
-		ApplyImageGeometry(*_catImage, center, Vector2{ catSize, catSize });
+		_bigLineImage->SetGeometry(center, BigLineSize);
+		_smallLineImage->SetGeometry(center, Vector2{ smallLineWidth, SmallLineMinSize.y });
+		_backCircleImage->SetGeometry(center, Vector2{ backCircleSize, backCircleSize });
+		_catImage->SetGeometry(center, Vector2{ catSize, catSize });
 		_catImage->SetColorBlend(Colors::Red, 1.f - pulse);
 	}
 
@@ -131,8 +131,8 @@ namespace gm
 			const float rightX = RightBeatMarkerStartX - BeatMarkerMoveDistance * ageBeats;
 			const float opacity = std::clamp(ageBeats, 0.f, 1.f);
 
-			ApplyImageGeometry(*markerPair.left, Vector2{ leftX, markerY }, BeatMarkerSize);
-			ApplyImageGeometry(*markerPair.right, Vector2{ rightX, markerY }, BeatMarkerSize);
+			markerPair.left->SetGeometry(Vector2{ leftX, markerY }, BeatMarkerSize);
+			markerPair.right->SetGeometry(Vector2{ rightX, markerY }, BeatMarkerSize);
 			markerPair.left->SetOpacity(opacity);
 			markerPair.right->SetOpacity(opacity);
 		}
@@ -162,11 +162,5 @@ namespace gm
 
 		_nextBeatMarkerPairIndex = 0;
 		_isBeatTrackingInitialized = false;
-	}
-
-	void RhythmBarWidget::ApplyImageGeometry(Image& image, const Vector2& center, const Vector2& size) const
-	{
-		image.SetPosition(center);
-		image.SetSize(size);
 	}
 }

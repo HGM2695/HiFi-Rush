@@ -29,7 +29,7 @@ namespace gm
 
 	protected:
 		void	PlayAnimation(ChiStateContext& context, ChiAnimationClipId animationClipId, const AnimationPlayOption& playOption) const;
-		bool	IsMoveInputPressed() const;
+		bool	IsMoveInputPressed(const ChiStateContext& context) const;
 		void	ReturnToIdleOrRun(ChiStateContext& context) const;
 		bool	IsAnimationCompleted(const ChiStateContext& context) const;
 		void	ChangeDashStateByInput(ChiStateContext& context, const RhythmJudgeResult* judgeResult = nullptr) const;

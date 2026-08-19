@@ -153,7 +153,6 @@ namespace gm
 	{
 		const ComboVisualInfo& info = ComboVisualInfos[_comboIndex];
 		const Vector2 startCenter = info.targetCenter + Vector2{ info.size.x, 0.f };
-		_comboImage->SetPosition(startCenter + (info.targetCenter - startCenter) * ratio);
-		_comboImage->SetSize(info.size);
+		_comboImage->SetGeometry(startCenter + (info.targetCenter - startCenter) * ratio, info.size);
 	}
 }

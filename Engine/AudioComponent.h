@@ -32,6 +32,8 @@ namespace gm
 
 		void								SetVolume(float volume);
 		float								GetVolume() const { return _volume; }
+		void								SetSpectrumAnalysisEnabled(bool isEnabled);
+		float								GetSpectrumAmplitude() const;
 
 		void								SetLooping(bool isLooping) { _isLooping = isLooping; }
 		bool								IsLooping() const { return _isLooping; }
@@ -52,5 +54,6 @@ namespace gm
 		float							_volume = 1.f;
 		bool							_isLooping = false;
 		bool							_isAutoPlay = false;
+		bool							_isSpectrumAnalysisEnabled = false;
 	};
 }

@@ -14,8 +14,8 @@ namespace gm
 	}
 
 	/// Dash //////////////////////////////////////////////////////////////////////////////
-	ChiDashState::ChiDashState(ChiStateId stateId, ChiAnimationClipId animationClipId, ChiDashDirection direction, float dashSpeed, bool rotateToDashDirection, ChiStateId nextDashState)
-		: ChiState(stateId, animationClipId), _direction(direction), _nextDashState(nextDashState), _dashSpeed(dashSpeed), _rotateToDashDirection(rotateToDashDirection)
+	ChiDashState::ChiDashState(ChiStateId stateId, ChiAnimationClipId animationClipId, ChiDashDirection direction, bool rotateToDashDirection, ChiStateId nextDashState)
+		: ChiState(stateId, animationClipId), _direction(direction), _nextDashState(nextDashState), _rotateToDashDirection(rotateToDashDirection)
 	{
 	}
 
@@ -29,10 +29,8 @@ namespace gm
 			context.moveComponent->FaceDirectionImmediate(_cachedDirection);
 	}
 
-	void ChiDashState::Tick(ChiStateContext& context, float deltaTime)
+	void ChiDashState::Tick(ChiStateContext& context, float)
 	{
-		context.moveComponent->MoveAlong(_cachedDirection, _dashSpeed, deltaTime, _rotateToDashDirection);
-
 		if (TryChangeDashAttack(context))
 			return;
 
@@ -123,45 +121,43 @@ namespace gm
 	}
 
 	ChiDashFrontState::ChiDashFrontState()
-		: ChiDashState(ChiStateId::DashFront, ChiAnimationClipId::DashFront, ChiDashDirection::Front, 0.f, false, ChiStateId::DashDouble)
+		: ChiDashState(ChiStateId::DashFront, ChiAnimationClipId::DashFront, ChiDashDirection::Front, false, ChiStateId::DashDouble)
 	{
 	}
 
 	ChiDashBackState::ChiDashBackState()
-		: ChiDashState(ChiStateId::DashBack, ChiAnimationClipId::DashBack, ChiDashDirection::Back, 0.f, false, ChiStateId::DashDouble)
+		: ChiDashState(ChiStateId::DashBack, ChiAnimationClipId::DashBack, ChiDashDirection::Back, false, ChiStateId::DashDouble)
 	{
 	}
 
 	ChiDashLeftState::ChiDashLeftState()
-		: ChiDashState(ChiStateId::DashLeft, ChiAnimationClipId::DashLeft, ChiDashDirection::Left, 0.f, false, ChiStateId::DashDouble)
+		: ChiDashState(ChiStateId::DashLeft, ChiAnimationClipId::DashLeft, ChiDashDirection::Left, false, ChiStateId::DashDouble)
 	{
 	}
 
 	ChiDashRightState::ChiDashRightState()
-		: ChiDashState(ChiStateId::DashRight, ChiAnimationClipId::DashRight, ChiDashDirection::Right, 0.f, false, ChiStateId::DashDouble)
+		: ChiDashState(ChiStateId::DashRight, ChiAnimationClipId::DashRight, ChiDashDirection::Right, false, ChiStateId::DashDouble)
 	{
 	}
 
 	ChiDashDoubleState::ChiDashDoubleState()
-		: ChiDashState(ChiStateId::DashDouble, ChiAnimationClipId::DashDouble, ChiDashDirection::InputOrFront, 0.f, true, ChiStateId::DashTriple)
+		: ChiDashState(ChiStateId::DashDouble, ChiAnimationClipId::DashDouble, ChiDashDirection::InputOrFront, true, ChiStateId::DashTriple)
 	{
 	}
 
 	ChiDashTripleState::ChiDashTripleState()
-		: ChiDashState(ChiStateId::DashTriple, ChiAnimationClipId::DashTriple, ChiDashDirection::InputOrFront, 0.f, true)
+		: ChiDashState(ChiStateId::DashTriple, ChiAnimationClipId::DashTriple, ChiDashDirection::InputOrFront, true)
 	{
 	}
 
 	/// DashSky //////////////////////////////////////////////////////////////////////////////
 	ChiDashSkyState::ChiDashSkyState()
-		: ChiDashState(ChiStateId::DashSky, ChiAnimationClipId::DashSky, ChiDashDirection::InputOrFront, 0.f, true)
+		: ChiDashState(ChiStateId::DashSky, ChiAnimationClipId::DashSky, ChiDashDirection::InputOrFront, true)
 	{
 	}
 
-	void ChiDashSkyState::Tick(ChiStateContext& context, float deltaTime)
+	void ChiDashSkyState::Tick(ChiStateContext& context, float)
 	{
-		context.moveComponent->MoveAlong(GetCachedDirection(), GetDashSpeed(), deltaTime, true);
-
 		if (GetElapsedBeatAfterBlend(context) > 0.5f)
 		{
 			const Input& input = APPLICATION.GetInput();
@@ -170,7 +166,7 @@ namespace gm
 				context.stateMachine->ChangeState(ChiStateId::AttackStump0, context.strongAttackInput.value());
 				return;
 			}
-			if (input.IsMouseRepeat(MouseButton::Left))
+			if (context.stateMachine->IsInputEnabled() && input.IsMouseRepeat(MouseButton::Left))
 			{
 				context.stateMachine->ChangeState(ChiStateId::AttackSky0);
 				return;

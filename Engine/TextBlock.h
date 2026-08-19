@@ -19,6 +19,8 @@ namespace gm
 
 		void				SetColor(Color color) { _color = color; }
 		Color				GetColor() const { return _color; }
+		void				SetFont(const std::wstring& fontKey) { _fontKey = fontKey; }
+		const std::wstring& GetFont() const { return _fontKey; }
 
 		TextHorizontalAlignment		GetHorizonAlign() const { return _horizonAlign; }
 		TextVerticalAlignment		GetVerticalAlign() const { return _verticalAlign; }
@@ -30,6 +32,7 @@ protected:
 
 	private:
 		std::wstring			_text{};
+		std::wstring			_fontKey{};
 		Color					_color = Colors::White;
 		float					_size = 24.f;
 

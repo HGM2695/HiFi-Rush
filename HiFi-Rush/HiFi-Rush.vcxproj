@@ -199,6 +199,9 @@
 	<ClInclude Include="EnvironmentComponentFactory.h" />
     <ClInclude Include="EnvironmentSpawner.h" />
 	<ClInclude Include="GameplayScene.h" />
+	<ClInclude Include="DialogTypes.h" />
+	<ClInclude Include="DialogComponent.h" />
+	<ClInclude Include="HiFiRushDialogData.h" />
     <ClInclude Include="FreeFlyMoveComponent.h" />
 	<ClInclude Include="BeatVisibilityComponent.h" />
     <ClInclude Include="BeatMoveComponent.h" />
@@ -211,6 +214,10 @@
 	<ClInclude Include="RhythmMeterWidget.h" />
 	<ClInclude Include="GameplayAnnouncementWidget.h" />
 	<ClInclude Include="ComboResultWidget.h" />
+	<ClInclude Include="RhythmTutorialTypes.h" />
+	<ClInclude Include="AttackGuideWidget.h" />
+	<ClInclude Include="RhythmTutorialWidget.h" />
+	<ClInclude Include="DialogWidget.h" />
 	<ClInclude Include="PlayerStatusWidget.h" />
     <ClInclude Include="BeatStaticMeshCycleComponent.h" />
     <ClInclude Include="BeatPositionSequenceComponent.h" />
@@ -223,7 +230,8 @@
 	<ClInclude Include="GunnerAnimationTypes.h" />
 	<ClInclude Include="GunnerState.h" />
 	<ClInclude Include="GunnerStateMachineComponent.h" />
-    <ClInclude Include="HiFiRushAudio.h" />
+	<ClInclude Include="HiFiRushAudio.h" />
+	<ClInclude Include="HiFiRushFonts.h" />
 	<ClInclude Include="HiFiRushAnimationNotifyNames.h" />
     <ClInclude Include="LoadResources.h" />
     <ClInclude Include="HiFiRushGameInstance.h" />
@@ -247,6 +255,8 @@
     <ClInclude Include="OutsideScene.h" />
     <ClInclude Include="PlayerRuntimeState.h" />
 	<ClInclude Include="PlayerResources.h" />
+	<ClInclude Include="PlayerControlTypes.h" />
+	<ClInclude Include="PlayerControlComponent.h" />
     <ClInclude Include="PlayerRuntimeStateSyncComponent.h" />
     <ClInclude Include="PlayerSpawner.h" />
     <ClInclude Include="QamilScene.h" />
@@ -276,6 +286,7 @@
     <ClCompile Include="ReverbComponent.cpp" />
 	<ClCompile Include="RhythmRankComponent.cpp" />
     <ClCompile Include="PlayerRuntimeStateSyncComponent.cpp" />
+	<ClCompile Include="PlayerControlComponent.cpp" />
     <ClCompile Include="SceneTransitionTriggerComponent.cpp" />
     <ClCompile Include="HitBoxComponent.cpp" />
 	<ClCompile Include="TemporaryBoxHitBoxObject.cpp" />
@@ -289,6 +300,8 @@
     <ClCompile Include="DebugEventPublisher.cpp" />
     <ClCompile Include="EnvironmentSpawner.cpp" />
 	<ClCompile Include="GameplayScene.cpp" />
+	<ClCompile Include="DialogComponent.cpp" />
+	<ClCompile Include="HiFiRushDialogData.cpp" />
     <ClCompile Include="FreeFlyMoveComponent.cpp" />
 	<ClCompile Include="BeatVisibilityComponent.cpp" />
     <ClCompile Include="BeatMoveComponent.cpp" />
@@ -303,6 +316,9 @@
 	<ClCompile Include="RhythmMeterWidget.cpp" />
 	<ClCompile Include="GameplayAnnouncementWidget.cpp" />
 	<ClCompile Include="ComboResultWidget.cpp" />
+	<ClCompile Include="AttackGuideWidget.cpp" />
+	<ClCompile Include="RhythmTutorialWidget.cpp" />
+	<ClCompile Include="DialogWidget.cpp" />
 	<ClCompile Include="PlayerStatusWidget.cpp" />
     <ClCompile Include="BeatSystem.cpp" />
 	<ClCompile Include="RhythmInputJudge.cpp" />

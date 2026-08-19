@@ -15,7 +15,7 @@ namespace gm
 		if (TryChangeGroundAction(context))
 			return;
 
-		if (IsMoveInputPressed())
+		if (IsMoveInputPressed(context))
 			context.stateMachine->ChangeState(ChiStateId::Run);
 	}
 

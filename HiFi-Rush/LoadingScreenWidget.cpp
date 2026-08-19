@@ -32,8 +32,7 @@ namespace gm
 		const float screenHeight = static_cast<float>(APPLICATION.GetHeight());
 
 		Border* background = root->AddNamedChild<Border>(L"Background");
-		background->SetPosition({ screenWidth * 0.5f, screenHeight * 0.5f });
-		background->SetSize({ screenWidth, screenHeight });
+		background->SetGeometry({ screenWidth * 0.5f, screenHeight * 0.5f }, { screenWidth, screenHeight });
 		background->SetBackgroundColor(Colors::Black);
 		background->SetBorderThickness(0.f);
 
@@ -41,8 +40,7 @@ namespace gm
 		const Vector2 catSize{ 306.4f, 323.f };
 
 		Image* catImage = root->AddNamedChild<Image>(L"Cat", LoadingScreenTextureKey);
-		catImage->SetPosition(catPosition);
-		catImage->SetSize(catSize);
+		catImage->SetGeometry(catPosition, catSize);
 
 		const float noteSize = std::min(88.f, screenHeight * 0.1f);
 		const std::array<const wchar_t*, 3> noteKeys{ LoadingNote1TextureKey, LoadingNote2TextureKey, LoadingNote3TextureKey };
@@ -57,8 +55,7 @@ namespace gm
 		for (uint32 noteIndex = 0; noteIndex < noteKeys.size(); ++noteIndex)
 		{
 			Image* noteImage = root->AddNamedChild<Image>(L"Note" + std::to_wstring(noteIndex + 1), noteKeys[noteIndex]);
-			noteImage->SetPosition(notePositions[noteIndex]);
-			noteImage->SetSize({ noteSize, noteSize });
+			noteImage->SetGeometry(notePositions[noteIndex], { noteSize, noteSize });
 			noteImages[noteIndex] = noteImage;
 		}
 

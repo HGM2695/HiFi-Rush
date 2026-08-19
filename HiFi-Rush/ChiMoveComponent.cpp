@@ -15,7 +15,7 @@ namespace gm
 	{
 		CharacterMovementComponent::OnTick(deltaTime);
 
-		if (GetOwnerTransform() == nullptr || _inputMovementEnabled == false)
+		if (GetOwnerTransform() == nullptr || IsMoveEnabled() == false)
 		{
 			ClearMovementState();
 			return;
@@ -45,6 +45,9 @@ namespace gm
 
 	Vector2 ChiMoveComponent::GetMoveInputAxis() const
 	{
+		if (IsMovementEnabled() == false)
+			return {};
+
 		return APPLICATION.GetInput().GetAxis2D(KeyCode::D, KeyCode::A, KeyCode::W, KeyCode::S);
 	}
 

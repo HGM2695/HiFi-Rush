@@ -73,6 +73,9 @@
     <Filter Include="Widget">
       <UniqueIdentifier>{4119e629-6af0-465a-8d7c-d3f2ef37bb97}</UniqueIdentifier>
     </Filter>
+	<Filter Include="Dialog">
+	  <UniqueIdentifier>{1c863e57-63da-476b-bb20-03f16542d72e}</UniqueIdentifier>
+	</Filter>
     <Filter Include="Util">
       <UniqueIdentifier>{5de7d524-483e-47d6-a959-a8bba6ac4bc8}</UniqueIdentifier>
     </Filter>
@@ -91,9 +94,12 @@
     <ClInclude Include="HiFiRushStatics.h">
       <Filter>Application</Filter>
     </ClInclude>
-    <ClInclude Include="HiFiRushAudio.h">
-      <Filter>Application\Audio</Filter>
-    </ClInclude>
+	<ClInclude Include="HiFiRushAudio.h">
+	  <Filter>Application\Audio</Filter>
+	</ClInclude>
+	<ClInclude Include="HiFiRushFonts.h">
+	  <Filter>Resource</Filter>
+	</ClInclude>
     <ClInclude Include="DebugEventPublisher.h">
       <Filter>Debug</Filter>
     </ClInclude>
@@ -112,6 +118,15 @@
     <ClInclude Include="GameplayScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
+	<ClInclude Include="DialogTypes.h">
+	  <Filter>Dialog</Filter>
+	</ClInclude>
+	<ClInclude Include="DialogComponent.h">
+	  <Filter>Dialog</Filter>
+	</ClInclude>
+	<ClInclude Include="HiFiRushDialogData.h">
+	  <Filter>Dialog</Filter>
+	</ClInclude>
     <ClInclude Include="TitleScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
@@ -157,6 +172,12 @@
     <ClInclude Include="PlayerResources.h">
       <Filter>Resource</Filter>
     </ClInclude>
+	<ClInclude Include="PlayerControlTypes.h">
+	  <Filter>Component\Player</Filter>
+	</ClInclude>
+	<ClInclude Include="PlayerControlComponent.h">
+	  <Filter>Component\Player</Filter>
+	</ClInclude>
     <ClInclude Include="EnvironmentSpawner.h">
       <Filter>Spawner</Filter>
     </ClInclude>
@@ -343,6 +364,18 @@
 	<ClInclude Include="ComboResultWidget.h">
 	  <Filter>Widget</Filter>
 	</ClInclude>
+	<ClInclude Include="RhythmTutorialTypes.h">
+	  <Filter>Widget</Filter>
+	</ClInclude>
+	<ClInclude Include="AttackGuideWidget.h">
+	  <Filter>Widget</Filter>
+	</ClInclude>
+	<ClInclude Include="RhythmTutorialWidget.h">
+	  <Filter>Widget</Filter>
+	</ClInclude>
+	<ClInclude Include="DialogWidget.h">
+	  <Filter>Dialog</Filter>
+	</ClInclude>
 	<ClInclude Include="PlayerStatusWidget.h">
 	  <Filter>Widget</Filter>
 	</ClInclude>
@@ -393,6 +426,12 @@
     <ClCompile Include="GameplayScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+	<ClCompile Include="DialogComponent.cpp">
+	  <Filter>Dialog</Filter>
+	</ClCompile>
+	<ClCompile Include="HiFiRushDialogData.cpp">
+	  <Filter>Dialog</Filter>
+	</ClCompile>
     <ClCompile Include="TitleScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
@@ -498,6 +537,9 @@
     <ClCompile Include="PlayerRuntimeStateSyncComponent.cpp">
       <Filter>Component\Player</Filter>
     </ClCompile>
+	<ClCompile Include="PlayerControlComponent.cpp">
+	  <Filter>Component\Player</Filter>
+	</ClCompile>
     <ClCompile Include="ChiMoveComponent.cpp">
       <Filter>Component\Player</Filter>
     </ClCompile>
@@ -569,6 +611,15 @@
 	</ClCompile>
 	<ClCompile Include="ComboResultWidget.cpp">
 	  <Filter>Widget</Filter>
+	</ClCompile>
+	<ClCompile Include="AttackGuideWidget.cpp">
+	  <Filter>Widget</Filter>
+	</ClCompile>
+	<ClCompile Include="RhythmTutorialWidget.cpp">
+	  <Filter>Widget</Filter>
+	</ClCompile>
+	<ClCompile Include="DialogWidget.cpp">
+	  <Filter>Dialog</Filter>
 	</ClCompile>
 	<ClCompile Include="PlayerStatusWidget.cpp">
 	  <Filter>Widget</Filter>

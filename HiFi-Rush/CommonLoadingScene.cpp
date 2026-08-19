@@ -126,6 +126,10 @@ namespace gm
 
 		if (LoadGameplayUIResources(result, resources, resourceFactory) == false)
 			return result;
+		if (LoadDialogResources(result, resources, resourceFactory) == false)
+			return result;
+		if (LoadTutorialUIResources(result, resources, resourceFactory) == false)
+			return result;
 
 		if (LoadMeshTextures(result, resources, resourceFactory) == false)
 			return result;
@@ -223,6 +227,173 @@ namespace gm
 			}
 
 			outLoadData.resources.push_back({ textureKey, std::move(texture) });
+		}
+
+		return true;
+	}
+
+	bool CommonLoadingScene::LoadTutorialUIResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory)
+	{
+		constexpr std::array<const wchar_t*, 21> texturePaths =
+		{{
+			L"UI/WeakAttack/WeakAttack.dds",
+			L"UI/StrongAttack/StrongAttack.dds",
+			L"UI/Tutorial/MouseButton.dds",
+			L"UI/Tutorial/MouseButtonRight.dds",
+			L"UI/Tutorial/T_tut_rhythm_bar_timeline.dds",
+			L"UI/Tutorial/T_tut_rhythm_bar_timing.dds",
+			L"UI/Tutorial/T_tut_rhythm_bg_bottom_anim.dds",
+			L"UI/Tutorial/T_tut_rhythm_bg_bottom.dds",
+			L"UI/Tutorial/T_tut_rhythm_bg_detail_anim.dds",
+			L"UI/Tutorial/T_tut_rhythm_bg_top_anim.dds",
+			L"UI/Tutorial/T_tut_rhythm_bg_top.dds",
+			L"UI/Tutorial/T_tut_rhythm_circle_bg.dds",
+			L"UI/Tutorial/T_tut_rhythm_circle.dds",
+			L"UI/Tutorial/T_tut_rhythm_vert_line_bg.dds",
+			L"UI/Tutorial/T_tut_rhythm_vert_line.dds",
+			L"UI/Tutorial/T_Word_CmnResult_Good.dds",
+			L"UI/Tutorial/T_Word_CmnResult_Miss.dds",
+			L"UI/Tutorial/T_Word_CmnResult_Perfect.dds",
+			L"UI/Tutorial/T_Word_Tut_Result_Good.dds",
+			L"UI/Tutorial/T_Word_Tut_Result_Miss.dds",
+			L"UI/Tutorial/T_Word_Tut_Result_Perfect.dds",
+		}};
+
+		for (const wchar_t* texturePath : texturePaths)
+		{
+			const std::wstring textureKey = GetFileNameWithoutExtension(texturePath);
+			if (resources.Find<Texture>(textureKey))
+				continue;
+
+			TextureDesc desc{};
+			desc.path = GetTexturePath(texturePath);
+			std::shared_ptr<Texture> texture = resourceFactory.CreateTexture(desc);
+			if (texture == nullptr)
+			{
+				outLoadData.errorMessage = L"Tutorial UI Texture 생성에 실패했습니다. key=" + textureKey;
+				return false;
+			}
+
+			outLoadData.resources.push_back({ textureKey, std::move(texture) });
+		}
+
+		struct TutorialCueInfo
+		{
+			const wchar_t* resourceKey = nullptr;
+			const wchar_t* fileName = nullptr;
+		};
+
+		constexpr std::array<TutorialCueInfo, 6> tutorialCueInfos =
+		{{
+			{ L"TutorialCue.Count", L"Tutorial/0123Yah.wav" },
+			{ L"TutorialCue.Pulse", L"Tutorial/Bim.wav" },
+			{ L"TutorialCue.One", L"Tutorial/One.wav" },
+			{ L"TutorialCue.Two", L"Tutorial/Two.wav" },
+			{ L"TutorialCue.Three", L"Tutorial/Three.wav" },
+			{ L"TutorialCue.Go", L"Tutorial/Go.wav" },
+		}};
+
+		for (const TutorialCueInfo& info : tutorialCueInfos)
+		{
+			if (resources.Find<SoundWave>(info.resourceKey))
+				continue;
+
+			SoundWaveDesc desc{};
+			desc.path = GetAudioPath(info.fileName);
+			std::shared_ptr<SoundWave> sound = SoundWave::Create(desc);
+			if (sound == nullptr)
+			{
+				outLoadData.errorMessage = L"Tutorial Cue 생성에 실패했습니다. key=" + std::wstring(info.resourceKey);
+				return false;
+			}
+
+			outLoadData.resources.push_back({ info.resourceKey, std::move(sound) });
+		}
+
+		return true;
+	}
+
+	bool CommonLoadingScene::LoadDialogResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory)
+	{
+		constexpr std::array<const wchar_t*, 13> texturePaths =
+		{{
+			L"UI/Modal/BackGround_Top.dds",
+			L"UI/Modal/BackGround_Bottom.dds",
+			L"UI/Modal/Window2.dds",
+			L"UI/Modal/T_talk_chai_00_base.dds",
+			L"UI/Modal/T_talk_chai_pleasure_mouth_00.dds",
+			L"UI/Modal/T_talk_chai_pleasure_mouth_01.dds",
+			L"UI/Modal/T_talk_chai_pleasure_mouth_02.dds",
+			L"UI/Modal/T_talk_speaker_00.dds",
+			L"UI/Modal/T_talk_speaker_01.dds",
+			L"UI/Modal/T_talk_speaker_02.dds",
+			L"UI/Modal/Saver0.dds",
+			L"UI/Modal/Saver1.dds",
+			L"UI/Modal/Saver2.dds",
+		}};
+
+		for (const wchar_t* texturePath : texturePaths)
+		{
+			const std::wstring textureKey = GetFileNameWithoutExtension(texturePath);
+			if (resources.Find<Texture>(textureKey))
+				continue;
+
+			TextureDesc desc{};
+			desc.path = GetTexturePath(texturePath);
+			std::shared_ptr<Texture> texture = resourceFactory.CreateTexture(desc);
+			if (texture == nullptr)
+			{
+				outLoadData.errorMessage = L"Dialog Texture 생성에 실패했습니다. key=" + textureKey;
+				return false;
+			}
+
+			outLoadData.resources.push_back({ textureKey, std::move(texture) });
+		}
+
+		struct DialogVoiceInfo
+		{
+			const wchar_t* resourceKey = nullptr;
+			const wchar_t* fileName = nullptr;
+		};
+
+		constexpr std::array<DialogVoiceInfo, 19> dialogVoiceInfos =
+		{{
+			{ L"DialogVoice.Tuto1", L"Dialog/Tuto1.mp3" },
+			{ L"DialogVoice.Tuto2", L"Dialog/Tuto2.mp3" },
+			{ L"DialogVoice.Tuto3", L"Dialog/Tuto3.mp3" },
+			{ L"DialogVoice.Tuto4", L"Dialog/Tuto4.mp3" },
+			{ L"DialogVoice.Tuto5", L"Dialog/Tuto5.mp3" },
+			{ L"DialogVoice.Tuto6", L"Dialog/Tuto6.mp3" },
+			{ L"DialogVoice.Tuto7_OneMore", L"Dialog/Tuto7_OneMore.mp3" },
+			{ L"DialogVoice.Tuto7_Perfect", L"Dialog/Tuto7_Perfect.mp3" },
+			{ L"DialogVoice.Tuto8", L"Dialog/Tuto8.mp3" },
+			{ L"DialogVoice.Tuto9", L"Dialog/Tuto9.mp3" },
+			{ L"DialogVoice.StrongTuto0", L"Dialog/StrongTuto0.mp3" },
+			{ L"DialogVoice.StrongTuto1", L"Dialog/StrongTuto1.mp3" },
+			{ L"DialogVoice.StrongTuto2", L"Dialog/StrongTuto2.mp3" },
+			{ L"DialogVoice.StrongTuto3", L"Dialog/StrongTuto3.mp3" },
+			{ L"DialogVoice.StrongTuto4", L"Dialog/StrongTuto4.mp3" },
+			{ L"DialogVoice.Saver0", L"Dialog/Saver0.mp3" },
+			{ L"DialogVoice.Saver1", L"Dialog/Saver1.mp3" },
+			{ L"DialogVoice.Shuffle", L"Dialog/Shuffle.mp3" },
+			{ L"DialogSFX.Applause", L"Dialog/EV_ev8105_01_CrowdApplause_01_Cutting.wav" },
+		}};
+
+		for (const DialogVoiceInfo& info : dialogVoiceInfos)
+		{
+			if (resources.Find<SoundWave>(info.resourceKey))
+				continue;
+
+			SoundWaveDesc desc{};
+			desc.path = GetAudioPath(info.fileName);
+			std::shared_ptr<SoundWave> voice = SoundWave::Create(desc);
+			if (voice == nullptr)
+			{
+				outLoadData.errorMessage = L"Dialog SoundWave 생성에 실패했습니다. key=" + std::wstring(info.resourceKey);
+				return false;
+			}
+
+			outLoadData.resources.push_back({ info.resourceKey, std::move(voice) });
 		}
 
 		return true;
@@ -597,6 +768,9 @@ namespace gm
 		if (LoadGameplayUIResources(result, resources, resourceFactory) == false)
 			return result;
 
+		if (LoadDialogResources(result, resources, resourceFactory) == false)
+			return result;
+
 		if (LoadMeshTextures(result, resources, resourceFactory) == false)
 			return result;
 
@@ -621,6 +795,8 @@ namespace gm
 		SceneLoadData result{};
 
 		if (LoadGameplayUIResources(result, resources, resourceFactory) == false)
+			return result;
+		if (LoadDialogResources(result, resources, resourceFactory) == false)
 			return result;
 
 		if (LoadMeshTextures(result, resources, resourceFactory) == false)

@@ -17,7 +17,7 @@ namespace gm
 		void			SetMoveEnabled(bool enabled) { _inputMovementEnabled = enabled; }
 		void			SetMovementCamera(const CameraComponent& camera);
 
-		bool			IsMoveEnabled() const { return _inputMovementEnabled; }
+		bool			IsMoveEnabled() const { return _inputMovementEnabled && IsMovementEnabled(); }
 		Vector2			GetMoveInputAxis() const;
 		Vector3			GetInputMoveDirection() const;
 

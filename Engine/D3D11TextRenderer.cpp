@@ -4,6 +4,7 @@
 #include <d3d11.h>
 #include <d2d1_1.h>
 #include <dwrite.h>
+#include <dwrite_3.h>
 #include <dxgi.h>
 
 namespace gm
@@ -54,21 +55,64 @@ namespace gm
 
 	bool D3D11TextRenderer::RegisterFont(const std::wstring& fontKey, const std::wstring& fontFamilyName)
 	{
-		GM_ASSERT_RETURN_VAL(_fontFamilyNameMapper.find(fontKey) == _fontFamilyNameMapper.end(), false, "%ls Key는 이미 존재합니다.", fontKey.c_str());
-		_fontFamilyNameMapper[fontKey] = fontFamilyName;
+		GM_ASSERT_RETURN_VAL(_fontRegistrations.find(fontKey) == _fontRegistrations.end(), false, "%ls Key는 이미 존재합니다.", fontKey.c_str());
+		_fontRegistrations.emplace(fontKey, FontRegistration{ fontFamilyName, nullptr });
 		
+		return true;
+	}
+
+	bool D3D11TextRenderer::RegisterFontFile(const std::wstring& fontKey, const std::wstring& filePath)
+	{
+		GM_ASSERT_RETURN_VAL(_fontRegistrations.find(fontKey) == _fontRegistrations.end(), false, "%ls Key는 이미 존재합니다.", fontKey.c_str());
+
+		Microsoft::WRL::ComPtr<IDWriteFactory5> factory;
+		GM_ASSERT_RETURN_VAL(SUCCEEDED(_dwriteFactory.As(&factory)), false, "DirectWrite Factory5를 지원하지 않습니다.");
+
+		Microsoft::WRL::ComPtr<IDWriteFontFile> fontFile;
+		GM_ASSERT_RETURN_VAL(SUCCEEDED(factory->CreateFontFileReference(filePath.c_str(), nullptr, fontFile.GetAddressOf())), false, "Font 파일을 열 수 없습니다. path=%ls", filePath.c_str());
+
+		Microsoft::WRL::ComPtr<IDWriteFontSetBuilder1> fontSetBuilder;
+		GM_ASSERT_RETURN_VAL(SUCCEEDED(factory->CreateFontSetBuilder(fontSetBuilder.GetAddressOf())), false, "Font Set Builder 생성에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(SUCCEEDED(fontSetBuilder->AddFontFile(fontFile.Get())), false, "Font Set에 파일을 추가하지 못했습니다. path=%ls", filePath.c_str());
+
+		Microsoft::WRL::ComPtr<IDWriteFontSet> fontSet;
+		GM_ASSERT_RETURN_VAL(SUCCEEDED(fontSetBuilder->CreateFontSet(fontSet.GetAddressOf())), false, "Font Set 생성에 실패했습니다.");
+
+		Microsoft::WRL::ComPtr<IDWriteFontCollection1> fontCollection;
+		GM_ASSERT_RETURN_VAL(SUCCEEDED(factory->CreateFontCollectionFromFontSet(fontSet.Get(), fontCollection.GetAddressOf())), false, "Font Collection 생성에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(fontCollection->GetFontFamilyCount() > 0, false, "Font Collection에 Font Family가 없습니다. path=%ls", filePath.c_str());
+
+		Microsoft::WRL::ComPtr<IDWriteFontFamily> fontFamily;
+		GM_ASSERT_RETURN_VAL(SUCCEEDED(fontCollection->GetFontFamily(0, fontFamily.GetAddressOf())), false, "Font Family 조회에 실패했습니다.");
+
+		Microsoft::WRL::ComPtr<IDWriteLocalizedStrings> familyNames;
+		GM_ASSERT_RETURN_VAL(SUCCEEDED(fontFamily->GetFamilyNames(familyNames.GetAddressOf())), false, "Font Family 이름 조회에 실패했습니다.");
+
+		UINT32 familyNameIndex = 0;
+		BOOL hasKoreanName = false;
+		familyNames->FindLocaleName(L"ko-kr", &familyNameIndex, &hasKoreanName);
+		if (hasKoreanName == false)
+			familyNameIndex = 0;
+
+		UINT32 familyNameLength = 0;
+		GM_ASSERT_RETURN_VAL(SUCCEEDED(familyNames->GetStringLength(familyNameIndex, &familyNameLength)), false, "Font Family 이름 길이 조회에 실패했습니다.");
+		std::wstring familyName(familyNameLength, L'\0');
+		GM_ASSERT_RETURN_VAL(SUCCEEDED(familyNames->GetString(familyNameIndex, familyName.data(), familyNameLength + 1)), false, "Font Family 이름 조회에 실패했습니다.");
+
+		Microsoft::WRL::ComPtr<IDWriteFontCollection> baseFontCollection;
+		GM_ASSERT_RETURN_VAL(SUCCEEDED(fontCollection.As(&baseFontCollection)), false, "Font Collection 변환에 실패했습니다.");
+		_fontRegistrations.emplace(fontKey, FontRegistration{ std::move(familyName), std::move(baseFontCollection) });
 		return true;
 	}
 
 	void D3D11TextRenderer::RequestDrawText(const std::wstring& text, const std::wstring& fontKey, const Vector2& position, float fontSize, Color color, TextHorizontalAlignment horizontalAlignment, TextVerticalAlignment verticalAlignment)
 	{
-		GM_ASSERT_RETURN(_fontFamilyNameMapper.find(fontKey) != _fontFamilyNameMapper.end(), "해당 fontKey는 등록되지 않았습니다.");
+		GM_ASSERT_RETURN(_fontRegistrations.find(fontKey) != _fontRegistrations.end(), "해당 fontKey는 등록되지 않았습니다.");
 
-		const std::wstring& familyName = _fontFamilyNameMapper[fontKey];
-		TextFormatKey textFormatKey = ToTextFormatKey(familyName, fontSize);
+		TextFormatKey textFormatKey = ToTextFormatKey(fontKey, fontSize);
 
 		if (_textFormatCache.find(textFormatKey) == _textFormatCache.end())
-			GM_ASSERT_RETURN(CreateTextFormat(familyName, fontSize), "TextFormat 생성 실패 %ls", familyName.c_str());
+			GM_ASSERT_RETURN(CreateTextFormat(fontKey, fontSize), "TextFormat 생성 실패 %ls", fontKey.c_str());
 
 		_drawList.push_back(DrawItem{ _textFormatCache[textFormatKey], text, position, color, horizontalAlignment, verticalAlignment });
 	}
@@ -179,18 +223,21 @@ namespace gm
 		return Rect{ left, top, metrics.width, metrics.height };
 	}
 
-	D3D11TextRenderer::TextFormatKey D3D11TextRenderer::ToTextFormatKey(const std::wstring& fontFamilyName, float fontSize)
+	D3D11TextRenderer::TextFormatKey D3D11TextRenderer::ToTextFormatKey(const std::wstring& fontKey, float fontSize)
 	{
-		return TextFormatKey(fontFamilyName, static_cast<uint32>(std::round(fontSize * 100.f)));
+		return TextFormatKey(fontKey, static_cast<uint32>(std::round(fontSize * 100.f)));
 	}
 
-	bool D3D11TextRenderer::CreateTextFormat(const std::wstring& fontFamilyName, float fontSize)
+	bool D3D11TextRenderer::CreateTextFormat(const std::wstring& fontKey, float fontSize)
 	{
+		const auto fontIter = _fontRegistrations.find(fontKey);
+		GM_ASSERT_RETURN_VAL(fontIter != _fontRegistrations.end(), false, "등록되지 않은 Font입니다. key=%ls", fontKey.c_str());
+		const FontRegistration& registration = fontIter->second;
 		Microsoft::WRL::ComPtr<IDWriteTextFormat> textFormat;
 
 		const HRESULT hr = _dwriteFactory->CreateTextFormat(
-			fontFamilyName.c_str(),
-			nullptr,
+			registration.fontFamilyName.c_str(),
+			registration.fontCollection.Get(),
 			DWRITE_FONT_WEIGHT_NORMAL,
 			DWRITE_FONT_STYLE_NORMAL,
 			DWRITE_FONT_STRETCH_NORMAL,
@@ -199,12 +246,13 @@ namespace gm
 			textFormat.GetAddressOf()
 		);
 
-		GM_ASSERT_RETURN_VAL(SUCCEEDED(hr), false, "[%ls] 생성에 실패했습니다.", fontFamilyName.c_str());
+		GM_ASSERT_RETURN_VAL(SUCCEEDED(hr), false, "[%ls] 생성에 실패했습니다.", registration.fontFamilyName.c_str());
 
 		textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 		textFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
+		textFormat->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
 
-		_textFormatCache.insert({ ToTextFormatKey(fontFamilyName, fontSize), textFormat });
+		_textFormatCache.insert({ ToTextFormatKey(fontKey, fontSize), textFormat });
 
 		return true;
 	}

@@ -44,7 +44,6 @@ namespace gm
 		void UpdateShadow();
 		void UpdateThunder();
 		void UpdateAfterImages();
-		void SetImageGeometry(Image& image, const Vector2& center, const Vector2& size) const;
 
 	private:
 		static constexpr uint32							AfterImageCount = 4;

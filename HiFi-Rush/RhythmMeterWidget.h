@@ -27,7 +27,6 @@ namespace gm
 		void					HandleRhythmRankChanged(const RhythmRankChangedEvent& event);
 		void					UpdateRankAppearance();
 		void					UpdateBeatAnimation();
-		void					SetImageGeometry(Image& image, const Vector2& center, const Vector2& size) const;
 		void					SetScaledImageGeometry(Image& image, const Vector2& center, const Vector2& size, float scale) const;
 
 		const BeatSystem&		_beatSystem;

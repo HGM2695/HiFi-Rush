@@ -35,6 +35,8 @@ namespace gm
 		void					ChangeState(ChiStateId nextStateId, const RhythmJudgeResult& rhythmInput);
 		void					ChangeState(ChiStateId nextStateId, float blendDuration, const RhythmJudgeResult& rhythmInput);
 		ChiStateId				GetCurrentStateId() const { return _currentStateId; }
+		void					SetInputEnabled(bool enabled) { _inputEnabled = enabled; }
+		bool					IsInputEnabled() const { return _inputEnabled; }
 
 		EventPublisher<ChiStateMachineComponent, RhythmJudgeResult> OnRhythmActionStarted;
 
@@ -68,5 +70,6 @@ namespace gm
 		HealthComponent*			_healthComponent = nullptr;
 		ReverbComponent*			_reverbComponent = nullptr;
 		HitBoxComponent*			_weaponHitBox = nullptr;
+		bool						_inputEnabled = true;
 	};
 }

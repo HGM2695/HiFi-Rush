@@ -12,6 +12,7 @@ struct ID2D1DeviceContext;
 struct ID2D1Factory1;
 struct ID2D1SolidColorBrush;
 struct IDWriteFactory;
+struct IDWriteFontCollection;
 struct IDWriteTextFormat;
 
 namespace gm
@@ -24,6 +25,7 @@ namespace gm
 
 		virtual bool Initialize(IGraphicsDevice& graphicsDevice) override;
 		virtual bool RegisterFont(const std::wstring& fontKey, const std::wstring& fontFamilyName) override;
+		virtual bool RegisterFontFile(const std::wstring& fontKey, const std::wstring& filePath) override;
 		virtual void RequestDrawText(const std::wstring& text, const std::wstring& fontKey, const Vector2& position, float fontSize, Color color,
 			TextHorizontalAlignment horizontalAlignment, TextVerticalAlignment verticalAlignment) override;
 		virtual void Render() override;
@@ -32,12 +34,12 @@ namespace gm
 	private:
 		struct TextFormatKey
 		{
-			std::wstring	fontFamilyName;
+			std::wstring	fontKey;
 			uint32			scaledFontSize;
 
 			bool operator==(const TextFormatKey& rhs) const
 			{
-				return fontFamilyName == rhs.fontFamilyName && scaledFontSize == rhs.scaledFontSize;
+				return fontKey == rhs.fontKey && scaledFontSize == rhs.scaledFontSize;
 			}
 		};
 
@@ -46,10 +48,16 @@ namespace gm
 			size_t operator()(const TextFormatKey& key) const
 			{
 				size_t seed = 0;
-				HashValue(seed, key.fontFamilyName);
+				HashValue(seed, key.fontKey);
 				HashValue(seed, key.scaledFontSize);
 				return seed;
 			}
+		};
+
+		struct FontRegistration
+		{
+			std::wstring									fontFamilyName;
+			Microsoft::WRL::ComPtr<IDWriteFontCollection>	fontCollection;
 		};
 
 		struct DrawItem
@@ -62,14 +70,14 @@ namespace gm
 			TextVerticalAlignment						verticalAlignment;
 		};
 
-		bool CreateTextFormat(const std::wstring& fontFamilyName, float fontSize);
-		TextFormatKey ToTextFormatKey(const std::wstring& fontFamilyName, float fontSize);
+		bool CreateTextFormat(const std::wstring& fontKey, float fontSize);
+		TextFormatKey ToTextFormatKey(const std::wstring& fontKey, float fontSize);
 		bool CreateDeviceResources(IGraphicsDevice& graphicsDevice);
 		Rect CalcDrawRect(const DrawItem& item);
 
 	private:
 		std::unordered_map<TextFormatKey, Microsoft::WRL::ComPtr<IDWriteTextFormat>, TextFormatKeyHasher>	_textFormatCache;
-		std::unordered_map<std::wstring, std::wstring>														_fontFamilyNameMapper;
+		std::unordered_map<std::wstring, FontRegistration>													_fontRegistrations;
 
 		Microsoft::WRL::ComPtr<ID2D1Factory1>			_d2dFactory;
 		Microsoft::WRL::ComPtr<ID2D1Device>				_d2dDevice;

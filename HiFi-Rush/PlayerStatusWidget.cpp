@@ -91,7 +91,7 @@ namespace gm
 			AfterImageEntry& entry = _afterImages[index];
 			entry.image = root->AddNamedChild<Image>(L"AfterImage" + std::to_wstring(index), AfterImageTextureKey);
 			entry.targetOffset = Vector2{ static_cast<float>(index + 2) * 10.f, static_cast<float>(index + 2) * 20.f };
-			SetImageGeometry(*entry.image, AfterImageCenter, AfterImageSize);
+			entry.image->SetGeometry(AfterImageCenter, AfterImageSize);
 			entry.image->SetColorBlend(afterImageColors[index], 1.f);
 			entry.image->SetOpacity(afterImageOpacities[index]);
 			entry.image->SetVisible(false);
@@ -105,13 +105,13 @@ namespace gm
 		_healthImage = root->AddNamedChild<Image>(L"Health", HealthTextureKey);
 		_thunderImage = root->AddNamedChild<Image>(L"Thunder", ThunderTextureKeys.front());
 
-		SetImageGeometry(*_shadowImage, BackgroundCenter, BackgroundSize);
-		SetImageGeometry(*_backgroundImage, BackgroundCenter, BackgroundSize);
-		SetImageGeometry(*_fullBackgroundImage, FullBackgroundCenter, FullBackgroundSize);
-		SetImageGeometry(*_reverbImage, ReverbCenter, ReverbSize);
-		SetImageGeometry(*_fullReverbImage, FullReverbCenter, ReverbSize);
-		SetImageGeometry(*_healthImage, HealthCenter, HealthSize);
-		SetImageGeometry(*_thunderImage, ThunderCenter, ThunderSize);
+		_shadowImage->SetGeometry(BackgroundCenter, BackgroundSize);
+		_backgroundImage->SetGeometry(BackgroundCenter, BackgroundSize);
+		_fullBackgroundImage->SetGeometry(FullBackgroundCenter, FullBackgroundSize);
+		_reverbImage->SetGeometry(ReverbCenter, ReverbSize);
+		_fullReverbImage->SetGeometry(FullReverbCenter, ReverbSize);
+		_healthImage->SetGeometry(HealthCenter, HealthSize);
+		_thunderImage->SetGeometry(ThunderCenter, ThunderSize);
 
 		_reverbImage->SetRotation(GaugeRotation);
 		_fullReverbImage->SetRotation(GaugeRotation);
@@ -221,11 +221,5 @@ namespace gm
 		const float moveRatio = std::sin(Math::GM_PI * elapsedBeats / AfterImageDurationBeats);
 		for (AfterImageEntry& entry : _afterImages)
 			entry.image->SetPosition(AfterImageCenter + entry.targetOffset * moveRatio);
-	}
-
-	void PlayerStatusWidget::SetImageGeometry(Image& image, const Vector2& center, const Vector2& size) const
-	{
-		image.SetPosition(center);
-		image.SetSize(size);
 	}
 }

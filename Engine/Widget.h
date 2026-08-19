@@ -89,6 +89,7 @@ namespace gm
 
 		void				SetSize(const Vector2& size) { _size = size; }
 		const Vector2&		GetSize() const { return _size; }
+		void				SetGeometry(const Vector2& position, const Vector2& size) { _position = position; _size = size; }
 		void				SetRotation(float rotation) { _rotation = rotation; }
 		float				GetRotation() const { return _rotation; }
 

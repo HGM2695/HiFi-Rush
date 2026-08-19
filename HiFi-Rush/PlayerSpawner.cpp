@@ -20,6 +20,7 @@
 #include "NavMeshControllerComponent.h"
 #include "PlayerRuntimeState.h"
 #include "PlayerRuntimeStateSyncComponent.h"
+#include "PlayerControlComponent.h"
 #include "PlayerResources.h"
 #include "Resources.h"
 #include "Rigidbody3DComponent.h"
@@ -115,7 +116,8 @@ namespace gm
 		weaponFollowComponent->SetTarget(*player, L"Player.Weapon");
 		weaponFollowComponent->SetDestroyWithTarget(true);
 
-		GM_ASSERT_RETURN_VAL(player->AddComponent<ChiStateMachineComponent>(weaponHitBox), nullptr, "Player ChiStateMachineComponent 생성에 실패했습니다.");
+		ChiStateMachineComponent* stateMachineComponent = player->AddComponent<ChiStateMachineComponent>(weaponHitBox);
+		GM_ASSERT_RETURN_VAL(stateMachineComponent, nullptr, "Player ChiStateMachineComponent 생성에 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(player->AddComponent<RhythmRankComponent>(), nullptr, "Player RhythmRankComponent 생성에 실패했습니다.");
 
 		BeatSkeletalAnimationSyncDesc animationSyncDesc{};
@@ -137,6 +139,7 @@ namespace gm
 		cameraComponent->SetPerspective(Math::GM_PI / 3.f, aspectRatio, 0.1f, 5000.f);
 		scene.GetCameraManager()->RegisterCamera(PlayerCameraKey, cameraComponent);
 		moveComponent->SetMovementCamera(*cameraComponent);
+		GM_ASSERT_RETURN_VAL(player->AddComponent<PlayerControlComponent>(*moveComponent, *stateMachineComponent, *followComponent), nullptr, "PlayerControlComponent 생성에 실패했습니다.");
 
 #if GM_ENABLE_DEBUG_TOOLS
 		FreeFlyMoveComponent* freeFlyMoveComponent = player->AddComponent<FreeFlyMoveComponent>();

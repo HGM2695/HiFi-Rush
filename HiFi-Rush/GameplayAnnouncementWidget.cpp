@@ -114,7 +114,8 @@ namespace gm
 			break;
 		}
 
-		_announcementImage->SetPosition(info.startCenter + (info.targetCenter - info.startCenter) * animationRatio);
-		_announcementImage->SetSize(info.startSize + (info.targetSize - info.startSize) * animationRatio);
+		_announcementImage->SetGeometry(
+			info.startCenter + (info.targetCenter - info.startCenter) * animationRatio,
+			info.startSize + (info.targetSize - info.startSize) * animationRatio);
 	}
 }

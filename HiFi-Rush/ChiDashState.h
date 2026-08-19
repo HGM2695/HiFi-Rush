@@ -17,7 +17,7 @@ namespace gm
 	class ChiDashState : public ChiState
 	{
 	public:
-		ChiDashState(ChiStateId stateId, ChiAnimationClipId animationClipId, ChiDashDirection direction, float dashSpeed, bool rotateToDashDirection, ChiStateId nextDashState = ChiStateId::None);
+		ChiDashState(ChiStateId stateId, ChiAnimationClipId animationClipId, ChiDashDirection direction, bool rotateToDashDirection, ChiStateId nextDashState = ChiStateId::None);
 
 		virtual void Enter(ChiStateContext& context) override;
 		virtual void Tick(ChiStateContext& context, float deltaTime) override;
@@ -25,14 +25,11 @@ namespace gm
 	protected:
 		bool			TryChangeDashAttack(ChiStateContext& context);
 		Vector3			GetDashDirection(ChiStateContext& context) const;
-		const Vector3&	GetCachedDirection() const { return _cachedDirection; }
-		float			GetDashSpeed() const { return _dashSpeed; }
 
 	private:
 		ChiDashDirection					_direction = ChiDashDirection::Front;
 		ChiStateId							_nextDashState = ChiStateId::None;
 		Vector3								_cachedDirection{};
-		float								_dashSpeed = 0.f;
 		bool								_rotateToDashDirection = false;
 		std::optional<RhythmJudgeResult>	_bufferedAttackInput;
 	};

@@ -18,7 +18,12 @@ namespace gm
 		void			SetRotationYawOffset(float radians) { _rotationYawOffset = radians; }
 		float			GetRotationYawOffset() const { return _rotationYawOffset; }
 
-		void			SetMovementEnabled(bool enabled) { _movementEnabled = enabled; }
+		void			SetMovementEnabled(bool enabled)
+		{
+			_movementEnabled = enabled;
+			if (enabled == false)
+				ClearMovementState();
+		}
 		bool			IsMovementEnabled() const { return IsEnabled() && _movementEnabled; }
 		void			SetRootMotionEnabled(bool enabled) { _rootMotionEnabled = enabled; }
 		bool			IsRootMotionEnabled() const { return _rootMotionEnabled; }

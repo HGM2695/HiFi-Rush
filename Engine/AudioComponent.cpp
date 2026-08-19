@@ -59,6 +59,7 @@ namespace gm
 
 		Stop();
 		_channel = APPLICATION.GetAudioSystem().PlaySound2D(*_sound, _volume, _isLooping);
+		SetSpectrumAnalysisEnabled(_isSpectrumAnalysisEnabled);
 	}
 
 	void AudioComponent::Stop()
@@ -94,6 +95,20 @@ namespace gm
 
 		if (_channel)
 			_channel->setVolume(_volume);
+	}
+
+	void AudioComponent::SetSpectrumAnalysisEnabled(bool isEnabled)
+	{
+		_isSpectrumAnalysisEnabled = isEnabled;
+		APPLICATION.GetAudioSystem().SetSpectrumAnalysisEnabled(_channel, isEnabled);
+	}
+
+	float AudioComponent::GetSpectrumAmplitude() const
+	{
+		if (_channel == nullptr || _isSpectrumAnalysisEnabled == false)
+			return 0.f;
+
+		return APPLICATION.GetAudioSystem().GetSpectrumAmplitude(_channel);
 	}
 
 	bool AudioComponent::IsPlaying() const

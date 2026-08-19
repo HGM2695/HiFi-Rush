@@ -91,18 +91,21 @@ namespace gm
 		_context.jumpInput.reset();
 		_context.dashInput.reset();
 
-		const Input& input = APPLICATION.GetInput();
-		if (input.IsMouseDown(MouseButton::Left))
-			_context.weakAttackInput = JudgeRhythmInput(RhythmInputType::WeakAttack);
+		if (_inputEnabled)
+		{
+			const Input& input = APPLICATION.GetInput();
+			if (input.IsMouseDown(MouseButton::Left))
+				_context.weakAttackInput = JudgeRhythmInput(RhythmInputType::WeakAttack);
 
-		if (input.IsMouseDown(MouseButton::Right))
-			_context.strongAttackInput = JudgeRhythmInput(RhythmInputType::StrongAttack);
+			if (input.IsMouseDown(MouseButton::Right))
+				_context.strongAttackInput = JudgeRhythmInput(RhythmInputType::StrongAttack);
 
-		if (input.IsKeyDown(KeyCode::Space))
-			_context.jumpInput = JudgeRhythmInput(RhythmInputType::Jump);
+			if (input.IsKeyDown(KeyCode::Space))
+				_context.jumpInput = JudgeRhythmInput(RhythmInputType::Jump);
 
-		if (input.IsKeyDown(KeyCode::LeftShift))
-			_context.dashInput = JudgeRhythmInput(RhythmInputType::Dash);
+			if (input.IsKeyDown(KeyCode::LeftShift))
+				_context.dashInput = JudgeRhythmInput(RhythmInputType::Dash);
+		}
 
 		ChiState* currentState = FindState(_currentStateId);
 		if (currentState == nullptr)

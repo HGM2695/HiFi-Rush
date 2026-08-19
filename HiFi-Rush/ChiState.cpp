@@ -45,15 +45,18 @@ namespace gm
 		context.animatorComponent->Play(GetChiAnimationClipName(animationClipId), playOption);
 	}
 
-	bool ChiState::IsMoveInputPressed() const
+	bool ChiState::IsMoveInputPressed(const ChiStateContext& context) const
 	{
+		if (context.stateMachine->IsInputEnabled() == false)
+			return false;
+
 		const Input& input = APPLICATION.GetInput();
 		return input.IsKeyRepeat(KeyCode::W) || input.IsKeyRepeat(KeyCode::A) || input.IsKeyRepeat(KeyCode::S) || input.IsKeyRepeat(KeyCode::D);
 	}
 
 	void ChiState::ReturnToIdleOrRun(ChiStateContext& context) const
 	{
-		if (IsMoveInputPressed())
+		if (IsMoveInputPressed(context))
 			context.stateMachine->ChangeState(ChiStateId::Run);
 		else
 			context.stateMachine->ChangeState(ChiStateId::Idle);
@@ -174,7 +177,7 @@ namespace gm
 
 	bool ChiState::TryChangeHibiki(ChiStateContext& context) const
 	{
-		if (APPLICATION.GetInput().IsKeyDown(KeyCode::R) == false)
+		if (context.stateMachine->IsInputEnabled() == false || APPLICATION.GetInput().IsKeyDown(KeyCode::R) == false)
 			return false;
 
 		context.stateMachine->ChangeState(ChiStateId::HibikiReady);

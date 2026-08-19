@@ -1,5 +1,7 @@
 #include "HiFiRushGameInstance.h"
 #include "Application.h"
+#include "HiFiRushFonts.h"
+#include "ITextRenderer.h"
 #include "RhythmBarWidget.h"
 #include "LoadResources.h"
 #include "Paths.h"
@@ -29,6 +31,9 @@ namespace gm
 
 	bool HiFiRushGameInstance::OnInitialize()
 	{
+		if (APPLICATION.GetTextRenderer().RegisterFontFile(HiFiRushFont::NanumSquareRoundExtraBold, GetResourcePath(HiFiRushFont::NanumSquareRoundExtraBoldFilePath)) == false)
+			return false;
+
 		if (_chiAnimationSettings.Load(GetResourcePath(ChiAnimationSettingsFilePath)) == false)
 			return false;
 

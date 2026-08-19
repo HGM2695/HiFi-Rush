@@ -9,6 +9,9 @@
 
 namespace
 {
+	constexpr unsigned int DSPBufferLength = 512;
+	constexpr int DSPBufferCount = 4;
+
 	void LogFMODError(const char* context, FMOD_RESULT result)
 	{
 		GM_LOG_ERROR("%s failed: %s", context, FMOD_ErrorString(result));
@@ -31,6 +34,15 @@ namespace gm
 		if (result != FMOD_OK)
 		{
 			LogFMODError("FMOD::System_Create", result);
+			_system = nullptr;
+			return false;
+		}
+
+		result = _system->setDSPBufferSize(DSPBufferLength, DSPBufferCount);
+		if (result != FMOD_OK)
+		{
+			LogFMODError("FMOD::System::setDSPBufferSize", result);
+			_system->release();
 			_system = nullptr;
 			return false;
 		}
@@ -168,11 +180,73 @@ namespace gm
 		return true;
 	}
 
+	void AudioSystem::SetSpectrumAnalysisEnabled(FMOD::Channel* channel, bool isEnabled)
+	{
+		if (channel == nullptr)
+			return;
+
+		const auto iter = _spectrumAnalyzers.find(channel);
+		if (isEnabled)
+		{
+			if (iter != _spectrumAnalyzers.end())
+				return;
+
+			FMOD::DSP* analyzer = nullptr;
+			FMOD_RESULT result = _system->createDSPByType(FMOD_DSP_TYPE_FFT, &analyzer);
+			if (result != FMOD_OK || analyzer == nullptr)
+			{
+				LogFMODError("FMOD::System::createDSPByType", result);
+				return;
+			}
+
+			result = analyzer->setParameterInt(FMOD_DSP_FFT_WINDOWSIZE, 512);
+			if (result == FMOD_OK)
+				result = channel->addDSP(0, analyzer);
+			if (result != FMOD_OK)
+			{
+				LogFMODError("FMOD::Channel::addDSP", result);
+				analyzer->release();
+				return;
+			}
+
+			_spectrumAnalyzers.insert({ channel, analyzer });
+			return;
+		}
+
+		if (iter == _spectrumAnalyzers.end())
+			return;
+
+		channel->removeDSP(iter->second);
+		iter->second->release();
+		_spectrumAnalyzers.erase(iter);
+	}
+
+	float AudioSystem::GetSpectrumAmplitude(FMOD::Channel* channel) const
+	{
+		const auto iter = _spectrumAnalyzers.find(channel);
+		if (iter == _spectrumAnalyzers.end())
+			return 0.f;
+
+		FMOD_DSP_PARAMETER_FFT* fftData = nullptr;
+		if (iter->second->getParameterData(FMOD_DSP_FFT_SPECTRUMDATA, reinterpret_cast<void**>(&fftData), nullptr, nullptr, 0) != FMOD_OK || fftData == nullptr)
+			return 0.f;
+
+		float amplitude = 0.f;
+		for (int channelIndex = 0; channelIndex < fftData->numchannels; ++channelIndex)
+		{
+			for (int bandIndex = 0; bandIndex < fftData->length; ++bandIndex)
+				amplitude += fftData->spectrum[channelIndex][bandIndex];
+		}
+
+		return amplitude;
+	}
+
 	void AudioSystem::StopChannel(FMOD::Channel* channel)
 	{
 		if (channel == nullptr)
 			return;
 
+		SetSpectrumAnalysisEnabled(channel, false);
 		channel->stop();
 
 		if (_bgmChannel == channel)
@@ -199,6 +273,7 @@ namespace gm
 			if (channel == nullptr)
 				continue;
 
+			SetSpectrumAnalysisEnabled(channel, false);
 			channel->stop();
 		}
 
@@ -276,14 +351,18 @@ namespace gm
 
 		_activeChannels.erase(
 			std::remove_if(_activeChannels.begin(), _activeChannels.end(),
-				[](FMOD::Channel* channel)
+				[this](FMOD::Channel* channel)
 				{
 					if (channel == nullptr)
 						return true;
 
 					bool isPlaying = false;
 					const FMOD_RESULT playResult = channel->isPlaying(&isPlaying);
-					return playResult != FMOD_OK || isPlaying == false;
+					const bool hasStopped = playResult != FMOD_OK || isPlaying == false;
+					if (hasStopped)
+						SetSpectrumAnalysisEnabled(channel, false);
+
+					return hasStopped;
 				}),
 			_activeChannels.end());
 	}

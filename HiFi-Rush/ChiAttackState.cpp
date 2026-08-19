@@ -240,7 +240,7 @@ namespace gm
 		if (IsActionCancelAllowed(context) == false)
 			return false;
 
-		if (IsMoveInputPressed())
+		if (IsMoveInputPressed(context))
 		{
 			context.stateMachine->ChangeState(ChiStateId::Run);
 			return true;
@@ -589,7 +589,7 @@ namespace gm
 		if (_hasCheckedBeatHit == false && GetAnimationBeat(context) >= 3.f)
 		{
 			_hasCheckedBeatHit = true;
-			if (APPLICATION.GetInput().IsMouseRepeat(MouseButton::Left) || APPLICATION.GetInput().IsMouseRepeat(MouseButton::Right))
+			if (context.stateMachine->IsInputEnabled() && (APPLICATION.GetInput().IsMouseRepeat(MouseButton::Left) || APPLICATION.GetInput().IsMouseRepeat(MouseButton::Right)))
 			{
 				context.stateMachine->ChangeState(ChiStateId::AttackStrongToWeakBeatHit);
 				return;
