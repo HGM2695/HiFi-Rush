@@ -307,6 +307,9 @@
     <ClInclude Include="MonsterCombatComponent.h">
       <Filter>Component\Monster</Filter>
     </ClInclude>
+    <ClInclude Include="MonsterCombatActivationComponent.h">
+      <Filter>Component\Monster</Filter>
+    </ClInclude>
     <ClInclude Include="MonsterStateMachineComponent.h">
       <Filter>Component\Monster</Filter>
     </ClInclude>
@@ -574,6 +577,9 @@
       <Filter>Component\Player\State</Filter>
     </ClCompile>
     <ClCompile Include="MonsterCombatComponent.cpp">
+      <Filter>Component\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="MonsterCombatActivationComponent.cpp">
       <Filter>Component\Monster</Filter>
     </ClCompile>
     <ClCompile Include="MonsterStateMachineComponent.cpp">

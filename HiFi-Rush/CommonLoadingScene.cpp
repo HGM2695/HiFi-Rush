@@ -744,23 +744,28 @@ namespace gm
 		return true;
 	}
 
-	bool CommonLoadingScene::LoadRhythmBGM(SceneLoadData& outLoadData, Resources& resources, const RhythmBGMDesc& desc)
+	bool CommonLoadingScene::LoadSoundWave(SceneLoadData& outLoadData, Resources& resources, const std::wstring& key, const std::wstring& fileName)
 	{
-		if (resources.Find<SoundWave>(desc.commonResourceKey))
+		if (resources.Find<SoundWave>(key))
 			return true;
 
 		SoundWaveDesc soundDesc{};
-		soundDesc.path = GetAudioPath(desc.fileName);
+		soundDesc.path = GetAudioPath(fileName);
 
 		std::shared_ptr<SoundWave> sound = SoundWave::Create(soundDesc);
 		if (sound == nullptr)
 		{
-			outLoadData.errorMessage = L"BGM SoundWave 생성에 실패했습니다. key=" + std::wstring(desc.commonResourceKey);
+			outLoadData.errorMessage = L"SoundWave 생성에 실패했습니다. key=" + key;
 			return false;
 		}
 
-		outLoadData.resources.push_back({ desc.commonResourceKey, std::move(sound) });
+		outLoadData.resources.push_back({ key, std::move(sound) });
 		return true;
+	}
+
+	bool CommonLoadingScene::LoadRhythmBGM(SceneLoadData& outLoadData, Resources& resources, const RhythmBGMDesc& desc)
+	{
+		return LoadSoundWave(outLoadData, resources, desc.commonResourceKey, desc.fileName);
 	}
 
 	CommonLoadingScene::SceneLoadData CommonLoadingScene::LoadOutsideSceneResources(Resources& resources, IGraphicsResourceFactory& resourceFactory)
@@ -786,6 +791,9 @@ namespace gm
 			return result;
 
 		if (LoadRhythmBGM(result, resources, HiFiRushBGM::Outside) == false)
+			return result;
+
+		if (LoadSoundWave(result, resources, HiFiRushSound::OutsideTriggerOpen, HiFiRushSound::OutsideTriggerOpenFileName) == false)
 			return result;
 
 		result.succeeded = true;

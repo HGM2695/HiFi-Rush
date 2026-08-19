@@ -48,6 +48,13 @@ namespace gm
 		return true;
 	}
 
+	void MonsterStateMachineComponent::CompleteDeathAnimation()
+	{
+		MonsterDeathAnimationCompletedEvent event{};
+		OnDeathAnimationCompleted.Publish(event);
+		GetOwner().Destroy();
+	}
+
 	void MonsterStateMachineComponent::OnInitialize()
 	{
 		_context.stateMachine = this;

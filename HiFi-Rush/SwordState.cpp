@@ -287,6 +287,6 @@ namespace gm
 	void SwordDeadState::Tick(MonsterStateContext& context, float)
 	{
 		if (IsAnimationCompleted(context))
-			context.stateMachine->GetOwner().Destroy();
+			context.stateMachine->CompleteDeathAnimation();
 	}
 }

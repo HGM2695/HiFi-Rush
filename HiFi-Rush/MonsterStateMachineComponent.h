@@ -13,6 +13,9 @@ namespace gm
 	class MonsterState;
 	struct HitEvent;
 	struct NavigationGroundContactEvent;
+	struct MonsterDeathAnimationCompletedEvent : EventType
+	{
+	};
 
 	class MonsterStateMachineComponent : public Component
 	{
@@ -28,6 +31,9 @@ namespace gm
 		void			SetInitialState(MonsterStateId stateId) { _initialStateId = stateId; }
 		MonsterStateId	GetInitialStateId() const { return _initialStateId; }
 		MonsterStateId	GetCurrentStateId() const { return _currentStateId; }
+		void			CompleteDeathAnimation();
+
+		EventPublisher<MonsterStateMachineComponent, MonsterDeathAnimationCompletedEvent> OnDeathAnimationCompleted;
 
 	protected:
 		void			OnInitialize() override;

@@ -58,6 +58,7 @@ namespace gm
 		static bool				LoadChiResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static bool				LoadMonsterResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory, MonsterType monsterType);
 		static bool				LoadNavigationMesh(SceneLoadData& outLoadData, Resources& resources, const std::wstring& key, const std::wstring& fileName);
+		static bool				LoadSoundWave(SceneLoadData& outLoadData, Resources& resources, const std::wstring& key, const std::wstring& fileName);
 		static bool				LoadRhythmBGM(SceneLoadData& outLoadData, Resources& resources, const RhythmBGMDesc& desc);
 
 		bool					RegisterLoadedResources();

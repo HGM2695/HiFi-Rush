@@ -5,11 +5,12 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace gm
 {
 	struct PlayerSpawnDesc;
-	class TriggerSequenceSystem;
+	struct MonsterSpawnResult;
 	class DialogComponent;
 	class TriggerSystem;
 	class GameplayAnnouncementWidget;
@@ -30,11 +31,12 @@ namespace gm
 		const DialogComponent&			GetDialogComponent() const;
 		bool							PlayDialogSequence(const std::wstring& sequenceId);
 		bool							SelectDialogBranch(const std::wstring& branchKey);
-		void PlayAnnouncement(GameplayAnnouncementType type);
-		void SetGameplayStatusUIVisible(bool isVisible);
+		void							PlayAnnouncement(GameplayAnnouncementType type);
+		void							SetGameplayStatusUIVisible(bool isVisible);
 
-	protected:
+protected:
 		bool InitializeMap(const std::wstring& mapResourceKey);
+		bool InitializeMap(const std::wstring& mapResourceKey, std::vector<MonsterSpawnResult>& outMonsterSpawnResults);
 		bool InitializePlayer(const PlayerSpawnDesc& desc);
 		void InitializeGameplayUI();
 		void OnUnload() override;
@@ -42,9 +44,9 @@ namespace gm
 	private:
 		std::unique_ptr<TriggerSystem>			_triggerSystem;
 		WeakGameObjectPtr						_player{};
-		GameplayAnnouncementWidget*			_announcementWidget = nullptr;
 		DialogComponent*						_dialogComponent = nullptr;
-		PlayerStatusWidget*					_playerStatusWidget = nullptr;
-		RhythmMeterWidget*					_rhythmMeterWidget = nullptr;
+		GameplayAnnouncementWidget*				_announcementWidget = nullptr;
+		PlayerStatusWidget*						_playerStatusWidget = nullptr;
+		RhythmMeterWidget*						_rhythmMeterWidget = nullptr;
 	};
 }

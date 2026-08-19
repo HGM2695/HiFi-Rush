@@ -240,6 +240,7 @@
     <ClInclude Include="MainHUDWidget.h" />
     <ClInclude Include="MonsterResourceInfo.h" />
 	<ClInclude Include="MonsterCombatComponent.h" />
+	<ClInclude Include="MonsterCombatActivationComponent.h" />
 	<ClInclude Include="MonsterSpawner.h" />
 	<ClInclude Include="MonsterState.h" />
 	<ClInclude Include="MonsterStateContext.h" />
@@ -336,6 +337,7 @@
     <ClCompile Include="MainHUDWidget.cpp" />
 	<ClCompile Include="MonsterResourceInfo.cpp" />
 	<ClCompile Include="MonsterCombatComponent.cpp" />
+	<ClCompile Include="MonsterCombatActivationComponent.cpp" />
 	<ClCompile Include="MonsterSpawner.cpp" />
 	<ClCompile Include="MonsterState.cpp" />
 	<ClCompile Include="MonsterStateMachineComponent.cpp" />

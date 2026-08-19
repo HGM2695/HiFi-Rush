@@ -85,6 +85,12 @@ namespace gm
 
 	bool GameplayScene::InitializeMap(const std::wstring& mapResourceKey)
 	{
+		std::vector<MonsterSpawnResult> unusedMonsterSpawnResults;
+		return InitializeMap(mapResourceKey, unusedMonsterSpawnResults);
+	}
+
+	bool GameplayScene::InitializeMap(const std::wstring& mapResourceKey, std::vector<MonsterSpawnResult>& outMonsterSpawnResults)
+	{
 		const std::shared_ptr<MapResource> mapResource = APPLICATION.GetResources().Find<MapResource>(mapResourceKey);
 		GM_ASSERT_RETURN_VAL(mapResource, false, "MapResource가 로드되지 않았습니다. key=%ls", mapResourceKey.c_str());
 
@@ -94,7 +100,7 @@ namespace gm
 		GM_ASSERT_RETURN_VAL(environmentSpawner.Spawn(*this, mapData.objects), false, "환경 구성에 실패했습니다. key=%ls", mapResourceKey.c_str());
 
 		MonsterSpawner monsterSpawner(APPLICATION.GetResources());
-		GM_ASSERT_RETURN_VAL(monsterSpawner.Spawn(*this, mapData.monsterSpawnDatas), false, "Monster 구성에 실패했습니다. key=%ls", mapResourceKey.c_str());
+		GM_ASSERT_RETURN_VAL(monsterSpawner.SpawnAll(*this, mapData.monsterSpawnDatas, outMonsterSpawnResults), false, "Monster 구성에 실패했습니다. key=%ls", mapResourceKey.c_str());
 
 		return true;
 	}

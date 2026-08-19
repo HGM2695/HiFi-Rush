@@ -1,10 +1,13 @@
 #include "MonsterSpawner.h"
 
 #include "BeatSkeletalAnimationSyncComponent.h"
+#include "BeatTriggeredSkeletalAnimationComponent.h"
+#include "BeatVisibilityComponent.h"
 #include "BoxCollider3DComponent.h"
 #include "CharacterMovementComponent.h"
 #include "GameObject.h"
 #include "GunnerStateMachineComponent.h"
+#include "GunnerAnimationTypes.h"
 #include "HealthComponent.h"
 #include "HiFiRushCollisionLayers.h"
 #include "HiFiRushStatics.h"
@@ -12,6 +15,7 @@
 #include "HurtBoxComponent.h"
 #include "MathUtil.h"
 #include "MonsterCombatComponent.h"
+#include "MonsterCombatActivationComponent.h"
 #include "MonsterResourceInfo.h"
 #include "MonsterStateMachineComponent.h"
 #include "MonsterTypes.h"
@@ -29,9 +33,11 @@
 #include "StaticMesh.h"
 #include "StaticMeshComponent.h"
 #include "SwordStateMachineComponent.h"
+#include "SwordAnimationTypes.h"
 #include "TransformComponent.h"
 
 #include <array>
+#include <utility>
 
 namespace gm
 {
@@ -45,6 +51,19 @@ namespace gm
 			L"ANIM_WALK_LEFT",
 			L"ANIM_WALK_RIGHT",
 		};
+
+		std::wstring GetAppearanceAnimationClipName(MonsterType monsterType)
+		{
+			switch (monsterType)
+			{
+			case MonsterType::Sword:
+				return GetSwordAnimationClipName(SwordAnimationId::Appear);
+			case MonsterType::Gunner:
+				return GetGunnerAnimationClipName(GunnerAnimationId::Appear);
+			default:
+				return {};
+			}
+		}
 	}
 
 	MonsterSpawner::MonsterSpawner(Resources& resources)
@@ -52,11 +71,15 @@ namespace gm
 	{
 	}
 
-	bool MonsterSpawner::Spawn(Scene& scene, const std::vector<MonsterSpawnData>& spawnDataList) const
+	bool MonsterSpawner::SpawnAll(Scene& scene, const std::vector<MonsterSpawnData>& spawnDataList, std::vector<MonsterSpawnResult>& outSpawnResults) const
 	{
+		outSpawnResults.clear();
+		outSpawnResults.reserve(spawnDataList.size());
 		for (const MonsterSpawnData& spawnData : spawnDataList)
 		{
-			GM_ASSERT_RETURN_VAL(Spawn(scene, spawnData), false, "Monster 생성에 실패했습니다.");
+			GameObject* monster = Spawn(scene, spawnData);
+			GM_ASSERT_RETURN_VAL(monster, false, "Monster 생성에 실패했습니다.");
+			outSpawnResults.push_back({ monster->GetWeakPtr(), spawnData.activationTriggerId });
 		}
 
 		return true;
@@ -90,6 +113,7 @@ namespace gm
 		playOption.loopOverride = true;
 		GM_ASSERT_RETURN_VAL(animator->Play(L"Default", playOption), nullptr, "Monster 기본 Animation 재생에 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(AddCommonComponents(*monster, data), nullptr, "Monster 공통 Component 구성에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(AddActivationComponents(*monster, data), nullptr, "Monster Trigger 활성화 Component 구성에 실패했습니다.");
 
 		if (data.type == MonsterType::Sword)
 		{
@@ -106,6 +130,16 @@ namespace gm
 			GM_ASSERT_RETURN_VAL(socketFollow, nullptr, "Sword Weapon SocketFollowComponent 생성에 실패했습니다.");
 			socketFollow->SetTarget(*monster, L"Sword.Weapon");
 			socketFollow->SetDestroyWithTarget(true);
+
+			if (data.playAppearanceAnimation)
+			{
+				BeatVisibilityDesc visibilityDesc{};
+				visibilityDesc.triggerId = data.activationTriggerId;
+				visibilityDesc.beatOffset = data.appearanceBeatOffset;
+				visibilityDesc.initialVisible = false;
+				visibilityDesc.visibleOnTrigger = true;
+				GM_ASSERT_RETURN_VAL(weapon->AddComponent<BeatVisibilityComponent>(HiFiRushStatics::GetBeatSystem(), visibilityDesc), nullptr, "Sword Weapon Trigger Visibility Component 생성에 실패했습니다.");
+			}
 		}
 
 		return monster;
@@ -222,6 +256,35 @@ namespace gm
 
 		GM_ASSERT_RETURN_VAL(stateMachine, false, "MonsterStateMachineComponent 생성에 실패했습니다.");
 		navMeshController->SetUseGroundCollision(true);
+		return true;
+	}
+
+	bool MonsterSpawner::AddActivationComponents(GameObject& monster, const MonsterSpawnData& data) const
+	{
+		if (data.activationTriggerId.empty())
+			return data.playAppearanceAnimation == false;
+
+		if (data.playAppearanceAnimation)
+		{
+			SkeletalAnimatorComponent* animator = monster.GetComponent<SkeletalAnimatorComponent>();
+			GM_ASSERT_RETURN_VAL(animator, false, "Trigger Monster에 SkeletalAnimatorComponent가 없습니다.");
+
+			const std::wstring appearanceClipName = GetAppearanceAnimationClipName(data.type);
+			GM_ASSERT_RETURN_VAL(appearanceClipName.empty() == false, false, "Appearance Animation을 지원하지 않는 Monster Type입니다.");
+
+			BeatTriggeredSkeletalAnimationDesc appearanceDesc{};
+			appearanceDesc.triggerId = data.activationTriggerId;
+			appearanceDesc.beatOffset = data.appearanceBeatOffset;
+			appearanceDesc.clipName = appearanceClipName;
+			appearanceDesc.initiallyVisible = false;
+			appearanceDesc.hideWhenCompleted = false;
+			GM_ASSERT_RETURN_VAL(monster.AddComponent<BeatTriggeredSkeletalAnimationComponent>(HiFiRushStatics::GetBeatSystem(), *animator, std::move(appearanceDesc)), false, "Monster Appearance Animation Component 생성에 실패했습니다.");
+		}
+
+		MonsterCombatActivationDesc combatActivationDesc{};
+		combatActivationDesc.triggerId = data.activationTriggerId;
+		combatActivationDesc.beatOffset = data.combatBeatOffset;
+		GM_ASSERT_RETURN_VAL(monster.AddComponent<MonsterCombatActivationComponent>(HiFiRushStatics::GetBeatSystem(), std::move(combatActivationDesc)), false, "Monster Combat Activation Component 생성에 실패했습니다.");
 		return true;
 	}
 }

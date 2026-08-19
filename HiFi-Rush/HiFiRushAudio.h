@@ -19,6 +19,12 @@ namespace gm
 		inline constexpr RhythmBGMDesc Qamil{ L"Qamil.BGM", L"TooBigToFail.mp3", 136.f, 0.08f, 0.35f };
 	}
 
+	namespace HiFiRushSound
+	{
+		inline constexpr wchar_t OutsideTriggerOpen[] = L"Outside.TriggerOpen";
+		inline constexpr wchar_t OutsideTriggerOpenFileName[] = L"TriggerOpen.mp3";
+	}
+
 	void PlayRhythmBGM(const RhythmBGMDesc& desc);
 	void TransitionRhythmBGM(const RhythmBGMDesc& desc);
 }

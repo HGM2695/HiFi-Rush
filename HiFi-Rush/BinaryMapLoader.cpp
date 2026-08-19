@@ -217,6 +217,10 @@ namespace gm
 
 		outSpawnData.type = static_cast<MonsterType>(monsterType);
 		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSpawnData.world), false, "Monster World 행렬을 읽는 데 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, outSpawnData.activationTriggerId), false, "Monster Activation Trigger ID를 읽는 데 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSpawnData.playAppearanceAnimation), false, "Monster Appearance Animation 설정을 읽는 데 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSpawnData.appearanceBeatOffset), false, "Monster Appearance Beat Offset을 읽는 데 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSpawnData.combatBeatOffset), false, "Monster Combat Beat Offset을 읽는 데 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSpawnData.maxHealth), false, "Monster Max Health를 읽는 데 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSpawnData.isInvincible), false, "Monster 무적 설정을 읽는 데 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSpawnData.bodyColliderCenter), false, "Monster Body Collider Center를 읽는 데 실패했습니다.");
