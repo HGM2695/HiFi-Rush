@@ -1,5 +1,6 @@
 #pragma once
 
+#include "MathTypes.h"
 #include "MonsterStateContext.h"
 #include "MonsterStateTypes.h"
 
@@ -9,7 +10,6 @@
 namespace gm
 {
 	struct HitEvent;
-	struct NavigationGroundContactEvent;
 
 	inline constexpr float MonsterDefaultBlendDuration = 0.15f;
 
@@ -22,7 +22,7 @@ namespace gm
 		virtual void Enter(MonsterStateContext& context) {}
 		virtual void Tick(MonsterStateContext& context, float deltaTime) {}
 		virtual void OnDamaged(MonsterStateContext& context, const HitEvent& event);
-		virtual void OnGroundContact(MonsterStateContext& context, const NavigationGroundContactEvent& event) {}
+		virtual void OnGroundContact(MonsterStateContext& context) {}
 		virtual void Exit(MonsterStateContext& context) {}
 
 	protected:
@@ -41,11 +41,16 @@ namespace gm
 		void Enter(MonsterStateContext& context) override;
 		void Tick(MonsterStateContext& context, float deltaTime) override;
 		void OnDamaged(MonsterStateContext& context, const HitEvent& event) override;
-		void OnGroundContact(MonsterStateContext& context, const NavigationGroundContactEvent& event) override;
+		void OnGroundContact(MonsterStateContext& context) override;
+		void Exit(MonsterStateContext& context) override;
 
 	private:
-		void Launch(MonsterStateContext& context, float speed) const;
-		void PlayAirHitAnimation(MonsterStateContext& context);
+		void SaveMotionSettings(MonsterStateContext& context);
+		void RestoreMotionSettings(MonsterStateContext& context);
+		void SetRootMotion(MonsterStateContext& context, bool enabled, const Vector3& weight) const;
+		void PlayAirHitAnimation(MonsterStateContext& context, bool applyRootMotionY);
+		bool HasReachedSkyHitFallTransition(const MonsterStateContext& context) const;
+		void BeginFall(MonsterStateContext& context);
 
 	private:
 		enum class Phase
@@ -58,7 +63,12 @@ namespace gm
 		std::wstring				_launchClipName;
 		std::wstring				_fallClipName;
 		std::array<std::wstring, 3>	_hitClipNames;
-		Phase					_phase = Phase::Launch;
+		Phase						_phase = Phase::Launch;
+		Vector3						_previousRootMotionWeight{ 1.f, 1.f, 1.f };
+		bool						_previousRootMotionEnabled = true;
+		bool						_previousUseGravity = true;
+		bool						_isSkyHit = false;
+		bool						_hasSavedMotionSettings = false;
 	};
 
 	class MonsterDownState final : public MonsterState

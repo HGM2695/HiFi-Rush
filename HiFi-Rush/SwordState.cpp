@@ -258,8 +258,13 @@ namespace gm
 	{
 		SetRootMotionEnabled(context, true);
 
-		const uint32 damageOffset = static_cast<uint32>(Math::RandomInt(0, 2));
-		const SwordAnimationId animationId = static_cast<SwordAnimationId>(ToIndex(SwordAnimationId::DamageLow0) + damageOffset);
+		SwordAnimationId animationId = SwordAnimationId::DamageMiddle;
+		if (context.lastHitReactionType != HitReactionType::StrongKnockback)
+		{
+			const uint32 damageOffset = static_cast<uint32>(Math::RandomInt(0, 2));
+			animationId = static_cast<SwordAnimationId>(ToIndex(SwordAnimationId::DamageLow0) + damageOffset);
+		}
+
 		PlayAnimation(context, GetSwordAnimationClipName(animationId), false);
 	}
 

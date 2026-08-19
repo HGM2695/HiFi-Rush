@@ -10,12 +10,17 @@ namespace gm
 {
 	namespace
 	{
+		constexpr float AnimationTicksPerBeat = 15.f;
 		constexpr float DashChainInputStartBeat = 0.5f;
+		constexpr float DashNormalActionStartBeat = 0.6f;
+		constexpr float DirectionalDashRunTransitionBeat = 1.f + 7.5f / AnimationTicksPerBeat;
+		constexpr float DoubleDashRunTransitionBeat = 1.5f;
+		constexpr float TripleDashRunTransitionBeat = 1.f + 5.f / AnimationTicksPerBeat;
 	}
 
 	/// Dash //////////////////////////////////////////////////////////////////////////////
-	ChiDashState::ChiDashState(ChiStateId stateId, ChiAnimationClipId animationClipId, ChiDashDirection direction, bool rotateToDashDirection, ChiStateId nextDashState)
-		: ChiState(stateId, animationClipId), _direction(direction), _nextDashState(nextDashState), _rotateToDashDirection(rotateToDashDirection)
+	ChiDashState::ChiDashState(ChiStateId stateId, ChiAnimationClipId animationClipId, ChiDashDirection direction, bool rotateToDashDirection, float runTransitionStartBeat, ChiStateId nextDashState)
+		: ChiState(stateId, animationClipId), _direction(direction), _nextDashState(nextDashState), _rotateToDashDirection(rotateToDashDirection), _runTransitionStartBeat(runTransitionStartBeat)
 	{
 	}
 
@@ -49,6 +54,21 @@ namespace gm
 				return;
 			}
 		}
+		else if (_nextDashState == ChiStateId::None && context.dashInput)
+		{
+			const bool isOnBeat = context.dashInput->judgeGrade != RhythmJudgeGrade::OffBeat;
+			if (IsBlendCompleted(context) && GetElapsedBeatAfterBlend(context) >= DashNormalActionStartBeat && isOnBeat)
+			{
+				ChangeDashStateByInput(context, &context.dashInput.value());
+				return;
+			}
+		}
+
+		if (GetStateElapsedBeat(context) >= _runTransitionStartBeat && IsMoveInputPressed(context))
+		{
+			context.stateMachine->ChangeState(ChiStateId::Run);
+			return;
+		}
 
 		if (IsAnimationCompleted(context))
 			ReturnToIdleOrRun(context);
@@ -71,14 +91,14 @@ namespace gm
 		if (_bufferedAttackInput && _bufferedAttackInput->type == RhythmInputType::WeakAttack)
 		{
 			context.moveComponent->FaceDirectionImmediate(_cachedDirection);
-			context.stateMachine->ChangeState(elapsedBeat < 0.6f ? ChiStateId::AttackWeakDash : ChiStateId::AttackWeak0, _bufferedAttackInput.value());
+			context.stateMachine->ChangeState(elapsedBeat < DashNormalActionStartBeat ? ChiStateId::AttackWeakDash : ChiStateId::AttackWeak0, _bufferedAttackInput.value());
 			return true;
 		}
 
 		if (_bufferedAttackInput && _bufferedAttackInput->type == RhythmInputType::StrongAttack)
 		{
 			context.moveComponent->FaceDirectionImmediate(_cachedDirection);
-			if (elapsedBeat < 0.6f)
+			if (elapsedBeat < DashNormalActionStartBeat)
 			{
 				if (_direction == ChiDashDirection::Front)
 					context.stateMachine->ChangeState(ChiStateId::AttackStrongDash, 0.f, _bufferedAttackInput.value());
@@ -121,38 +141,38 @@ namespace gm
 	}
 
 	ChiDashFrontState::ChiDashFrontState()
-		: ChiDashState(ChiStateId::DashFront, ChiAnimationClipId::DashFront, ChiDashDirection::Front, false, ChiStateId::DashDouble)
+		: ChiDashState(ChiStateId::DashFront, ChiAnimationClipId::DashFront, ChiDashDirection::Front, false, DirectionalDashRunTransitionBeat, ChiStateId::DashDouble)
 	{
 	}
 
 	ChiDashBackState::ChiDashBackState()
-		: ChiDashState(ChiStateId::DashBack, ChiAnimationClipId::DashBack, ChiDashDirection::Back, false, ChiStateId::DashDouble)
+		: ChiDashState(ChiStateId::DashBack, ChiAnimationClipId::DashBack, ChiDashDirection::Back, false, DirectionalDashRunTransitionBeat, ChiStateId::DashDouble)
 	{
 	}
 
 	ChiDashLeftState::ChiDashLeftState()
-		: ChiDashState(ChiStateId::DashLeft, ChiAnimationClipId::DashLeft, ChiDashDirection::Left, false, ChiStateId::DashDouble)
+		: ChiDashState(ChiStateId::DashLeft, ChiAnimationClipId::DashLeft, ChiDashDirection::Left, false, DirectionalDashRunTransitionBeat, ChiStateId::DashDouble)
 	{
 	}
 
 	ChiDashRightState::ChiDashRightState()
-		: ChiDashState(ChiStateId::DashRight, ChiAnimationClipId::DashRight, ChiDashDirection::Right, false, ChiStateId::DashDouble)
+		: ChiDashState(ChiStateId::DashRight, ChiAnimationClipId::DashRight, ChiDashDirection::Right, false, DirectionalDashRunTransitionBeat, ChiStateId::DashDouble)
 	{
 	}
 
 	ChiDashDoubleState::ChiDashDoubleState()
-		: ChiDashState(ChiStateId::DashDouble, ChiAnimationClipId::DashDouble, ChiDashDirection::InputOrFront, true, ChiStateId::DashTriple)
+		: ChiDashState(ChiStateId::DashDouble, ChiAnimationClipId::DashDouble, ChiDashDirection::InputOrFront, true, DoubleDashRunTransitionBeat, ChiStateId::DashTriple)
 	{
 	}
 
 	ChiDashTripleState::ChiDashTripleState()
-		: ChiDashState(ChiStateId::DashTriple, ChiAnimationClipId::DashTriple, ChiDashDirection::InputOrFront, true)
+		: ChiDashState(ChiStateId::DashTriple, ChiAnimationClipId::DashTriple, ChiDashDirection::InputOrFront, true, TripleDashRunTransitionBeat)
 	{
 	}
 
 	/// DashSky //////////////////////////////////////////////////////////////////////////////
 	ChiDashSkyState::ChiDashSkyState()
-		: ChiDashState(ChiStateId::DashSky, ChiAnimationClipId::DashSky, ChiDashDirection::InputOrFront, true)
+		: ChiDashState(ChiStateId::DashSky, ChiAnimationClipId::DashSky, ChiDashDirection::InputOrFront, true, 0.f)
 	{
 	}
 

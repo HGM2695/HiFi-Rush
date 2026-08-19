@@ -1,5 +1,7 @@
 #pragma once
 
+#include "CombatTypes.h"
+
 namespace gm
 {
 	class BeatSystem;
@@ -20,5 +22,6 @@ namespace gm
 		Rigidbody3DComponent*			rigidbodyComponent = nullptr;
 		HealthComponent*				healthComponent = nullptr;
 		SkeletalAnimatorComponent*		animatorComponent = nullptr;
+		HitReactionType					lastHitReactionType = HitReactionType::None;
 	};
 }

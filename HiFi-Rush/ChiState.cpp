@@ -168,7 +168,7 @@ namespace gm
 
 		if (canDoubleJump && context.jumpInput)
 		{
-			context.stateMachine->ChangeState(ChiStateId::JumpDoubleUp, 0.f, context.jumpInput.value());
+			context.stateMachine->ChangeState(ChiStateId::JumpDoubleUp, context.jumpInput.value());
 			return true;
 		}
 

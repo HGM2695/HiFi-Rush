@@ -12,7 +12,6 @@ namespace gm
 {
 	class MonsterState;
 	struct HitEvent;
-	struct NavigationGroundContactEvent;
 	struct MonsterDeathAnimationCompletedEvent : EventType
 	{
 	};
@@ -41,7 +40,7 @@ namespace gm
 
 	private:
 		void			OnDamaged(const HitEvent& event);
-		void			OnGroundContact(const NavigationGroundContactEvent& event);
+		void			OnGroundContact();
 		MonsterState*	FindState(MonsterStateId stateId) const;
 
 	private:

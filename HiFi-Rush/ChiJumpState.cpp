@@ -1,6 +1,7 @@
 #include "ChiJumpState.h"
 #include "BeatSystem.h"
 #include "ChiAnimationSettings.h"
+#include "ChiMoveComponent.h"
 #include "ChiStateMachineComponent.h"
 #include "Rigidbody3DComponent.h"
 
@@ -10,13 +11,8 @@ namespace gm
 {
 	namespace
 	{
-		constexpr float JumpImpulse = 9.f;
-		constexpr float DoubleJumpImpulse = 12.f;
 		constexpr float JumpStartTime = 0.f;
 		constexpr float DoubleJumpDownStartTime = 0.f;
-		constexpr float JumpGravityScale = 3.f;
-		constexpr float ApexGravityScale = 1.f;
-		constexpr float ApexVelocityThreshold = 2.f;
 
 		AnimationPlayOption MakeJumpPlayOption(bool isLoop, float startTime)
 		{
@@ -25,25 +21,33 @@ namespace gm
 
 		void ApplyVerticalImpulse(ChiStateContext& context, float impulse)
 		{
+			const ChiJumpPhysicsSettings& settings = context.moveComponent->GetJumpPhysicsSettings();
 			context.rigidbodyComponent->ClearVerticalVelocity();
-			context.rigidbodyComponent->SetGravityScale(JumpGravityScale);
+			context.rigidbodyComponent->SetGravityScale(settings.riseGravityScale);
 			context.rigidbodyComponent->AddImpulse(Vector3{ 0.f, impulse, 0.f });
 		}
 
 		void UpdateApexGravity(ChiStateContext& context)
 		{
+			const ChiJumpPhysicsSettings& settings = context.moveComponent->GetJumpPhysicsSettings();
 			const float verticalSpeed = std::abs(context.rigidbodyComponent->GetVelocity().y);
-			context.rigidbodyComponent->SetGravityScale(verticalSpeed <= ApexVelocityThreshold ? ApexGravityScale : JumpGravityScale);
+			const bool useApexGravity = settings.apexVelocityThreshold > 0.f && verticalSpeed <= settings.apexVelocityThreshold;
+			context.rigidbodyComponent->SetGravityScale(useApexGravity ? settings.apexGravityScale : settings.riseGravityScale);
 		}
 
 		void RestoreJumpGravity(ChiStateContext& context)
 		{
-			context.rigidbodyComponent->SetGravityScale(JumpGravityScale);
+			context.rigidbodyComponent->SetGravityScale(context.moveComponent->GetJumpPhysicsSettings().riseGravityScale);
 		}
 
-		bool HasLeftApex(const ChiStateContext& context)
+		void ApplyFallGravity(ChiStateContext& context)
 		{
-			return context.rigidbodyComponent->GetVelocity().y <= -ApexVelocityThreshold;
+			context.rigidbodyComponent->SetGravityScale(context.moveComponent->GetJumpPhysicsSettings().fallGravityScale);
+		}
+
+		bool ShouldTransitionToDown(const ChiStateContext& context)
+		{
+			return context.rigidbodyComponent->GetVelocity().y <= context.moveComponent->GetJumpPhysicsSettings().downTransitionVelocity;
 		}
 
 	}
@@ -57,7 +61,7 @@ namespace gm
 	void ChiJumpUpState::Enter(ChiStateContext& context)
 	{
 		ChiState::Enter(context);
-		ApplyVerticalImpulse(context, JumpImpulse);
+		ApplyVerticalImpulse(context, context.moveComponent->GetJumpPhysicsSettings().jumpImpulse);
 	}
 
 	void ChiJumpUpState::Tick(ChiStateContext& context, float deltaTime)
@@ -72,7 +76,7 @@ namespace gm
 		}
 		if (elapsedBeat > 0.2f && context.jumpInput)
 		{
-			context.stateMachine->ChangeState(ChiStateId::JumpDoubleUp, 0.f, context.jumpInput.value());
+			context.stateMachine->ChangeState(ChiStateId::JumpDoubleUp, context.jumpInput.value());
 			return;
 		}
 		if (context.strongAttackInput)
@@ -86,7 +90,7 @@ namespace gm
 			return;
 		}
 
-		if (HasLeftApex(context))
+		if (ShouldTransitionToDown(context))
 			context.stateMachine->ChangeState(ChiStateId::JumpDown);
 	}
 
@@ -101,9 +105,17 @@ namespace gm
 	{
 	}
 
+	void ChiJumpDownState::Enter(ChiStateContext& context)
+	{
+		ChiState::Enter(context);
+		ApplyFallGravity(context);
+	}
+
 	void ChiJumpDownState::Tick(ChiStateContext& context, float deltaTime)
 	{
-		if (TryChangeAirAction(context, true, 0.1f))
+		ApplyFallGravity(context);
+
+		if (TryChangeAirAction(context, true))
 			return;
 	}
 
@@ -140,7 +152,7 @@ namespace gm
 	void ChiJumpDoubleUpState::Enter(ChiStateContext& context)
 	{
 		ChiState::Enter(context);
-		ApplyVerticalImpulse(context, DoubleJumpImpulse);
+		ApplyVerticalImpulse(context, context.moveComponent->GetJumpPhysicsSettings().doubleJumpImpulse);
 	}
 
 	void ChiJumpDoubleUpState::Tick(ChiStateContext& context, float deltaTime)
@@ -150,7 +162,7 @@ namespace gm
 		if (TryChangeAirAction(context, false, 0.1f))
 			return;
 
-		if (HasLeftApex(context))
+		if (ShouldTransitionToDown(context))
 			context.stateMachine->ChangeState(ChiStateId::JumpDoubleDown);
 	}
 
@@ -164,8 +176,16 @@ namespace gm
 	{
 	}
 
+	void ChiJumpDoubleDownState::Enter(ChiStateContext& context)
+	{
+		ChiState::Enter(context);
+		ApplyFallGravity(context);
+	}
+
 	void ChiJumpDoubleDownState::Tick(ChiStateContext& context, float deltaTime)
 	{
+		ApplyFallGravity(context);
+
 		if (TryChangeAirAction(context, false, 0.1f))
 			return;
 	}

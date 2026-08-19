@@ -98,16 +98,18 @@ namespace gm
 
 	void MonsterStateMachineComponent::OnDamaged(const HitEvent& event)
 	{
+		_context.lastHitReactionType = event.damage.hitReactionType;
+
 		MonsterState* currentState = FindState(_currentStateId);
 		if (currentState)
 			currentState->OnDamaged(_context, event);
 	}
 
-	void MonsterStateMachineComponent::OnGroundContact(const NavigationGroundContactEvent& event)
+	void MonsterStateMachineComponent::OnGroundContact()
 	{
 		MonsterState* currentState = FindState(_currentStateId);
 		if (currentState)
-			currentState->OnGroundContact(_context, event);
+			currentState->OnGroundContact(_context);
 	}
 
 	MonsterState* MonsterStateMachineComponent::FindState(MonsterStateId stateId) const
