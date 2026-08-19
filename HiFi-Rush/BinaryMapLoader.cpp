@@ -204,6 +204,50 @@ namespace gm
 			return true;
 		}
 
+		case EnvironmentComponentType::CollisionTrigger:
+		{
+			CollisionTriggerComponentData data{};
+			GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, data.colliderId), false, "CollisionTrigger의 Collider ID를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(data.colliderId.empty() == false, false, "CollisionTrigger의 Collider ID가 비어 있습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, data.triggerId), false, "CollisionTrigger의 Trigger ID를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(data.triggerId.empty() == false, false, "CollisionTrigger의 Trigger ID가 비어 있습니다.");
+			outObject.components.emplace_back(std::move(data));
+			return true;
+		}
+
+		case EnvironmentComponentType::RespawnPointTrigger:
+		{
+			RespawnPointTriggerComponentData data{};
+			GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, data.colliderId), false, "RespawnPointTrigger의 Collider ID를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(data.colliderId.empty() == false, false, "RespawnPointTrigger의 Collider ID가 비어 있습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.respawnPosition), false, "RespawnPointTrigger의 Respawn Position을 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.respawnRotationY), false, "RespawnPointTrigger의 Respawn Rotation Y를 읽는 데 실패했습니다.");
+			outObject.components.emplace_back(std::move(data));
+			return true;
+		}
+
+		case EnvironmentComponentType::MovementBase:
+		{
+			MovementBaseComponentData data{};
+			GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, data.colliderId), false, "MovementBase의 Collider ID를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(data.colliderId.empty() == false, false, "MovementBase의 Collider ID가 비어 있습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.passengerMask), false, "MovementBase의 Passenger Mask를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(data.passengerMask != 0, false, "MovementBase의 Passenger Mask가 비어 있습니다.");
+			outObject.components.emplace_back(std::move(data));
+			return true;
+		}
+
+		case EnvironmentComponentType::FallRespawnTrigger:
+		{
+			FallRespawnTriggerComponentData data{};
+			GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, data.colliderId), false, "FallRespawnTrigger의 Collider ID를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(data.colliderId.empty() == false, false, "FallRespawnTrigger의 Collider ID가 비어 있습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.damage), false, "FallRespawnTrigger의 Damage를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(data.damage > 0, false, "FallRespawnTrigger의 Damage는 0보다 커야 합니다.");
+			outObject.components.emplace_back(std::move(data));
+			return true;
+		}
+
 		default:
 			return false;
 		}

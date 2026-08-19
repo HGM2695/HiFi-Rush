@@ -28,6 +28,7 @@ namespace gm
 		constexpr wchar_t FirstWaveTriggerId[] = L"Outside.FirstWave";
 		constexpr wchar_t SecondWaveTriggerId[] = L"Outside.SecondWave";
 		constexpr wchar_t FightDoorTriggerId[] = L"Outside.FirstFightDoor";
+		constexpr wchar_t ShuffleDialogTriggerId[] = L"Outside.ShuffleDialog";
 		constexpr float TriggerAnimationBeatOffset = 2.f;
 	}
 
@@ -44,6 +45,7 @@ namespace gm
 		PlayRhythmBGM(HiFiRushBGM::Outside);
 		InitializeGameplayUI();
 		SetGameplayStatusUIVisible(false);
+		GM_ASSERT_RETURN(_shuffleDialogTriggerBinding.Bind(GetTriggerSystem(), ShuffleDialogTriggerId, 0.f, [this](float) { StartShuffleTutorial(); }, []() {}), "Outside Shuffle Dialog Trigger Binding에 실패했습니다.");
 		GetDialogComponent().OnFinished.Subscribe(_dialogFinishedConnection,
 			[this](const DialogFinishedEvent& event)
 			{
@@ -98,10 +100,19 @@ namespace gm
 
 	void OutsideScene::HandleDialogFinished(const DialogFinishedEvent& event)
 	{
-		if (event.completed == false || event.sequenceId != HiFiRushDialogSequenceIds::SaverEncounter)
+		if (event.completed == false)
 			return;
 
-		StartEncounter();
+		if (event.sequenceId == HiFiRushDialogSequenceIds::SaverEncounter)
+			StartEncounter();
+		else if (event.sequenceId == HiFiRushDialogSequenceIds::ShuffleTutorial)
+			SetGameplayStatusUIVisible(true);
+	}
+
+	void OutsideScene::StartShuffleTutorial()
+	{
+		SetGameplayStatusUIVisible(false);
+		GM_ASSERT_RETURN(PlayDialogSequence(HiFiRushDialogSequenceIds::ShuffleTutorial), "Outside Shuffle Tutorial Dialog 재생에 실패했습니다.");
 	}
 
 	void OutsideScene::StartEncounter()
@@ -198,5 +209,4 @@ namespace gm
 		}
 
 	}
-
 }

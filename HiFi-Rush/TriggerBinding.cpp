@@ -26,7 +26,7 @@ namespace gm
 
 	void TriggerBinding::HandleTrigger(const TriggerEvent& event)
 	{
-		if (event.targetsAll == false && event.triggerId != _triggerId)
+		if (event.triggerId != _triggerId)
 			return;
 
 		if (event.type == TriggerType::Activate)

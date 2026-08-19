@@ -19,7 +19,6 @@ namespace gm
 		TriggerType		type = TriggerType::Activate;
 		std::wstring	triggerId{};
 		float			startBeat = 0.f;
-		bool			targetsAll = false;
 	};
 
 	class TriggerSystem
@@ -34,16 +33,10 @@ namespace gm
 		EventPublisher<TriggerSystem, TriggerEvent> OnTrigger;
 
 	private:
-		void ActivateAll();
-		void ResetAll();
-		void PublishTrigger(TriggerType type, const std::wstring& triggerId, float startBeat, bool targetsAll);
+		void PublishTrigger(TriggerType type, const std::wstring& triggerId, float startBeat);
 
 	private:
 		const BeatSystem&					_beatSystem;
 		std::unordered_set<std::wstring>	_activatedTriggerIds{};
-
-#if GM_ENABLE_DEBUG_TOOLS
-		EventConnection _debugEventConnection{};
-#endif
 	};
 }

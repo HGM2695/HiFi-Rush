@@ -32,6 +32,10 @@ namespace gm
 		bool CreateComponent(GameObject& gameObject, const HurtBoxComponentData& data) const;
 		bool CreateComponent(GameObject& gameObject, const HitReactionComponentData& data) const;
 		bool CreateComponent(GameObject& gameObject, const SceneTransitionTriggerComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const CollisionTriggerComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const RespawnPointTriggerComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const MovementBaseComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const FallRespawnTriggerComponentData& data) const;
 
 	private:
 		Resources&			_resources;

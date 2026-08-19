@@ -20,7 +20,7 @@ namespace gm
 
 		Collider3DComponent&		GetCollider() { return *_collider; }
 		const Collider3DComponent&	GetCollider() const { return *_collider; }
-		const std::wstring&		GetColliderId() const { return _colliderId; }
+		const std::wstring&			GetColliderId() const { return _colliderId; }
 
 		EventPublisher<HurtBoxComponent, HitEvent> OnHurt;
 
@@ -30,7 +30,7 @@ namespace gm
 	private:
 		DamageResult ReceiveHit(const HitEvent& event);
 
-		std::wstring		_colliderId{};
+		std::wstring			_colliderId{};
 		Collider3DComponent*	_collider = nullptr;
 		HealthComponent*		_health = nullptr;
 	};

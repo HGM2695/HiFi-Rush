@@ -11,12 +11,16 @@
 #include "BeatVisibilityComponent.h"
 #include "BoxCollider3DComponent.h"
 #include "Collider3DComponent.h"
+#include "CollisionTriggerComponent.h"
+#include "FallRespawnTriggerComponent.h"
 #include "GameObject.h"
 #include "GMAssert.h"
 #include "HealthComponent.h"
 #include "HitReactionComponent.h"
 #include "HurtBoxComponent.h"
+#include "MovementBaseComponent.h"
 #include "Resources.h"
+#include "RespawnPointTriggerComponent.h"
 #include "SceneTransitionTriggerComponent.h"
 #include "SkeletalAnimatorComponent.h"
 #include "SphereCollider3DComponent.h"
@@ -143,6 +147,43 @@ namespace gm
 		GM_ASSERT_RETURN_VAL(data.targetSceneName.empty() == false, false, "Scene Transition의 Target Scene 이름은 비어 있을 수 없습니다.");
 
 		return gameObject.AddComponent<SceneTransitionTriggerComponent>(data.colliderId, data.targetSceneName) != nullptr;
+	}
+
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const CollisionTriggerComponentData& data) const
+	{
+		GM_ASSERT_RETURN_VAL(gameObject.GetComponent<CollisionTriggerComponent>() == nullptr, false, "GameObject에는 CollisionTriggerComponent를 하나만 추가할 수 있습니다.");
+		GM_ASSERT_RETURN_VAL(data.colliderId.empty() == false, false, "Collision Trigger가 참조할 Collider ID는 비어 있을 수 없습니다.");
+		GM_ASSERT_RETURN_VAL(data.triggerId.empty() == false, false, "Collision Trigger가 실행할 Trigger ID는 비어 있을 수 없습니다.");
+
+		return gameObject.AddComponent<CollisionTriggerComponent>(data.colliderId, data.triggerId) != nullptr;
+	}
+
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const RespawnPointTriggerComponentData& data) const
+	{
+		GM_ASSERT_RETURN_VAL(gameObject.GetComponent<RespawnPointTriggerComponent>() == nullptr, false, "GameObject에는 RespawnPointTriggerComponent를 하나만 추가할 수 있습니다.");
+		GM_ASSERT_RETURN_VAL(data.colliderId.empty() == false, false, "Respawn Point Trigger가 참조할 Collider ID는 비어 있을 수 없습니다.");
+		GM_ASSERT_RETURN_VAL(std::isfinite(data.respawnPosition.x) && std::isfinite(data.respawnPosition.y) && std::isfinite(data.respawnPosition.z), false, "Respawn Point Trigger의 Respawn Position은 유한한 값이어야 합니다.");
+		GM_ASSERT_RETURN_VAL(std::isfinite(data.respawnRotationY), false, "Respawn Point Trigger의 Respawn Rotation Y는 유한한 값이어야 합니다.");
+
+		return gameObject.AddComponent<RespawnPointTriggerComponent>(data.colliderId, data.respawnPosition, data.respawnRotationY) != nullptr;
+	}
+
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const MovementBaseComponentData& data) const
+	{
+		GM_ASSERT_RETURN_VAL(gameObject.GetComponent<MovementBaseComponent>() == nullptr, false, "GameObject에는 MovementBaseComponent를 하나만 추가할 수 있습니다.");
+		GM_ASSERT_RETURN_VAL(data.colliderId.empty() == false, false, "Movement Base가 참조할 Collider ID는 비어 있을 수 없습니다.");
+		GM_ASSERT_RETURN_VAL(data.passengerMask != 0, false, "Movement Base의 Passenger Mask는 비어 있을 수 없습니다.");
+
+		return gameObject.AddComponent<MovementBaseComponent>(data.colliderId, data.passengerMask) != nullptr;
+	}
+
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const FallRespawnTriggerComponentData& data) const
+	{
+		GM_ASSERT_RETURN_VAL(gameObject.GetComponent<FallRespawnTriggerComponent>() == nullptr, false, "GameObject에는 FallRespawnTriggerComponent를 하나만 추가할 수 있습니다.");
+		GM_ASSERT_RETURN_VAL(data.colliderId.empty() == false, false, "Fall Respawn Trigger가 참조할 Collider ID는 비어 있을 수 없습니다.");
+		GM_ASSERT_RETURN_VAL(data.damage > 0, false, "Fall Respawn Trigger의 Damage는 0보다 커야 합니다.");
+
+		return gameObject.AddComponent<FallRespawnTriggerComponent>(data.colliderId, data.damage) != nullptr;
 	}
 
 	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatMoveComponentData& data) const

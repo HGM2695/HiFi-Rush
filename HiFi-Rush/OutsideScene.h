@@ -2,6 +2,7 @@
 
 #include "Event.h"
 #include "GameplayScene.h"
+#include "TriggerBinding.h"
 
 #include <memory>
 #include <optional>
@@ -33,6 +34,7 @@ namespace gm
 	private:
 		bool InitializeEncounterMonsters(const std::vector<MonsterSpawnResult>& monsterSpawnResults);
 		void HandleDialogFinished(const DialogFinishedEvent& event);
+		void StartShuffleTutorial();
 		void HandleMonsterDeathAnimationCompleted(const MonsterDeathAnimationCompletedEvent& event);
 		void StartEncounter();
 		bool TrackWaveMonsters(const std::vector<WeakGameObjectPtr>& monsters);
@@ -46,6 +48,7 @@ namespace gm
 		std::vector<WeakGameObjectPtr>	_secondWaveMonsters{};
 		std::vector<std::unique_ptr<EventConnection>> _waveDeathAnimationConnections{};
 		EventConnection					_dialogFinishedConnection{};
+		TriggerBinding					_shuffleDialogTriggerBinding{};
 		std::optional<float>			_triggerSoundBeat{};
 		uint32							_remainingWaveMonsterCount = 0;
 		EncounterPhase					_encounterPhase = EncounterPhase::Intro;

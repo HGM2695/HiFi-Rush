@@ -25,16 +25,16 @@ namespace gm
 	struct BeatMoveComponentData
 	{
 		TriggerBindingData		triggerBindingData{};
-		Vector3						targetPosition{};
-		float						durationBeats = 1.f;
+		Vector3					targetPosition{};
+		float					durationBeats = 1.f;
 	};
 
 	struct BeatTriggeredRotationComponentData
 	{
 		TriggerBindingData		triggerBindingData{};
-		Vector3						axis{ 0.f, 0.f, 1.f };
-		float						angleDegrees = 90.f;
-		float						durationBeats = 0.25f;
+		Vector3					axis{ 0.f, 0.f, 1.f };
+		float					angleDegrees = 90.f;
+		float					durationBeats = 0.25f;
 	};
 
 	struct BeatPositionSequenceComponentData
@@ -47,8 +47,8 @@ namespace gm
 	struct BeatVisibilityComponentData
 	{
 		TriggerBindingData		triggerBindingData{};
-		bool						initialVisible = false;
-		bool						visibleOnTrigger = true;
+		bool					initialVisible = false;
+		bool					visibleOnTrigger = true;
 	};
 
 	struct BeatTransformComponentData
@@ -141,6 +141,31 @@ namespace gm
 		std::wstring	targetSceneName{};
 	};
 
+	struct CollisionTriggerComponentData
+	{
+		std::wstring	colliderId{};
+		std::wstring	triggerId{};
+	};
+
+	struct RespawnPointTriggerComponentData
+	{
+		std::wstring	colliderId{};
+		Vector3			respawnPosition{};
+		float			respawnRotationY = 0.f;
+	};
+
+	struct MovementBaseComponentData
+	{
+		std::wstring	colliderId{};
+		CollisionMask	passengerMask = AllCollisionLayers;
+	};
+
+	struct FallRespawnTriggerComponentData
+	{
+		std::wstring	colliderId{};
+		int32			damage = 50;
+	};
+
 	enum class EnvironmentComponentType : uint32
 	{
 		BeatMove,
@@ -159,6 +184,10 @@ namespace gm
 		HurtBox,
 		HitReaction,
 		SceneTransitionTrigger,
+		CollisionTrigger,
+		RespawnPointTrigger,
+		MovementBase,
+		FallRespawnTrigger,
 		Count,
 	};
 
@@ -178,7 +207,11 @@ namespace gm
 		HealthComponentData,
 		HurtBoxComponentData,
 		HitReactionComponentData,
-		SceneTransitionTriggerComponentData>;
+		SceneTransitionTriggerComponentData,
+		CollisionTriggerComponentData,
+		RespawnPointTriggerComponentData,
+		MovementBaseComponentData,
+		FallRespawnTriggerComponentData>;
 
 	static_assert(std::variant_size_v<EnvironmentComponentData> == static_cast<size_t>(EnvironmentComponentType::Count));
 }
