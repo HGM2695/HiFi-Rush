@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "CameraManager.h"
 #include "Application.h"
+#include "AudioSystem.h"
 #include "TimeSystem.h"
 #include "TickManager.h"
 #include <algorithm>
@@ -23,6 +24,7 @@ namespace gm
 	void Scene::Exit()
 	{
 		OnExit();
+		APPLICATION.GetAudioSystem().StopBGM();
 
 		if (_isUnloadOnExit)
 			Unload();
