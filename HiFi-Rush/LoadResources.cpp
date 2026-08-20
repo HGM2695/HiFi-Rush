@@ -4,7 +4,9 @@
 #include "PathUtil.h"
 #include "Paths.h"
 #include "Resources.h"
+#include "SoundWave.h"
 #include "Texture.h"
+#include "TitleResources.h"
 
 #include <array>
 
@@ -26,6 +28,20 @@ namespace gm
 			GM_ASSERT_RETURN_VAL(resources.Add(key, texture), false, "UI Texture 등록에 실패했습니다. key=%ls", key.c_str());
 			return true;
 		}
+
+		bool LoadSoundWave(Resources& resources, const std::wstring& key, const std::wstring& relativePath)
+		{
+			if (resources.Find<SoundWave>(key))
+				return true;
+
+			SoundWaveDesc desc{};
+			desc.path = GetAudioPath(relativePath);
+
+			std::shared_ptr<SoundWave> sound = SoundWave::Create(desc);
+			GM_ASSERT_RETURN_VAL(sound, false, "SoundWave 생성에 실패했습니다. key=%ls", key.c_str());
+			GM_ASSERT_RETURN_VAL(resources.Add(key, sound), false, "SoundWave 등록에 실패했습니다. key=%ls", key.c_str());
+			return true;
+		}
 	}
 
 	bool LoadResources()
@@ -45,6 +61,9 @@ namespace gm
 			if (LoadTexture(resources, resourceFactory, relativePath) == false)
 				return false;
 		}
+
+		if (LoadSoundWave(resources, TitleResource::BGMKey, TitleResource::BGMFileName) == false)
+			return false;
 
 		return true;
 	}

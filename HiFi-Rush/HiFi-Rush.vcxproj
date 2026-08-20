@@ -243,6 +243,8 @@
     <ClInclude Include="HiFiRushGameInstance.h" />
     <ClInclude Include="HiFiRushStatics.h" />
     <ClInclude Include="LoadingScreenWidget.h" />
+	<ClInclude Include="TitleResources.h" />
+	<ClInclude Include="TitleWidget.h" />
     <ClInclude Include="MainHUDWidget.h" />
     <ClInclude Include="MonsterResourceInfo.h" />
 	<ClInclude Include="MonsterCombatComponent.h" />
@@ -349,6 +351,7 @@
     <ClCompile Include="HiFiRushStatics.cpp" />
     <ClCompile Include="LoadResources.cpp" />
     <ClCompile Include="LoadingScreenWidget.cpp" />
+	<ClCompile Include="TitleWidget.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainHUDWidget.cpp" />
 	<ClCompile Include="MonsterResourceInfo.cpp" />

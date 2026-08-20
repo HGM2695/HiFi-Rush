@@ -1,14 +1,15 @@
 #include "TitleScene.h"
-#include "Input.h"
 #include "Application.h"
-#include "ITextRenderer.h"
-#include "PhysicsSystem.h"
-#include "SceneManager.h"
-#include "BuiltinGraphicsResources.h"
+#include "AudioStatics.h"
 #include "CameraComponent.h"
 #include "CameraManager.h"
 #include "GameObject.h"
+#include "Input.h"
+#include "PhysicsSystem.h"
 #include "SceneDebugTools.h"
+#include "TitleResources.h"
+#include "TitleWidget.h"
+#include "UIManager.h"
 
 namespace gm
 {
@@ -22,19 +23,24 @@ namespace gm
 	void TitleScene::OnEnter()
 	{
 		APPLICATION.GetPhysicsSystem().SetPhysicsMode(PhysicsMode::None);
+		APPLICATION.GetInput().SetCursorLocked(false);
+		GetCameraManager()->SetActiveCamera(L"TitleCamera");
+
+		UIManager& uiManager = APPLICATION.GetUIManager();
+		uiManager.ClearViewportWidgets();
+		uiManager.AddUserWidget<TitleWidget>();
+
+		PlayBGM(TitleResource::BGMKey);
 	}
 
-	void TitleScene::OnTick(float deltaTime)
+	void TitleScene::OnExit()
+	{
+		APPLICATION.GetUIManager().ClearViewportWidgets();
+	}
+
+	void TitleScene::OnTick(float)
 	{
 		TickSceneTransitionDebug();
-
-		if (APPLICATION.GetInput().IsKeyDown(KeyCode::M))
-			APPLICATION.GetSceneManager().RequestSceneChange(L"TutorialScene", L"CommonLoadingScene");
-	}
-
-	void TitleScene::OnRender()
-	{
-		APPLICATION.GetTextRenderer().RequestDrawText(L"TitleScene", BuiltinResourceKey::DefaultUIFont, { APPLICATION.GetWidth() * 0.5f, APPLICATION.GetHeight() * 0.5f }, 44.f, Colors::White);
 	}
 }
 

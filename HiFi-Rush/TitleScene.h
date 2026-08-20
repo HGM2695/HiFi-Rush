@@ -9,8 +9,8 @@ namespace gm
 	protected:
 		void OnInitialize() override;
 		void OnEnter() override;
+		void OnExit() override;
 		void OnTick(float deltaTime) override;
-		void OnRender() override;
 	};
 }
 
