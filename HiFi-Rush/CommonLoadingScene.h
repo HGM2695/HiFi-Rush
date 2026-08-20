@@ -52,11 +52,13 @@ namespace gm
 		static SceneLoadData	LoadQamilSceneResources(Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static bool				LoadGameplayUIResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static bool				LoadTutorialUIResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory);
+		static bool				LoadQamilUIResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static bool				LoadDialogResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static bool				LoadMeshTextures(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static bool				LoadMapResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory, const std::wstring& mapFileName);
 		static bool				LoadChiResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static bool				LoadMonsterResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory, MonsterType monsterType);
+		static bool				LoadQamilResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static bool				LoadNavigationMesh(SceneLoadData& outLoadData, Resources& resources, const std::wstring& key, const std::wstring& fileName);
 		static bool				LoadSoundWave(SceneLoadData& outLoadData, Resources& resources, const std::wstring& key, const std::wstring& fileName);
 		static bool				LoadRhythmBGM(SceneLoadData& outLoadData, Resources& resources, const RhythmBGMDesc& desc);

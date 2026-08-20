@@ -19,6 +19,8 @@
 #include "PathUtil.h"
 #include "Paths.h"
 #include "PlayerResources.h"
+#include "QamilAnimationTypes.h"
+#include "QamilResources.h"
 #include "Resources.h"
 #include "SceneManager.h"
 #include "SkeletalAnimationClip.h"
@@ -126,8 +128,10 @@ namespace gm
 
 		if (LoadGameplayUIResources(result, resources, resourceFactory) == false)
 			return result;
+
 		if (LoadDialogResources(result, resources, resourceFactory) == false)
 			return result;
+
 		if (LoadTutorialUIResources(result, resources, resourceFactory) == false)
 			return result;
 
@@ -319,6 +323,54 @@ namespace gm
 			}
 
 			outLoadData.resources.push_back({ info.resourceKey, std::move(sound) });
+		}
+
+		return true;
+	}
+
+	bool CommonLoadingScene::LoadQamilUIResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory)
+	{
+		constexpr std::array<const wchar_t*, 21> texturePaths =
+		{{
+			L"UI/Qamil/Qamil_BG0.dds",
+			L"UI/Qamil/Qamil_BG1.dds",
+			L"UI/Qamil/Qamil_BG2.dds",
+			L"UI/Qamil/Qamil_BG3.dds",
+			L"UI/Qamil/Qamil_BrokenBG0.dds",
+			L"UI/Qamil/Qamil_BrokenBG1.dds",
+			L"UI/Qamil/Qamil_BrokenBG2.dds",
+			L"UI/Qamil/Qamil_BrokenBG3.dds",
+			L"UI/Qamil/Qamil_DamageHP0.dds",
+			L"UI/Qamil/Qamil_DamageHP1.dds",
+			L"UI/Qamil/Qamil_DamageHP2.dds",
+			L"UI/Qamil/Qamil_DamageHP3.dds",
+			L"UI/Qamil/Qamil_Gold0.dds",
+			L"UI/Qamil/Qamil_Gold1.dds",
+			L"UI/Qamil/Qamil_HP0.dds",
+			L"UI/Qamil/Qamil_HP1.dds",
+			L"UI/Qamil/Qamil_HP2.dds",
+			L"UI/Qamil/Qamil_HP3.dds",
+			L"UI/Qamil/Qamil_Name.dds",
+			L"UI/Qamil/Qamil_Shadow.dds",
+			L"UI/Qamil/Qamil_DamageEffect.dds",
+		}};
+
+		for (const wchar_t* texturePath : texturePaths)
+		{
+			const std::wstring textureKey = GetFileNameWithoutExtension(texturePath);
+			if (resources.Find<Texture>(textureKey))
+				continue;
+
+			TextureDesc desc{};
+			desc.path = GetTexturePath(texturePath);
+			std::shared_ptr<Texture> texture = resourceFactory.CreateTexture(desc);
+			if (texture == nullptr)
+			{
+				outLoadData.errorMessage = L"Qamil UI Texture 생성에 실패했습니다. key=" + textureKey;
+				return false;
+			}
+
+			outLoadData.resources.push_back({ textureKey, std::move(texture) });
 		}
 
 		return true;
@@ -730,6 +782,90 @@ namespace gm
 		return true;
 	}
 
+	bool CommonLoadingScene::LoadQamilResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory)
+	{
+		bool hasAllResources = resources.Find<SkeletalMesh>(QamilSkeletalMeshResourceKey) != nullptr && resources.Find<SkeletalMesh>(QamilMissileSkeletalMeshResourceKey) != nullptr && resources.Find<SkeletalAnimationClip>(QamilMissileAnimationResourceKey) != nullptr;
+		for (uint32 animationIndex = 0; animationIndex < QamilAnimationIdCount; ++animationIndex)
+			hasAllResources &= resources.Find<SkeletalAnimationClip>(GetQamilAnimationClipKey(static_cast<QamilAnimationId>(animationIndex))) != nullptr;
+		if (hasAllResources)
+			return true;
+
+		BinaryModelLoader loader;
+		const std::wstring modelPath = GetModelPath(L"Binary/Monsters/" + std::wstring(QamilModelFileName));
+		ModelData modelData = loader.Load(modelPath);
+		if (modelData.type != ModelType::Skeletal || modelData.skinnedVertices.empty() || modelData.indices.empty())
+		{
+			outLoadData.errorMessage = L"Qamil 모델 데이터가 유효하지 않습니다.";
+			return false;
+		}
+
+		if (modelData.animations.size() != QamilAnimationIdCount)
+		{
+			outLoadData.errorMessage = L"Qamil Animation 개수가 QamilAnimationId와 일치하지 않습니다.";
+			return false;
+		}
+
+		if (resources.Find<SkeletalMesh>(QamilSkeletalMeshResourceKey) == nullptr)
+		{
+			std::shared_ptr<SkeletalMesh> skeletalMesh = SkeletalMesh::Create(modelData, resourceFactory);
+			if (skeletalMesh == nullptr)
+			{
+				outLoadData.errorMessage = L"Qamil SkeletalMesh 생성에 실패했습니다.";
+				return false;
+			}
+
+			outLoadData.resources.push_back({ QamilSkeletalMeshResourceKey, std::move(skeletalMesh) });
+		}
+
+		for (uint32 animationIndex = 0; animationIndex < QamilAnimationIdCount; ++animationIndex)
+		{
+			const QamilAnimationId animationId = static_cast<QamilAnimationId>(animationIndex);
+			const std::wstring animationKey = GetQamilAnimationClipKey(animationId);
+			if (resources.Find<SkeletalAnimationClip>(animationKey))
+				continue;
+
+			std::shared_ptr<SkeletalAnimationClip> animation = SkeletalAnimationClip::Create(modelData.animations[animationIndex]);
+			if (animation == nullptr)
+			{
+				outLoadData.errorMessage = L"Qamil SkeletalAnimationClip 생성에 실패했습니다. key=" + animationKey;
+				return false;
+			}
+
+			outLoadData.resources.push_back({ animationKey, std::move(animation) });
+		}
+
+		ModelData missileModelData = loader.Load(GetModelPath(L"Binary/Monsters/" + std::wstring(QamilMissileModelFileName)));
+		if (missileModelData.type != ModelType::Skeletal || missileModelData.skinnedVertices.empty() || missileModelData.indices.empty() || missileModelData.animations.size() != 1)
+		{
+			outLoadData.errorMessage = L"Qamil Missile 모델 데이터가 유효하지 않습니다.";
+			return false;
+		}
+
+		if (resources.Find<SkeletalMesh>(QamilMissileSkeletalMeshResourceKey) == nullptr)
+		{
+			std::shared_ptr<SkeletalMesh> missileMesh = SkeletalMesh::Create(missileModelData, resourceFactory);
+			if (missileMesh == nullptr)
+			{
+				outLoadData.errorMessage = L"Qamil Missile SkeletalMesh 생성에 실패했습니다.";
+				return false;
+			}
+			outLoadData.resources.push_back({ QamilMissileSkeletalMeshResourceKey, std::move(missileMesh) });
+		}
+
+		if (resources.Find<SkeletalAnimationClip>(QamilMissileAnimationResourceKey) == nullptr)
+		{
+			std::shared_ptr<SkeletalAnimationClip> missileAnimation = SkeletalAnimationClip::Create(missileModelData.animations.front());
+			if (missileAnimation == nullptr)
+			{
+				outLoadData.errorMessage = L"Qamil Missile Animation 생성에 실패했습니다.";
+				return false;
+			}
+			outLoadData.resources.push_back({ QamilMissileAnimationResourceKey, std::move(missileAnimation) });
+		}
+
+		return true;
+	}
+
 	bool CommonLoadingScene::LoadNavigationMesh(SceneLoadData& outLoadData, Resources& resources, const std::wstring& key, const std::wstring& fileName)
 	{
 		if (resources.Find<NavigationMesh>(key))
@@ -815,13 +951,20 @@ namespace gm
 
 		if (LoadGameplayUIResources(result, resources, resourceFactory) == false)
 			return result;
+
 		if (LoadDialogResources(result, resources, resourceFactory) == false)
+			return result;
+
+		if (LoadQamilUIResources(result, resources, resourceFactory) == false)
 			return result;
 
 		if (LoadMeshTextures(result, resources, resourceFactory) == false)
 			return result;
 
 		if (LoadMapResources(result, resources, resourceFactory, L"QamilMap.bin") == false)
+			return result;
+
+		if (LoadQamilResources(result, resources, resourceFactory) == false)
 			return result;
 
 		if (LoadChiResources(result, resources, resourceFactory) == false)

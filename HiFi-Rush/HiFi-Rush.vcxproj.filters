@@ -169,6 +169,9 @@
     <ClInclude Include="MonsterResourceInfo.h">
       <Filter>Resource</Filter>
     </ClInclude>
+    <ClInclude Include="QamilResources.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
     <ClInclude Include="PlayerResources.h">
       <Filter>Resource</Filter>
     </ClInclude>
@@ -185,6 +188,9 @@
       <Filter>Spawner</Filter>
     </ClInclude>
     <ClInclude Include="MonsterSpawner.h">
+      <Filter>Spawner</Filter>
+    </ClInclude>
+    <ClInclude Include="QamilSpawner.h">
       <Filter>Spawner</Filter>
     </ClInclude>
     <ClInclude Include="PlayerSpawner.h">
@@ -520,6 +526,9 @@
       <Filter>Spawner</Filter>
     </ClCompile>
     <ClCompile Include="MonsterSpawner.cpp">
+      <Filter>Spawner</Filter>
+    </ClCompile>
+    <ClCompile Include="QamilSpawner.cpp">
       <Filter>Spawner</Filter>
     </ClCompile>
     <ClCompile Include="PlayerSpawner.cpp">
