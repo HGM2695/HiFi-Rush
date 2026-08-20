@@ -70,6 +70,12 @@
     <Filter Include="Component\Monster\Gunner\State">
       <UniqueIdentifier>{f5a696bb-3085-4cda-87f6-f0ded3d3a786}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\Monster\Qamil">
+      <UniqueIdentifier>{33b86587-98a3-45cb-a591-82e50b47955a}</UniqueIdentifier>
+    </Filter>
+	<Filter Include="Component\Monster\Qamil\State">
+	  <UniqueIdentifier>{58cb56dd-0662-47f3-a58a-d60085ae4888}</UniqueIdentifier>
+	</Filter>
     <Filter Include="Widget">
       <UniqueIdentifier>{4119e629-6af0-465a-8d7c-d3f2ef37bb97}</UniqueIdentifier>
     </Filter>
@@ -388,6 +394,45 @@
     <ClInclude Include="GunnerState.h">
       <Filter>Component\Monster\Gunner\State</Filter>
     </ClInclude>
+    <ClInclude Include="QamilAnimationTypes.h">
+      <Filter>Component\Monster\Qamil</Filter>
+    </ClInclude>
+	<ClInclude Include="QamilStateMachineComponent.h">
+	  <Filter>Component\Monster\Qamil</Filter>
+	</ClInclude>
+	<ClInclude Include="QamilState.h">
+	  <Filter>Component\Monster\Qamil\State</Filter>
+	</ClInclude>
+	<ClInclude Include="QamilLifecycleState.h">
+	  <Filter>Component\Monster\Qamil\State</Filter>
+	</ClInclude>
+	<ClInclude Include="QamilMissileObject.h">
+	  <Filter>Component\Monster\Qamil</Filter>
+	</ClInclude>
+	<ClInclude Include="QamilMissileState.h">
+	  <Filter>Component\Monster\Qamil\State</Filter>
+	</ClInclude>
+	<ClInclude Include="QamilMoveState.h">
+	  <Filter>Component\Monster\Qamil\State</Filter>
+	</ClInclude>
+	<ClInclude Include="QamilAttackAim.h">
+	  <Filter>Component\Monster\Qamil\State</Filter>
+	</ClInclude>
+	<ClInclude Include="QamilNormalAttackState.h">
+	  <Filter>Component\Monster\Qamil\State</Filter>
+	</ClInclude>
+	<ClInclude Include="QamilSpecialAttackState.h">
+	  <Filter>Component\Monster\Qamil\State</Filter>
+	</ClInclude>
+	<ClInclude Include="QamilWideAttackState.h">
+	  <Filter>Component\Monster\Qamil\State</Filter>
+	</ClInclude>
+	<ClInclude Include="QamilStateContext.h">
+	  <Filter>Component\Monster\Qamil\State</Filter>
+	</ClInclude>
+	<ClInclude Include="QamilStateTypes.h">
+	  <Filter>Component\Monster\Qamil\State</Filter>
+	</ClInclude>
     <ClInclude Include="LoadingScreenWidget.h">
       <Filter>Widget</Filter>
     </ClInclude>
