@@ -5,8 +5,10 @@
 #include "BeatPositionSequenceComponent.h"
 #include "BeatSkeletalAnimationSyncComponent.h"
 #include "BeatStaticMeshCycleComponent.h"
+#include "BeatTextureSequenceComponent.h"
 #include "BeatTransformComponent.h"
 #include "BeatTriggeredRotationComponent.h"
+#include "BeatTriggeredRotationShakeComponent.h"
 #include "BeatTriggeredSkeletalAnimationComponent.h"
 #include "BeatVisibilityComponent.h"
 #include "BoxCollider3DComponent.h"
@@ -27,6 +29,7 @@
 #include "StaticMesh.h"
 #include "StaticMeshComponent.h"
 #include "TransformComponent.h"
+#include "TriggeredMaterialOverrideComponent.h"
 
 #include <algorithm>
 #include <cmath>
@@ -207,6 +210,17 @@ namespace gm
 		return gameObject.AddComponent<BeatTriggeredRotationComponent>(_beatSystem, desc) != nullptr;
 	}
 
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatTriggeredRotationShakeComponentData& data) const
+	{
+		BeatTriggeredRotationShakeDesc desc{};
+		desc.triggerId = data.triggerBindingData.triggerId;
+		desc.beatOffset = data.triggerBindingData.beatOffset;
+		desc.axis = data.axis;
+		desc.angleDegrees = data.angleDegrees;
+		desc.durationBeats = data.durationBeats;
+		return gameObject.AddComponent<BeatTriggeredRotationShakeComponent>(_beatSystem, desc) != nullptr;
+	}
+
 	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatPositionSequenceComponentData& data) const
 	{
 		BeatPositionSequenceDesc desc{};
@@ -285,6 +299,31 @@ namespace gm
 
 		GM_ASSERT_RETURN_VAL(gameObject.AddComponent<BeatStaticMeshCycleComponent>(_beatSystem, *meshComponent, std::move(meshVariants)), false, "BeatStaticMeshCycleComponent 생성에 실패했습니다.");
 		return true;
+	}
+
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatTextureSequenceComponentData& data) const
+	{
+		BeatTextureSequenceDesc desc{};
+		desc.triggerId = data.triggerBindingData.triggerId;
+		desc.beatOffset = data.triggerBindingData.beatOffset;
+		desc.materialSlot = data.materialSlot;
+		desc.textureSlot = data.textureSlot;
+		desc.initialTextureKeys = data.initialTextureKeys;
+		desc.triggeredTextureKeys = data.triggeredTextureKeys;
+		desc.framesPerBeat = data.framesPerBeat;
+		desc.phaseOffsetBeats = data.phaseOffsetBeats;
+		return gameObject.AddComponent<BeatTextureSequenceComponent>(_resources, _beatSystem, std::move(desc)) != nullptr;
+	}
+
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const TriggeredMaterialOverrideComponentData& data) const
+	{
+		TriggeredMaterialOverrideDesc desc{};
+		desc.triggerId = data.triggerBindingData.triggerId;
+		desc.beatOffset = data.triggerBindingData.beatOffset;
+		desc.overrides.reserve(data.overrides.size());
+		for (const MaterialTextureOverrideData& overrideData : data.overrides)
+			desc.overrides.push_back({ overrideData.materialSlot, overrideData.textureSlot, overrideData.textureKey });
+		return gameObject.AddComponent<TriggeredMaterialOverrideComponent>(_resources, _beatSystem, std::move(desc)) != nullptr;
 	}
 
 	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatSkeletalAnimationSyncComponentData& data) const

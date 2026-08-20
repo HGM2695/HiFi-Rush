@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CollisionTypes.h"
+#include "GraphicsTypes.h"
 #include "MathTypes.h"
 #include "Types.h"
 
@@ -35,6 +36,14 @@ namespace gm
 		Vector3					axis{ 0.f, 0.f, 1.f };
 		float					angleDegrees = 90.f;
 		float					durationBeats = 0.25f;
+	};
+
+	struct BeatTriggeredRotationShakeComponentData
+	{
+		TriggerBindingData	triggerBindingData{};
+		Vector3				axis{ 1.f, 0.f, 0.f };
+		float				angleDegrees = 15.f;
+		float				durationBeats = 0.75f;
 	};
 
 	struct BeatPositionSequenceComponentData
@@ -82,6 +91,30 @@ namespace gm
 	struct BeatStaticMeshCycleComponentData
 	{
 		std::vector<uint32> modelIndices{};
+	};
+
+	struct BeatTextureSequenceComponentData
+	{
+		TriggerBindingData			triggerBindingData{};
+		uint32						materialSlot = 0;
+		TextureSlot					textureSlot = TextureSlot::BaseColor;
+		std::vector<std::wstring>	initialTextureKeys{};
+		std::vector<std::wstring>	triggeredTextureKeys{};
+		float						framesPerBeat = 1.f;
+		float						phaseOffsetBeats = 0.f;
+	};
+
+	struct MaterialTextureOverrideData
+	{
+		uint32			materialSlot = 0;
+		TextureSlot		textureSlot = TextureSlot::BaseColor;
+		std::wstring	textureKey{};
+	};
+
+	struct TriggeredMaterialOverrideComponentData
+	{
+		TriggerBindingData					triggerBindingData{};
+		std::vector<MaterialTextureOverrideData>	overrides{};
 	};
 
 	struct BeatSkeletalAnimationSyncComponentData
@@ -188,6 +221,9 @@ namespace gm
 		RespawnPointTrigger,
 		MovementBase,
 		FallRespawnTrigger,
+		BeatTriggeredRotationShake,
+		BeatTextureSequence,
+		TriggeredMaterialOverride,
 		Count,
 	};
 
@@ -211,7 +247,10 @@ namespace gm
 		CollisionTriggerComponentData,
 		RespawnPointTriggerComponentData,
 		MovementBaseComponentData,
-		FallRespawnTriggerComponentData>;
+		FallRespawnTriggerComponentData,
+		BeatTriggeredRotationShakeComponentData,
+		BeatTextureSequenceComponentData,
+		TriggeredMaterialOverrideComponentData>;
 
 	static_assert(std::variant_size_v<EnvironmentComponentData> == static_cast<size_t>(EnvironmentComponentType::Count));
 }

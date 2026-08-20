@@ -214,6 +214,9 @@
     <ClInclude Include="BeatStaticMeshCycleComponent.h">
       <Filter>Component\Beat</Filter>
     </ClInclude>
+    <ClInclude Include="BeatTextureSequenceComponent.h">
+      <Filter>Component\Beat</Filter>
+    </ClInclude>
     <ClInclude Include="BeatPositionSequenceComponent.h">
       <Filter>Component\Beat</Filter>
     </ClInclude>
@@ -228,6 +231,12 @@
     </ClInclude>
     <ClInclude Include="BeatTriggeredRotationComponent.h">
       <Filter>Component\Beat</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatTriggeredRotationShakeComponent.h">
+      <Filter>Component\Beat</Filter>
+    </ClInclude>
+    <ClInclude Include="TriggeredMaterialOverrideComponent.h">
+      <Filter>Component\Environment</Filter>
     </ClInclude>
     <ClInclude Include="CombatTypes.h">
       <Filter>Component\Combat</Filter>
@@ -537,6 +546,9 @@
     <ClCompile Include="BeatStaticMeshCycleComponent.cpp">
       <Filter>Component\Beat</Filter>
     </ClCompile>
+    <ClCompile Include="BeatTextureSequenceComponent.cpp">
+      <Filter>Component\Beat</Filter>
+    </ClCompile>
     <ClCompile Include="BeatPositionSequenceComponent.cpp">
       <Filter>Component\Beat</Filter>
     </ClCompile>
@@ -551,6 +563,12 @@
     </ClCompile>
     <ClCompile Include="BeatTriggeredRotationComponent.cpp">
       <Filter>Component\Beat</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatTriggeredRotationShakeComponent.cpp">
+      <Filter>Component\Beat</Filter>
+    </ClCompile>
+    <ClCompile Include="TriggeredMaterialOverrideComponent.cpp">
+      <Filter>Component\Environment</Filter>
     </ClCompile>
     <ClCompile Include="HealthComponent.cpp">
       <Filter>Component\Combat</Filter>

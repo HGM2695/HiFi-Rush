@@ -29,9 +29,9 @@ namespace gm
 		if (event.triggerId != _triggerId)
 			return;
 
-		if (event.type == TriggerType::Activate)
-			_activateHandler(event.startBeat + _beatOffset);
-		else
+		if (event.type == TriggerType::Reset)
 			_resetHandler();
+		else
+			_activateHandler(event.startBeat + _beatOffset);
 	}
 }

@@ -20,6 +20,16 @@ namespace gm
 		return true;
 	}
 
+	bool TriggerSystem::Pulse(const std::wstring& triggerId)
+	{
+		GM_ASSERT_RETURN_VAL(triggerId.empty() == false, false, "Trigger ID는 비어 있을 수 없습니다.");
+		if (_beatSystem.HasPlaybackTime() == false)
+			return false;
+
+		PublishTrigger(TriggerType::Pulse, triggerId, _beatSystem.GetCurrentBeat());
+		return true;
+	}
+
 	bool TriggerSystem::Reset(const std::wstring& triggerId)
 	{
 		GM_ASSERT_RETURN_VAL(triggerId.empty() == false, false, "Trigger ID는 비어 있을 수 없습니다.");

@@ -248,6 +248,57 @@ namespace gm
 			return true;
 		}
 
+		case EnvironmentComponentType::BeatTriggeredRotationShake:
+		{
+			BeatTriggeredRotationShakeComponentData data{};
+			GM_ASSERT_RETURN_VAL(ReadTriggerBinding(inputStream, data.triggerBindingData), false, "BeatTriggeredRotationShake 트리거 바인딩을 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.axis) && ReadBinary(inputStream, data.angleDegrees) && ReadBinary(inputStream, data.durationBeats), false, "BeatTriggeredRotationShake Component를 읽는 데 실패했습니다.");
+			outObject.components.emplace_back(std::move(data));
+			return true;
+		}
+
+		case EnvironmentComponentType::BeatTextureSequence:
+		{
+			BeatTextureSequenceComponentData data{};
+			GM_ASSERT_RETURN_VAL(ReadTriggerBinding(inputStream, data.triggerBindingData), false, "BeatTextureSequence 트리거 바인딩을 읽는 데 실패했습니다.");
+			uint32 textureSlot = 0;
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.materialSlot) && ReadBinary(inputStream, textureSlot), false, "BeatTextureSequence Material 설정을 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(textureSlot < TextureSlotCount, false, "BeatTextureSequence Texture Slot이 유효하지 않습니다. slot=%u", textureSlot);
+			data.textureSlot = ToTextureSlot(textureSlot);
+			uint32 initialTextureCount = 0;
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, initialTextureCount), false, "BeatTextureSequence 기본 Texture 개수를 읽는 데 실패했습니다.");
+			data.initialTextureKeys.resize(initialTextureCount);
+			for (std::wstring& textureKey : data.initialTextureKeys)
+				GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, textureKey), false, "BeatTextureSequence 기본 Texture Key를 읽는 데 실패했습니다.");
+			uint32 triggeredTextureCount = 0;
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, triggeredTextureCount), false, "BeatTextureSequence Trigger Texture 개수를 읽는 데 실패했습니다.");
+			data.triggeredTextureKeys.resize(triggeredTextureCount);
+			for (std::wstring& textureKey : data.triggeredTextureKeys)
+				GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, textureKey), false, "BeatTextureSequence Trigger Texture Key를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.framesPerBeat) && ReadBinary(inputStream, data.phaseOffsetBeats), false, "BeatTextureSequence 재생 설정을 읽는 데 실패했습니다.");
+			outObject.components.emplace_back(std::move(data));
+			return true;
+		}
+
+		case EnvironmentComponentType::TriggeredMaterialOverride:
+		{
+			TriggeredMaterialOverrideComponentData data{};
+			GM_ASSERT_RETURN_VAL(ReadTriggerBinding(inputStream, data.triggerBindingData), false, "TriggeredMaterialOverride 트리거 바인딩을 읽는 데 실패했습니다.");
+			uint32 overrideCount = 0;
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, overrideCount), false, "TriggeredMaterialOverride 항목 개수를 읽는 데 실패했습니다.");
+			data.overrides.resize(overrideCount);
+			for (MaterialTextureOverrideData& overrideData : data.overrides)
+			{
+				uint32 textureSlot = 0;
+				GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, overrideData.materialSlot) && ReadBinary(inputStream, textureSlot), false, "TriggeredMaterialOverride Material 설정을 읽는 데 실패했습니다.");
+				GM_ASSERT_RETURN_VAL(textureSlot < TextureSlotCount, false, "TriggeredMaterialOverride Texture Slot이 유효하지 않습니다. slot=%u", textureSlot);
+				overrideData.textureSlot = ToTextureSlot(textureSlot);
+				GM_ASSERT_RETURN_VAL(ReadBinaryWideString(inputStream, overrideData.textureKey), false, "TriggeredMaterialOverride Texture Key를 읽는 데 실패했습니다.");
+			}
+			outObject.components.emplace_back(std::move(data));
+			return true;
+		}
+
 		default:
 			return false;
 		}

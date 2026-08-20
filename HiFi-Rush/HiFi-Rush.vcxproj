@@ -226,6 +226,7 @@
 	<ClInclude Include="DialogWidget.h" />
 	<ClInclude Include="PlayerStatusWidget.h" />
     <ClInclude Include="BeatStaticMeshCycleComponent.h" />
+    <ClInclude Include="BeatTextureSequenceComponent.h" />
     <ClInclude Include="BeatPositionSequenceComponent.h" />
     <ClInclude Include="BeatSkeletalAnimationSyncComponent.h" />
     <ClInclude Include="BeatTriggeredSkeletalAnimationComponent.h" />
@@ -233,6 +234,8 @@
 	<ClInclude Include="RhythmInputJudge.h" />
     <ClInclude Include="BeatTransformComponent.h" />
     <ClInclude Include="BeatTriggeredRotationComponent.h" />
+    <ClInclude Include="BeatTriggeredRotationShakeComponent.h" />
+    <ClInclude Include="TriggeredMaterialOverrideComponent.h" />
 	<ClInclude Include="GunnerAnimationTypes.h" />
 	<ClInclude Include="GunnerState.h" />
 	<ClInclude Include="GunnerStateMachineComponent.h" />
@@ -327,6 +330,7 @@
     <ClCompile Include="BeatOrbitComponent.cpp" />
     <ClCompile Include="BeatAudioLevelMoveComponent.cpp" />
     <ClCompile Include="BeatStaticMeshCycleComponent.cpp" />
+    <ClCompile Include="BeatTextureSequenceComponent.cpp" />
     <ClCompile Include="BeatPositionSequenceComponent.cpp" />
     <ClCompile Include="BeatSkeletalAnimationSyncComponent.cpp" />
     <ClCompile Include="BeatTriggeredSkeletalAnimationComponent.cpp" />
@@ -344,6 +348,8 @@
 	<ClCompile Include="RhythmInputJudge.cpp" />
     <ClCompile Include="BeatTransformComponent.cpp" />
     <ClCompile Include="BeatTriggeredRotationComponent.cpp" />
+    <ClCompile Include="BeatTriggeredRotationShakeComponent.cpp" />
+    <ClCompile Include="TriggeredMaterialOverrideComponent.cpp" />
 	<ClCompile Include="GunnerState.cpp" />
 	<ClCompile Include="GunnerStateMachineComponent.cpp" />
     <ClCompile Include="HiFiRushAudio.cpp" />

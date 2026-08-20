@@ -18,12 +18,15 @@ namespace gm
 	private:
 		bool CreateComponent(GameObject& gameObject, const BeatMoveComponentData& data) const;
 		bool CreateComponent(GameObject& gameObject, const BeatTriggeredRotationComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const BeatTriggeredRotationShakeComponentData& data) const;
 		bool CreateComponent(GameObject& gameObject, const BeatPositionSequenceComponentData& data) const;
 		bool CreateComponent(GameObject& gameObject, const BeatVisibilityComponentData& data) const;
 		bool CreateComponent(GameObject& gameObject, const BeatTransformComponentData& data) const;
 		bool CreateComponent(GameObject& gameObject, const BeatOrbitComponentData& data) const;
 		bool CreateComponent(GameObject& gameObject, const BeatAudioLevelMoveComponentData& data) const;
 		bool CreateComponent(GameObject& gameObject, const BeatStaticMeshCycleComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const BeatTextureSequenceComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const TriggeredMaterialOverrideComponentData& data) const;
 		bool CreateComponent(GameObject& gameObject, const BeatSkeletalAnimationSyncComponentData& data) const;
 		bool CreateComponent(GameObject& gameObject, const BeatTriggeredSkeletalAnimationComponentData& data) const;
 		bool CreateComponent(GameObject& gameObject, const BoxCollider3DComponentData& data) const;

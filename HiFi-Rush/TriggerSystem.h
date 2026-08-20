@@ -11,6 +11,7 @@ namespace gm
 	enum class TriggerType
 	{
 		Activate,
+		Pulse,
 		Reset,
 	};
 
@@ -27,6 +28,7 @@ namespace gm
 		explicit TriggerSystem(const BeatSystem& beatSystem);
 
 		bool Activate(const std::wstring& triggerId);
+		bool Pulse(const std::wstring& triggerId);
 		bool Reset(const std::wstring& triggerId);
 		void Clear();
 
