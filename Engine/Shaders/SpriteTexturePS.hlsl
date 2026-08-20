@@ -32,7 +32,7 @@ float4 main(PSInput input) : SV_TARGET
     {
         clip(saturate(fillRatio) - input.texcoord.x);
     }
-    else
+    else if (fillMode == 1)
     {
         static const float TwoPi = 6.28318530718f;
         float2 direction = input.texcoord - float2(0.5f, 0.5f);
@@ -45,6 +45,10 @@ float4 main(PSInput input) : SV_TARGET
             deltaAngle += TwoPi;
 
         clip(saturate(fillRatio) * radialSweepAngle - deltaAngle);
+    }
+    else
+    {
+        clip(input.texcoord.x - (1.f - saturate(fillRatio)));
     }
 
     float2 uv = uvOffset + input.texcoord * uvScale;

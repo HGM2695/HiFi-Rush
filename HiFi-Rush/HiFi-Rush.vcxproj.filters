@@ -391,7 +391,7 @@
 	<ClInclude Include="GameplayAnnouncementWidget.h">
 	  <Filter>Widget</Filter>
 	</ClInclude>
-	<ClInclude Include="RespawnWipeWidget.h">
+	<ClInclude Include="ScreenWipeWidget.h">
 	  <Filter>Widget</Filter>
 	</ClInclude>
 	<ClInclude Include="ComboResultWidget.h">
@@ -678,7 +678,7 @@
 	<ClCompile Include="GameplayAnnouncementWidget.cpp">
 	  <Filter>Widget</Filter>
 	</ClCompile>
-	<ClCompile Include="RespawnWipeWidget.cpp">
+	<ClCompile Include="ScreenWipeWidget.cpp">
 	  <Filter>Widget</Filter>
 	</ClCompile>
 	<ClCompile Include="ComboResultWidget.cpp">

@@ -19,7 +19,8 @@ namespace gm
 	class TriggerSystem;
 	class GameplayAnnouncementWidget;
 	class PlayerStatusWidget;
-	class RespawnWipeWidget;
+	class ScreenWipeWidget;
+	class RhythmBarWidget;
 	class RhythmMeterWidget;
 	enum class GameplayAnnouncementType;
 
@@ -46,6 +47,9 @@ protected:
 		bool InitializeMap(const std::wstring& mapResourceKey, std::vector<MonsterSpawnResult>& outMonsterSpawnResults);
 		bool InitializePlayer(const PlayerSpawnDesc& desc);
 		void InitializeGameplayUI();
+		void SetBossBattleHUDEnabled(bool enabled);
+		void PlayScreenWipe();
+		void CoverScreenWithWipe();
 		void OnUnload() override;
 
 	private:
@@ -60,6 +64,7 @@ protected:
 		DialogComponent*						_dialogComponent = nullptr;
 		GameplayAnnouncementWidget*				_announcementWidget = nullptr;
 		PlayerStatusWidget*						_playerStatusWidget = nullptr;
+		RhythmBarWidget*						_rhythmBarWidget = nullptr;
 		RhythmMeterWidget*						_rhythmMeterWidget = nullptr;
 
 		Vector3									_playerRespawnPosition{};
@@ -67,7 +72,7 @@ protected:
 		std::vector<Collider3DComponent*>		_disabledPlayerColliders{};
 		EventConnection							_playerDeathConnection{};
 		EventConnection							_playerDeathAnimationCompletedConnection{};
-		RespawnWipeWidget*						_respawnWipeWidget = nullptr;
+		ScreenWipeWidget*						_screenWipeWidget = nullptr;
 		bool									_isPlayerDead = false;
 	};
 }

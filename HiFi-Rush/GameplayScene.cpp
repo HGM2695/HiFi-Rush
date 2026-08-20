@@ -25,7 +25,7 @@
 #include "PlayerStatusWidget.h"
 #include "Resources.h"
 #include "ReverbComponent.h"
-#include "RespawnWipeWidget.h"
+#include "ScreenWipeWidget.h"
 #include "Rigidbody3DComponent.h"
 #include "SoundWave.h"
 #include "TransformComponent.h"
@@ -89,6 +89,12 @@ namespace gm
 		GM_ASSERT_RETURN(_playerStatusWidget && _rhythmMeterWidget, "Gameplay Status UI가 구성되지 않았습니다.");
 		_playerStatusWidget->SetVisible(isVisible);
 		_rhythmMeterWidget->SetVisible(isVisible);
+	}
+
+	void GameplayScene::SetBossBattleHUDEnabled(bool enabled)
+	{
+		GM_ASSERT_RETURN(_rhythmBarWidget, "Boss Battle HUD를 구성하려면 RhythmBarWidget이 필요합니다.");
+		_rhythmBarWidget->SetBossLayoutEnabled(enabled);
 	}
 
 	void GameplayScene::SetPlayerRespawnPoint(const Vector3& position, float rotationY)
@@ -180,12 +186,12 @@ namespace gm
 
 		_playerStatusWidget = uiManager.AddUserWidget<PlayerStatusWidget>(HiFiRushStatics::GetBeatSystem(), *healthComponent, *reverbComponent, *stateMachine);
 		_rhythmMeterWidget = uiManager.AddUserWidget<RhythmMeterWidget>(HiFiRushStatics::GetBeatSystem(), *rhythmRankComponent);
-		uiManager.AddUserWidget<RhythmBarWidget>(HiFiRushStatics::GetBeatSystem());
+		_rhythmBarWidget = uiManager.AddUserWidget<RhythmBarWidget>(HiFiRushStatics::GetBeatSystem());
 		uiManager.AddUserWidget<ComboResultWidget>(*stateMachine);
 		uiManager.AddUserWidget<BeatHitWidget>(HiFiRushStatics::GetBeatSystem(), *stateMachine);
 		_announcementWidget = uiManager.AddUserWidget<GameplayAnnouncementWidget>(HiFiRushStatics::GetBeatSystem());
 		uiManager.AddUserWidget<DialogWidget>(HiFiRushStatics::GetBeatSystem(), *_dialogComponent);
-		_respawnWipeWidget = uiManager.AddUserWidget<RespawnWipeWidget>();
+		_screenWipeWidget = uiManager.AddUserWidget<ScreenWipeWidget>();
 
 		_playerDeathConnection.Disconnect();
 		_playerDeathAnimationCompletedConnection.Disconnect();
@@ -202,6 +208,18 @@ namespace gm
 			});
 	}
 
+	void GameplayScene::PlayScreenWipe()
+	{
+		GM_ASSERT_RETURN(_screenWipeWidget, "Screen Wipe Widget이 구성되지 않았습니다.");
+		_screenWipeWidget->PlayOpen();
+	}
+
+	void GameplayScene::CoverScreenWithWipe()
+	{
+		GM_ASSERT_RETURN(_screenWipeWidget, "Screen Wipe Widget이 구성되지 않았습니다.");
+		_screenWipeWidget->PlayCover();
+	}
+
 	void GameplayScene::HandlePlayerDeath(const HitEvent&)
 	{
 		if (_isPlayerDead)
@@ -213,7 +231,7 @@ namespace gm
 		GM_ASSERT_RETURN(controlComponent, "Player 사망 처리에는 PlayerControlComponent가 필요합니다.");
 
 		_isPlayerDead = true;
-		controlComponent->BlockControls(this, PlayerControl::All);
+		controlComponent->BlockControls(this, PlayerControl::Movement | PlayerControl::Action);
 
 		_disabledPlayerColliders.clear();
 		for (Collider3DComponent* collider : player->GetColliders3D())
@@ -240,9 +258,8 @@ namespace gm
 		Rigidbody3DComponent* rigidbody = player->GetRigidbody3D();
 		NavMeshControllerComponent* navMeshController = player->GetComponent<NavMeshControllerComponent>();
 		GM_ASSERT_RETURN_VAL(transform && rigidbody && navMeshController, false, "Player 복귀에 필요한 Component가 없습니다.");
-		GM_ASSERT_RETURN_VAL(_respawnWipeWidget, false, "Respawn Wipe Widget이 구성되지 않았습니다.");
-
-		_respawnWipeWidget->Play();
+		GM_ASSERT_RETURN_VAL(_screenWipeWidget, false, "Screen Wipe Widget이 구성되지 않았습니다.");
+		PlayScreenWipe();
 		transform->SetPosition(_playerRespawnPosition);
 		transform->SetRotationY(_playerRespawnRotationY);
 		rigidbody->SetVelocity(Vector3{});
@@ -286,7 +303,8 @@ namespace gm
 		_dialogComponent = nullptr;
 		_announcementWidget = nullptr;
 		_playerStatusWidget = nullptr;
-		_respawnWipeWidget = nullptr;
+		_screenWipeWidget = nullptr;
+		_rhythmBarWidget = nullptr;
 		_rhythmMeterWidget = nullptr;
 		_triggerSystem->Clear();
 	}

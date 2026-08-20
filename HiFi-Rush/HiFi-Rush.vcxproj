@@ -216,7 +216,7 @@
 	<ClInclude Include="RhythmBarWidget.h" />
 	<ClInclude Include="RhythmMeterWidget.h" />
 	<ClInclude Include="GameplayAnnouncementWidget.h" />
-	<ClInclude Include="RespawnWipeWidget.h" />
+	<ClInclude Include="ScreenWipeWidget.h" />
 	<ClInclude Include="ComboResultWidget.h" />
 	<ClInclude Include="BeatHitTypes.h" />
 	<ClInclude Include="BeatHitWidget.h" />
@@ -333,7 +333,7 @@
 	<ClCompile Include="RhythmBarWidget.cpp" />
 	<ClCompile Include="RhythmMeterWidget.cpp" />
 	<ClCompile Include="GameplayAnnouncementWidget.cpp" />
-	<ClCompile Include="RespawnWipeWidget.cpp" />
+	<ClCompile Include="ScreenWipeWidget.cpp" />
 	<ClCompile Include="ComboResultWidget.cpp" />
 	<ClCompile Include="BeatHitWidget.cpp" />
 	<ClCompile Include="AttackGuideWidget.cpp" />

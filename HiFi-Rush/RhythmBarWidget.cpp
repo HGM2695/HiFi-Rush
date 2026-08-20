@@ -3,6 +3,7 @@
 #include "BeatSystem.h"
 #include "CanvasPanel.h"
 #include "Image.h"
+#include "MathUtil.h"
 
 #include <algorithm>
 #include <string>
@@ -43,6 +44,11 @@ namespace gm
 		: _beatSystem(beatSystem)
 	{}
 
+	void RhythmBarWidget::SetBossLayoutEnabled(bool enabled)
+	{
+		_targetVerticalOffset = enabled ? BossLayoutVerticalOffset : 0.f;
+	}
+
 	std::unique_ptr<Widget> RhythmBarWidget::BuildWidgetTree()
 	{
 		auto root = CreateNamedRootWidget<CanvasPanel>(RootWidgetName);
@@ -66,8 +72,11 @@ namespace gm
 		return root;
 	}
 
-	void RhythmBarWidget::OnTick(float)
+	void RhythmBarWidget::OnTick(float deltaTime)
 	{
+		const float interpolationRatio = Math::CalcExponentialSmoothingRatio(LayoutInterpolationSpeed, deltaTime);
+		_verticalOffset = Lerp(_verticalOffset, _targetVerticalOffset, interpolationRatio);
+
 		const float pulse = _beatSystem.HasPlaybackTime() ? BeatMath::EvaluateBeatIntervalPulse(_beatSystem.GetCurrentBeat(), 1.f) : 0.f;
 
 		UpdateBaseImages(pulse);

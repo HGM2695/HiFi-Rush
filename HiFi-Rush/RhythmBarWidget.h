@@ -16,8 +16,7 @@
 
 		explicit RhythmBarWidget(const BeatSystem& beatSystem);
 
-		void	SetVerticalOffset(float offset) { _verticalOffset = offset; }
-		float	GetVerticalOffset() const { return _verticalOffset; }
+		void SetBossLayoutEnabled(bool enabled);
 
 	protected:
 		std::unique_ptr<Widget> BuildWidgetTree() override;
@@ -39,6 +38,8 @@
 
 	private:
 		static constexpr uint32								BeatMarkerPairCount = 3;
+		static constexpr float								BossLayoutVerticalOffset = 55.f;
+		static constexpr float								LayoutInterpolationSpeed = 12.f;
 
 		Image*												_bigLineImage = nullptr;
 		Image*												_smallLineImage = nullptr;
@@ -50,6 +51,7 @@
 		uint32												_nextBeatMarkerPairIndex = 0;
 		int64												_lastBeatIndex = 0;
 		float												_verticalOffset = 0.f;
+		float												_targetVerticalOffset = 0.f;
 		bool												_isBeatTrackingInitialized = false;
 	};
 }
