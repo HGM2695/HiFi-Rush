@@ -75,7 +75,7 @@ namespace gm
 
 		// Camera Tick 시점에 CameraManager를 갱신합니다.
 		if (group == TickGroup::Camera)
-			_cameraManager->Tick(deltaTime);
+			_cameraManager->Tick(APPLICATION.GetTimeSystem().GetUnscaledDeltaTime());
 	}
 
 	void Scene::Render()

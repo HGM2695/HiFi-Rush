@@ -225,6 +225,8 @@
 	<ClInclude Include="RhythmTutorialWidget.h" />
 	<ClInclude Include="DialogWidget.h" />
 	<ClInclude Include="PlayerStatusWidget.h" />
+	<ClInclude Include="QamilHealthWidget.h" />
+	<ClInclude Include="QamilPhaseTriggerComponent.h" />
     <ClInclude Include="BeatStaticMeshCycleComponent.h" />
     <ClInclude Include="BeatTextureSequenceComponent.h" />
     <ClInclude Include="BeatPositionSequenceComponent.h" />
@@ -359,6 +361,8 @@
 	<ClCompile Include="RhythmTutorialWidget.cpp" />
 	<ClCompile Include="DialogWidget.cpp" />
 	<ClCompile Include="PlayerStatusWidget.cpp" />
+	<ClCompile Include="QamilHealthWidget.cpp" />
+	<ClCompile Include="QamilPhaseTriggerComponent.cpp" />
     <ClCompile Include="BeatSystem.cpp" />
 	<ClCompile Include="RhythmInputJudge.cpp" />
     <ClCompile Include="BeatTransformComponent.cpp" />

@@ -478,6 +478,12 @@
 	<ClInclude Include="PlayerStatusWidget.h">
 	  <Filter>Widget</Filter>
 	</ClInclude>
+	<ClInclude Include="QamilHealthWidget.h">
+	  <Filter>Widget</Filter>
+	</ClInclude>
+	<ClInclude Include="QamilPhaseTriggerComponent.h">
+	  <Filter>Component\Monster\Qamil</Filter>
+	</ClInclude>
     <ClInclude Include="MainHUDWidget.h">
       <Filter>Widget</Filter>
     </ClInclude>
@@ -735,6 +741,39 @@
     <ClCompile Include="GunnerState.cpp">
       <Filter>Component\Monster\Gunner\State</Filter>
     </ClCompile>
+	<ClCompile Include="QamilState.cpp">
+	  <Filter>Component\Monster\Qamil\State</Filter>
+	</ClCompile>
+	<ClCompile Include="QamilLifecycleState.cpp">
+	  <Filter>Component\Monster\Qamil\State</Filter>
+	</ClCompile>
+	<ClCompile Include="QamilMissileObject.cpp">
+	  <Filter>Component\Monster\Qamil</Filter>
+	</ClCompile>
+	<ClCompile Include="QamilMissileState.cpp">
+	  <Filter>Component\Monster\Qamil\State</Filter>
+	</ClCompile>
+	<ClCompile Include="QamilMoveState.cpp">
+	  <Filter>Component\Monster\Qamil\State</Filter>
+	</ClCompile>
+	<ClCompile Include="QamilAttackAim.cpp">
+	  <Filter>Component\Monster\Qamil\State</Filter>
+	</ClCompile>
+	<ClCompile Include="QamilNormalAttackState.cpp">
+	  <Filter>Component\Monster\Qamil\State</Filter>
+	</ClCompile>
+	<ClCompile Include="QamilSpecialAttackState.cpp">
+	  <Filter>Component\Monster\Qamil\State</Filter>
+	</ClCompile>
+	<ClCompile Include="QamilWideAttackState.cpp">
+	  <Filter>Component\Monster\Qamil\State</Filter>
+	</ClCompile>
+	<ClCompile Include="QamilStateMachineComponent.cpp">
+	  <Filter>Component\Monster\Qamil</Filter>
+	</ClCompile>
+	<ClCompile Include="QamilPhaseTriggerComponent.cpp">
+	  <Filter>Component\Monster\Qamil</Filter>
+	</ClCompile>
     <ClCompile Include="LoadingScreenWidget.cpp">
       <Filter>Widget</Filter>
     </ClCompile>
@@ -769,6 +808,9 @@
 	  <Filter>Dialog</Filter>
 	</ClCompile>
 	<ClCompile Include="PlayerStatusWidget.cpp">
+	  <Filter>Widget</Filter>
+	</ClCompile>
+	<ClCompile Include="QamilHealthWidget.cpp">
 	  <Filter>Widget</Filter>
 	</ClCompile>
     <ClCompile Include="MainHUDWidget.cpp">
