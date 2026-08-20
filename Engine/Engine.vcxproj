@@ -259,6 +259,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SoundWave.h" />
     <ClInclude Include="SocketComponent.h" />
+    <ClInclude Include="SocketColliderComponent.h" />
     <ClInclude Include="SocketFollowComponent.h" />
     <ClInclude Include="StaticMeshComponent.h" />
     <ClInclude Include="SkeletalAnimationBlender.h" />
@@ -368,6 +369,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SoundWave.cpp" />
     <ClCompile Include="SocketComponent.cpp" />
+    <ClCompile Include="SocketColliderComponent.cpp" />
     <ClCompile Include="SocketFollowComponent.cpp" />
     <ClCompile Include="StaticMeshComponent.cpp" />
     <ClCompile Include="SkeletalAnimationBlender.cpp" />

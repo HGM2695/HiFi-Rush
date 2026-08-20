@@ -3,6 +3,8 @@
 #include "CollisionTypes.h"
 #include "Event.h"
 
+#include <optional>
+
 namespace gm
 {
 	class HitBoxComponent;
@@ -21,9 +23,11 @@ namespace gm
 
 	struct DamageInfo
 	{
-		int32			amount = 0;
-		HitReactionType	hitReactionType = HitReactionType::None;
-		bool			ignoreInvincibility = false;
+		int32					amount = 0;
+		HitReactionType			hitReactionType = HitReactionType::None;
+		std::optional<Vector3>	worldKnockbackDirection{};
+		Vector3					worldImpulse{};
+		bool					ignoreInvincibility = false;
 	};
 
 	enum class DamageState
@@ -52,6 +56,8 @@ namespace gm
 		CollisionContact	contact{};
 		DamageInfo			damage{};
 		DamageResult		damageResult{};
+
+		Vector3 GetWorldKnockbackDirection() const { return damage.worldKnockbackDirection.value_or(contact.normal); }
 	};
 
 	struct HealthChangedEvent : EventType

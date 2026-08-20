@@ -6,7 +6,7 @@
 #include "HiFiRushCollisionLayers.h"
 #include "ReverbComponent.h"
 #include "Scene.h"
-#include "TemporaryBoxHitBoxObject.h"
+#include "TemporaryHitBoxObject.h"
 #include "TransformComponent.h"
 
 namespace gm

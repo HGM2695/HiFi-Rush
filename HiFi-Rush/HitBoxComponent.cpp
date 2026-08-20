@@ -88,7 +88,7 @@ namespace gm
 			return;
 
 		HurtBoxComponent* hurtBox = FindHurtBox(*event.otherCollider);
-		if (hurtBox == nullptr || hurtBox->IsEnabled() == false)
+		if (hurtBox == nullptr || hurtBox->IsEnabled() == false || (_hitCondition && _hitCondition(*hurtBox) == false))
 			return;
 
 		_hitTargets.push_back({ target, _rehitInterval });

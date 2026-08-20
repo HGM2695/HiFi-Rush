@@ -15,7 +15,7 @@
 #include "Scene.h"
 #include "SkeletalAnimationClip.h"
 #include "SkeletalAnimatorComponent.h"
-#include "TemporaryBoxHitBoxObject.h"
+#include "TemporaryHitBoxObject.h"
 #include "TransformComponent.h"
 
 #include <algorithm>
@@ -27,6 +27,7 @@ namespace gm
 	{
 		constexpr float GunnerDashBackDistanceRatio = 0.7f;
 		constexpr float GunnerDashFrontDistanceRatio = 1.5f;
+		constexpr float GunnerAimTrackingEndRatio = 0.5f;
 		constexpr float GunnerLaserMinimumLength = 14.f;
 		constexpr float GunnerLaserExtraLength = 3.f;
 		constexpr float GunnerLaserWidth = 2.f;
@@ -199,7 +200,9 @@ namespace gm
 	void GunnerAttackState::Enter(MonsterStateContext& context)
 	{
 		_notifyConnection.Disconnect();
-		_isFacingLocked = false;
+		_isAimLocked = false;
+		_lockedAimDirection = Vector3{ 0.f, 0.f, 1.f };
+		_lockedTargetDistance = 0.f;
 
 		if (context.combatComponent == nullptr || context.combatComponent->TryStartAttack() == false)
 		{
@@ -207,6 +210,7 @@ namespace gm
 			return;
 		}
 
+		FaceTargetImmediate(context);
 		_attackType = Math::RandomInt(0, 1) ? AttackType::Ground : AttackType::Sky;
 		_attackPhase = AttackPhase::Ready;
 		if (_attackType == AttackType::Sky)
@@ -228,8 +232,13 @@ namespace gm
 		if (context.animatorComponent == nullptr)
 			return;
 
-		if (_attackPhase != AttackPhase::Landing && _isFacingLocked == false)
-			FaceTarget(context, deltaTime);
+		if (_attackPhase == AttackPhase::Shoot && _isAimLocked == false)
+		{
+			if (HasReachedAimLockTime(context))
+				LockAim(context);
+			else
+				FaceTarget(context, deltaTime);
+		}
 
 		if (IsAnimationCompleted(context) == false)
 			return;
@@ -251,7 +260,7 @@ namespace gm
 	void GunnerAttackState::Exit(MonsterStateContext& context)
 	{
 		_notifyConnection.Disconnect();
-		_isFacingLocked = false;
+		_isAimLocked = false;
 		if (context.animatorComponent != nullptr)
 			context.animatorComponent->SetPlayRate(1.f);
 		if (_overrodeSkyMovement)
@@ -267,12 +276,14 @@ namespace gm
 	void GunnerAttackState::BeginShoot(MonsterStateContext& context)
 	{
 		_attackPhase = AttackPhase::Shoot;
+		_isAimLocked = false;
 		const GunnerAnimationId animationId = _attackType == AttackType::Ground ? GunnerAnimationId::GroundAttackShoot : GunnerAnimationId::SkyAttackShoot;
 		PlayAnimation(context, GetGunnerAnimationClipName(animationId), false);
 
 		const std::shared_ptr<SkeletalAnimationClip> clip = context.animatorComponent->GetCurrentClip();
 		GM_ASSERT_RETURN(clip, "Gunner Shoot Animation Clip이 없습니다.");
 		const AnimationNotifyEvent* hitStartNotify = clip->FindNotify(HiFiRushAnimationNotifyNames::HitStart);
+		GM_ASSERT_RETURN(hitStartNotify, "Gunner Shoot Animation에 HitStart Notify가 없습니다.");
 		SkeletalAnimatorComponent* animator = context.animatorComponent;
 		animator->GetNotifyEvent().Subscribe(_notifyConnection,
 			[this, &context, animator](const AnimationNotifyEvent& event)
@@ -282,6 +293,50 @@ namespace gm
 
 		if (context.beatSystem != nullptr && context.beatSystem->HasPlaybackTime())
 			animator->SetPlayRate(BeatMath::CalcAnimationPlayRate(context.beatSystem->GetCurrentBeat(), context.beatSystem->GetSecondsPerBeat(), hitStartNotify->time));
+	}
+
+	bool GunnerAttackState::HasReachedAimLockTime(const MonsterStateContext& context) const
+	{
+		if (context.animatorComponent == nullptr)
+			return false;
+
+		const std::shared_ptr<SkeletalAnimationClip> clip = context.animatorComponent->GetCurrentClip();
+		return clip != nullptr && context.animatorComponent->GetPlayTime() >= clip->GetLength() * GunnerAimTrackingEndRatio;
+	}
+
+	void GunnerAttackState::LockAim(MonsterStateContext& context)
+	{
+		if (_isAimLocked)
+			return;
+
+		_isAimLocked = true;
+		if (context.moveComponent != nullptr)
+			_lockedAimDirection = context.moveComponent->GetForwardDirection();
+		if (context.combatComponent == nullptr || context.combatComponent->HasTarget() == false)
+			return;
+
+		_lockedTargetDistance = context.combatComponent->GetTargetDistance();
+		if (_attackType != AttackType::Sky)
+			return;
+
+		GameObject& owner = context.stateMachine->GetOwner();
+		TransformComponent* ownerTransform = owner.GetTransform();
+		GameObject* target = context.combatComponent->GetTarget();
+		TransformComponent* targetTransform = target != nullptr ? target->GetTransform() : nullptr;
+		if (ownerTransform == nullptr || targetTransform == nullptr)
+			return;
+
+		Vector3 start = ownerTransform->GetPosition();
+		start.y += 1.5f;
+		Vector3 targetPosition = targetTransform->GetPosition();
+		targetPosition.y += 0.9f;
+		const Vector3 offset = targetPosition - start;
+		const float distance = offset.Length();
+		if (distance <= 0.000001f)
+			return;
+
+		_lockedAimDirection = offset / distance;
+		_lockedTargetDistance = distance;
 	}
 
 	void GunnerAttackState::BeginLanding(MonsterStateContext& context)
@@ -298,7 +353,7 @@ namespace gm
 	{
 		if (event.name == HiFiRushAnimationNotifyNames::HitStart)
 		{
-			_isFacingLocked = true;
+			LockAim(context);
 			SpawnLaser(context);
 			animator.SetPlayRate(1.f);
 		}
@@ -306,7 +361,7 @@ namespace gm
 
 	void GunnerAttackState::SpawnLaser(MonsterStateContext& context)
 	{
-		if (context.stateMachine == nullptr || context.combatComponent == nullptr)
+		if (context.stateMachine == nullptr)
 			return;
 
 		GameObject& owner = context.stateMachine->GetOwner();
@@ -316,28 +371,12 @@ namespace gm
 			return;
 
 		Vector3 start = ownerTransform->GetPosition();
-		Vector3 direction = context.combatComponent->GetTargetDirection();
-		float targetDistance = context.combatComponent->GetTargetDistance();
-		GameObject* target = context.combatComponent->GetTarget();
-		if (_attackType == AttackType::Sky && target != nullptr && target->GetTransform() != nullptr)
-		{
-			start.y += 1.5f;
-			Vector3 targetPosition = target->GetTransform()->GetPosition();
-			targetPosition.y += 0.9f;
-			const Vector3 offset = targetPosition - start;
-			targetDistance = offset.Length();
-			if (targetDistance > 0.000001f)
-				direction = offset / targetDistance;
-		}
-		else
-		{
-			start.y += 0.75f;
-		}
+		start.y += _attackType == AttackType::Sky ? 1.5f : 0.75f;
 
-		const float laserLength = std::max(targetDistance + GunnerLaserExtraLength, GunnerLaserMinimumLength);
+		const float laserLength = std::max(_lockedTargetDistance + GunnerLaserExtraLength, GunnerLaserMinimumLength);
 
 		TemporaryBoxHitBoxDesc desc{};
-		desc.world = Math::CreateLookAtLH(start, start + direction, Vector3::Up).Invert();
+		desc.world = Math::CreateLookAtLH(start, start + _lockedAimDirection, Vector3::Up).Invert();
 		desc.colliderId = L"Attack";
 		desc.localCenter = Vector3{ 0.f, 0.f, laserLength * 0.5f };
 		desc.size = Vector3{ GunnerLaserWidth, GunnerLaserHeight, laserLength };

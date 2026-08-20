@@ -10,7 +10,7 @@
 #include "MathUtil.h"
 #include "ReverbComponent.h"
 #include "Scene.h"
-#include "TemporaryBoxHitBoxObject.h"
+#include "TemporaryHitBoxObject.h"
 #include "TransformComponent.h"
 
 #include <algorithm>

@@ -40,14 +40,16 @@ namespace gm
 
 		const Vector3 findDirection = GetFindDirection(direction);
 		CombatTargetComponent* bestTarget = nullptr;
+		uint32 bestTargetPointIndex = 0;
 		float bestTargetCost = (std::numeric_limits<float>::max)();
 
-		if (_target.IsValid() && _targetComponent)
+		if (_target.IsValid() && _targetComponent && _targetPointIndex)
 		{
-			if (canTargeting(*_targetComponent, findDirection, _desc.releaseRadius, false))
+			if (CanTargetPoint(*_targetComponent, _targetPointIndex.value(), findDirection, _desc.releaseRadius, false))
 			{
 				bestTarget = _targetComponent;
-				bestTargetCost = EvaluateTargetCost(*_targetComponent, findDirection) - _desc.currentTargetBonus;
+				bestTargetPointIndex = _targetPointIndex.value();
+				bestTargetCost = EvaluateTargetPointCost(*_targetComponent, bestTargetPointIndex, findDirection) - _desc.currentTargetBonus;
 			}
 			else
 			{
@@ -61,6 +63,7 @@ namespace gm
 
 		CollisionQueryFilter filter{};
 		filter.mask = HiFiRushCollisionLayer::Monster;
+		filter.includeTriggers = true;
 		const std::vector<Collider3DComponent*> overlaps = _physicsSystem.OverlapSphere(*scene, _ownerTransform->GetPosition(), _desc.findRadius, filter);
 
 		std::unordered_set<CombatTargetComponent*> evaluatedTargets;
@@ -70,27 +73,33 @@ namespace gm
 				continue;
 
 			CombatTargetComponent* candidate = collider->GetOwner().GetComponent<CombatTargetComponent>();
-			if (candidate == nullptr || evaluatedTargets.insert(candidate).second == false || candidate == _targetComponent)
+			if (candidate == nullptr || evaluatedTargets.insert(candidate).second == false)
 				continue;
 
-			if (canTargeting(*candidate, findDirection, _desc.findRadius, true) == false)
-				continue;
+			for (uint32 targetPointIndex = 0; targetPointIndex < candidate->GetTargetPointCount(); ++targetPointIndex)
+			{
+				if (candidate == _targetComponent && _targetPointIndex && targetPointIndex == _targetPointIndex.value())
+					continue;
+				if (CanTargetPoint(*candidate, targetPointIndex, findDirection, _desc.findRadius, true) == false)
+					continue;
 
-			const float targetCost = EvaluateTargetCost(*candidate, findDirection);
-			if (targetCost >= bestTargetCost)
-				continue;
+				const float targetCost = EvaluateTargetPointCost(*candidate, targetPointIndex, findDirection);
+				if (targetCost >= bestTargetCost)
+					continue;
 
-			bestTarget = candidate;
-			bestTargetCost = targetCost;
+				bestTarget = candidate;
+				bestTargetPointIndex = targetPointIndex;
+				bestTargetCost = targetCost;
+			}
 		}
 
-		SetTarget(bestTarget);
+		SetTarget(bestTarget, bestTargetPointIndex);
 		return GetTarget();
 	}
 
 	GameObject* PlayerTargetingComponent::GetTarget() const
 	{
-		if (_target.IsValid() == false || _targetComponent == nullptr || _targetComponent->IsTargetable() == false)
+		if (_target.IsValid() == false || _targetComponent == nullptr || _targetPointIndex.has_value() == false || _targetComponent->IsTargetPointTargetable(_targetPointIndex.value()) == false)
 			return nullptr;
 
 		return _target.GetUnsafe();
@@ -101,7 +110,7 @@ namespace gm
 		if (GetTarget() == nullptr)
 			return {};
 
-		return _targetComponent->GetTargetPosition();
+		return _targetComponent->GetTargetPosition(_targetPointIndex.value());
 	}
 
 	Vector3 PlayerTargetingComponent::GetTargetDirection() const
@@ -109,13 +118,14 @@ namespace gm
 		if (GetTarget() == nullptr || _ownerTransform == nullptr)
 			return {};
 
-		return Math::GetNormalizedXZDirection(_targetComponent->GetTargetPosition() - _ownerTransform->GetPosition());
+		return Math::GetNormalizedXZDirection(GetTargetPosition() - _ownerTransform->GetPosition());
 	}
 
 	void PlayerTargetingComponent::ClearTarget()
 	{
 		_target.Reset();
 		_targetComponent = nullptr;
+		_targetPointIndex.reset();
 	}
 
 	void PlayerTargetingComponent::OnInitialize()
@@ -143,12 +153,12 @@ namespace gm
 		return Vector3{ 0.f, 0.f, 1.f };
 	}
 
-	bool PlayerTargetingComponent::canTargeting(const CombatTargetComponent& target, const Vector3& findDirection, float maxDistance, bool isCheckTargetAngle) const
+	bool PlayerTargetingComponent::CanTargetPoint(const CombatTargetComponent& target, uint32 targetPointIndex, const Vector3& findDirection, float maxDistance, bool checkTargetAngle) const
 	{
-		if (target.IsTargetable() == false || _ownerTransform == nullptr)
+		if (target.IsTargetPointTargetable(targetPointIndex) == false || _ownerTransform == nullptr)
 			return false;
 
-		const Vector3 targetOffset = target.GetTargetPosition() - _ownerTransform->GetPosition();
+		const Vector3 targetOffset = target.GetTargetPosition(targetPointIndex) - _ownerTransform->GetPosition();
 		const float distance = targetOffset.Length();
 		if (distance > maxDistance)
 			return false;
@@ -156,22 +166,22 @@ namespace gm
 		const Vector3 targetDirection = Math::GetNormalizedXZDirection(targetOffset);
 		const float directionDot = findDirection.Dot(targetDirection);
 		const float minimumDot = std::cos(Math::DegreesToRadians(_desc.viewAngle));
-		if (isCheckTargetAngle && directionDot < minimumDot && distance > _desc.closeTargetRadius)
+		if (checkTargetAngle && directionDot < minimumDot && distance > _desc.closeTargetRadius)
 			return false;
 
 		return true;
 	}
 
-	float PlayerTargetingComponent::EvaluateTargetCost(const CombatTargetComponent& target, const Vector3& findDirection) const
+	float PlayerTargetingComponent::EvaluateTargetPointCost(const CombatTargetComponent& target, uint32 targetPointIndex, const Vector3& findDirection) const
 	{
-		const Vector3 targetOffset = target.GetTargetPosition() - _ownerTransform->GetPosition();
+		const Vector3 targetOffset = target.GetTargetPosition(targetPointIndex) - _ownerTransform->GetPosition();
 		const float distance = targetOffset.Length();
 		const Vector3 targetDirection = Math::GetNormalizedXZDirection(targetOffset);
 		const float directionDot = findDirection.Dot(targetDirection);
 		return distance + (1.f - directionDot) * _desc.directionWeight;
 	}
 
-	void PlayerTargetingComponent::SetTarget(CombatTargetComponent* target)
+	void PlayerTargetingComponent::SetTarget(CombatTargetComponent* target, uint32 targetPointIndex)
 	{
 		if (target == nullptr)
 		{
@@ -181,5 +191,6 @@ namespace gm
 
 		_target = target->GetOwner().GetWeakPtr();
 		_targetComponent = target;
+		_targetPointIndex = targetPointIndex;
 	}
 }

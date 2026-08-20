@@ -43,7 +43,7 @@ namespace gm
 		return &iter->second;
 	}
 
-	Matrix SocketComponent::GetSocketWorldMatrix(const std::wstring& socketName) const
+	Matrix SocketComponent::GetSocketAnchorWorldMatrix(const std::wstring& socketName) const
 	{
 		const Socket* socket = FindSocket(socketName);
 		if (socket == nullptr)
@@ -74,7 +74,16 @@ namespace gm
 			}
 		}
 
-		return socket->GetLocalMatrix() * parentMatrix;
+		return parentMatrix;
+	}
+
+	Matrix SocketComponent::GetSocketWorldMatrix(const std::wstring& socketName) const
+	{
+		const Socket* socket = FindSocket(socketName);
+		if (socket == nullptr)
+			return Math::IdentityMatrix();
+
+		return socket->GetLocalMatrix() * GetSocketAnchorWorldMatrix(socketName);
 	}
 
 	void SocketComponent::OnInitialize()

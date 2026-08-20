@@ -2,27 +2,46 @@
 
 #include "Component.h"
 
+#include <string>
+#include <vector>
+
 namespace gm
 {
 	class HealthComponent;
+	class SocketComponent;
 	class TransformComponent;
 
 	class CombatTargetComponent final : public Component
 	{
 	public:
-		explicit CombatTargetComponent(const Vector3& localTargetOffset = {});
+		CombatTargetComponent() = default;
+		explicit CombatTargetComponent(const Vector3& localTargetOffset);
 
-		bool			IsTargetable() const;
-		Vector3			GetTargetPosition() const;
-		void			SetLocalTargetOffset(const Vector3& offset) { _localTargetOffset = offset; }
-		const Vector3&	GetLocalTargetOffset() const { return _localTargetOffset; }
+		bool	AddLocalTargetPoint(const std::wstring& targetPointId, const Vector3& localOffset = {});
+		bool	AddSocketTargetPoint(const std::wstring& targetPointId, const std::wstring& socketName);
+		bool	SetTargetPointEnabled(const std::wstring& targetPointId, bool isEnabled);
+		bool	IsTargetable() const;
+		bool	IsTargetPointTargetable(uint32 targetPointIndex) const;
+		uint32	GetTargetPointCount() const { return static_cast<uint32>(_targetPoints.size()); }
+		Vector3 GetTargetPosition(uint32 targetPointIndex) const;
 
 	protected:
-		void			OnInitialize() override;
+		void OnInitialize() override;
 
 	private:
+		struct TargetPoint
+		{
+			std::wstring id{};
+			std::wstring socketName{};
+			Vector3 localOffset{};
+			bool isEnabled = true;
+		};
+
+		bool HasTargetPoint(const std::wstring& targetPointId) const;
+
 		TransformComponent*		_ownerTransform = nullptr;
 		HealthComponent*		_healthComponent = nullptr;
-		Vector3					_localTargetOffset{};
+		SocketComponent*		_socketComponent = nullptr;
+		std::vector<TargetPoint>	_targetPoints{};
 	};
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "MathTypes.h"
 #include "RhythmInputJudge.h"
 
 #include <optional>
@@ -27,6 +28,7 @@ namespace gm
 		Rigidbody3DComponent*				rigidbodyComponent = nullptr;
 		SkeletalAnimatorComponent*			animatorComponent = nullptr;
 		std::optional<float>				blendDuration;
+		std::optional<Vector3>				airborneImpulse;
 
 		const RhythmJudge*					rhythmJudge = nullptr;
 		std::optional<RhythmJudgeResult>	weakAttackInput;

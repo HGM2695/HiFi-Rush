@@ -70,7 +70,6 @@ namespace gm
 	private:
 		HitBoxComponent&	_hitBox;
 		EventConnection		_notifyConnection{};
-		bool				_isFacingLocked = false;
 	};
 
 	/// SwordDamageState //////////////////////////////////////////////////////////////////////////////

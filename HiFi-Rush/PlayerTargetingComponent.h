@@ -3,6 +3,8 @@
 #include "Component.h"
 #include "WeakGameObjectPtr.h"
 
+#include <optional>
+
 namespace gm
 {
 	class CameraComponent;
@@ -37,9 +39,9 @@ namespace gm
 
 	private:
 		Vector3 GetFindDirection(const Vector3& preferredDirection) const;
-		bool	canTargeting(const CombatTargetComponent& target, const Vector3& findDirection, float maxDistance, bool isCheckTargetAngle) const;
-		float	EvaluateTargetCost(const CombatTargetComponent& target, const Vector3& findDirection) const;
-		void	SetTarget(CombatTargetComponent* target);
+		bool	CanTargetPoint(const CombatTargetComponent& target, uint32 targetPointIndex, const Vector3& findDirection, float maxDistance, bool checkTargetAngle) const;
+		float	EvaluateTargetPointCost(const CombatTargetComponent& target, uint32 targetPointIndex, const Vector3& findDirection) const;
+		void	SetTarget(CombatTargetComponent* target, uint32 targetPointIndex);
 
 	private:
 		const PhysicsSystem3D&	_physicsSystem;
@@ -47,6 +49,7 @@ namespace gm
 		WeakGameObjectPtr		_referenceCameraOwner{};
 		WeakGameObjectPtr		_target{};
 		CombatTargetComponent*	_targetComponent = nullptr;
+		std::optional<uint32>	_targetPointIndex{};
 		TransformComponent*		_ownerTransform = nullptr;
 		PlayerTargetingDesc		_desc{};
 	};

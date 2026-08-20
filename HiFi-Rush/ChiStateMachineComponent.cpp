@@ -238,13 +238,22 @@ namespace gm
 		if (event.damageResult.state != DamageState::Applied)
 			return;
 
-		_moveComponent->FaceDirectionImmediate(-event.contact.normal);
+		_moveComponent->FaceDirectionImmediate(-event.GetWorldKnockbackDirection());
 
 		if (event.damageResult.isDead)
 		{
 			ChangeState(ChiStateId::DamageDead);
 			return;
 		}
+
+		if (event.damage.hitReactionType == HitReactionType::Airborne)
+		{
+			ChangeStateToAirborne(event.damage.worldImpulse);
+			return;
+		}
+
+		if (event.damage.worldImpulse.LengthSquared() > 0.f)
+			_context.rigidbodyComponent->AddImpulse(event.damage.worldImpulse);
 
 		switch (event.damage.hitReactionType)
 		{
@@ -259,6 +268,13 @@ namespace gm
 		default:
 			break;
 		}
+	}
+
+	void ChiStateMachineComponent::ChangeStateToAirborne(const Vector3& impulse)
+	{
+		ResetTransitionOptions();
+		_context.airborneImpulse = impulse;
+		ChangeStateInternal(ChiStateId::JumpUp);
 	}
 
 	void ChiStateMachineComponent::ChangeState(ChiStateId nextStateId)
@@ -323,6 +339,7 @@ namespace gm
 	void ChiStateMachineComponent::ResetTransitionOptions()
 	{
 		_context.blendDuration.reset();
+		_context.airborneImpulse.reset();
 		_context.transitionRhythmInput.reset();
 	}
 

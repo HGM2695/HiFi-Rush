@@ -83,6 +83,9 @@
     <ClInclude Include="SocketComponent.h">
       <Filter>Engine Component</Filter>
     </ClInclude>
+    <ClInclude Include="SocketColliderComponent.h">
+      <Filter>Engine Component</Filter>
+    </ClInclude>
     <ClInclude Include="SocketFollowComponent.h">
       <Filter>Engine Component</Filter>
     </ClInclude>
@@ -472,6 +475,9 @@
       <Filter>Engine Component</Filter>
     </ClCompile>
     <ClCompile Include="SocketComponent.cpp">
+      <Filter>Engine Component</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketColliderComponent.cpp">
       <Filter>Engine Component</Filter>
     </ClCompile>
     <ClCompile Include="SocketFollowComponent.cpp">

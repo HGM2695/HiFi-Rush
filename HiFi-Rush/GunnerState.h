@@ -78,6 +78,8 @@ namespace gm
 
 		void BeginShoot(MonsterStateContext& context);
 		void BeginLanding(MonsterStateContext& context);
+		bool HasReachedAimLockTime(const MonsterStateContext& context) const;
+		void LockAim(MonsterStateContext& context);
 		void HandleAnimationNotify(MonsterStateContext& context, SkeletalAnimatorComponent& animator, const AnimationNotifyEvent& event);
 		void SpawnLaser(MonsterStateContext& context);
 
@@ -85,8 +87,10 @@ namespace gm
 		int32				_damage = 0;
 		AttackType			_attackType = AttackType::Ground;
 		AttackPhase			_attackPhase = AttackPhase::Ready;
+		Vector3				_lockedAimDirection{ 0.f, 0.f, 1.f };
+		float				_lockedTargetDistance = 0.f;
 		bool				_previousUseGravity = true;
-		bool				_isFacingLocked = false;
+		bool				_isAimLocked = false;
 		bool				_overrodeSkyMovement = false;
 	};
 

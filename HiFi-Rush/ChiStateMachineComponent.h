@@ -61,6 +61,7 @@ namespace gm
 		void					OnGroundContact();
 		void					OnGroundLost(const NavigationGroundLostEvent& event);
 		void					OnDamaged(const HitEvent& event);
+		void					ChangeStateToAirborne(const Vector3& impulse);
 		RhythmJudgeResult		JudgeRhythmInput(RhythmInputType inputType);
 		void					UpdateBeatHit();
 		bool					IsAcceptedBeatHitInput(const std::optional<RhythmJudgeResult>& input, int64 targetBeatIndex) const;

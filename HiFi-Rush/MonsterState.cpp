@@ -30,6 +30,14 @@ namespace gm
 		context.moveComponent->FaceDirection(context.combatComponent->GetTargetDirection(), deltaTime);
 	}
 
+	void MonsterState::FaceTargetImmediate(MonsterStateContext& context) const
+	{
+		if (context.combatComponent == nullptr || context.moveComponent == nullptr)
+			return;
+
+		context.moveComponent->FaceDirectionImmediate(context.combatComponent->GetTargetDirection());
+	}
+
 	void MonsterState::SetRootMotionEnabled(MonsterStateContext& context, bool enabled) const
 	{
 		if (context.moveComponent != nullptr)

@@ -250,9 +250,9 @@
     <ClInclude Include="HitBoxComponent.h">
       <Filter>Component\Combat</Filter>
     </ClInclude>
-	<ClInclude Include="TemporaryBoxHitBoxObject.h">
+	<ClInclude Include="TemporaryHitBoxObject.h">
 	  <Filter>GameObject</Filter>
-    </ClInclude>
+	</ClInclude>
     <ClInclude Include="HurtBoxComponent.h">
       <Filter>Component\Combat</Filter>
     </ClInclude>
@@ -561,9 +561,9 @@
     <ClCompile Include="HitBoxComponent.cpp">
       <Filter>Component\Combat</Filter>
     </ClCompile>
-	<ClCompile Include="TemporaryBoxHitBoxObject.cpp">
+	<ClCompile Include="TemporaryHitBoxObject.cpp">
 	  <Filter>GameObject</Filter>
-    </ClCompile>
+	</ClCompile>
     <ClCompile Include="HurtBoxComponent.cpp">
       <Filter>Component\Combat</Filter>
     </ClCompile>

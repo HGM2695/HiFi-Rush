@@ -24,7 +24,6 @@ namespace gm
 		}
 
 		GM_ASSERT_RETURN(_collider, "HurtBox가 참조하는 Collider를 찾을 수 없습니다. colliderId=%ls", _colliderId.c_str());
-		_collider->SetTrigger(true);
 
 		_health = GetOwner().GetComponent<HealthComponent>();
 		GM_ASSERT_RETURN(_health, "HurtBox를 가진 GameObject에는 HealthComponent가 필요합니다.");

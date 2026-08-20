@@ -4,6 +4,8 @@
 #include "Component.h"
 #include "WeakGameObjectPtr.h"
 
+#include <functional>
+#include <utility>
 #include <vector>
 
 namespace gm
@@ -29,6 +31,7 @@ namespace gm
 		bool	IsIgnoreInvincibility() const { return _damageInfo.ignoreInvincibility; }
 		void	SetDamageInfo(const DamageInfo& damageInfo);
 		const DamageInfo& GetDamageInfo() const { return _damageInfo; }
+		void	SetHitCondition(std::function<bool(const HurtBoxComponent&)> hitCondition) { _hitCondition = std::move(hitCondition); }
 
 		Collider3DComponent&		GetCollider() { return _collider; }
 		const Collider3DComponent&	GetCollider() const { return _collider; }
@@ -55,6 +58,7 @@ namespace gm
 		EventConnection					_collisionEnterConnection{};
 		EventConnection					_collisionStayConnection{};
 		DamageInfo						_damageInfo{};
+		std::function<bool(const HurtBoxComponent&)> _hitCondition{};
 		float							_rehitInterval = 0.f;
 		bool							_isAttackActive = false;
 	};

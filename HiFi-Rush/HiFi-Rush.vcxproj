@@ -185,7 +185,7 @@
 	<ClInclude Include="RhythmRankComponent.h" />
     <ClInclude Include="HiFiRushCollisionLayers.h" />
     <ClInclude Include="HitBoxComponent.h" />
-	<ClInclude Include="TemporaryBoxHitBoxObject.h" />
+	<ClInclude Include="TemporaryHitBoxObject.h" />
 	<ClInclude Include="HitReactionComponent.h" />
     <ClInclude Include="HurtBoxComponent.h" />
     <ClInclude Include="SceneTransitionTriggerComponent.h" />
@@ -304,7 +304,7 @@
 	<ClCompile Include="RespawnPointTriggerComponent.cpp" />
 	<ClCompile Include="FallRespawnTriggerComponent.cpp" />
     <ClCompile Include="HitBoxComponent.cpp" />
-	<ClCompile Include="TemporaryBoxHitBoxObject.cpp" />
+	<ClCompile Include="TemporaryHitBoxObject.cpp" />
 	<ClCompile Include="HitReactionComponent.cpp" />
     <ClCompile Include="HurtBoxComponent.cpp" />
     <ClCompile Include="CommonLoadingScene.cpp" />

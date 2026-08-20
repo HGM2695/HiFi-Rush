@@ -104,6 +104,8 @@ namespace gm
 	void MonsterStateMachineComponent::OnDamaged(const HitEvent& event)
 	{
 		_context.lastHitReactionType = event.damage.hitReactionType;
+		if (event.damageResult.state == DamageState::Applied && _context.moveComponent)
+			_context.moveComponent->FaceDirectionImmediate(-event.GetWorldKnockbackDirection());
 
 		MonsterState* currentState = FindState(_currentStateId);
 		if (currentState)

@@ -190,7 +190,6 @@ namespace gm
 	{
 		_notifyConnection.Disconnect();
 		_hitBox.EndAttack();
-		_isFacingLocked = false;
 
 		if (context.combatComponent == nullptr || context.combatComponent->TryStartAttack() == false)
 		{
@@ -198,6 +197,7 @@ namespace gm
 			return;
 		}
 
+		FaceTargetImmediate(context);
 		SetRootMotionEnabled(context, true);
 
 		const bool useSlash = Math::RandomInt(0, 1) == 0;
@@ -207,6 +207,7 @@ namespace gm
 		const std::shared_ptr<SkeletalAnimationClip> clip = context.animatorComponent->GetCurrentClip();
 		GM_ASSERT_RETURN(clip, "Sword Attack Animation Clip이 없습니다.");
 		const AnimationNotifyEvent* hitStartNotify = clip->FindNotify(HiFiRushAnimationNotifyNames::HitStart);
+		GM_ASSERT_RETURN(hitStartNotify, "Sword Attack Animation에 HitStart Notify가 없습니다.");
 		SkeletalAnimatorComponent* animator = context.animatorComponent;
 		animator->GetNotifyEvent().Subscribe(_notifyConnection,
 			[this, animator](const AnimationNotifyEvent& event)
@@ -218,13 +219,11 @@ namespace gm
 			animator->SetPlayRate(BeatMath::CalcAnimationPlayRate(context.beatSystem->GetCurrentBeat(), context.beatSystem->GetSecondsPerBeat(), hitStartNotify->time));
 	}
 
-	void SwordAttackState::Tick(MonsterStateContext& context, float deltaTime)
+	void SwordAttackState::Tick(MonsterStateContext& context, float)
 	{
 		if (context.animatorComponent == nullptr)
 			return;
 
-		if (_isFacingLocked == false)
-			FaceTarget(context, deltaTime);
 		if (IsAnimationCompleted(context))
 			context.stateMachine->ChangeState(MonsterStateId::Idle);
 	}
@@ -233,7 +232,6 @@ namespace gm
 	{
 		_notifyConnection.Disconnect();
 		_hitBox.EndAttack();
-		_isFacingLocked = false;
 		if (context.animatorComponent != nullptr)
 			context.animatorComponent->SetPlayRate(1.f);
 		SetRootMotionEnabled(context, false);
@@ -243,7 +241,6 @@ namespace gm
 	{
 		if (event.name == HiFiRushAnimationNotifyNames::HitStart)
 		{
-			_isFacingLocked = true;
 			_hitBox.BeginAttack();
 			animator.SetPlayRate(1.f);
 		}

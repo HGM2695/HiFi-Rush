@@ -187,6 +187,7 @@ namespace gm
 		hurtCollider->SetSize(data.bodyColliderSize);
 		hurtCollider->SetCollisionLayer(HiFiRushCollisionLayer::Monster);
 		hurtCollider->SetCollisionMask(HiFiRushCollisionLayer::PlayerAttack);
+		hurtCollider->SetTrigger(true);
 
 		HealthComponent* health = monster.AddComponent<HealthComponent>(data.maxHealth);
 		GM_ASSERT_RETURN_VAL(health, false, "Monster HealthComponent 생성에 실패했습니다.");

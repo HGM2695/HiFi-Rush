@@ -29,6 +29,7 @@ namespace gm
 
 		bool			HasSocket(const std::wstring& socketName) const;
 		const Socket*	FindSocket(const std::wstring& socketName) const;
+		Matrix			GetSocketAnchorWorldMatrix(const std::wstring& socketName) const;
 		Matrix			GetSocketWorldMatrix(const std::wstring& socketName) const;
 
 	protected:

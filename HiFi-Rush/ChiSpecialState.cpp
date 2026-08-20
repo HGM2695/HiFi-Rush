@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "HiFiRushCollisionLayers.h"
 #include "Scene.h"
-#include "TemporaryBoxHitBoxObject.h"
+#include "TemporaryHitBoxObject.h"
 #include "TransformComponent.h"
 
 namespace gm

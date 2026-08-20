@@ -19,12 +19,12 @@ namespace gm
 			return AnimationPlayOption{ .startTime = startTime, .loopOverride = isLoop };
 		}
 
-		void ApplyVerticalImpulse(ChiStateContext& context, float impulse)
+		void ApplyAirborneImpulse(ChiStateContext& context, const Vector3& impulse)
 		{
 			const ChiJumpPhysicsSettings& settings = context.moveComponent->GetJumpPhysicsSettings();
 			context.rigidbodyComponent->ClearVerticalVelocity();
 			context.rigidbodyComponent->SetGravityScale(settings.riseGravityScale);
-			context.rigidbodyComponent->AddImpulse(Vector3{ 0.f, impulse, 0.f });
+			context.rigidbodyComponent->AddImpulse(impulse);
 		}
 
 		void UpdateApexGravity(ChiStateContext& context)
@@ -61,7 +61,8 @@ namespace gm
 	void ChiJumpUpState::Enter(ChiStateContext& context)
 	{
 		ChiState::Enter(context);
-		ApplyVerticalImpulse(context, context.moveComponent->GetJumpPhysicsSettings().jumpImpulse);
+		const Vector3 impulse = context.airborneImpulse.value_or(Vector3{ 0.f, context.moveComponent->GetJumpPhysicsSettings().jumpImpulse, 0.f });
+		ApplyAirborneImpulse(context, impulse);
 	}
 
 	void ChiJumpUpState::Tick(ChiStateContext& context, float deltaTime)
@@ -152,7 +153,7 @@ namespace gm
 	void ChiJumpDoubleUpState::Enter(ChiStateContext& context)
 	{
 		ChiState::Enter(context);
-		ApplyVerticalImpulse(context, context.moveComponent->GetJumpPhysicsSettings().doubleJumpImpulse);
+		ApplyAirborneImpulse(context, Vector3{ 0.f, context.moveComponent->GetJumpPhysicsSettings().doubleJumpImpulse, 0.f });
 	}
 
 	void ChiJumpDoubleUpState::Tick(ChiStateContext& context, float deltaTime)
