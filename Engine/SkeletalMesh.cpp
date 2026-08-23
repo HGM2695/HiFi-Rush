@@ -32,9 +32,10 @@ namespace gm
 	SkeletalMesh::SkeletalMesh(std::shared_ptr<Mesh> mesh, const ModelData& modelData)
 		: _preTransform(modelData.preTransform)
 		, _localBounds(modelData.localBounds)
+		, _castsShadow(modelData.castsShadow)
 		, _mesh(std::move(mesh))
 		, _sections(modelData.sections)
-		, _textureSets(modelData.textureSets)
+		, _materialSlots(modelData.materialSlots)
 		, _bones(modelData.bones)
 	{}
 
@@ -46,11 +47,11 @@ namespace gm
 		return &_sections[index];
 	}
 
-	const MeshTextureSet* SkeletalMesh::GetTextureSet(uint32 index) const
+	const MeshMaterialSlot* SkeletalMesh::GetMaterialSlot(uint32 index) const
 	{
-		if (index >= _textureSets.size())
+		if (index >= _materialSlots.size())
 			return nullptr;
 
-		return &_textureSets[index];
+		return &_materialSlots[index];
 	}
 }

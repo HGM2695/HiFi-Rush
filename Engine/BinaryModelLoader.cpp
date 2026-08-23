@@ -20,6 +20,7 @@ namespace gm
 		constexpr uint32 LegacyMetalnessTextureType = 15;
 		constexpr uint32 LegacyRoughnessTextureType = 16;
 		constexpr uint32 LegacyAmbientOcclusionTextureType = 17;
+		constexpr uint32 ModelRenderDataMagic = 0x52444D47;
 
 		struct ModelBoundsBinaryData
 		{
@@ -83,6 +84,8 @@ namespace gm
 		GM_ASSERT_RETURN_VAL(ReadMaterials(inputStream, modelData), modelData, "모델 Material 데이터 읽기에 실패했습니다.");
 
 		GM_ASSERT_RETURN_VAL(ReadModelBounds(inputStream, modelData.localBounds), modelData, "Model 바운드 데이터 읽기에 실패했습니다. 베이킹 여부를 확인하세요. path=%ls", filepath.c_str());
+		GM_ASSERT_RETURN_VAL(ReadMaterialSurfaceData(inputStream, modelData), modelData, "Material Surface 데이터 읽기에 실패했습니다. path=%ls", filepath.c_str());
+		GM_ASSERT_RETURN_VAL(ReadModelRenderData(inputStream, modelData), modelData, "Model Render 데이터 읽기에 실패했습니다. path=%ls", filepath.c_str());
 
 		return modelData;
 	}
@@ -187,7 +190,7 @@ namespace gm
 		// section
 		MeshSection section{};
 		section.name = std::move(meshName);
-		section.textureSetIndex = materialIndex;
+		section.materialSlotIndex = materialIndex;
 
 		if (modelData.type == ModelType::Skeletal)
 		{
@@ -234,10 +237,10 @@ namespace gm
 		uint32 materialCount = 0;
 		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, materialCount), false, "Material 개수 읽기에 실패했습니다.");
 
-		modelData.textureSets.resize(materialCount);
+		modelData.materialSlots.resize(materialCount);
 		for (uint32 materialIndex = 0; materialIndex < materialCount; ++materialIndex)
 		{
-			MeshTextureSet& textureSet = modelData.textureSets[materialIndex];
+			MeshMaterialSlot& materialSlot = modelData.materialSlots[materialIndex];
 
 			uint32 totalTextureCount = 0;
 			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, totalTextureCount), false, "Material Texture 개수 읽기에 실패했습니다.");
@@ -259,12 +262,99 @@ namespace gm
 					if (engineSlot == TextureSlot::Count)
 						continue;
 
-					std::wstring& targetKey = textureSet.textureKeys[ToTexturelSlotIndex(engineSlot)];
+					std::wstring& targetKey = materialSlot.textureKeys[ToTexturelSlotIndex(engineSlot)];
 					targetKey = Utf8ToWide(GetFileNameWithoutExtension(texturePath).c_str());
 				}
 			}
 		}
 
+		return true;
+	}
+
+	bool BinaryModelLoader::ReadMaterialSurfaceData(std::istream& inputStream, ModelData& modelData)
+	{
+		if (inputStream.peek() == std::char_traits<char>::eof())
+			return true;
+
+		uint32 surfaceDataCount = 0;
+		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, surfaceDataCount), false, "Material Surface 데이터 개수 읽기에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(surfaceDataCount == modelData.materialSlots.size(), false, "Material Slot과 Surface 데이터 개수가 다릅니다. material=%zu, surface=%u", modelData.materialSlots.size(), surfaceDataCount);
+
+		constexpr std::streamoff LegacySurfaceDataSize = sizeof(uint32) * 3 + sizeof(Color) + sizeof(float) * 2;
+		constexpr std::streamoff SurfaceDataSize = LegacySurfaceDataSize + sizeof(uint32);
+		constexpr std::streamoff SurfaceDataWithAddressModeSize = SurfaceDataSize + sizeof(uint32);
+		constexpr std::streamoff ModelRenderDataSize = sizeof(uint32) * 2;
+		const std::streampos surfaceDataBegin = inputStream.tellg();
+		inputStream.seekg(0, std::ios::end);
+		const std::streampos dataEnd = inputStream.tellg();
+		const std::streamoff remainingSize = dataEnd - surfaceDataBegin;
+		bool hasModelRenderData = false;
+		if (remainingSize >= ModelRenderDataSize)
+		{
+			uint32 trailingMagic = 0;
+			uint32 trailingCastsShadow = 0;
+			inputStream.seekg(dataEnd - ModelRenderDataSize);
+			hasModelRenderData = ReadBinary(inputStream, trailingMagic) && ReadBinary(inputStream, trailingCastsShadow) && trailingMagic == ModelRenderDataMagic && trailingCastsShadow <= 1;
+		}
+		inputStream.seekg(surfaceDataBegin);
+		const std::streamoff materialSurfaceDataSize = remainingSize - (hasModelRenderData ? ModelRenderDataSize : 0);
+		const std::streamoff legacySurfaceDataSize = static_cast<std::streamoff>(surfaceDataCount) * LegacySurfaceDataSize;
+		const std::streamoff surfaceDataSize = static_cast<std::streamoff>(surfaceDataCount) * SurfaceDataSize;
+		const std::streamoff surfaceDataWithAddressModeSize = static_cast<std::streamoff>(surfaceDataCount) * SurfaceDataWithAddressModeSize;
+		const bool hasAddressMode = materialSurfaceDataSize == surfaceDataWithAddressModeSize;
+		const bool hasOutlineMode = hasAddressMode || materialSurfaceDataSize == surfaceDataSize;
+		const bool hasLegacySurfaceData = materialSurfaceDataSize == legacySurfaceDataSize;
+		GM_ASSERT_RETURN_VAL(hasOutlineMode || hasLegacySurfaceData, false, "Material Surface 데이터 크기가 올바르지 않습니다. count=%u, size=%lld", surfaceDataCount, materialSurfaceDataSize);
+
+		for (MeshMaterialSlot& materialSlot : modelData.materialSlots)
+		{
+			uint32 shadingModel = 0;
+			uint32 surfaceMode = 0;
+			Color emissiveColor{};
+			float emissiveIntensity = 0.f;
+			float alphaCutoff = 0.f;
+			uint32 cullMode = 0;
+			uint32 outlineMode = static_cast<uint32>(OutlineMode::Enabled);
+			uint32 baseColorAddressMode = static_cast<uint32>(TextureAddressMode::Wrap);
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, shadingModel), false, "Material Shading Model 읽기에 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, surfaceMode), false, "Material Surface Mode 읽기에 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, emissiveColor), false, "Material Emissive Color 읽기에 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, emissiveIntensity), false, "Material Emissive Intensity 읽기에 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, alphaCutoff), false, "Material Alpha Cutoff 읽기에 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, cullMode), false, "Material Cull Mode 읽기에 실패했습니다.");
+			if (hasOutlineMode)
+				GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outlineMode), false, "Material Outline Mode 읽기에 실패했습니다.");
+			if (hasAddressMode)
+				GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, baseColorAddressMode), false, "Material Base Color Address Mode 읽기에 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(shadingModel < static_cast<uint32>(ShadingModel::Count), false, "지원하지 않는 Material Shading Model입니다. model=%u", shadingModel);
+			GM_ASSERT_RETURN_VAL(surfaceMode < static_cast<uint32>(SurfaceMode::Count), false, "지원하지 않는 Material Surface Mode입니다. mode=%u", surfaceMode);
+			GM_ASSERT_RETURN_VAL(cullMode < static_cast<uint32>(CullMode::Count), false, "지원하지 않는 Material Cull Mode입니다. mode=%u", cullMode);
+			GM_ASSERT_RETURN_VAL(outlineMode < static_cast<uint32>(OutlineMode::Count), false, "지원하지 않는 Material Outline Mode입니다. mode=%u", outlineMode);
+			GM_ASSERT_RETURN_VAL(baseColorAddressMode < static_cast<uint32>(TextureAddressMode::Count), false, "지원하지 않는 Material Base Color Address Mode입니다. mode=%u", baseColorAddressMode);
+
+			materialSlot.surfaceData.shadingModel = static_cast<ShadingModel>(shadingModel);
+			materialSlot.surfaceData.surfaceMode = static_cast<SurfaceMode>(surfaceMode);
+			materialSlot.surfaceData.emissiveColor = emissiveColor;
+			materialSlot.surfaceData.emissiveIntensity = emissiveIntensity;
+			materialSlot.surfaceData.alphaCutoff = alphaCutoff;
+			materialSlot.surfaceData.outlineMode = static_cast<OutlineMode>(outlineMode);
+			materialSlot.cullMode = static_cast<CullMode>(cullMode);
+			materialSlot.baseColorAddressMode = static_cast<TextureAddressMode>(baseColorAddressMode);
+		}
+
+		return true;
+	}
+
+	bool BinaryModelLoader::ReadModelRenderData(std::istream& inputStream, ModelData& modelData)
+	{
+		if (inputStream.peek() == std::char_traits<char>::eof())
+			return true;
+
+		uint32 magic = 0;
+		uint32 castsShadow = 0;
+		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, magic) && magic == ModelRenderDataMagic, false, "Model Render 데이터 식별자가 올바르지 않습니다.");
+		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, castsShadow) && castsShadow <= 1, false, "Model Shadow 설정이 올바르지 않습니다.");
+		modelData.castsShadow = castsShadow != 0;
 		return true;
 	}
 }

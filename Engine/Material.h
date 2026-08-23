@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GraphicsTypes.h"
+#include "MaterialTypes.h"
 #include <array>
 #include <cstddef>
 #include <cstring>
@@ -34,28 +35,49 @@ namespace gm
 
 		explicit Material(const MaterialBuilder& builder);
 
-		std::shared_ptr<Shader>	GetVertexShader() const { return _vertexShader; }
-		std::shared_ptr<Shader>	GetPixelShader() const { return _pixelShader; }
-		PrimitiveTopology		GetTopology() const { return _topology; }
-		const RasterizerDesc&	GetRasterizerDesc() const { return _rasterizerDesc; }
-		const DepthStencilDesc&	GetDepthStencilDesc() const { return _depthStencilDesc; }
-		const BlendDesc&		GetBlendDesc() const { return _blendDesc; }
-		std::shared_ptr<Texture> GetTexture(TextureSlot slot) const;
-		const SamplerDesc&		GetSamplerDesc(TextureSlot slot) const;
-		const ConstantSlot&		GetConstantSlot(ShaderStage stage, uint32 slot) const;
-		const ConstantSlots&	GetConstantSlots(ShaderStage stage) const;
-		size_t					GetRenderStateHash() const;
-		bool					HasSameRenderState(const Material& rhs) const;
+		const MaterialSurfaceData&	GetSurfaceData() const { return _surfaceData; }
+		const MaterialColorData&	GetColorData() const { return _colorData; }
+		ShadingModel				GetShadingModel() const { return _surfaceData.shadingModel; }
+		SurfaceMode					GetSurfaceMode() const { return _surfaceData.surfaceMode; }
+		OutlineMode					GetOutlineMode() const { return _surfaceData.outlineMode; }
+		const Color&				GetEmissiveColor() const { return _surfaceData.emissiveColor; }
+		float						GetEmissiveIntensity() const { return _surfaceData.emissiveIntensity; }
+		float						GetAlphaCutoff() const { return _surfaceData.alphaCutoff; }
+		const Vector2&				GetTextureUVOffset() const { return _textureUVOffset; }
+		std::shared_ptr<Shader>		GetVertexShader() const { return _vertexShader; }
+		std::shared_ptr<Shader>		GetPixelShader() const { return _pixelShader; }
+		PrimitiveTopology			GetTopology() const { return _topology; }
+		const RasterizerDesc&		GetRasterizerDesc() const { return _rasterizerDesc; }
+		const DepthStencilDesc&		GetDepthStencilDesc() const { return _depthStencilDesc; }
+		const BlendDesc&			GetBlendDesc() const { return _blendDesc; }
+		std::shared_ptr<Texture>	GetTexture(TextureSlot slot) const;
+		const SamplerDesc&			GetSamplerDesc(TextureSlot slot) const;
+		const ConstantSlot&			GetConstantSlot(ShaderStage stage, uint32 slot) const;
+		const ConstantSlots&		GetConstantSlots(ShaderStage stage) const;
+		size_t						GetRenderStateHash() const;
+		bool						HasSameRenderState(const Material& rhs) const;
 
-		void					SetVertexShader(const std::shared_ptr<Shader>& shader);
-		void					SetPixelShader(const std::shared_ptr<Shader>& shader);
-		void					SetTopology(PrimitiveTopology topology);
-		void					SetRasterizerDesc(const RasterizerDesc& desc);
-		void					SetDepthStencilDesc(const DepthStencilDesc& desc);
-		void					SetBlendDesc(const BlendDesc& desc);
-		void					SetTexture(TextureSlot slot, const std::shared_ptr<Texture>& texture);
-		void					SetSamplerDesc(TextureSlot slot, const SamplerDesc& desc);
-		void					SetConstantData(ShaderStage stage, uint32 slot, const void* data, uint32 size);
+		void						SetSurfaceData(const MaterialSurfaceData& data);
+		void						SetColorData(const MaterialColorData& data);
+		void						SetColorBlend(const Color& color, float ratio);
+		void						SetOpacityGradient(const Color& lowColor, const Color& highColor);
+		void						SetColorMultiplier(const Color& multiplier) { _colorData.colorMultiplier = multiplier; }
+		void						SetShadingModel(ShadingModel shadingModel);
+		void						SetSurfaceMode(SurfaceMode surfaceMode);
+		void						SetOutlineMode(OutlineMode outlineMode);
+		void						SetEmissiveColor(const Color& color) { _surfaceData.emissiveColor = color; }
+		void						SetEmissiveIntensity(float intensity);
+		void						SetAlphaCutoff(float alphaCutoff);
+		void						SetTextureUVOffset(const Vector2& offset) { _textureUVOffset = offset; }
+		void						SetVertexShader(const std::shared_ptr<Shader>& shader);
+		void						SetPixelShader(const std::shared_ptr<Shader>& shader);
+		void						SetTopology(PrimitiveTopology topology);
+		void						SetRasterizerDesc(const RasterizerDesc& desc);
+		void						SetDepthStencilDesc(const DepthStencilDesc& desc);
+		void						SetBlendDesc(const BlendDesc& desc);
+		void						SetTexture(TextureSlot slot, const std::shared_ptr<Texture>& texture);
+		void						SetSamplerDesc(TextureSlot slot, const SamplerDesc& desc);
+		void						SetConstantData(ShaderStage stage, uint32 slot, const void* data, uint32 size);
 
 		template <typename T>
 		void SetConstantData(ShaderStage stage, uint32 slot, const T& data)
@@ -64,6 +86,12 @@ namespace gm
 		}
 
 	private:
+		static void ApplySurfaceModePipelineState(SurfaceMode surfaceMode, DepthStencilDesc& depthStencilDesc, BlendDesc& blendDesc);
+
+	private:
+		MaterialSurfaceData										_surfaceData{};
+		MaterialColorData										_colorData{};
+		Vector2													_textureUVOffset{};
 		std::array<std::shared_ptr<Texture>, TextureSlotCount>	_textures{};
 		std::array<SamplerDesc, TextureSlotCount>				_samplerDescs{};
 		ConstantSlotsByShader									_constantData{};
@@ -82,6 +110,17 @@ namespace gm
 		public:
 			explicit MaterialBuilder(Resources& resources);
 
+			MaterialBuilder&	SetSurfaceData(const MaterialSurfaceData& data);
+			MaterialBuilder&	SetColorData(const MaterialColorData& data);
+			MaterialBuilder&	SetColorBlend(const Color& color, float ratio);
+			MaterialBuilder&	SetOpacityGradient(const Color& lowColor, const Color& highColor);
+			MaterialBuilder&	SetColorMultiplier(const Color& multiplier);
+			MaterialBuilder&	SetShadingModel(ShadingModel shadingModel);
+			MaterialBuilder&	SetSurfaceMode(SurfaceMode surfaceMode);
+			MaterialBuilder&	SetOutlineMode(OutlineMode outlineMode);
+			MaterialBuilder&	SetEmissiveColor(const Color& color);
+			MaterialBuilder&	SetEmissiveIntensity(float intensity);
+			MaterialBuilder&	SetAlphaCutoff(float alphaCutoff);
 			MaterialBuilder&	SetVertexShader(const std::wstring& key);
 			MaterialBuilder&	SetPixelShader(const std::wstring& key);
 			MaterialBuilder&	SetTexture(TextureSlot slot, const std::wstring& key);
@@ -120,6 +159,8 @@ namespace gm
 
 		private:
 			Resources&													_resources;
+			MaterialSurfaceData											_surfaceData{};
+			MaterialColorData											_colorData{};
 			std::array<std::shared_ptr<gm::Texture>, TextureSlotCount>	_textures{};
 			std::array<SamplerDesc, TextureSlotCount>					_samplerDescs{};
 			ConstantSlotsByShader										_constantData{};

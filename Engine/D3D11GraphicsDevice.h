@@ -27,7 +27,6 @@ namespace gm
 
 		static std::unique_ptr<IGraphicsDevice> Create(const D3D11GraphicsDeviceDesc& desc);
 
-		virtual void BeginFrame(const Color& color) override;
 		virtual void EndFrame() override;
 
 		ID3D11Device*			GetNativeDevice() const { return _device.Get(); }
@@ -45,7 +44,6 @@ namespace gm
 		bool Initialize(const D3D11GraphicsDeviceDesc& desc);
 		bool createDeviceAndSwapChain();
 		bool createBackBufferResources();
-		void setViewport() const;
 		void releaseBackBufferResources();
 
 	private:

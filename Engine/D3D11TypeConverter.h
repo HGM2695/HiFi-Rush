@@ -15,6 +15,11 @@ namespace gm
 	D3D11_BLEND_OP							ToD3D11BlendOp(BlendOp blendOp);
 	D3D11_FILTER							ToD3D11Filter(TextureFilter filter);
 	D3D11_TEXTURE_ADDRESS_MODE				ToD3D11TextureAddressMode(TextureAddressMode addressMode);
+	DXGI_FORMAT								ToD3D11TextureFormat(TextureFormat format);
+	DXGI_FORMAT								ToD3D11SRVFormat(TextureFormat format);
+	DXGI_FORMAT								ToD3D11RTVFormat(TextureFormat format);
+	DXGI_FORMAT								ToD3D11DSVFormat(TextureFormat format);
+	uint32									ToD3D11BindFlags(TextureBindUsage usage);
 	DXGI_FORMAT								ToDXGIFormat(VertexElementFormat format);
 	const char*								ToD3D11SemanticName(VertexElementSemantic semantic);
 	std::vector<D3D11_INPUT_ELEMENT_DESC>	ToD3D11InputElements(const VertexLayoutDesc& layoutDesc);

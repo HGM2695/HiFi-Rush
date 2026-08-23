@@ -20,5 +20,7 @@ namespace gm
 		bool ReadMesh(std::istream& inputStream, ModelData& modelData);
 		bool ReadMeshes(std::istream& inputStream, ModelData& modelData);
 		bool ReadMaterials(std::istream& inputStream, ModelData& modelData);
+		bool ReadMaterialSurfaceData(std::istream& inputStream, ModelData& modelData);
+		bool ReadModelRenderData(std::istream& inputStream, ModelData& modelData);
 	};
 }

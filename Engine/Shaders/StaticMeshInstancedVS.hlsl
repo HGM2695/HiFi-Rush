@@ -1,3 +1,5 @@
+#include "GBufferCommon.hlsli"
+
 cbuffer CameraConstants : register(b1)
 {
     row_major matrix view;
@@ -16,20 +18,17 @@ struct VSInput
     float4 worldRow3 : TEXCOORD4;
 };
 
-struct VSOutput
+MeshPixelInput main(VSInput input)
 {
-    float4 position : SV_POSITION;
-    float2 texcoord : TEXCOORD0;
-};
-
-VSOutput main(VSInput input)
-{
-    VSOutput output;
+    MeshPixelInput output;
 
     float4x4 world = float4x4(input.worldRow0, input.worldRow1, input.worldRow2, input.worldRow3);
     float4 worldPosition = mul(float4(input.position, 1.f), world);
     float4 viewPosition = mul(worldPosition, view);
     output.position = mul(viewPosition, projection);
     output.texcoord = input.texcoord;
+    output.worldNormal = TransformWorldNormal(input.normal, (float3x3)world);
+    output.worldTangent = TransformWorldTangent(input.tangent, (float3x3)world);
+    output.viewDepth = viewPosition.z;
     return output;
 }

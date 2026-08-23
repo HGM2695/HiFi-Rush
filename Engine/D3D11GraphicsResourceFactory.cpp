@@ -51,12 +51,26 @@ namespace gm
 		return D3D11Mesh::Create(desc);
 	}
 
-	std::shared_ptr<Texture> D3D11GraphicsResourceFactory::CreateTexture(const TextureDesc& textureDesc)
+	std::shared_ptr<Texture> D3D11GraphicsResourceFactory::LoadTexture(const TextureLoadDesc& textureLoadDesc)
+	{
+		D3D11TextureLoadDesc desc{};
+		desc.path = textureLoadDesc.path;
+		desc.colorSpace = textureLoadDesc.colorSpace;
+		desc.device = _graphicsDevice.GetNativeDevice();
+		return D3D11Texture::Load(desc);
+	}
+
+	std::unique_ptr<Texture> D3D11GraphicsResourceFactory::CreateTexture(const TextureDesc& textureDesc)
 	{
 		D3D11TextureDesc desc{};
-		desc.path = textureDesc.path;
+		desc.width = textureDesc.width;
+		desc.height = textureDesc.height;
+		desc.arraySize = textureDesc.arraySize;
+		desc.format = textureDesc.format;
+		desc.bindUsage = textureDesc.bindUsage;
+		desc.initialData = textureDesc.initialData;
+		desc.initialDataRowPitch = textureDesc.initialDataRowPitch;
 		desc.device = _graphicsDevice.GetNativeDevice();
-
 		return D3D11Texture::Create(desc);
 	}
 

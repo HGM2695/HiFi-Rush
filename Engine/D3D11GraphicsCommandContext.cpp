@@ -1,5 +1,6 @@
 #include "D3D11GraphicsCommandContext.h"
 #include "D3D11ConstantBuffer.h"
+#include "D3D11GraphicsDevice.h"
 #include "D3D11InstanceBuffer.h"
 #include "D3D11Mesh.h"
 #include "D3D11Shader.h"
@@ -8,14 +9,17 @@
 #include "Material.h"
 #include "Shader.h"
 #include <d3d11.h>
+#include <array>
 #include <cstring>
+#include <vector>
 
 namespace gm
 {
-	D3D11GraphicsCommandContext::D3D11GraphicsCommandContext(ID3D11Device* device, ID3D11DeviceContext* context)
-		: _device(device)
-		, _context(context)
-		, _renderStateManager(device)
+	D3D11GraphicsCommandContext::D3D11GraphicsCommandContext(D3D11GraphicsDevice& graphicsDevice)
+		: _graphicsDevice(graphicsDevice)
+		, _device(graphicsDevice.GetNativeDevice())
+		, _context(graphicsDevice.GetImmediateContext())
+		, _renderStateManager(_device)
 	{
 	}
 
@@ -55,6 +59,11 @@ namespace gm
 		BindNativePixelShader(pixelShader.GetNativeShader());
 	}
 
+	void D3D11GraphicsCommandContext::UnbindPixelShader()
+	{
+		_context->PSSetShader(nullptr, nullptr, 0);
+	}
+
 	void D3D11GraphicsCommandContext::BindMesh(const Mesh& mesh)
 	{
 		const D3D11Mesh& d3d11Mesh = static_cast<const D3D11Mesh&>(mesh);
@@ -70,7 +79,7 @@ namespace gm
 		BindNativeVertexBuffer(1, d3d11Buffer.GetNativeBuffer(), d3d11Buffer.GetStride());
 	}
 
-	void D3D11GraphicsCommandContext::BindTexture(uint32 slot, const Texture* texture)
+	void D3D11GraphicsCommandContext::BindShaderTexture(uint32 slot, const Texture* texture)
 	{
 		const D3D11Texture* d3d11Texture = static_cast<const D3D11Texture*>(texture);
 		ID3D11ShaderResourceView* srv = d3d11Texture ? d3d11Texture->GetShaderResourceView() : nullptr;
@@ -81,6 +90,87 @@ namespace gm
 	{
 		ID3D11SamplerState* nativeSampler = samplerDesc ? _renderStateManager.GetSamplerState(*samplerDesc) : nullptr;
 		BindNativeSampler(slot, nativeSampler);
+	}
+
+	void D3D11GraphicsCommandContext::UnbindShaderTextures(uint32 startSlot, uint32 count)
+	{
+		if (count == 0)
+			return;
+
+		std::vector<ID3D11ShaderResourceView*> nullResources(count, nullptr);
+		_context->PSSetShaderResources(startSlot, count, nullResources.data());
+	}
+
+	void D3D11GraphicsCommandContext::BindBackBuffer()
+	{
+		ID3D11RenderTargetView* renderTargetView = _graphicsDevice.GetRenderTargetView();
+		ID3D11DepthStencilView* depthStencilView = _graphicsDevice.GetDepthStencilView();
+		_context->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
+	}
+
+	void D3D11GraphicsCommandContext::BindRenderTarget(const Texture* renderTexture, const Texture* depthTexture)
+	{
+		ID3D11RenderTargetView* renderTargetView = renderTexture ? static_cast<const D3D11Texture*>(renderTexture)->GetRenderTargetView() : nullptr;
+		ID3D11DepthStencilView* depthStencilView = depthTexture ? static_cast<const D3D11Texture*>(depthTexture)->GetDepthStencilView() : nullptr;
+		_context->OMSetRenderTargets(renderTexture ? 1u : 0u, renderTexture ? &renderTargetView : nullptr, depthStencilView);
+	}
+
+	void D3D11GraphicsCommandContext::BindRenderTargets(const std::vector<const Texture*>& renderTextures, const Texture* depthTexture)
+	{
+		GM_ASSERT_RETURN(renderTextures.size() <= D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, "동시에 바인딩할 수 있는 Render Target 개수를 초과했습니다.");
+		std::array<ID3D11RenderTargetView*, D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT> renderTargetViews{};
+		for (size_t index = 0; index < renderTextures.size(); ++index)
+			renderTargetViews[index] = static_cast<const D3D11Texture*>(renderTextures[index])->GetRenderTargetView();
+
+		ID3D11DepthStencilView* depthStencilView = depthTexture ? static_cast<const D3D11Texture*>(depthTexture)->GetDepthStencilView() : nullptr;
+		_context->OMSetRenderTargets(static_cast<uint32>(renderTextures.size()), renderTextures.empty() ? nullptr : renderTargetViews.data(), depthStencilView);
+	}
+
+	void D3D11GraphicsCommandContext::BindDepthStencilSlice(const Texture& depthTexture, uint32 arraySlice)
+	{
+		const D3D11Texture& d3d11Texture = static_cast<const D3D11Texture&>(depthTexture);
+		ID3D11DepthStencilView* depthStencilView = d3d11Texture.GetDepthStencilView(arraySlice);
+		_context->OMSetRenderTargets(0, nullptr, depthStencilView);
+	}
+
+	void D3D11GraphicsCommandContext::ClearBackBuffer(const Color& color, float depth, uint8 stencil)
+	{
+		ID3D11RenderTargetView* renderTargetView = _graphicsDevice.GetRenderTargetView();
+		ID3D11DepthStencilView* depthStencilView = _graphicsDevice.GetDepthStencilView();
+		_context->ClearRenderTargetView(renderTargetView, color);
+		_context->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, depth, stencil);
+	}
+
+	void D3D11GraphicsCommandContext::ClearRenderTarget(Texture& renderTexture, const Color& color)
+	{
+		D3D11Texture& d3d11Texture = static_cast<D3D11Texture&>(renderTexture);
+		_context->ClearRenderTargetView(d3d11Texture.GetRenderTargetView(), color);
+	}
+
+	void D3D11GraphicsCommandContext::ClearDepthStencil(Texture& depthTexture, float depth, uint8 stencil)
+	{
+		D3D11Texture& d3d11Texture = static_cast<D3D11Texture&>(depthTexture);
+		const uint32 clearFlags = depthTexture.GetFormat() == TextureFormat::Depth24Stencil8 ? D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL : D3D11_CLEAR_DEPTH;
+		_context->ClearDepthStencilView(d3d11Texture.GetDepthStencilView(), clearFlags, depth, stencil);
+	}
+
+	void D3D11GraphicsCommandContext::ClearDepthStencilSlice(Texture& depthTexture, uint32 arraySlice, float depth, uint8 stencil)
+	{
+		D3D11Texture& d3d11Texture = static_cast<D3D11Texture&>(depthTexture);
+		const uint32 clearFlags = depthTexture.GetFormat() == TextureFormat::Depth24Stencil8 ? D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL : D3D11_CLEAR_DEPTH;
+		_context->ClearDepthStencilView(d3d11Texture.GetDepthStencilView(arraySlice), clearFlags, depth, stencil);
+	}
+
+	void D3D11GraphicsCommandContext::SetViewport(const Viewport& viewport)
+	{
+		D3D11_VIEWPORT d3d11Viewport{};
+		d3d11Viewport.TopLeftX = viewport.x;
+		d3d11Viewport.TopLeftY = viewport.y;
+		d3d11Viewport.Width = viewport.width;
+		d3d11Viewport.Height = viewport.height;
+		d3d11Viewport.MinDepth = viewport.minDepth;
+		d3d11Viewport.MaxDepth = viewport.maxDepth;
+		_context->RSSetViewports(1, &d3d11Viewport);
 	}
 
 	void D3D11GraphicsCommandContext::BindConstantBuffer(ShaderStage stage, uint32 slot, const ConstantBuffer* cbuffer)
@@ -146,7 +236,7 @@ namespace gm
 		for (uint32 i = 0; i < TextureSlotCount; ++i)
 		{
 			const TextureSlot slot = ToTextureSlot(i);
-			BindTexture(i, material.GetTexture(slot).get());
+			BindShaderTexture(i, material.GetTexture(slot).get());
 		}
 
 		for (uint32 i = 0; i < TextureSlotCount; ++i)
@@ -231,4 +321,5 @@ namespace gm
 		const float blendFactor[4] = { 0.f, 0.f, 0.f, 0.f };
 		_context->OMSetBlendState(blendState, blendFactor, 0xffffffff);
 	}
+
 }

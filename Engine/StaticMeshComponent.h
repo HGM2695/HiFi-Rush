@@ -28,6 +28,8 @@ namespace gm
 
 		void								SetMaterial(uint32 slotIndex, const Material& material);
 		Material*							GetMaterial(uint32 slotIndex) const;
+		void								SetCastsShadow(bool castsShadow) { _castsShadow = castsShadow; }
+		bool								CastsShadow() const { return _castsShadow; }
 
 	protected:
 		virtual void OnInitialize() override;
@@ -39,5 +41,6 @@ namespace gm
 
 		std::shared_ptr<StaticMesh>				_staticMesh;
 		std::vector<std::unique_ptr<Material>>	_materials;
+		bool									_castsShadow = true;
 	};
 }

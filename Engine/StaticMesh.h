@@ -22,11 +22,12 @@ namespace gm
 		const BoundingVolume&					GetLocalBounds() const { return _localBounds; }
 		const std::shared_ptr<Mesh>&			GetMesh() const { return _mesh; }
 		const std::vector<MeshSection>&			GetSections() const { return _sections; }
-		const std::vector<MeshTextureSet>&		GetTextureSets() const { return _textureSets; }
+		const std::vector<MeshMaterialSlot>&	GetMaterialSlots() const { return _materialSlots; }
+		bool									CastsShadow() const { return _castsShadow; }
 
 		const MeshSection*						GetSection(uint32 index) const;
-		const MeshTextureSet*					GetTextureSet(uint32 index) const;
-		uint32									GetTextureSetCount() const { return static_cast<uint32>(_textureSets.size()); }
+		const MeshMaterialSlot*					GetMaterialSlot(uint32 index) const;
+		uint32									GetMaterialSlotCount() const { return static_cast<uint32>(_materialSlots.size()); }
 
 	private:
 		StaticMesh(std::shared_ptr<Mesh> mesh, const ModelData& modelData);
@@ -34,9 +35,10 @@ namespace gm
 	private:
 		Matrix							_preTransform = Matrix::CreateScale(1.f);
 		BoundingVolume					_localBounds{};
+		bool							_castsShadow = true;
 
 		std::shared_ptr<Mesh>			_mesh;
 		std::vector<MeshSection>		_sections;
-		std::vector<MeshTextureSet>		_textureSets;
+		std::vector<MeshMaterialSlot>	_materialSlots;
 	};
 }

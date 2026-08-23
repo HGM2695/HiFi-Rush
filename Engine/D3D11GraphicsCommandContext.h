@@ -17,10 +17,12 @@ struct ID3D11BlendState;
 
 namespace gm
 {
+	class D3D11GraphicsDevice;
+
 	class D3D11GraphicsCommandContext : public IGraphicsCommandContext
 	{
 	public:
-		D3D11GraphicsCommandContext(ID3D11Device* device, ID3D11DeviceContext* context);
+		explicit D3D11GraphicsCommandContext(D3D11GraphicsDevice& graphicsDevice);
 
 		virtual void		BindMaterial(const Material& material) override;
 
@@ -31,12 +33,24 @@ namespace gm
 
 		virtual void		BindVertexShader(const Shader& shader) override;
 		virtual void		BindPixelShader(const Shader& shader) override;
+		virtual void		UnbindPixelShader() override;
 
 		virtual void		BindMesh(const Mesh& mesh) override;
 		virtual void		BindInstanceBuffer(const InstanceBuffer& buffer) override;
 
-		virtual void		BindTexture(uint32 slot, const Texture* texture) override;
+		virtual void		BindShaderTexture(uint32 slot, const Texture* texture) override;
 		virtual void		BindSampler(uint32 slot, const SamplerDesc* samplerDesc) override;
+		virtual void		UnbindShaderTextures(uint32 startSlot, uint32 count) override;
+
+		virtual void		BindBackBuffer() override;
+		virtual void		BindRenderTarget(const Texture* renderTexture, const Texture* depthTexture) override;
+		virtual void		BindRenderTargets(const std::vector<const Texture*>& renderTextures, const Texture* depthTexture) override;
+		virtual void		BindDepthStencilSlice(const Texture& depthTexture, uint32 arraySlice) override;
+		virtual void		ClearBackBuffer(const Color& color, float depth = 1.f, uint8 stencil = 0) override;
+		virtual void		ClearRenderTarget(Texture& renderTexture, const Color& color) override;
+		virtual void		ClearDepthStencil(Texture& depthTexture, float depth = 1.f, uint8 stencil = 0) override;
+		virtual void		ClearDepthStencilSlice(Texture& depthTexture, uint32 arraySlice, float depth = 1.f, uint8 stencil = 0) override;
+		virtual void		SetViewport(const Viewport& viewport) override;
 
 		virtual void		BindConstantBuffer(ShaderStage stage, uint32 slot, const ConstantBuffer* cbuffer) override;
 		virtual void		UpdateConstantBuffer(ConstantBuffer& buffer, const void* data, uint32 size) override;
@@ -57,6 +71,7 @@ namespace gm
 		void				BindNativeDepthStencilState(ID3D11DepthStencilState* depthStencilState);
 		void				BindNativeBlendState(ID3D11BlendState* blendState);
 
+		D3D11GraphicsDevice&	_graphicsDevice;
 		ID3D11Device*			_device = nullptr;
 		ID3D11DeviceContext*	_context = nullptr;
 		D3D11RenderStateManager	_renderStateManager;

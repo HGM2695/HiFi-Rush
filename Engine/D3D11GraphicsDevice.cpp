@@ -1,11 +1,8 @@
 #include "D3D11GraphicsDevice.h"
-#include "DirectXMath.h"
 #include <d3d11.h>
 
 namespace gm
 {
-	using namespace DirectX;
-
 	std::unique_ptr<IGraphicsDevice> D3D11GraphicsDevice::Create(const D3D11GraphicsDeviceDesc& desc)
 	{
 		GM_ASSERT_RETURN_VAL(desc.hWnd, nullptr, "윈도우 핸들이 유효하지 않습니다.");
@@ -13,13 +10,6 @@ namespace gm
 		GM_ASSERT_RETURN_VAL(device->Initialize(desc), nullptr, "D3D11 디바이스 초기화에 실패했습니다.");
 
 		return device;
-	}
-
-	void D3D11GraphicsDevice::BeginFrame(const Color& color)
-	{
-		_deviceContext->OMSetRenderTargets(1, _renderTargetView.GetAddressOf(), _depthStencilView.Get());
-		_deviceContext->ClearRenderTargetView(_renderTargetView.Get(), color);
-		_deviceContext->ClearDepthStencilView(_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 	}
 
 	void D3D11GraphicsDevice::EndFrame()
@@ -36,15 +26,12 @@ namespace gm
 		const HRESULT hr = _swapChain->ResizeBuffers(0, _width, _height, DXGI_FORMAT_UNKNOWN, 0);
 		GM_ASSERT_RETURN(SUCCEEDED(hr), "스왑체인 ResizeBuffers에 실패했습니다.");
 		GM_ASSERT_RETURN(createBackBufferResources(), "리사이즈 후 백 버퍼 리소스 생성에 실패했습니다.");
-
-		setViewport();
 	}
 
 	bool D3D11GraphicsDevice::Initialize(const D3D11GraphicsDeviceDesc& desc)
 	{
 		GM_ASSERT_RETURN_VAL(createDeviceAndSwapChain(), false, "DX11 디바이스와 스왑체인 생성에 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(createBackBufferResources(), false, "백 버퍼 리소스 생성에 실패했습니다.");
-		setViewport();
 
 		return true;
 	}
@@ -109,7 +96,10 @@ namespace gm
 		HRESULT hr = _swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(backBuffer.GetAddressOf()));
 		GM_ASSERT_RETURN_VAL(SUCCEEDED(hr), false, "스왑체인에서 백 버퍼를 가져오지 못했습니다.");
 
-		hr = _device->CreateRenderTargetView(backBuffer.Get(), nullptr, _renderTargetView.GetAddressOf());
+		D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc{};
+		renderTargetViewDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM_SRGB;
+		renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+		hr = _device->CreateRenderTargetView(backBuffer.Get(), &renderTargetViewDesc, _renderTargetView.GetAddressOf());
 		GM_ASSERT_RETURN_VAL(SUCCEEDED(hr), false, "렌더 타겟 뷰 생성에 실패했습니다.");
 
 		D3D11_TEXTURE2D_DESC depthStencilDesc{};
@@ -130,19 +120,6 @@ namespace gm
 		GM_ASSERT_RETURN_VAL(SUCCEEDED(hr), false, "깊이 스텐실 뷰 생성에 실패했습니다.");
 
 		return true;
-	}
-
-	void D3D11GraphicsDevice::setViewport() const
-	{
-		D3D11_VIEWPORT viewport{};
-		viewport.TopLeftX = 0.f;
-		viewport.TopLeftY = 0.f;
-		viewport.Width = static_cast<float>(_width);
-		viewport.Height = static_cast<float>(_height);
-		viewport.MinDepth = 0.f;
-		viewport.MaxDepth = 1.f;
-
-		_deviceContext->RSSetViewports(1, &viewport);
 	}
 
 	void D3D11GraphicsDevice::releaseBackBufferResources()

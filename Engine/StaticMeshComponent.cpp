@@ -20,33 +20,36 @@ namespace gm
 
 		_staticMesh = staticMesh;
 		_preTransform = _staticMesh->GetPreTransform();
+		_castsShadow = _staticMesh->CastsShadow();
 
-		const uint32 slotCount = _staticMesh->GetTextureSetCount();
+		const uint32 slotCount = _staticMesh->GetMaterialSlotCount();
 		_materials.clear();
 		_materials.reserve(slotCount);
 
 		Resources& resources = APPLICATION.GetResources();
 		for (uint32 slotIndex = 0; slotIndex < slotCount; ++slotIndex)
 		{
-			const MeshTextureSet* textureSet = _staticMesh->GetTextureSet(slotIndex);
-			if (textureSet == nullptr)
+			const MeshMaterialSlot* materialSlot = _staticMesh->GetMaterialSlot(slotIndex);
+			if (materialSlot == nullptr)
 			{
 				_materials.push_back(nullptr);
 				continue;
 			}
 
 			Material::MaterialBuilder builder(resources);
-			builder.SetVertexShader(BuiltinResourceKey::StaticMeshVS)
-				.SetPixelShader(BuiltinResourceKey::StaticMeshPS)
-				.SetSamplerAddressMode(TextureSlot::BaseColor, TextureAddressMode::Wrap);
+			builder.SetSurfaceData(materialSlot->surfaceData)
+				.SetCullMode(materialSlot->cullMode)
+				.SetVertexShader(BuiltinResourceKey::StaticMeshVS)
+				.SetPixelShader(BuiltinResourceKey::MeshForwardPS)
+				.SetSamplerAddressMode(TextureSlot::BaseColor, materialSlot->baseColorAddressMode);
 
-			for (uint32 textureSetIndex = 0; textureSetIndex < TextureSlotCount; ++textureSetIndex)
+			for (uint32 textureSlotIndex = 0; textureSlotIndex < TextureSlotCount; ++textureSlotIndex)
 			{
-				const std::wstring& textureKey = textureSet->textureKeys[textureSetIndex];
+				const std::wstring& textureKey = materialSlot->textureKeys[textureSlotIndex];
 				if (textureKey.empty())
 					continue;
 
-				builder.SetTexture(ToTextureSlot(textureSetIndex), textureKey);
+				builder.SetTexture(ToTextureSlot(textureSlotIndex), textureKey);
 			}
 
 			_materials.push_back(std::make_unique<Material>(builder.Build()));
@@ -101,9 +104,10 @@ namespace gm
 		item.world = _ownerTransform->GetWorldMatrix();
 		item.worldBounds = TransformBoundingVolume(_staticMesh->GetLocalBounds(), item.world);
 		item.staticMesh = _staticMesh.get();
-		item.materials.reserve(_staticMesh->GetTextureSetCount());
+		item.castsShadow = _castsShadow;
+		item.materials.reserve(_staticMesh->GetMaterialSlotCount());
 
-		for (uint32 i = 0; i < _staticMesh->GetTextureSetCount(); ++i)
+		for (uint32 i = 0; i < _staticMesh->GetMaterialSlotCount(); ++i)
 		{
 			item.materials.push_back(GetMaterial(i));
 		}

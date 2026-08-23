@@ -12,6 +12,16 @@ namespace gm
         Count
     };
 
+	struct Viewport
+	{
+		float x = 0.f;
+		float y = 0.f;
+		float width = 0.f;
+		float height = 0.f;
+		float minDepth = 0.f;
+		float maxDepth = 1.f;
+	};
+
     enum class ShaderStage
     {
         Vertex,
@@ -170,7 +180,45 @@ namespace gm
         Count
     };
 
-    inline constexpr uint32         ToTexturelSlotIndex(TextureSlot slot) { return static_cast<uint32>(slot); }
-    inline constexpr TextureSlot    ToTextureSlot(uint32 index) { return static_cast<TextureSlot>(index); }
-    inline constexpr uint32         TextureSlotCount = ToTexturelSlotIndex(TextureSlot::Count);
+	enum class TextureColorSpace
+	{
+		Linear,
+		SRGB,
+
+		Count
+	};
+
+	enum class TextureFormat
+	{
+		Unknown,
+		R8UNorm, // 단일 채널만 사용하는 경우
+		R16Float, // 계산용 단일 채널
+		R32Float,
+		R32UInt, // Object ID 등
+		RGBA8UNorm, // LDR
+		RGBA8UNormSRGB, // sRGB 출력용
+		RGBA16Float, // HDR
+		Depth24Stencil8, // Depth, Stencil
+		Depth32Float, // Shadow Depth
+
+		Count
+	};
+
+	enum class TextureBindUsage : uint8
+	{
+		None = 0,
+		ShaderResource = 1 << 0,
+		RenderTarget = 1 << 1,
+		DepthStencil = 1 << 2
+	};
+
+	inline constexpr TextureBindUsage operator|(TextureBindUsage lhs, TextureBindUsage rhs) { return static_cast<TextureBindUsage>(static_cast<uint8>(lhs) | static_cast<uint8>(rhs)); }
+	inline constexpr TextureBindUsage operator&(TextureBindUsage lhs, TextureBindUsage rhs) { return static_cast<TextureBindUsage>(static_cast<uint8>(lhs) & static_cast<uint8>(rhs)); }
+	inline constexpr bool HasTextureBindUsage(TextureBindUsage usage, TextureBindUsage value) { return (usage & value) == value; }
+
+    inline constexpr uint32             ToTexturelSlotIndex(TextureSlot slot) { return static_cast<uint32>(slot); }
+    inline constexpr TextureSlot        ToTextureSlot(uint32 index) { return static_cast<TextureSlot>(index); }
+    inline constexpr uint32             TextureSlotCount = ToTexturelSlotIndex(TextureSlot::Count);
+    // BaseColor 슬롯이면 색으로 읽고, Normal 슬롯이면 수치 데이터로 읽습니다
+	inline constexpr TextureColorSpace  GetDefaultTextureColorSpace(TextureSlot slot) { return slot == TextureSlot::BaseColor || slot == TextureSlot::Emissive ? TextureColorSpace::SRGB : TextureColorSpace::Linear; }
 }

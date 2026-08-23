@@ -2,6 +2,7 @@
 
 #include "BoundingTypes.h"
 #include "GraphicsTypes.h"
+#include "LightTypes.h"
 #include "MathTypes.h"
 #include "SpriteFrame.h"
 #include <cstddef>
@@ -15,12 +16,44 @@ namespace gm
 	class StaticMesh;
 	class SkeletalMesh;
 	class Texture;
+
+	/// Light ////////////////////////////////////////////////////////////////////////////////////////////////
+	struct LightRenderItem
+	{
+		LightType		lightType = LightType::Directional;
+		Vector3			position{};
+		Vector3			direction = Vector3::Forward;
+		Vector3			right = Vector3::Right;
+		Color			color = Colors::White;
+		float			intensity = 1.f;
+		float			range = 0.f;
+		float			innerConeRadian = 0.f;
+		float			outerConeRadian = 0.f;
+		SpotConeFalloff spotConeFalloff = SpotConeFalloff::Smooth;
+		bool			useSpotCookie = false;
+		bool			castsShadow = false;
+	};
 	
 	/// Sprite ////////////////////////////////////////////////////////////////////////////////////////////////
+	enum class SpriteFacingMode
+	{
+		None,
+		Billboard,
+		YAxisBillboard,
+		FixedUpAxisBillboard,
+		FixedRightAxisBillboard,
+
+		Count
+	};
+
 	struct SpriteRenderItem
 	{
-		Matrix			world = Matrix::CreateScale(1.f);
-		const Material* material = nullptr;
+		Matrix				world = Matrix::CreateScale(1.f);
+		const Material*		material = nullptr;
+		SpriteFacingMode	facingMode = SpriteFacingMode::None;
+		float				cameraDepth = 0.f;
+		float				sortDepthOffset = 0.f;
+		uint64				submissionOrder = 0;
 	};
 
 	struct SpriteConstantPS
@@ -34,17 +67,42 @@ namespace gm
 		uint32	fillMode = 0;
 		float	radialStartAngle = 0.f;
 		float	radialSweepAngle = 0.f;
-		Vector2 padding{};
-		Color	redChannelColor = Colors::Red;
-		Color	greenChannelColor = Colors::Green;
-		Color	blueChannelColor = Colors::Blue;
-		float	channelColorMappingRatio = 0.f;
-		Vector3 channelColorPadding{};
+		Vector2 radialCenter{ 0.5f, 0.5f };
 	};
 
 	struct ColorConstantPS
 	{
 		Color	color = Colors::White;
+	};
+
+	struct EffectMaterialConstantPS
+	{
+		Color	emissiveColor = Colors::White;
+		float	dissolveThreshold = 0.f;
+		float	emissiveIntensity = 0.f;
+		uint32	dissolveEnabled = 0;
+		float	padding = 0.f;
+	};
+
+	struct MaterialSurfaceConstantPS
+	{
+		uint32	shadingModel = 0;
+		uint32	surfaceMode = 0;
+		uint32	outlineMode = 0;
+		float	emissiveIntensity = 0.f;
+		float	alphaCutoff = 0.5f;
+		Vector3	surfacePadding{};
+		Color	emissiveColor = Colors::White;
+		uint32	colorMode = 0;
+		uint32	textureFlags = 0;
+		float	colorBlendRatio = 0.f;
+		float	colorPadding = 0.f;
+		Color	blendColor = Colors::White;
+		Color	opacityLowColor = Colors::White;
+		Color	opacityHighColor = Colors::White;
+		Color	colorMultiplier = Colors::White;
+		Vector2 textureUVOffset{};
+		Vector2 textureUVPadding{};
 	};
 
 	/// UI ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,6 +121,8 @@ namespace gm
 		BoundingVolume					worldBounds{};
 		const StaticMesh*				staticMesh = nullptr;
 		std::vector<const Material*>	materials;
+		uint64							submissionOrder = 0;
+		bool							castsShadow = true;
 	};
 
 	struct StaticMeshBatchKey
@@ -80,6 +140,8 @@ namespace gm
 	{
 		StaticMeshBatchKey	key{};
 		std::vector<Matrix>	worlds;
+		float				cameraDepth = 0.f;
+		uint64				submissionOrder = 0;
 	};
 
 	/// SkeletalMesh ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -90,5 +152,40 @@ namespace gm
 		const SkeletalMesh*					skeletalMesh = nullptr;
 		const std::vector<Matrix>*			boneModelMatrices = nullptr;
 		std::vector<const Material*>		materials;
+		uint64								submissionOrder = 0;
+		bool								castsShadow = true;
+	};
+
+	enum class TransparentRenderSource
+	{
+		Static,
+		Skeletal,
+		Sprite
+	};
+
+	struct TransparentRenderEntry
+	{
+		TransparentRenderSource	source = TransparentRenderSource::Static;
+		uint32					itemIndex = 0;
+		float					cameraDepth = 0.f;
+		uint64					submissionOrder = 0;
+	};
+
+	enum class RenderTargetDebugView
+	{
+		OriginalScene,
+		BaseColor,
+		WorldNormal,
+		AmbientOcclusion,
+		ScreenSpaceAmbientOcclusion,
+		ScreenSpaceOutline,
+		MaterialFlags,
+		Emissive,
+		SceneDepth,
+		BloomContribution,
+		SceneColorA,
+		SceneColorB,
+
+		Count
 	};
 }

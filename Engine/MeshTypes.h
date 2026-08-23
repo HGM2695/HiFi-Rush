@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GraphicsTypes.h"
+#include "MaterialTypes.h"
 #include "MathTypes.h"
 #include "Types.h"
 #include <array>
@@ -51,14 +52,17 @@ namespace gm
 		std::wstring		name;
 		uint32				indexStart = 0;
 		uint32				indexCount = 0;
-		uint32				textureSetIndex = 0;
+		uint32				materialSlotIndex = 0;
 
 		std::vector<uint32>	boneIndices;
 		std::vector<Matrix>	offsetMatrices;
 	};
 
-	struct MeshTextureSet
+	struct MeshMaterialSlot
 	{
-		std::array<std::wstring, TextureSlotCount> textureKeys{};
+		std::array<std::wstring, TextureSlotCount>	textureKeys{};
+		MaterialSurfaceData							surfaceData{ ShadingModel::ToonLit };
+		CullMode									cullMode = CullMode::Back;
+		TextureAddressMode							baseColorAddressMode = TextureAddressMode::Wrap;
 	};
 }

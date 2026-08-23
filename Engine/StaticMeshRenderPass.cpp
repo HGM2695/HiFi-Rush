@@ -40,6 +40,12 @@ namespace gm
 			Matrix world = Matrix::CreateScale(1.f);
 		};
 
+		float CalculateCameraDepth(const StaticMeshRenderItem& item, const Matrix& view)
+		{
+			const Vector3 center = item.worldBounds.isValid ? Vector3{ item.worldBounds.box.Center.x, item.worldBounds.box.Center.y, item.worldBounds.box.Center.z } : Vector3::Transform(Vector3::Zero, item.world);
+			return Vector3::Transform(center, view).z;
+		}
+
 		bool CompareBatchItems(const StaticMeshBatchItem& lhs, const StaticMeshBatchItem& rhs)
 		{
 			if (lhs.key.materialStateHash != rhs.key.materialStateHash)
@@ -66,6 +72,13 @@ namespace gm
 			batch.key = item.key;
 			batch.worlds.push_back(item.world);
 			batches.push_back(std::move(batch));
+		}
+
+		void BuildRenderBatches(std::vector<StaticMeshBatchItem>& items, std::vector<StaticMeshRenderBatch>& batches)
+		{
+			std::sort(items.begin(), items.end(), CompareBatchItems);
+			for (const StaticMeshBatchItem& item : items)
+				AppendBatchItem(batches, item);
 		}
 	}
 
@@ -98,6 +111,8 @@ namespace gm
 
 		_staticMeshInstancedVertexShader = _resources.Find<Shader>(BuiltinResourceKey::StaticMeshInstancedVS);
 		GM_ASSERT_RETURN_VAL(_staticMeshInstancedVertexShader, false, "Static Mesh Instanced Vertex Shader를 찾지 못했습니다.");
+		_gBufferPixelShader = _resources.Find<Shader>(BuiltinResourceKey::MeshGBufferPS);
+		GM_ASSERT_RETURN_VAL(_gBufferPixelShader, false, "Mesh G-Buffer Pixel Shader를 찾지 못했습니다.");
 
 		return true;
 	}
@@ -121,10 +136,13 @@ namespace gm
 	}
 #endif
 
-	void StaticMeshRenderPass::Render(const CameraViewInfo& viewInfo, const BoundingFrustum* worldFrustum, bool isInstancingEnabled)
+	void StaticMeshRenderPass::Prepare(const CameraViewInfo& viewInfo, const BoundingFrustum* worldFrustum)
 	{
 		_constantBufferPool.ResetUsage();
-		_renderBatchList.clear();
+		_opaqueRenderBatches.clear();
+		_maskedRenderBatches.clear();
+		_transparentRenderBatches.clear();
+		_cameraBuffer = nullptr;
 
 #if GM_ENABLE_DEBUG_TOOLS
 		_lastSubmittedItemCount = static_cast<uint32>(_items.size());
@@ -136,47 +154,58 @@ namespace gm
 		_lastInstancedInstanceCount = 0;
 #endif
 
-		BuildRenderBatches(worldFrustum);
+		BuildRenderQueues(viewInfo.view, worldFrustum);
 
 #if GM_ENABLE_DEBUG_TOOLS
-		_lastRenderBatchCount = static_cast<uint32>(_renderBatchList.size());
+		_lastRenderBatchCount = static_cast<uint32>(_opaqueRenderBatches.size() + _maskedRenderBatches.size() + _transparentRenderBatches.size());
 #endif
 
 		CameraConstantVS cameraConstantVS{};
 		cameraConstantVS.view = viewInfo.view;
 		cameraConstantVS.proj = viewInfo.projection;
 
-		ConstantBuffer* cameraBuffer = _constantBufferPool.Acquire(sizeof(CameraConstantVS));
-		_commandContext.UpdateConstantBuffer(*cameraBuffer, &cameraConstantVS, sizeof(CameraConstantVS));
-		_commandContext.BindConstantBuffer(ShaderStage::Vertex, 1, cameraBuffer);
-		for (const StaticMeshRenderBatch& batch : _renderBatchList)
+		_cameraBuffer = _constantBufferPool.Acquire(sizeof(CameraConstantVS));
+		_commandContext.UpdateConstantBuffer(*_cameraBuffer, &cameraConstantVS, sizeof(CameraConstantVS));
+	}
+
+	void StaticMeshRenderPass::RenderOpaqueAndMasked(bool isInstancingEnabled)
+	{
+		BindCameraConstant();
+		for (const StaticMeshRenderBatch& batch : _opaqueRenderBatches)
+			RenderBatch(batch, isInstancingEnabled, true);
+		for (const StaticMeshRenderBatch& batch : _maskedRenderBatches)
+			RenderBatch(batch, isInstancingEnabled, true);
+	}
+
+	void StaticMeshRenderPass::AppendTransparentRenderEntries(std::vector<TransparentRenderEntry>& entries) const
+	{
+		for (uint32 itemIndex = 0; itemIndex < _transparentRenderBatches.size(); ++itemIndex)
 		{
-			const StaticMeshBatchKey& key = batch.key;
-			if (key.mesh == nullptr || key.material == nullptr || key.indexCount == 0)
-				continue;
-
-			_commandContext.BindMesh(*key.mesh);
-			_commandContext.BindMaterial(*key.material);
-			BindMaterialConstantData(*key.material);
-
-			if (CanRenderInstanced(batch, isInstancingEnabled) && RenderInstancedBatch(batch))
-				continue;
-
-			RenderNormalBatch(batch);
+			const StaticMeshRenderBatch& batch = _transparentRenderBatches[itemIndex];
+			entries.push_back(TransparentRenderEntry{ TransparentRenderSource::Static, itemIndex, batch.cameraDepth, batch.submissionOrder });
 		}
+	}
 
-		Clear();
+	void StaticMeshRenderPass::RenderTransparent(uint32 itemIndex)
+	{
+		GM_ASSERT_RETURN(itemIndex < _transparentRenderBatches.size(), "Static Mesh Transparent Render Item Index가 범위를 벗어났습니다.");
+		BindCameraConstant();
+		RenderBatch(_transparentRenderBatches[itemIndex], false, false);
 	}
 
 	void StaticMeshRenderPass::Clear()
 	{
 		_items.clear();
-		_renderBatchList.clear();
+		_opaqueRenderBatches.clear();
+		_maskedRenderBatches.clear();
+		_transparentRenderBatches.clear();
+		_cameraBuffer = nullptr;
 	}
 
-	void StaticMeshRenderPass::BuildRenderBatches(const BoundingFrustum* worldFrustum)
+	void StaticMeshRenderPass::BuildRenderQueues(const Matrix& view, const BoundingFrustum* worldFrustum)
 	{
-		std::vector<StaticMeshBatchItem> batchItems;
+		std::vector<StaticMeshBatchItem> opaqueItems;
+		std::vector<StaticMeshBatchItem> maskedItems;
 
 		for (const StaticMeshRenderItem& item : _items)
 		{
@@ -191,6 +220,7 @@ namespace gm
 #if GM_ENABLE_DEBUG_TOOLS
 			++_lastVisibleItemCount;
 #endif
+			const float cameraDepth = CalculateCameraDepth(item, view);
 
 			const StaticMesh& staticMesh = *item.staticMesh;
 			const std::shared_ptr<Mesh>& mesh = staticMesh.GetMesh();
@@ -199,10 +229,10 @@ namespace gm
 
 			for (const MeshSection& section : staticMesh.GetSections())
 			{
-				if (section.indexCount == 0 || section.textureSetIndex >= item.materials.size())
+				if (section.indexCount == 0 || section.materialSlotIndex >= item.materials.size())
 					continue;
 
-				const Material* material = item.materials[section.textureSetIndex];
+				const Material* material = item.materials[section.materialSlotIndex];
 				if (material == nullptr || material->GetVertexShader() == nullptr || material->GetPixelShader() == nullptr)
 					continue;
 
@@ -214,13 +244,59 @@ namespace gm
 				batchItem.key.indexCount = section.indexCount;
 				batchItem.world = item.world;
 
-				batchItems.push_back(std::move(batchItem));
+				switch (material->GetSurfaceMode())
+				{
+				case SurfaceMode::Opaque:
+					opaqueItems.push_back(std::move(batchItem));
+					break;
+				case SurfaceMode::Masked:
+					maskedItems.push_back(std::move(batchItem));
+					break;
+				case SurfaceMode::Transparent:
+				{
+					StaticMeshRenderBatch batch{};
+					batch.key = batchItem.key;
+					batch.worlds.push_back(batchItem.world);
+					batch.cameraDepth = cameraDepth;
+					batch.submissionOrder = item.submissionOrder;
+					_transparentRenderBatches.push_back(std::move(batch));
+					break;
+				}
+				default:
+					break;
+				}
 			}
 		}
 
-		std::sort(batchItems.begin(), batchItems.end(), CompareBatchItems);
-		for (const StaticMeshBatchItem& item : batchItems)
-			AppendBatchItem(_renderBatchList, item);
+		BuildRenderBatches(opaqueItems, _opaqueRenderBatches);
+		BuildRenderBatches(maskedItems, _maskedRenderBatches);
+	}
+
+	void StaticMeshRenderPass::BindCameraConstant()
+	{
+		GM_ASSERT_RETURN(_cameraBuffer, "Static Mesh Camera ConstantBuffer가 준비되지 않았습니다.");
+		_commandContext.BindConstantBuffer(ShaderStage::Vertex, 1, _cameraBuffer);
+	}
+
+	void StaticMeshRenderPass::RenderBatch(const StaticMeshRenderBatch& batch, bool isInstancingEnabled, bool isGBufferPass)
+	{
+		const StaticMeshBatchKey& key = batch.key;
+		if (key.mesh == nullptr || key.material == nullptr || key.indexCount == 0)
+			return;
+
+		_commandContext.BindMesh(*key.mesh);
+		_commandContext.BindMaterial(*key.material);
+		if (isGBufferPass)
+		{
+			_commandContext.BindVertexShader(*_staticMeshVertexShader);
+			_commandContext.BindPixelShader(*_gBufferPixelShader);
+		}
+		BindMaterialConstantData(*key.material);
+		BindMaterialSurfaceConstant(*key.material);
+		if (CanRenderInstanced(batch, isInstancingEnabled) && RenderInstancedBatch(batch))
+			return;
+
+		RenderNormalBatch(batch);
 	}
 
 	bool StaticMeshRenderPass::CanRenderInstanced(const StaticMeshRenderBatch& batch, bool isInstancingEnabled) const
@@ -292,6 +368,34 @@ namespace gm
 #endif
 
 		return true;
+	}
+
+	void StaticMeshRenderPass::BindMaterialSurfaceConstant(const Material& material)
+	{
+		const MaterialSurfaceData& surfaceData = material.GetSurfaceData();
+		MaterialSurfaceConstantPS constant{};
+		constant.shadingModel = static_cast<uint32>(surfaceData.shadingModel);
+		constant.surfaceMode = static_cast<uint32>(surfaceData.surfaceMode);
+		constant.outlineMode = static_cast<uint32>(surfaceData.outlineMode);
+		constant.emissiveIntensity = surfaceData.emissiveIntensity;
+		constant.alphaCutoff = surfaceData.alphaCutoff;
+		constant.emissiveColor = ConvertSRGBToLinear(surfaceData.emissiveColor);
+		const MaterialColorData& colorData = material.GetColorData();
+		constant.colorMode = static_cast<uint32>(colorData.mode);
+		for (uint32 textureSlotIndex = 0; textureSlotIndex < TextureSlotCount; ++textureSlotIndex)
+		{
+			if (material.GetTexture(ToTextureSlot(textureSlotIndex)))
+				constant.textureFlags |= 1u << textureSlotIndex;
+		}
+		constant.colorBlendRatio = colorData.blendRatio;
+		constant.blendColor = ConvertSRGBToLinear(colorData.blendColor);
+		constant.opacityLowColor = ConvertSRGBToLinear(colorData.opacityLowColor);
+		constant.opacityHighColor = ConvertSRGBToLinear(colorData.opacityHighColor);
+		constant.colorMultiplier = colorData.colorMultiplier;
+		constant.textureUVOffset = material.GetTextureUVOffset();
+		ConstantBuffer* buffer = _constantBufferPool.Acquire(sizeof(MaterialSurfaceConstantPS));
+		_commandContext.UpdateConstantBuffer(*buffer, &constant, sizeof(MaterialSurfaceConstantPS));
+		_commandContext.BindConstantBuffer(ShaderStage::Pixel, 0, buffer);
 	}
 
 	void StaticMeshRenderPass::BindMaterialConstantData(const Material& material)

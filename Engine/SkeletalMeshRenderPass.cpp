@@ -1,11 +1,15 @@
 #include "SkeletalMeshRenderPass.h"
+#include "BuiltinGraphicsResources.h"
 #include "ConstantBuffer.h"
 #include "GraphicsUtils.h"
 #include "IGraphicsCommandContext.h"
 #include "IGraphicsResourceFactory.h"
 #include "Material.h"
 #include "Mesh.h"
+#include "Resources.h"
+#include "Shader.h"
 #include "SkeletalMesh.h"
+#include "SkinningRenderData.h"
 
 #if GM_ENABLE_DEBUG_TOOLS
 #include "IDebugRenderer.h"
@@ -13,13 +17,12 @@
 
 #include <algorithm>
 #include <array>
+#include <functional>
 
 namespace gm
 {
 	namespace
 	{
-		constexpr uint32 MaxSkinningBoneCount = 512;
-
 		struct ObjectConstantVS
 		{
 			Matrix world;
@@ -31,26 +34,10 @@ namespace gm
 			Matrix proj;
 		};
 
-		struct BonePaletteConstantVS
+		float CalculateCameraDepth(const SkeletalMeshRenderItem& item, const Matrix& view)
 		{
-			std::array<Matrix, MaxSkinningBoneCount> boneMatrices;
-		};
-
-		BonePaletteConstantVS BuildBonePalette(const MeshSection& section, const std::vector<Matrix>& boneModelMatrices)
-		{
-			BonePaletteConstantVS bonePalette{};
-			for (Matrix& matrix : bonePalette.boneMatrices)
-				matrix = Matrix::CreateScale(1.f);
-
-			const uint32 paletteCount = std::min<uint32>(MaxSkinningBoneCount, static_cast<uint32>(section.boneIndices.size()));
-
-			for (uint32 paletteIndex = 0; paletteIndex < paletteCount; ++paletteIndex)
-			{
-				const uint32 skeletonBoneIndex = section.boneIndices[paletteIndex];
-				bonePalette.boneMatrices[paletteIndex] = section.offsetMatrices[paletteIndex] * boneModelMatrices[skeletonBoneIndex];
-			}
-
-			return bonePalette;
+			const Vector3 center = item.worldBounds.isValid ? Vector3{ item.worldBounds.box.Center.x, item.worldBounds.box.Center.y, item.worldBounds.box.Center.z } : Vector3::Transform(Vector3::Zero, item.world);
+			return Vector3::Transform(center, view).z;
 		}
 	}
 
@@ -66,6 +53,10 @@ namespace gm
 
 	bool SkeletalMeshRenderPass::Initialize()
 	{
+		_skeletalMeshVertexShader = _resources.Find<Shader>(BuiltinResourceKey::SkeletalMeshVS);
+		GM_ASSERT_RETURN_VAL(_skeletalMeshVertexShader, false, "Skeletal Mesh Vertex Shader를 찾지 못했습니다.");
+		_gBufferPixelShader = _resources.Find<Shader>(BuiltinResourceKey::MeshGBufferPS);
+		GM_ASSERT_RETURN_VAL(_gBufferPixelShader, false, "Mesh G-Buffer Pixel Shader를 찾지 못했습니다.");
 		return true;
 	}
 
@@ -88,23 +79,56 @@ namespace gm
 	}
 #endif
 
-	void SkeletalMeshRenderPass::Render(const CameraViewInfo& viewInfo, const BoundingFrustum* worldFrustum)
+	void SkeletalMeshRenderPass::Prepare(const CameraViewInfo& viewInfo, const BoundingFrustum* worldFrustum)
 	{
 		_constantBufferPool.ResetUsage();
+		_opaqueRenderItems.clear();
+		_maskedRenderItems.clear();
+		_transparentRenderItems.clear();
+		_cameraBuffer = nullptr;
 
 #if GM_ENABLE_DEBUG_TOOLS
 		_lastSubmittedItemCount = static_cast<uint32>(_items.size());
 		_lastVisibleItemCount = 0;
 		_lastCulledItemCount = 0;
 #endif
+		BuildRenderQueues(viewInfo.view, worldFrustum);
 
 		CameraConstantVS cameraConstantVS{};
 		cameraConstantVS.view = viewInfo.view;
 		cameraConstantVS.proj = viewInfo.projection;
 
-		ConstantBuffer* cameraBuffer = _constantBufferPool.Acquire(sizeof(CameraConstantVS));
-		_commandContext.UpdateConstantBuffer(*cameraBuffer, &cameraConstantVS, sizeof(CameraConstantVS));
-		_commandContext.BindConstantBuffer(ShaderStage::Vertex, 1, cameraBuffer);
+		_cameraBuffer = _constantBufferPool.Acquire(sizeof(CameraConstantVS));
+		_commandContext.UpdateConstantBuffer(*_cameraBuffer, &cameraConstantVS, sizeof(CameraConstantVS));
+	}
+
+	void SkeletalMeshRenderPass::RenderOpaqueAndMasked()
+	{
+		BindCameraConstant();
+		for (const SectionRenderItem& item : _opaqueRenderItems)
+			RenderSection(item, true);
+		for (const SectionRenderItem& item : _maskedRenderItems)
+			RenderSection(item, true);
+	}
+
+	void SkeletalMeshRenderPass::AppendTransparentRenderEntries(std::vector<TransparentRenderEntry>& entries) const
+	{
+		for (uint32 itemIndex = 0; itemIndex < _transparentRenderItems.size(); ++itemIndex)
+		{
+			const SectionRenderItem& item = _transparentRenderItems[itemIndex];
+			entries.push_back(TransparentRenderEntry{ TransparentRenderSource::Skeletal, itemIndex, item.cameraDepth, item.submissionOrder });
+		}
+	}
+
+	void SkeletalMeshRenderPass::RenderTransparent(uint32 itemIndex)
+	{
+		GM_ASSERT_RETURN(itemIndex < _transparentRenderItems.size(), "Skeletal Mesh Transparent Render Item Index가 범위를 벗어났습니다.");
+		BindCameraConstant();
+		RenderSection(_transparentRenderItems[itemIndex], false);
+	}
+
+	void SkeletalMeshRenderPass::BuildRenderQueues(const Matrix& view, const BoundingFrustum* worldFrustum)
+	{
 		for (const SkeletalMeshRenderItem& item : _items)
 		{
 			if (worldFrustum != nullptr && IsBoundingVolumeVisible(*worldFrustum, item.worldBounds) == false)
@@ -118,49 +142,134 @@ namespace gm
 #if GM_ENABLE_DEBUG_TOOLS
 			++_lastVisibleItemCount;
 #endif
+			const float cameraDepth = CalculateCameraDepth(item, view);
 
 			const SkeletalMesh& skeletalMesh = *item.skeletalMesh;
 			const std::shared_ptr<Mesh>& mesh = skeletalMesh.GetMesh();
 			if (mesh == nullptr)
 				continue;
 
-			ObjectConstantVS objectConstantVS{};
-			objectConstantVS.world = item.world;
-
-			ConstantBuffer* objectBuffer = _constantBufferPool.Acquire(sizeof(ObjectConstantVS));
-			_commandContext.UpdateConstantBuffer(*objectBuffer, &objectConstantVS, sizeof(ObjectConstantVS));
-			_commandContext.BindConstantBuffer(ShaderStage::Vertex, 0, objectBuffer);
-			_commandContext.BindMesh(*mesh);
-
-			for (const MeshSection& section : skeletalMesh.GetSections())
+			const std::vector<MeshSection>& sections = skeletalMesh.GetSections();
+			for (uint32 sectionIndex = 0; sectionIndex < sections.size(); ++sectionIndex)
 			{
+				const MeshSection& section = sections[sectionIndex];
 				if (section.indexCount == 0)
 					continue;
 
-				if (section.textureSetIndex >= item.materials.size())
+				if (section.materialSlotIndex >= item.materials.size())
 					continue;
 
-				const Material* material = item.materials[section.textureSetIndex];
+				const Material* material = item.materials[section.materialSlotIndex];
 				if (material == nullptr || material->GetVertexShader() == nullptr || material->GetPixelShader() == nullptr)
 					continue;
 
-				BonePaletteConstantVS bonePalette = BuildBonePalette(section, *item.boneModelMatrices);
-				ConstantBuffer* boneBuffer = _constantBufferPool.Acquire(sizeof(BonePaletteConstantVS));
-				_commandContext.UpdateConstantBuffer(*boneBuffer, &bonePalette, sizeof(BonePaletteConstantVS));
-				_commandContext.BindConstantBuffer(ShaderStage::Vertex, 2, boneBuffer);
+				SectionRenderItem renderItem{};
+				renderItem.world = item.world;
+				renderItem.mesh = mesh.get();
+				renderItem.section = &section;
+				renderItem.boneModelMatrices = item.boneModelMatrices;
+				renderItem.material = material;
+				renderItem.materialStateHash = material->GetRenderStateHash();
+				renderItem.cameraDepth = cameraDepth;
+				renderItem.submissionOrder = item.submissionOrder;
 
-				_commandContext.BindMaterial(*material);
-				BindMaterialConstantData(*material);
-				_commandContext.DrawIndexed(section.indexCount, section.indexStart, 0);
+				switch (material->GetSurfaceMode())
+				{
+				case SurfaceMode::Opaque:
+					_opaqueRenderItems.push_back(std::move(renderItem));
+					break;
+				case SurfaceMode::Masked:
+					_maskedRenderItems.push_back(std::move(renderItem));
+					break;
+				case SurfaceMode::Transparent:
+					_transparentRenderItems.push_back(std::move(renderItem));
+					break;
+				default:
+					break;
+				}
 			}
 		}
 
-		Clear();
+		auto compareRenderItems = [](const SectionRenderItem& lhs, const SectionRenderItem& rhs)
+		{
+			if (lhs.materialStateHash != rhs.materialStateHash)
+				return lhs.materialStateHash < rhs.materialStateHash;
+			if (lhs.mesh != rhs.mesh)
+				return std::less<const Mesh*>{}(lhs.mesh, rhs.mesh);
+			return lhs.section->indexStart < rhs.section->indexStart;
+		};
+		std::sort(_opaqueRenderItems.begin(), _opaqueRenderItems.end(), compareRenderItems);
+		std::sort(_maskedRenderItems.begin(), _maskedRenderItems.end(), compareRenderItems);
 	}
 
 	void SkeletalMeshRenderPass::Clear()
 	{
 		_items.clear();
+		_opaqueRenderItems.clear();
+		_maskedRenderItems.clear();
+		_transparentRenderItems.clear();
+		_cameraBuffer = nullptr;
+	}
+
+	void SkeletalMeshRenderPass::BindCameraConstant()
+	{
+		GM_ASSERT_RETURN(_cameraBuffer, "Skeletal Mesh Camera ConstantBuffer가 준비되지 않았습니다.");
+		_commandContext.BindConstantBuffer(ShaderStage::Vertex, 1, _cameraBuffer);
+	}
+
+	void SkeletalMeshRenderPass::RenderSection(const SectionRenderItem& item, bool isGBufferPass)
+	{
+		if (item.mesh == nullptr || item.section == nullptr || item.boneModelMatrices == nullptr || item.material == nullptr)
+			return;
+
+		ObjectConstantVS objectConstantVS{};
+		objectConstantVS.world = item.world;
+		ConstantBuffer* objectBuffer = _constantBufferPool.Acquire(sizeof(ObjectConstantVS));
+		_commandContext.UpdateConstantBuffer(*objectBuffer, &objectConstantVS, sizeof(ObjectConstantVS));
+		_commandContext.BindConstantBuffer(ShaderStage::Vertex, 0, objectBuffer);
+		_commandContext.BindMesh(*item.mesh);
+
+		BonePaletteConstantVS bonePalette = BuildBonePalette(*item.section, *item.boneModelMatrices);
+		ConstantBuffer* boneBuffer = _constantBufferPool.Acquire(sizeof(BonePaletteConstantVS));
+		_commandContext.UpdateConstantBuffer(*boneBuffer, &bonePalette, sizeof(BonePaletteConstantVS));
+		_commandContext.BindConstantBuffer(ShaderStage::Vertex, 2, boneBuffer);
+		_commandContext.BindMaterial(*item.material);
+		if (isGBufferPass)
+		{
+			_commandContext.BindVertexShader(*_skeletalMeshVertexShader);
+			_commandContext.BindPixelShader(*_gBufferPixelShader);
+		}
+		BindMaterialConstantData(*item.material);
+		BindMaterialSurfaceConstant(*item.material);
+		_commandContext.DrawIndexed(item.section->indexCount, item.section->indexStart, 0);
+	}
+
+	void SkeletalMeshRenderPass::BindMaterialSurfaceConstant(const Material& material)
+	{
+		const MaterialSurfaceData& surfaceData = material.GetSurfaceData();
+		MaterialSurfaceConstantPS constant{};
+		constant.shadingModel = static_cast<uint32>(surfaceData.shadingModel);
+		constant.surfaceMode = static_cast<uint32>(surfaceData.surfaceMode);
+		constant.outlineMode = static_cast<uint32>(surfaceData.outlineMode);
+		constant.emissiveIntensity = surfaceData.emissiveIntensity;
+		constant.alphaCutoff = surfaceData.alphaCutoff;
+		constant.emissiveColor = ConvertSRGBToLinear(surfaceData.emissiveColor);
+		const MaterialColorData& colorData = material.GetColorData();
+		constant.colorMode = static_cast<uint32>(colorData.mode);
+		for (uint32 textureSlotIndex = 0; textureSlotIndex < TextureSlotCount; ++textureSlotIndex)
+		{
+			if (material.GetTexture(ToTextureSlot(textureSlotIndex)))
+				constant.textureFlags |= 1u << textureSlotIndex;
+		}
+		constant.colorBlendRatio = colorData.blendRatio;
+		constant.blendColor = ConvertSRGBToLinear(colorData.blendColor);
+		constant.opacityLowColor = ConvertSRGBToLinear(colorData.opacityLowColor);
+		constant.opacityHighColor = ConvertSRGBToLinear(colorData.opacityHighColor);
+		constant.colorMultiplier = colorData.colorMultiplier;
+		constant.textureUVOffset = material.GetTextureUVOffset();
+		ConstantBuffer* buffer = _constantBufferPool.Acquire(sizeof(MaterialSurfaceConstantPS));
+		_commandContext.UpdateConstantBuffer(*buffer, &constant, sizeof(MaterialSurfaceConstantPS));
+		_commandContext.BindConstantBuffer(ShaderStage::Pixel, 0, buffer);
 	}
 
 	void SkeletalMeshRenderPass::BindMaterialConstantData(const Material& material)

@@ -24,9 +24,10 @@ namespace gm
 		item.worldBounds = TransformBoundingVolume(_skeletalMesh->GetLocalBounds(), item.world);
 		item.skeletalMesh = _skeletalMesh.get();
 		item.boneModelMatrices = &_pose.GetBoneModelMatrices();
-		item.materials.reserve(_skeletalMesh->GetTextureSetCount());
+		item.castsShadow = _castsShadow;
+		item.materials.reserve(_skeletalMesh->GetMaterialSlotCount());
 
-		for (uint32 i = 0; i < _skeletalMesh->GetTextureSetCount(); ++i)
+		for (uint32 i = 0; i < _skeletalMesh->GetMaterialSlotCount(); ++i)
 			item.materials.push_back(GetMaterial(i));
 
 		APPLICATION.GetRenderer().SubmitSkeletalMesh(item);
@@ -55,34 +56,37 @@ namespace gm
 
 		_skeletalMesh = skeletalMesh;
 		_preTransform = _skeletalMesh->GetPreTransform();
+		_castsShadow = _skeletalMesh->CastsShadow();
 		_pose.RebuildBindPose(*_skeletalMesh);
 
-		const uint32 slotCount = _skeletalMesh->GetTextureSetCount();
+		const uint32 slotCount = _skeletalMesh->GetMaterialSlotCount();
 		_materials.clear();
 		_materials.reserve(slotCount);
 
 		Resources& resources = APPLICATION.GetResources();
 		for (uint32 slotIndex = 0; slotIndex < slotCount; ++slotIndex)
 		{
-			const MeshTextureSet* textureSet = _skeletalMesh->GetTextureSet(slotIndex);
-			if (textureSet == nullptr)
+			const MeshMaterialSlot* materialSlot = _skeletalMesh->GetMaterialSlot(slotIndex);
+			if (materialSlot == nullptr)
 			{
 				_materials.push_back(nullptr);
 				continue;
 			}
 
 			Material::MaterialBuilder builder(resources);
-			builder.SetVertexShader(BuiltinResourceKey::SkeletalMeshVS)
-				.SetPixelShader(BuiltinResourceKey::StaticMeshPS)
-				.SetSamplerAddressMode(TextureSlot::BaseColor, TextureAddressMode::Wrap);
+			builder.SetSurfaceData(materialSlot->surfaceData)
+				.SetCullMode(materialSlot->cullMode)
+				.SetVertexShader(BuiltinResourceKey::SkeletalMeshVS)
+				.SetPixelShader(BuiltinResourceKey::MeshForwardPS)
+				.SetSamplerAddressMode(TextureSlot::BaseColor, materialSlot->baseColorAddressMode);
 
-			for (uint32 textureSetIndex = 0; textureSetIndex < TextureSlotCount; ++textureSetIndex)
+			for (uint32 textureSlotIndex = 0; textureSlotIndex < TextureSlotCount; ++textureSlotIndex)
 			{
-				const std::wstring& textureKey = textureSet->textureKeys[textureSetIndex];
+				const std::wstring& textureKey = materialSlot->textureKeys[textureSlotIndex];
 				if (textureKey.empty())
 					continue;
 
-				builder.SetTexture(ToTextureSlot(textureSetIndex), textureKey);
+				builder.SetTexture(ToTextureSlot(textureSlotIndex), textureKey);
 			}
 
 			_materials.push_back(std::make_unique<Material>(builder.Build()));

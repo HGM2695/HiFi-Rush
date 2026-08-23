@@ -9,7 +9,6 @@ namespace gm
 	public:
 		virtual ~IGraphicsDevice() = default;
 
-		virtual void BeginFrame(const Color& color) = 0;
 		virtual void EndFrame() = 0;
 
 		void Resize(uint32 width, uint32 height)

@@ -15,8 +15,8 @@ namespace gm
 		virtual std::shared_ptr<Shader>			CreateVertexShader(const ShaderDesc& shaderDesc, const VertexLayoutDesc& layoutDesc) override;
 		virtual std::shared_ptr<Shader>			CreatePixelShader(const ShaderDesc& shaderDesc) override;
 		virtual std::shared_ptr<Mesh>			CreateMesh(const MeshDesc& meshDesc) override;
-		virtual std::shared_ptr<Texture>		CreateTexture(const TextureDesc& textureDesc) override;
-
+		virtual std::shared_ptr<Texture>		LoadTexture(const TextureLoadDesc& textureLoadDesc) override;
+		virtual std::unique_ptr<Texture>		CreateTexture(const TextureDesc& textureDesc) override;
 		virtual std::unique_ptr<ConstantBuffer>	CreateConstantBuffer(const ConstantBufferDesc& constantBufferDesc) override;
 		virtual std::unique_ptr<InstanceBuffer>	CreateInstanceBuffer(const InstanceBufferDesc& instanceBufferDesc) override;
 

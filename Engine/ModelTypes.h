@@ -21,11 +21,12 @@ namespace gm
 		ModelType type = ModelType::Static;
 		Matrix preTransform = Matrix::CreateScale(1.f);
 		BoundingVolume localBounds{};
+		bool castsShadow = true;
 
 		std::vector<VertexMesh>				vertices;
 		std::vector<uint32>					indices;
 		std::vector<MeshSection>			sections;
-		std::vector<MeshTextureSet>			textureSets;
+		std::vector<MeshMaterialSlot>		materialSlots;
 
 		std::vector<VertexAnimationMesh>		skinnedVertices;
 		std::vector<BoneData>					bones;

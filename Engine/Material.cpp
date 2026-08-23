@@ -54,7 +54,9 @@ namespace gm
 	}
 
 	Material::Material(const MaterialBuilder& builder)
-		: _textures(builder._textures)
+		: _surfaceData(builder._surfaceData)
+		, _colorData(builder._colorData)
+		, _textures(builder._textures)
 		, _samplerDescs(builder._samplerDescs)
 		, _constantData(builder._constantData)
 		, _vertexShader(builder._vertexShader)
@@ -64,6 +66,69 @@ namespace gm
 		, _depthStencilDesc(builder._depthStencilDesc)
 		, _blendDesc(builder._blendDesc)
 	{}
+
+	void Material::SetColorData(const MaterialColorData& data)
+	{
+		GM_ASSERT_RETURN(data.mode < MaterialColorMode::Count, "지원하지 않는 Material Color Mode입니다.");
+		GM_ASSERT_RETURN(data.blendRatio >= 0.f && data.blendRatio <= 1.f, "Material Color Blend Ratio는 0과 1 사이여야 합니다.");
+		_colorData = data;
+	}
+
+	void Material::SetColorBlend(const Color& color, float ratio)
+	{
+		GM_ASSERT_RETURN(ratio >= 0.f && ratio <= 1.f, "Material Color Blend Ratio는 0과 1 사이여야 합니다.");
+		_colorData.mode = MaterialColorMode::Blend;
+		_colorData.blendColor = color;
+		_colorData.blendRatio = ratio;
+	}
+
+	void Material::SetOpacityGradient(const Color& lowColor, const Color& highColor)
+	{
+		_colorData.mode = MaterialColorMode::OpacityGradient;
+		_colorData.opacityLowColor = lowColor;
+		_colorData.opacityHighColor = highColor;
+	}
+
+	void Material::SetSurfaceData(const MaterialSurfaceData& data)
+	{
+		SetShadingModel(data.shadingModel);
+		SetSurfaceMode(data.surfaceMode);
+		SetOutlineMode(data.outlineMode);
+		SetEmissiveColor(data.emissiveColor);
+		SetEmissiveIntensity(data.emissiveIntensity);
+		SetAlphaCutoff(data.alphaCutoff);
+	}
+
+	void Material::SetShadingModel(ShadingModel shadingModel)
+	{
+		GM_ASSERT_RETURN(shadingModel < ShadingModel::Count, "지원하지 않는 Material Shading Model입니다.");
+		_surfaceData.shadingModel = shadingModel;
+	}
+
+	void Material::SetSurfaceMode(SurfaceMode surfaceMode)
+	{
+		GM_ASSERT_RETURN(surfaceMode < SurfaceMode::Count, "지원하지 않는 Material Surface Mode입니다.");
+		_surfaceData.surfaceMode = surfaceMode;
+		ApplySurfaceModePipelineState(surfaceMode, _depthStencilDesc, _blendDesc);
+	}
+
+	void Material::SetOutlineMode(OutlineMode outlineMode)
+	{
+		GM_ASSERT_RETURN(outlineMode < OutlineMode::Count, "지원하지 않는 Material Outline Mode입니다.");
+		_surfaceData.outlineMode = outlineMode;
+	}
+
+	void Material::SetEmissiveIntensity(float intensity)
+	{
+		GM_ASSERT_RETURN(intensity >= 0.f, "Material Emissive Intensity는 0 이상이어야 합니다.");
+		_surfaceData.emissiveIntensity = intensity;
+	}
+
+	void Material::SetAlphaCutoff(float alphaCutoff)
+	{
+		GM_ASSERT_RETURN(alphaCutoff >= 0.f && alphaCutoff <= 1.f, "Material Alpha Cutoff은 0과 1 사이여야 합니다.");
+		_surfaceData.alphaCutoff = alphaCutoff;
+	}
 
 	std::shared_ptr<Texture> Material::GetTexture(TextureSlot slot) const
 	{
@@ -91,6 +156,35 @@ namespace gm
 	size_t Material::GetRenderStateHash() const
 	{
 		size_t seed = 0;
+		HashEnum(seed, _surfaceData.shadingModel);
+		HashEnum(seed, _surfaceData.surfaceMode);
+		HashEnum(seed, _surfaceData.outlineMode);
+		HashValue(seed, _surfaceData.emissiveColor.x);
+		HashValue(seed, _surfaceData.emissiveColor.y);
+		HashValue(seed, _surfaceData.emissiveColor.z);
+		HashValue(seed, _surfaceData.emissiveColor.w);
+		HashValue(seed, _surfaceData.emissiveIntensity);
+		HashValue(seed, _surfaceData.alphaCutoff);
+		HashEnum(seed, _colorData.mode);
+		HashValue(seed, _colorData.blendColor.x);
+		HashValue(seed, _colorData.blendColor.y);
+		HashValue(seed, _colorData.blendColor.z);
+		HashValue(seed, _colorData.blendColor.w);
+		HashValue(seed, _colorData.opacityLowColor.x);
+		HashValue(seed, _colorData.opacityLowColor.y);
+		HashValue(seed, _colorData.opacityLowColor.z);
+		HashValue(seed, _colorData.opacityLowColor.w);
+		HashValue(seed, _colorData.opacityHighColor.x);
+		HashValue(seed, _colorData.opacityHighColor.y);
+		HashValue(seed, _colorData.opacityHighColor.z);
+		HashValue(seed, _colorData.opacityHighColor.w);
+		HashValue(seed, _colorData.colorMultiplier.x);
+		HashValue(seed, _colorData.colorMultiplier.y);
+		HashValue(seed, _colorData.colorMultiplier.z);
+		HashValue(seed, _colorData.colorMultiplier.w);
+		HashValue(seed, _colorData.blendRatio);
+		HashValue(seed, _textureUVOffset.x);
+		HashValue(seed, _textureUVOffset.y);
 		HashValue(seed, _vertexShader.get());
 		HashValue(seed, _pixelShader.get());
 		HashEnum(seed, _topology);
@@ -122,6 +216,9 @@ namespace gm
 	{
 		if (this == &rhs)
 			return true;
+
+		if ((_surfaceData == rhs._surfaceData) == false || (_colorData == rhs._colorData) == false || _textureUVOffset.x != rhs._textureUVOffset.x || _textureUVOffset.y != rhs._textureUVOffset.y)
+			return false;
 
 		if (_vertexShader != rhs._vertexShader || _pixelShader != rhs._pixelShader || _topology != rhs._topology)
 			return false;
@@ -197,8 +294,123 @@ namespace gm
 		_blendDesc = desc;
 	}
 
+	void Material::ApplySurfaceModePipelineState(SurfaceMode surfaceMode, DepthStencilDesc& depthStencilDesc, BlendDesc& blendDesc)
+	{
+		depthStencilDesc.depthEnable = true;
+
+		switch (surfaceMode)
+		{
+		case SurfaceMode::Opaque:
+		case SurfaceMode::Masked:
+			depthStencilDesc.depthWriteEnable = true;
+			blendDesc.blendEnable = false;
+			blendDesc.srcBlend = BlendFactor::One;
+			blendDesc.destBlend = BlendFactor::Zero;
+			blendDesc.blendOp = BlendOp::Add;
+			break;
+
+		case SurfaceMode::Transparent:
+			depthStencilDesc.depthWriteEnable = false;
+			blendDesc.blendEnable = true;
+			blendDesc.srcBlend = BlendFactor::SrcAlpha;
+			blendDesc.destBlend = BlendFactor::InvSrcAlpha;
+			blendDesc.blendOp = BlendOp::Add;
+			break;
+
+		default:
+			GM_ASSERT_RETURN(false, "지원하지 않는 Material Surface Mode입니다.");
+		}
+	}
+
 	/// Material Builder /////////////////////////////////////////////////////////////////////////////////////////////
-	Material::MaterialBuilder::MaterialBuilder(Resources& resources) : _resources(resources) { }
+	Material::MaterialBuilder::MaterialBuilder(Resources& resources) : _resources(resources)
+	{
+		Material::ApplySurfaceModePipelineState(_surfaceData.surfaceMode, _depthStencilDesc, _blendDesc);
+	}
+
+	Material::MaterialBuilder& Material::MaterialBuilder::SetSurfaceData(const MaterialSurfaceData& data)
+	{
+		SetShadingModel(data.shadingModel);
+		SetSurfaceMode(data.surfaceMode);
+		SetOutlineMode(data.outlineMode);
+		SetEmissiveColor(data.emissiveColor);
+		SetEmissiveIntensity(data.emissiveIntensity);
+		SetAlphaCutoff(data.alphaCutoff);
+		return *this;
+	}
+
+	Material::MaterialBuilder& Material::MaterialBuilder::SetColorData(const MaterialColorData& data)
+	{
+		GM_ASSERT_RETURN_VAL(data.mode < MaterialColorMode::Count, *this, "지원하지 않는 Material Color Mode입니다.");
+		GM_ASSERT_RETURN_VAL(data.blendRatio >= 0.f && data.blendRatio <= 1.f, *this, "Material Color Blend Ratio는 0과 1 사이여야 합니다.");
+		_colorData = data;
+		return *this;
+	}
+
+	Material::MaterialBuilder& Material::MaterialBuilder::SetColorBlend(const Color& color, float ratio)
+	{
+		GM_ASSERT_RETURN_VAL(ratio >= 0.f && ratio <= 1.f, *this, "Material Color Blend Ratio는 0과 1 사이여야 합니다.");
+		_colorData.mode = MaterialColorMode::Blend;
+		_colorData.blendColor = color;
+		_colorData.blendRatio = ratio;
+		return *this;
+	}
+
+	Material::MaterialBuilder& Material::MaterialBuilder::SetOpacityGradient(const Color& lowColor, const Color& highColor)
+	{
+		_colorData.mode = MaterialColorMode::OpacityGradient;
+		_colorData.opacityLowColor = lowColor;
+		_colorData.opacityHighColor = highColor;
+		return *this;
+	}
+
+	Material::MaterialBuilder& Material::MaterialBuilder::SetColorMultiplier(const Color& multiplier)
+	{
+		_colorData.colorMultiplier = multiplier;
+		return *this;
+	}
+
+	Material::MaterialBuilder& Material::MaterialBuilder::SetShadingModel(ShadingModel shadingModel)
+	{
+		GM_ASSERT_RETURN_VAL(shadingModel < ShadingModel::Count, *this, "지원하지 않는 Material Shading Model입니다.");
+		_surfaceData.shadingModel = shadingModel;
+		return *this;
+	}
+
+	Material::MaterialBuilder& Material::MaterialBuilder::SetSurfaceMode(SurfaceMode surfaceMode)
+	{
+		GM_ASSERT_RETURN_VAL(surfaceMode < SurfaceMode::Count, *this, "지원하지 않는 Material Surface Mode입니다.");
+		_surfaceData.surfaceMode = surfaceMode;
+		Material::ApplySurfaceModePipelineState(surfaceMode, _depthStencilDesc, _blendDesc);
+		return *this;
+	}
+
+	Material::MaterialBuilder& Material::MaterialBuilder::SetOutlineMode(OutlineMode outlineMode)
+	{
+		GM_ASSERT_RETURN_VAL(outlineMode < OutlineMode::Count, *this, "지원하지 않는 Material Outline Mode입니다.");
+		_surfaceData.outlineMode = outlineMode;
+		return *this;
+	}
+
+	Material::MaterialBuilder& Material::MaterialBuilder::SetEmissiveColor(const Color& color)
+	{
+		_surfaceData.emissiveColor = color;
+		return *this;
+	}
+
+	Material::MaterialBuilder& Material::MaterialBuilder::SetEmissiveIntensity(float intensity)
+	{
+		GM_ASSERT_RETURN_VAL(intensity >= 0.f, *this, "Material Emissive Intensity는 0 이상이어야 합니다.");
+		_surfaceData.emissiveIntensity = intensity;
+		return *this;
+	}
+
+	Material::MaterialBuilder& Material::MaterialBuilder::SetAlphaCutoff(float alphaCutoff)
+	{
+		GM_ASSERT_RETURN_VAL(alphaCutoff >= 0.f && alphaCutoff <= 1.f, *this, "Material Alpha Cutoff은 0과 1 사이여야 합니다.");
+		_surfaceData.alphaCutoff = alphaCutoff;
+		return *this;
+	}
 
 	Material::MaterialBuilder& Material::MaterialBuilder::SetVertexShader(const std::wstring& key)
 	{

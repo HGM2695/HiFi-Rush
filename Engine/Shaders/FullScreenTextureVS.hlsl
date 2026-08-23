@@ -17,4 +17,3 @@ VSOutput main(VSInput input)
     output.texcoord = input.texcoord;
     return output;
 }
-

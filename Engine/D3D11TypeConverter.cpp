@@ -146,6 +146,81 @@ namespace gm
 		static_assert(static_cast<uint32>(TextureAddressMode::Count) == 3, "TextureAddressMode을 추가했다면, D3D11로의 변환도 고려");
 	}
 
+	DXGI_FORMAT ToD3D11TextureFormat(TextureFormat format)
+	{
+		switch (format)
+		{
+		case TextureFormat::R8UNorm:
+			return DXGI_FORMAT_R8_UNORM;
+		case TextureFormat::R16Float:
+			return DXGI_FORMAT_R16_FLOAT;
+		case TextureFormat::R32Float:
+			return DXGI_FORMAT_R32_FLOAT;
+		case TextureFormat::R32UInt:
+			return DXGI_FORMAT_R32_UINT;
+		case TextureFormat::RGBA8UNorm:
+			return DXGI_FORMAT_R8G8B8A8_UNORM;
+		case TextureFormat::RGBA8UNormSRGB:
+			return DXGI_FORMAT_R8G8B8A8_TYPELESS;
+		case TextureFormat::RGBA16Float:
+			return DXGI_FORMAT_R16G16B16A16_FLOAT;
+		case TextureFormat::Depth24Stencil8:
+			return DXGI_FORMAT_R24G8_TYPELESS;
+		case TextureFormat::Depth32Float:
+			return DXGI_FORMAT_R32_TYPELESS;
+		default:
+			GM_ASSERT_RETURN_VAL(false, DXGI_FORMAT_UNKNOWN, "지원하지 않는 TextureFormat입니다.");
+		}
+
+		static_assert(static_cast<uint32>(TextureFormat::Count) == 10, "TextureFormat을 추가했다면, D3D11로의 변환도 고려");
+	}
+
+	DXGI_FORMAT ToD3D11SRVFormat(TextureFormat format)
+	{
+		switch (format)
+		{
+		case TextureFormat::RGBA8UNormSRGB:
+			return DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		case TextureFormat::Depth24Stencil8:
+			return DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+		case TextureFormat::Depth32Float:
+			return DXGI_FORMAT_R32_FLOAT;
+		default:
+			return ToD3D11TextureFormat(format);
+		}
+	}
+
+	DXGI_FORMAT ToD3D11RTVFormat(TextureFormat format)
+	{
+		GM_ASSERT_RETURN_VAL(format != TextureFormat::Depth24Stencil8 && format != TextureFormat::Depth32Float, DXGI_FORMAT_UNKNOWN, "Depth TextureFormat은 Render Target으로 사용할 수 없습니다.");
+		return format == TextureFormat::RGBA8UNormSRGB ? DXGI_FORMAT_R8G8B8A8_UNORM_SRGB : ToD3D11TextureFormat(format);
+	}
+
+	DXGI_FORMAT ToD3D11DSVFormat(TextureFormat format)
+	{
+		switch (format)
+		{
+		case TextureFormat::Depth24Stencil8:
+			return DXGI_FORMAT_D24_UNORM_S8_UINT;
+		case TextureFormat::Depth32Float:
+			return DXGI_FORMAT_D32_FLOAT;
+		default:
+			GM_ASSERT_RETURN_VAL(false, DXGI_FORMAT_UNKNOWN, "Depth Stencil View로 지원하지 않는 TextureFormat입니다.");
+		}
+	}
+
+	uint32 ToD3D11BindFlags(TextureBindUsage usage)
+	{
+		uint32 bindFlags = 0;
+		if (HasTextureBindUsage(usage, TextureBindUsage::ShaderResource))
+			bindFlags |= D3D11_BIND_SHADER_RESOURCE;
+		if (HasTextureBindUsage(usage, TextureBindUsage::RenderTarget))
+			bindFlags |= D3D11_BIND_RENDER_TARGET;
+		if (HasTextureBindUsage(usage, TextureBindUsage::DepthStencil))
+			bindFlags |= D3D11_BIND_DEPTH_STENCIL;
+		return bindFlags;
+	}
+
 	DXGI_FORMAT ToDXGIFormat(VertexElementFormat format)
 	{
 		switch (format)
