@@ -43,8 +43,7 @@ namespace gm
 			return;
 		}
 
-		_hitBox->BeginAttack();
-		_hasActivated = true;
+		Activate();
 	}
 
 	void TemporaryHitBoxObject::OnTick(float deltaTime)
@@ -61,8 +60,7 @@ namespace gm
 			if (_activationBeat.has_value() && beatSystem.HasPlaybackTime() && beatSystem.GetCurrentBeat() < _activationBeat.value())
 				return;
 
-			_hitBox->BeginAttack();
-			_hasActivated = true;
+			Activate();
 		}
 
 		_elapsedTime += deltaTime;
@@ -71,6 +69,14 @@ namespace gm
 
 		_hitBox->EndAttack();
 		Destroy();
+	}
+
+	void TemporaryHitBoxObject::Activate()
+	{
+		_hitBox->BeginAttack();
+		if (_onActivated)
+			_onActivated();
+		_hasActivated = true;
 	}
 
 	void TemporaryHitBoxObject::ConfigureHitBox(Collider3DComponent& collider, const TemporaryHitBoxDesc& desc)
@@ -87,6 +93,7 @@ namespace gm
 		_hitBox->SetDamageInfo(desc.damageInfo);
 		_hitBox->SetRehitInterval(desc.rehitInterval);
 		_hitBox->SetHitCondition(desc.hitCondition);
+		_onActivated = desc.onActivated;
 		_onHit = desc.onHit;
 		_lifetime = desc.lifetime;
 		_activationDelayBeats = desc.activationDelayBeats;

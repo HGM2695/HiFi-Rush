@@ -36,22 +36,4 @@ namespace gm
 		components.erase(iter);
 	}
 
-	void TickManager::RegisterGameObject(GameObject& gameObject)
-	{
-		gameObject.ForEachComponent(
-			[this](Component& component)
-			{
-				Register(component);
-			});
-	}
-
-	void TickManager::UnregisterGameObject(GameObject& gameObject)
-	{
-		gameObject.ForEachComponent(
-			[this](Component& component)
-			{
-				Unregister(component);
-			}
-		);
-	}
 }

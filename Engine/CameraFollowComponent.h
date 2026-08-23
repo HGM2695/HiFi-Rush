@@ -4,6 +4,8 @@
 #include "MathUtil.h"
 #include "WeakGameObjectPtr.h"
 
+#include <optional>
+
 namespace gm
 {
 	class GameObject;
@@ -18,8 +20,11 @@ namespace gm
 		void			SetTarget(const GameObject& target, const std::wstring& socketName);
 		void			ClearTarget();
 
-		void			SetDistance(float distance) { _distance = distance; }
+		void			SetDistance(float distance) { _distance = distance; _targetDistance = distance; }
+		void			SetTargetDistance(float distance) { _targetDistance = distance; }
 		void			SetHeight(float height) { _height = height; }
+		void			StartWorldPositionMove(const Vector3& targetPosition, float duration);
+		void			StopWorldPositionMove();
 
 		void			SetYaw(float yawRadians) { _yaw = yawRadians; }
 		void			SetPitch(float pitchRadians);
@@ -33,11 +38,14 @@ namespace gm
 		void			AddPitch(float deltaRadians) { SetPitch(_pitch + deltaRadians); }
 
 		float			GetDistance() const { return _distance; }
+		float			GetTargetDistance() const { return _targetDistance; }
 		float			GetHeight() const { return _height; }
 		float			GetYaw() const { return _yaw; }
 		float			GetPitch() const { return _pitch; }
+		Vector3			GetFollowTargetPosition() const;
 		float			GetMouseSensitivity() const { return _mouseSensitivity; }
 		bool			IsMouseControlEnabled() const { return _mouseControlEnabled; }
+		bool			IsWorldPositionMoveActive() const { return _worldPositionMove.has_value(); }
 		float			GetMinimumHeightFromTarget() const { return _bottomDistanceLimit; }
 		bool			HasMinimumHeightLimit() const { return _isLimitBottom; }
 
@@ -47,10 +55,19 @@ namespace gm
 
 	private:
 		void			UpdateOrbitInput();
-		Vector3			GetTargetPosition() const;
+		Vector3			UpdateWorldPositionMove(float deltaTime, const Vector3& targetPosition);
+		void			SyncOrbitFromWorldPosition(const Vector3& cameraPosition, const Vector3& targetPosition);
 		Vector3			CalcCameraPosition(const Vector3& targetPosition) const;
 
 	private:
+		struct WorldPositionMove
+		{
+			Vector3 targetPosition{};
+			float duration = 0.f;
+			float elapsed = 0.f;
+		};
+
+		float						_targetDistance = 0.1f;
 		TransformComponent*		_ownerTransform = nullptr;
 		WeakGameObjectPtr		_target;
 		const SocketComponent*	_targetSocketComponent = nullptr;
@@ -66,5 +83,6 @@ namespace gm
 		bool					_mouseControlEnabled = true;
 		float					_bottomDistanceLimit = 0.f;
 		bool					_isLimitBottom = false;
+		std::optional<WorldPositionMove>	_worldPositionMove{};
 	};
 }

@@ -27,6 +27,7 @@ namespace gm
 		int32	GetDamage() const { return _damageInfo.amount; }
 		void	SetHitReactionType(HitReactionType hitReactionType) { _damageInfo.hitReactionType = hitReactionType; }
 		HitReactionType GetHitReactionType() const { return _damageInfo.hitReactionType; }
+		void	SetWorldKnockbackDirection(const Vector3& direction) { _damageInfo.worldKnockbackDirection = direction; }
 		void	SetIgnoreInvincibility(bool ignoreInvincibility) { _damageInfo.ignoreInvincibility = ignoreInvincibility; }
 		bool	IsIgnoreInvincibility() const { return _damageInfo.ignoreInvincibility; }
 		void	SetDamageInfo(const DamageInfo& damageInfo);

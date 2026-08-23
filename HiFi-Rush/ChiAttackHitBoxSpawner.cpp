@@ -1,13 +1,18 @@
 #include "ChiAttackHitBoxSpawner.h"
+#include "AudioStatics.h"
 #include "ChiAnimationTypes.h"
+#include "ChiMoveComponent.h"
 #include "ChiStateContext.h"
 #include "ChiStateMachineComponent.h"
 #include "GameObject.h"
 #include "HiFiRushCollisionLayers.h"
+#include "HiFiRushAudio.h"
 #include "ReverbComponent.h"
 #include "Scene.h"
 #include "TemporaryHitBoxObject.h"
 #include "TransformComponent.h"
+
+#include <algorithm>
 
 namespace gm
 {
@@ -19,6 +24,12 @@ namespace gm
 			GroundContact,
 		};
 
+		enum class HitBoxShape
+		{
+			Box,
+			Sphere,
+		};
+
 		struct HitBoxSetting
 		{
 			Vector3					localCenter{};
@@ -28,6 +39,7 @@ namespace gm
 			float					lifetime = 1.05f;
 			float					rehitInterval = 0.f;
 			ActivationTriggerType	activationTriggerType = ActivationTriggerType::HitStartNotify;
+			HitBoxShape				hitBoxShape = HitBoxShape::Box;
 		};
 
 		const HitBoxSetting* FindSetting(ChiAnimationClipId animationClipId)
@@ -39,7 +51,7 @@ namespace gm
 			static const HitBoxSetting StrongDashAttackHitBox{ Vector3{ 0.f, 0.75f, 1.1f }, Vector3{ 1.6f, 1.5f, 1.6f }, 20, HitReactionType::Airborne };
 			static const HitBoxSetting DelayedWeakAttackHitBox{ Vector3{ 0.f, 0.75f, 1.f }, Vector3{ 1.4f, 1.5f, 2.4f }, 5, HitReactionType::StrongKnockback, 0.2f, 0.1f };
 			static const HitBoxSetting AirAttackHitBox{ Vector3{ 0.f, 0.75f, 1.1f }, Vector3{ 1.6f, 2.f, 1.6f }, 10, HitReactionType::Sky };
-			static const HitBoxSetting StumpAttackHitBox{ Vector3{ 0.f, 0.75f, 0.f }, Vector3{ 3.f, 1.5f, 3.f }, 20, HitReactionType::StrongKnockback, 1.05f, 0.f, ActivationTriggerType::GroundContact };
+			static const HitBoxSetting StumpAttackHitBox{ Vector3{}, Vector3{ 3.f, 1.5f, 3.f }, 20, HitReactionType::StrongKnockback, 1.05f, 0.f, ActivationTriggerType::GroundContact, HitBoxShape::Sphere };
 
 			switch (animationClipId)
 			{
@@ -91,22 +103,72 @@ namespace gm
 			ReverbComponent* reverbComponent = owner.GetComponent<ReverbComponent>();
 			GM_ASSERT_RETURN_VAL(reverbComponent, false, "Chi Attack HitBox의 적중 보상을 처리하려면 ReverbComponent가 필요합니다.");
 
+			auto configureHitBox = [&setting, reverbComponent](TemporaryHitBoxDesc& desc)
+			{
+				desc.colliderId = L"Attack";
+				desc.collisionLayer = HiFiRushCollisionLayer::PlayerAttack;
+				desc.collisionMask = HiFiRushCollisionMask::PlayerAttackTargets;
+				desc.damageInfo.amount = setting.damage;
+				desc.damageInfo.hitReactionType = setting.hitReactionType;
+				desc.onHit = [reverbComponent](const HitEvent& event) { reverbComponent->HandleAttackHit(event); };
+				desc.rehitInterval = setting.rehitInterval;
+				desc.lifetime = setting.lifetime;
+			};
+
+			if (setting.hitBoxShape == HitBoxShape::Sphere)
+			{
+				TemporarySphereHitBoxDesc desc{};
+				desc.world = transform->GetWorldMatrix();
+				desc.localCenter = setting.localCenter;
+				desc.radius = std::max(setting.size.x, setting.size.z) * 0.5f;
+				configureHitBox(desc);
+				return scene->SpawnGameObject<TemporaryHitBoxObject>(desc) != nullptr;
+			}
+
 			TemporaryBoxHitBoxDesc desc{};
 			desc.world = transform->GetWorldMatrix();
-			desc.colliderId = L"Attack";
 			desc.localCenter = setting.localCenter;
 			desc.size = setting.size;
-			desc.collisionLayer = HiFiRushCollisionLayer::PlayerAttack;
-			desc.collisionMask = HiFiRushCollisionMask::PlayerAttackTargets;
-			desc.damageInfo.amount = setting.damage;
-			desc.damageInfo.hitReactionType = setting.hitReactionType;
-			desc.onHit = [reverbComponent](const HitEvent& event)
-			{
-				reverbComponent->HandleAttackHit(event);
-			};
-			desc.rehitInterval = setting.rehitInterval;
-			desc.lifetime = setting.lifetime;
+			configureHitBox(desc);
+			desc.damageInfo.worldKnockbackDirection = context.moveComponent->GetForwardDirection();
 			return scene->SpawnGameObject<TemporaryHitBoxObject>(desc) != nullptr;
+		}
+
+		void PlaySwingSound(ChiAnimationClipId animationClipId)
+		{
+			switch (animationClipId)
+			{
+			case ChiAnimationClipId::AttackWeakDash:
+			case ChiAnimationClipId::AttackWeak0:
+			case ChiAnimationClipId::AttackSky0:
+				PlaySound2D(HiFiRushSound::ChiWeakSwings[0], 0.2f);
+				break;
+			case ChiAnimationClipId::AttackWeak1:
+			case ChiAnimationClipId::AttackSky1:
+				PlaySound2D(HiFiRushSound::ChiWeakSwings[1], 0.2f);
+				break;
+			case ChiAnimationClipId::AttackWeak2:
+			case ChiAnimationClipId::AttackSky2:
+				PlaySound2D(HiFiRushSound::ChiWeakSwings[2], 0.2f);
+				break;
+			case ChiAnimationClipId::AttackWeak3:
+			case ChiAnimationClipId::AttackSky3:
+				PlaySound2D(HiFiRushSound::ChiWeakSwings[3], 0.2f);
+				break;
+			case ChiAnimationClipId::AttackStrongDash:
+			case ChiAnimationClipId::AttackStrong0_1:
+				PlaySound2D(HiFiRushSound::ChiStrongSwings[0], 0.2f);
+				break;
+			case ChiAnimationClipId::AttackStrong1:
+			case ChiAnimationClipId::AttackDelayedWeak2:
+				PlaySound2D(HiFiRushSound::ChiStrongSwings[1], 0.2f);
+				break;
+			case ChiAnimationClipId::AttackStrong2:
+				PlaySound2D(HiFiRushSound::ChiStrongSwings[2], 0.2f);
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
@@ -120,6 +182,9 @@ namespace gm
 	{
 		const HitBoxSetting* setting = FindSetting(animationClipId);
 		GM_ASSERT_RETURN_VAL(setting, false, "Chi Attack HitBox 설정을 찾을 수 없습니다.");
-		return SpawnHitBox(context, *setting);
+		if (SpawnHitBox(context, *setting) == false)
+			return false;
+		PlaySwingSound(animationClipId);
+		return true;
 	}
 }

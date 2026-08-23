@@ -72,8 +72,9 @@ namespace gm
 
     bool Window::CreateWindowHandle(uint32 width, uint32 height, HINSTANCE instance, const std::wstring& className, const std::wstring& title, int nCmdShow)
     {
+		constexpr DWORD WindowStyle = WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX;
         RECT rc{ 0, 0, static_cast<LONG>(width), static_cast<LONG>(height) };
-        AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+        AdjustWindowRect(&rc, WindowStyle, FALSE);
 
         const int winW = rc.right - rc.left;
         const int winH = rc.bottom - rc.top;
@@ -81,7 +82,7 @@ namespace gm
         HWND hWnd = CreateWindowW(
             className.c_str(),
             title.c_str(), 
-            WS_OVERLAPPEDWINDOW,
+            WindowStyle,
             CW_USEDEFAULT, 
             0, 
             winW, 

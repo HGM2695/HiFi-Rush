@@ -8,7 +8,6 @@
 namespace gm
 {
 	class Component;
-	class GameObject;
 
 	class TickManager
 	{
@@ -17,8 +16,6 @@ namespace gm
 
 		void	Register(Component& component);
 		void	Unregister(Component& component);
-		void	RegisterGameObject(GameObject& gameObject);
-		void	UnregisterGameObject(GameObject& gameObject);
 
 	private:
 		std::array<std::vector<Component*>, TickGroupCount>		_componentsByTickGroup{};

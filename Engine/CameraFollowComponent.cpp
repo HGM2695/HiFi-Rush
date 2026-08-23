@@ -39,9 +39,25 @@ namespace gm
 
 	void CameraFollowComponent::ClearTarget()
 	{
+		_worldPositionMove.reset();
 		_target.Reset();
 		_targetSocketComponent = nullptr;
 		_socketName.clear();
+	}
+
+	void CameraFollowComponent::StartWorldPositionMove(const Vector3& targetPosition, float duration)
+	{
+		_worldPositionMove = WorldPositionMove{ targetPosition, std::max(0.f, duration), 0.f };
+	}
+
+	void CameraFollowComponent::StopWorldPositionMove()
+	{
+		if (_worldPositionMove == std::nullopt)
+			return;
+
+		if (_ownerTransform && _target.IsValid() && _targetSocketComponent)
+			SyncOrbitFromWorldPosition(_ownerTransform->GetPosition(), GetFollowTargetPosition());
+		_worldPositionMove.reset();
 	}
 
 	void CameraFollowComponent::OnInitialize()
@@ -55,15 +71,47 @@ namespace gm
 		if (_ownerTransform == nullptr || _target.IsValid() == false || _targetSocketComponent == nullptr)
 			return;
 
-		UpdateOrbitInput();
+		if (_worldPositionMove == std::nullopt)
+			UpdateOrbitInput();
+		const float distanceInterpolationRatio = 1.f - std::exp(-6.32163094f * std::max(0.f, deltaTime));
+		_distance += (_targetDistance - _distance) * distanceInterpolationRatio;
 
-		const Vector3 targetPosition = GetTargetPosition();
-		const Vector3 cameraPosition = CalcCameraPosition(targetPosition);
+		const Vector3 targetPosition = GetFollowTargetPosition();
+		const Vector3 cameraPosition = _worldPositionMove ? UpdateWorldPositionMove(deltaTime, targetPosition) : CalcCameraPosition(targetPosition);
 
 		Matrix viewMatrix = Math::CreateLookAtLH(cameraPosition, targetPosition, Vector3{ 0.f, 1.f, 0.f });
 		Matrix cameraWorldMatrix = viewMatrix.Invert();
 		
 		_ownerTransform->SetWorldMatrix(cameraWorldMatrix);
+	}
+
+	Vector3 CameraFollowComponent::UpdateWorldPositionMove(float deltaTime, const Vector3& targetPosition)
+	{
+		WorldPositionMove& move = _worldPositionMove.value();
+		move.elapsed += std::max(0.f, deltaTime);
+		const float interpolationRatio = move.duration > 0.f ? 1.f - std::exp(-6.32163094f * std::max(0.f, deltaTime)) : 1.f;
+		Vector3 cameraPosition = Vector3::Lerp(_ownerTransform->GetPosition(), move.targetPosition, interpolationRatio);
+		if (_isLimitBottom)
+			cameraPosition.y = std::max(cameraPosition.y, targetPosition.y + _bottomDistanceLimit);
+		if (move.elapsed >= move.duration)
+		{
+			SyncOrbitFromWorldPosition(cameraPosition, targetPosition);
+			_worldPositionMove.reset();
+		}
+		return cameraPosition;
+	}
+
+	void CameraFollowComponent::SyncOrbitFromWorldPosition(const Vector3& cameraPosition, const Vector3& targetPosition)
+	{
+		Vector3 offset = cameraPosition - targetPosition;
+		offset.y -= _height;
+		const float distance = offset.Length();
+		if (distance <= 0.0001f)
+			return;
+
+		_distance = distance;
+		_yaw = std::atan2(-offset.x, -offset.z);
+		_pitch = std::clamp(std::asin(std::clamp(offset.y / distance, -1.f, 1.f)), _minPitch, _maxPitch);
 	}
 
 	void CameraFollowComponent::UpdateOrbitInput()
@@ -76,7 +124,7 @@ namespace gm
 		_pitch = std::clamp(_pitch + mouseDelta.y * _mouseSensitivity, _minPitch, _maxPitch);
 	}
 
-	Vector3 CameraFollowComponent::GetTargetPosition() const
+	Vector3 CameraFollowComponent::GetFollowTargetPosition() const
 	{
 		Matrix socketWorldMatrix = _targetSocketComponent->GetSocketWorldMatrix(_socketName);
 		Vector3 scale{};

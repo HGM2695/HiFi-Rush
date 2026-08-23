@@ -22,6 +22,7 @@ namespace gm
 		float rehitInterval = 0.f;
 		float activationDelayBeats = 0.f;
 		float lifetime = 0.f;
+		std::function<void()> onActivated{};
 		std::function<void(const HitEvent&)> onHit{};
 		std::function<bool(const HurtBoxComponent&)> hitCondition{};
 	};
@@ -49,8 +50,10 @@ namespace gm
 		void OnTick(float deltaTime) override;
 
 	private:
+		void Activate();
 		void ConfigureHitBox(Collider3DComponent& collider, const TemporaryHitBoxDesc& desc);
 
+		std::function<void()> _onActivated{};
 		std::function<void(const HitEvent&)> _onHit{};
 		EventConnection _hitConnection{};
 		HitBoxComponent* _hitBox = nullptr;
