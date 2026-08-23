@@ -1,11 +1,16 @@
 #include "QamilWideAttackState.h"
 
 #include "AnimationTypes.h"
+#include "AudioStatics.h"
+#include "BeatMath.h"
+#include "BeatSystem.h"
 #include "GameObject.h"
 #include "HiFiRushAnimationNotifyNames.h"
 #include "HiFiRushCollisionLayers.h"
+#include "HiFiRushAudio.h"
 #include "HurtBoxComponent.h"
 #include "MathUtil.h"
+#include "QamilEffectComponent.h"
 #include "QamilStateMachineComponent.h"
 #include "Scene.h"
 #include "SkeletalAnimationClip.h"
@@ -25,7 +30,7 @@ namespace gm
 		constexpr Vector3 QamilStumpHitBoxSize{ 30.f, 4.f, 30.f };
 		constexpr float QamilStumpGroundTolerance = 0.1f;
 		constexpr float QamilStumpVerticalImpulse = 30.f;
-		constexpr float QamilSweepRadius = 26.f;
+		constexpr float QamilSweepRadius = 23.4f;
 		constexpr float QamilPlatformRotation = Math::GM_PI * 0.5f;
 		constexpr wchar_t QamilStumpShakePositiveXTriggerId[] = L"Qamil.StumpShake.PositiveX";
 		constexpr wchar_t QamilStumpShakeNegativeXTriggerId[] = L"Qamil.StumpShake.NegativeX";
@@ -60,7 +65,9 @@ namespace gm
 		if (event.name == HiFiRushAnimationNotifyNames::HitStart)
 		{
 			GM_ASSERT(SpawnHitBox(context), "Qamil Stump HitBox 생성에 실패했습니다.");
+			GM_ASSERT(SpawnEffect(context), "Qamil Stump Effect 생성에 실패했습니다.");
 			GM_ASSERT(PulseFloorShake(context), "Qamil Stump 바닥 흔들림 실행에 실패했습니다.");
+			PlaySound2D(HiFiRushSound::QamilStump);
 		}
 	}
 
@@ -90,6 +97,12 @@ namespace gm
 		return scene->SpawnGameObject<TemporaryHitBoxObject>(desc) != nullptr;
 	}
 
+	bool QamilStumpState::SpawnEffect(QamilStateContext& context) const
+	{
+		QamilEffectComponent* effectComponent = context.stateMachine->GetOwner().GetComponent<QamilEffectComponent>();
+		return effectComponent && effectComponent->SpawnStump(GetCurrentPlatformPosition(context));
+	}
+
 	bool QamilStumpState::PulseFloorShake(QamilStateContext& context) const
 	{
 		if (context.triggerSystem == nullptr || context.transformComponent == nullptr)
@@ -109,6 +122,7 @@ namespace gm
 	void QamilSweepState::Enter(QamilStateContext& context)
 	{
 		_notifyConnection.Disconnect();
+		_warningEffect.Stop();
 		_isClockwise = SelectClockwiseDirection(context);
 		const Vector3 arenaCenter = context.transformComponent->GetPosition();
 		const Vector3 currentPlatformOffset = GetCurrentPlatformPosition(context) - arenaCenter;
@@ -116,6 +130,7 @@ namespace gm
 		_attackCenter = arenaCenter + currentPlatformOffset + nextPlatformOffset;
 
 		GM_ASSERT_RETURN(PlayBeatSyncedAnimation(context, _isClockwise ? QamilAnimationId::SweepLeft : QamilAnimationId::SweepRight, false), "Qamil Sweep Animation 재생에 실패했습니다.");
+		GM_ASSERT_RETURN(SpawnWarning(context), "Qamil Sweep Warning 생성에 실패했습니다.");
 		const std::shared_ptr<SkeletalAnimationClip> clip = context.animatorComponent->GetCurrentClip();
 		GM_ASSERT_RETURN(clip && clip->FindNotify(HiFiRushAnimationNotifyNames::HitStart), "Qamil Sweep Animation에 HitStart Notify가 없습니다.");
 		context.animatorComponent->GetNotifyEvent().Subscribe(_notifyConnection, [this, &context](const AnimationNotifyEvent& event) { HandleAnimationNotify(context, event); });
@@ -123,6 +138,7 @@ namespace gm
 
 	void QamilSweepState::Tick(QamilStateContext& context, float)
 	{
+		UpdateWarning(context);
 		if (IsAnimationCompleted(context) == false)
 			return;
 
@@ -135,13 +151,38 @@ namespace gm
 	void QamilSweepState::Exit(QamilStateContext& context)
 	{
 		_notifyConnection.Disconnect();
+		_warningEffect.Stop();
 		context.animatorComponent->SetPlayRate(GetBasePlayRate(context));
 	}
 
 	void QamilSweepState::HandleAnimationNotify(QamilStateContext& context, const AnimationNotifyEvent& event)
 	{
 		if (event.name == HiFiRushAnimationNotifyNames::HitStart)
+		{
+			_warningEffect.Stop();
 			GM_ASSERT(SpawnHitBox(context), "Qamil Sweep HitBox 생성에 실패했습니다.");
+			GM_ASSERT(SpawnEffect(context), "Qamil Sweep Effect 생성에 실패했습니다.");
+			PlaySound2D(HiFiRushSound::QamilSweep);
+		}
+	}
+
+	bool QamilSweepState::SpawnWarning(QamilStateContext& context)
+	{
+		QamilEffectComponent* effectComponent = context.stateMachine->GetOwner().GetComponent<QamilEffectComponent>();
+		return effectComponent && effectComponent->SpawnSweepWarning(_attackCenter, _warningEffect);
+	}
+
+	bool QamilSweepState::SpawnEffect(QamilStateContext& context) const
+	{
+		QamilEffectComponent* effectComponent = context.stateMachine->GetOwner().GetComponent<QamilEffectComponent>();
+		return effectComponent && effectComponent->SpawnSweep(_attackCenter, _isClockwise);
+	}
+
+	void QamilSweepState::UpdateWarning(const QamilStateContext& context)
+	{
+		if (_warningEffect.IsValid() == false || context.beatSystem == nullptr || context.beatSystem->HasPlaybackTime() == false)
+			return;
+		_warningEffect.SetOpacity(BeatMath::EvaluateBeatIntervalPulse(context.beatSystem->GetCurrentBeat(), 1.f) * 0.5f);
 	}
 
 	bool QamilSweepState::SpawnHitBox(QamilStateContext& context) const

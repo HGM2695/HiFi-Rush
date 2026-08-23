@@ -1,15 +1,19 @@
 #include "GunnerState.h"
 
+#include "AudioStatics.h"
 #include "BeatMath.h"
 #include "BeatSystem.h"
 #include "CharacterMovementComponent.h"
 #include "GameObject.h"
 #include "GunnerAnimationTypes.h"
+#include "GunnerEffectComponent.h"
 #include "HiFiRushAnimationNotifyNames.h"
 #include "HiFiRushCollisionLayers.h"
+#include "HiFiRushAudio.h"
 #include "MathUtil.h"
 #include "MonsterCombatComponent.h"
 #include "MonsterStateMachineComponent.h"
+#include "NavMeshControllerComponent.h"
 #include "Random.h"
 #include "Rigidbody3DComponent.h"
 #include "Scene.h"
@@ -27,12 +31,19 @@ namespace gm
 	{
 		constexpr float GunnerDashBackDistanceRatio = 0.7f;
 		constexpr float GunnerDashFrontDistanceRatio = 1.5f;
-		constexpr float GunnerAimTrackingEndRatio = 0.5f;
 		constexpr float GunnerLaserMinimumLength = 14.f;
 		constexpr float GunnerLaserExtraLength = 3.f;
 		constexpr float GunnerLaserWidth = 2.f;
 		constexpr float GunnerLaserHeight = 1.5f;
 		constexpr float GunnerLaserLifetime = 0.2f;
+		constexpr float GunnerLaserVisualMinimumLength = 7.f;
+		constexpr float GunnerAnimationTicksPerBeat = 15.f;
+		constexpr float GunnerGroundReadyGuideHalfWidth = 1.f;
+		constexpr float GunnerGroundReadyGuideNarrowHalfWidth = 0.7f;
+		constexpr float GunnerGroundAttackGuideHalfWidth = 0.5f;
+		constexpr float GunnerSkyAttackGuideHalfWidth = 0.8f;
+		constexpr float GunnerGuideNarrowSpeedPerBeat = 1.5f;
+		constexpr float GunnerShootSoundBeat = 1.f + 6.f / GunnerAnimationTicksPerBeat;
 	}
 
 	// GunnerIdleState /////////////////////////////////////////////////////////////////////////
@@ -57,6 +68,7 @@ namespace gm
 	void GunnerMoveState::Enter(MonsterStateContext& context)
 	{
 		_moveType = MoveType::None;
+		_lastFootstepBeatIndex = context.beatSystem ? context.beatSystem->GetCurrentBeatIndex() : -1;
 		SetRootMotionEnabled(context, false);
 		if (context.combatComponent != nullptr)
 			SelectMove(context, context.combatComponent->GetTargetDistance());
@@ -81,6 +93,16 @@ namespace gm
 		}
 
 		SelectMove(context, distance);
+		if (IsDash() == false && context.beatSystem != nullptr)
+		{
+			const int64 currentBeatIndex = context.beatSystem->GetCurrentBeatIndex();
+			if (currentBeatIndex != _lastFootstepBeatIndex)
+			{
+				_lastFootstepBeatIndex = currentBeatIndex;
+				PlaySound2D(HiFiRushSound::MonsterFootsteps[_footstepIndex], 0.3f);
+				_footstepIndex = (_footstepIndex + 1) % HiFiRushSound::MonsterFootsteps.size();
+			}
+		}
 		FaceTarget(context, deltaTime);
 
 		const Vector3 targetDirection = context.combatComponent->GetTargetDirection();
@@ -184,6 +206,8 @@ namespace gm
 
 		SetRootMotionEnabled(context, IsDash());
 		PlayAnimation(context, GetGunnerAnimationClipName(animationId), isLoop);
+		if (IsDash())
+			PlayRandomSound2D(HiFiRushSound::GunnerDashes);
 	}
 
 	bool GunnerMoveState::IsDash() const
@@ -201,6 +225,9 @@ namespace gm
 	{
 		_notifyConnection.Disconnect();
 		_isAimLocked = false;
+		_hasSpawnedLaser = false;
+		_hasStartedLaserGuide = false;
+		_hasPlayedShootSound = false;
 		_lockedAimDirection = Vector3{ 0.f, 0.f, 1.f };
 		_lockedTargetDistance = 0.f;
 
@@ -225,6 +252,13 @@ namespace gm
 		SetRootMotionEnabled(context, true);
 		const GunnerAnimationId animationId = _attackType == AttackType::Ground ? GunnerAnimationId::GroundAttackReady : GunnerAnimationId::SkyAttackReady;
 		PlayAnimation(context, GetGunnerAnimationClipName(animationId), false);
+		GunnerEffectComponent* effectComponent = GetEffectComponent(context);
+		if (_attackType == AttackType::Ground && effectComponent)
+		{
+			effectComponent->StartGroundReadyLaserGuide();
+			_hasStartedLaserGuide = true;
+		}
+		UpdateLaserGuide(context);
 	}
 
 	void GunnerAttackState::Tick(MonsterStateContext& context, float deltaTime)
@@ -232,13 +266,29 @@ namespace gm
 		if (context.animatorComponent == nullptr)
 			return;
 
-		if (_attackPhase == AttackPhase::Shoot && _isAimLocked == false)
+		if (_attackPhase == AttackPhase::Ready)
 		{
-			if (HasReachedAimLockTime(context))
-				LockAim(context);
-			else
-				FaceTarget(context, deltaTime);
+			FaceTarget(context, deltaTime);
+			if (_attackType == AttackType::Sky && _hasStartedLaserGuide == false)
+			{
+				NavMeshControllerComponent* navMeshController = context.stateMachine->GetOwner().GetComponent<NavMeshControllerComponent>();
+				if (navMeshController && navMeshController->IsGrounded() == false)
+				{
+					GunnerEffectComponent* effectComponent = GetEffectComponent(context);
+					if (effectComponent)
+					{
+						effectComponent->StartSkyReadyLaserGuide();
+						_hasStartedLaserGuide = true;
+					}
+				}
+			}
 		}
+		if (_attackPhase == AttackPhase::Shoot && _hasPlayedShootSound == false && GetAnimationBeat(context) >= GunnerShootSoundBeat)
+		{
+			PlaySound2D(HiFiRushSound::GunnerShoot);
+			_hasPlayedShootSound = true;
+		}
+		UpdateLaserGuide(context);
 
 		if (IsAnimationCompleted(context) == false)
 			return;
@@ -261,6 +311,9 @@ namespace gm
 	{
 		_notifyConnection.Disconnect();
 		_isAimLocked = false;
+		GunnerEffectComponent* effectComponent = GetEffectComponent(context);
+		if (effectComponent)
+			effectComponent->StopLaserGuide();
 		if (context.animatorComponent != nullptr)
 			context.animatorComponent->SetPlayRate(1.f);
 		if (_overrodeSkyMovement)
@@ -279,6 +332,17 @@ namespace gm
 		_isAimLocked = false;
 		const GunnerAnimationId animationId = _attackType == AttackType::Ground ? GunnerAnimationId::GroundAttackShoot : GunnerAnimationId::SkyAttackShoot;
 		PlayAnimation(context, GetGunnerAnimationClipName(animationId), false);
+		LockAim(context);
+		GunnerEffectComponent* effectComponent = GetEffectComponent(context);
+		if (effectComponent)
+		{
+			if (_attackType == AttackType::Ground)
+				effectComponent->StartGroundAttackLaserGuide();
+			else
+				effectComponent->StartSkyAttackLaserGuide();
+			_hasStartedLaserGuide = true;
+		}
+		UpdateLaserGuide(context);
 
 		const std::shared_ptr<SkeletalAnimationClip> clip = context.animatorComponent->GetCurrentClip();
 		GM_ASSERT_RETURN(clip, "Gunner Shoot Animation Clip이 없습니다.");
@@ -295,15 +359,6 @@ namespace gm
 			animator->SetPlayRate(BeatMath::CalcAnimationPlayRate(context.beatSystem->GetCurrentBeat(), context.beatSystem->GetSecondsPerBeat(), hitStartNotify->time));
 	}
 
-	bool GunnerAttackState::HasReachedAimLockTime(const MonsterStateContext& context) const
-	{
-		if (context.animatorComponent == nullptr)
-			return false;
-
-		const std::shared_ptr<SkeletalAnimationClip> clip = context.animatorComponent->GetCurrentClip();
-		return clip != nullptr && context.animatorComponent->GetPlayTime() >= clip->GetLength() * GunnerAimTrackingEndRatio;
-	}
-
 	void GunnerAttackState::LockAim(MonsterStateContext& context)
 	{
 		if (_isAimLocked)
@@ -315,10 +370,6 @@ namespace gm
 		if (context.combatComponent == nullptr || context.combatComponent->HasTarget() == false)
 			return;
 
-		_lockedTargetDistance = context.combatComponent->GetTargetDistance();
-		if (_attackType != AttackType::Sky)
-			return;
-
 		GameObject& owner = context.stateMachine->GetOwner();
 		TransformComponent* ownerTransform = owner.GetTransform();
 		GameObject* target = context.combatComponent->GetTarget();
@@ -327,9 +378,13 @@ namespace gm
 			return;
 
 		Vector3 start = ownerTransform->GetPosition();
-		start.y += 1.5f;
 		Vector3 targetPosition = targetTransform->GetPosition();
-		targetPosition.y += 0.9f;
+		if (_attackType == AttackType::Sky)
+		{
+			GunnerEffectComponent* effectComponent = GetEffectComponent(context);
+			start = effectComponent ? effectComponent->GetLaserSocketPosition() : start + Vector3{ 0.f, 1.5f, 0.f };
+			targetPosition.y += 1.5f;
+		}
 		const Vector3 offset = targetPosition - start;
 		const float distance = offset.Length();
 		if (distance <= 0.000001f)
@@ -343,6 +398,9 @@ namespace gm
 	{
 		_notifyConnection.Disconnect();
 		_attackPhase = AttackPhase::Landing;
+		GunnerEffectComponent* effectComponent = GetEffectComponent(context);
+		if (effectComponent)
+			effectComponent->StopLaserGuide();
 		if (context.animatorComponent != nullptr)
 			context.animatorComponent->SetPlayRate(1.f);
 		const GunnerAnimationId animationId = _attackType == AttackType::Ground ? GunnerAnimationId::GroundAttackLanding : GunnerAnimationId::SkyAttackLanding;
@@ -355,6 +413,7 @@ namespace gm
 		{
 			LockAim(context);
 			SpawnLaser(context);
+			_hasSpawnedLaser = true;
 			animator.SetPlayRate(1.f);
 		}
 	}
@@ -370,13 +429,25 @@ namespace gm
 		if (scene == nullptr || ownerTransform == nullptr)
 			return;
 
+		GunnerEffectComponent* effectComponent = GetEffectComponent(context);
+		GM_ASSERT_RETURN(effectComponent, "Gunner Laser Effect를 생성하려면 GunnerEffectComponent가 필요합니다.");
 		Vector3 start = ownerTransform->GetPosition();
-		start.y += _attackType == AttackType::Sky ? 1.5f : 0.75f;
+		if (_attackType == AttackType::Sky)
+			start = effectComponent->GetLaserSocketPosition();
+		else
+		{
+			start += _lockedAimDirection * 0.2f;
+			start.y += 1.f;
+		}
 
 		const float laserLength = std::max(_lockedTargetDistance + GunnerLaserExtraLength, GunnerLaserMinimumLength);
+		const float visualLength = std::max(_lockedTargetDistance, GunnerLaserVisualMinimumLength);
+		effectComponent->StopLaserGuide();
+		GM_ASSERT_RETURN(effectComponent->SpawnLaser(start, _lockedAimDirection, visualLength), "Gunner Laser Effect 생성에 실패했습니다.");
 
 		TemporaryBoxHitBoxDesc desc{};
-		desc.world = Math::CreateLookAtLH(start, start + _lockedAimDirection, Vector3::Up).Invert();
+		const Vector3 laserUp = std::abs(_lockedAimDirection.Dot(Vector3::Up)) > 0.99f ? Vector3::Right : Vector3::Up;
+		desc.world = Math::CreateLookAtLH(start, start + _lockedAimDirection, laserUp).Invert();
 		desc.colliderId = L"Attack";
 		desc.localCenter = Vector3{ 0.f, 0.f, laserLength * 0.5f };
 		desc.size = Vector3{ GunnerLaserWidth, GunnerLaserHeight, laserLength };
@@ -384,8 +455,70 @@ namespace gm
 		desc.collisionMask = HiFiRushCollisionLayer::Player;
 		desc.damageInfo.amount = _damage;
 		desc.damageInfo.hitReactionType = HitReactionType::StrongKnockback;
+		desc.damageInfo.worldKnockbackDirection = _lockedAimDirection;
 		desc.lifetime = GunnerLaserLifetime;
 		GM_ASSERT_RETURN(scene->SpawnGameObject<TemporaryHitBoxObject>(desc), "Gunner Laser GameObject 생성에 실패했습니다.");
+	}
+
+	void GunnerAttackState::UpdateLaserGuide(MonsterStateContext& context)
+	{
+		if (_hasSpawnedLaser)
+			return;
+
+		GunnerEffectComponent* effectComponent = GetEffectComponent(context);
+		if (effectComponent == nullptr || context.combatComponent == nullptr || context.combatComponent->HasTarget() == false)
+			return;
+
+		GameObject& owner = context.stateMachine->GetOwner();
+		GameObject* target = context.combatComponent->GetTarget();
+		if (target == nullptr)
+			return;
+
+		if (_attackType == AttackType::Ground)
+		{
+			const float halfWidth = GetLaserGuideHalfWidth(context);
+			if (halfWidth <= 0.f)
+			{
+				effectComponent->StopLaserGuide();
+				return;
+			}
+			const Vector3 start = owner.GetTransform()->GetPosition();
+			const Vector3 targetPosition = _isAimLocked ? start + _lockedAimDirection * _lockedTargetDistance : target->GetTransform()->GetPosition();
+			effectComponent->UpdateGroundLaserGuide(start, targetPosition, halfWidth);
+			return;
+		}
+
+		const float halfWidth = GetLaserGuideHalfWidth(context);
+		if (halfWidth <= 0.f)
+		{
+			effectComponent->StopLaserGuide();
+			return;
+		}
+		const Vector3 start = effectComponent->GetLaserSocketPosition();
+		Vector3 targetPosition = _isAimLocked ? start + _lockedAimDirection * _lockedTargetDistance : target->GetTransform()->GetPosition() + Vector3{ 0.f, 1.5f, 0.f };
+		effectComponent->UpdateSkyLaserGuide(start, targetPosition);
+	}
+
+	float GunnerAttackState::GetAnimationBeat(const MonsterStateContext& context) const
+	{
+		const std::shared_ptr<SkeletalAnimationClip> clip = context.animatorComponent->GetCurrentClip();
+		if (clip == nullptr || clip->GetTicksPerSecond() <= 0.f)
+			return 0.f;
+		return context.animatorComponent->GetPlayTime() / (GunnerAnimationTicksPerBeat / clip->GetTicksPerSecond());
+	}
+
+	float GunnerAttackState::GetLaserGuideHalfWidth(const MonsterStateContext& context) const
+	{
+		const float animationBeat = GetAnimationBeat(context);
+		if (_attackPhase == AttackPhase::Ready)
+			return animationBeat >= 1.f ? GunnerGroundReadyGuideNarrowHalfWidth : GunnerGroundReadyGuideHalfWidth;
+		const float initialHalfWidth = _attackType == AttackType::Ground ? GunnerGroundAttackGuideHalfWidth : GunnerSkyAttackGuideHalfWidth;
+		return animationBeat <= 1.f ? initialHalfWidth : std::max(0.f, initialHalfWidth - (animationBeat - 1.f) * GunnerGuideNarrowSpeedPerBeat);
+	}
+
+	GunnerEffectComponent* GunnerAttackState::GetEffectComponent(const MonsterStateContext& context) const
+	{
+		return context.stateMachine->GetOwner().GetComponent<GunnerEffectComponent>();
 	}
 
 	// GunnerDamageState /////////////////////////////////////////////////////////////////////////
@@ -414,6 +547,7 @@ namespace gm
 
 		SetRootMotionEnabled(context, true);
 		PlayAnimation(context, GetGunnerAnimationClipName(GunnerAnimationId::Die), false);
+		PlayRandomSound2D(HiFiRushSound::GunnerDeathVoices);
 	}
 
 	void GunnerDeadState::Tick(MonsterStateContext& context, float)

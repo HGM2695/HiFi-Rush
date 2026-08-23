@@ -8,6 +8,8 @@
 #include "HiFiRushStatics.h"
 #include "HurtBoxComponent.h"
 #include "QamilAnimationTypes.h"
+#include "QamilBodyMaterialAnimationComponent.h"
+#include "QamilEffectComponent.h"
 #include "QamilPhaseTriggerComponent.h"
 #include "QamilResources.h"
 #include "QamilStateMachineComponent.h"
@@ -54,9 +56,9 @@ namespace gm
 		{
 			const MeshSection* section = skeletalMesh->GetSection(sectionIndex);
 			GM_ASSERT_RETURN_VAL(section, nullptr, "Qamil Phase 3 Material Override 대상 Section이 없습니다. section=%u", sectionIndex);
-			const bool hasMaterialSlot = std::any_of(phase3MaterialDesc.overrides.begin(), phase3MaterialDesc.overrides.end(), [section](const MaterialTextureOverrideDesc& materialOverride) { return materialOverride.materialSlot == section->textureSetIndex; });
+			const bool hasMaterialSlot = std::any_of(phase3MaterialDesc.overrides.begin(), phase3MaterialDesc.overrides.end(), [section](const MaterialTextureOverrideDesc& materialOverride) { return materialOverride.materialSlot == section->materialSlotIndex; });
 			if (hasMaterialSlot == false)
-				phase3MaterialDesc.overrides.push_back({ section->textureSetIndex, TextureSlot::BaseColor, QamilPhase3BodyTextureResourceKey });
+				phase3MaterialDesc.overrides.push_back({ section->materialSlotIndex, TextureSlot::BaseColor, QamilPhase3BodyTextureResourceKey });
 		}
 		GM_ASSERT_RETURN_VAL(qamil->AddComponent<TriggeredMaterialOverrideComponent>(_resources, HiFiRushStatics::GetBeatSystem(), std::move(phase3MaterialDesc)), nullptr, "Qamil Phase 3 Material Override 구성에 실패했습니다.");
 
@@ -78,6 +80,8 @@ namespace gm
 
 		GM_ASSERT_RETURN_VAL(qamil->AddComponent<HealthComponent>(desc.maxHealth), nullptr, "Qamil HealthComponent 생성에 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(qamil->AddComponent<QamilStateMachineComponent>(), nullptr, "QamilStateMachineComponent 생성에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(qamil->AddComponent<QamilEffectComponent>(_resources, HiFiRushStatics::GetEffectPresets()), nullptr, "QamilEffectComponent 생성에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(qamil->AddComponent<QamilBodyMaterialAnimationComponent>(_resources, HiFiRushStatics::GetBeatSystem()), nullptr, "QamilBodyMaterialAnimationComponent 생성에 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(qamil->AddComponent<QamilPhaseTriggerComponent>(), nullptr, "QamilPhaseTriggerComponent 생성에 실패했습니다.");
 		SocketComponent* sockets = qamil->AddComponent<SocketComponent>();
 		GM_ASSERT_RETURN_VAL(sockets, nullptr, "Qamil SocketComponent 생성에 실패했습니다.");

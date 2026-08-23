@@ -1,5 +1,6 @@
 #pragma once
 
+#include "EffectInstance.h"
 #include "QamilState.h"
 
 namespace gm
@@ -17,6 +18,7 @@ namespace gm
 	private:
 		void HandleAnimationNotify(QamilStateContext& context, const AnimationNotifyEvent& event);
 		bool SpawnHitBox(QamilStateContext& context) const;
+		bool SpawnEffect(QamilStateContext& context) const;
 		bool PulseFloorShake(QamilStateContext& context) const;
 
 		EventConnection _notifyConnection{};
@@ -32,9 +34,13 @@ namespace gm
 
 	private:
 		void HandleAnimationNotify(QamilStateContext& context, const AnimationNotifyEvent& event);
+		bool SpawnWarning(QamilStateContext& context);
+		bool SpawnEffect(QamilStateContext& context) const;
+		void UpdateWarning(const QamilStateContext& context);
 		bool SpawnHitBox(QamilStateContext& context) const;
 
 		EventConnection _notifyConnection{};
+		EffectInstance _warningEffect{};
 		Vector3 _attackCenter{};
 		bool _isClockwise = false;
 	};

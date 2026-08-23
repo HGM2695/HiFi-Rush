@@ -32,11 +32,13 @@ namespace gm
 
 	private:
 		void	HandleTemporaryHitBoxNotify(ChiStateContext& context, const AnimationNotifyEvent& event);
+		void	HandleEffectStartNotify(ChiStateContext& context, const AnimationNotifyEvent& event);
 		void	HandleBeatHitStartNotify(ChiStateContext& context, const AnimationNotifyEvent& event);
 		void	HandleBeatHitResult(ChiStateContext& context, const BeatHitResultEvent& event);
 
 		std::optional<RhythmJudgeResult>	_bufferedRhythmInput;
 		EventConnection						_temporaryHitBoxNotifyConnection{};
+		EventConnection						_effectStartNotifyConnection{};
 		EventConnection						_beatHitStartNotifyConnection{};
 		EventConnection						_beatHitResultConnection{};
 

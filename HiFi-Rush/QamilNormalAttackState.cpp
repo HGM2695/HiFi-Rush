@@ -1,13 +1,16 @@
 #include "QamilNormalAttackState.h"
 
 #include "AnimationTypes.h"
+#include "AudioStatics.h"
 #include "BeatMath.h"
 #include "BeatSystem.h"
 #include "Collider3DComponent.h"
 #include "GameObject.h"
 #include "HiFiRushAnimationNotifyNames.h"
 #include "HiFiRushCollisionLayers.h"
+#include "HiFiRushAudio.h"
 #include "MathUtil.h"
+#include "QamilEffectComponent.h"
 #include "QamilStateMachineComponent.h"
 #include "Scene.h"
 #include "SkeletalAnimationClip.h"
@@ -234,6 +237,7 @@ namespace gm
 			LockAimCorrection(context);
 		_attackAim.Apply(context, _targetAimOffset);
 		GM_ASSERT_RETURN(SpawnHitBox(context), "Qamil Normal Attack HitBox 생성에 실패했습니다.");
+		PlaySound2D(HiFiRushSound::ChiStrongBeatHit);
 		_handCollisionDelayFrames = QamilHandCollisionDelayFrames;
 		context.animatorComponent->SetPlayRate(GetBasePlayRate(context));
 	}
@@ -259,6 +263,12 @@ namespace gm
 		desc.damageInfo.amount = QamilNormalAttackDamage;
 		desc.damageInfo.hitReactionType = HitReactionType::StrongKnockback;
 		desc.lifetime = QamilNormalAttackHitBoxLifetime;
-		return scene->SpawnGameObject<TemporaryHitBoxObject>(desc) != nullptr;
+		if (scene->SpawnGameObject<TemporaryHitBoxObject>(desc) == nullptr)
+			return false;
+
+		QamilEffectComponent* effectComponent = owner.GetComponent<QamilEffectComponent>();
+		const bool hasSpawnedPunchImpact = effectComponent && effectComponent->SpawnPunchImpact(handShape.Center, handShape.Radius);
+		GM_ASSERT(hasSpawnedPunchImpact, "Qamil Normal Attack Punch Impact 생성에 실패했습니다.");
+		return true;
 	}
 }

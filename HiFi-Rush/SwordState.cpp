@@ -1,17 +1,20 @@
 #include "SwordState.h"
 
+#include "AudioStatics.h"
 #include "BeatMath.h"
 #include "BeatSystem.h"
 #include "CharacterMovementComponent.h"
 #include "GameObject.h"
 #include "HitBoxComponent.h"
 #include "HiFiRushAnimationNotifyNames.h"
+#include "HiFiRushAudio.h"
 #include "MonsterCombatComponent.h"
 #include "MonsterStateMachineComponent.h"
 #include "Random.h"
 #include "SkeletalAnimationClip.h"
 #include "SkeletalAnimatorComponent.h"
 #include "SwordAnimationTypes.h"
+#include "SwordEffectComponent.h"
 
 namespace gm
 {
@@ -45,6 +48,7 @@ namespace gm
 	void SwordMoveState::Enter(MonsterStateContext& context)
 	{
 		_moveType = MoveType::None;
+		_lastFootstepBeatIndex = context.beatSystem ? context.beatSystem->GetCurrentBeatIndex() : -1;
 		SetRootMotionEnabled(context, false);
 		if (context.combatComponent != nullptr)
 			SelectMove(context, context.combatComponent->GetTargetDistance());
@@ -69,6 +73,16 @@ namespace gm
 		}
 
 		SelectMove(context, distance);
+		if (IsDash() == false && context.beatSystem != nullptr)
+		{
+			const int64 currentBeatIndex = context.beatSystem->GetCurrentBeatIndex();
+			if (currentBeatIndex != _lastFootstepBeatIndex)
+			{
+				_lastFootstepBeatIndex = currentBeatIndex;
+				PlaySound2D(HiFiRushSound::MonsterFootsteps[_footstepIndex], 0.3f);
+				_footstepIndex = (_footstepIndex + 1) % HiFiRushSound::MonsterFootsteps.size();
+			}
+		}
 
 		FaceTarget(context, deltaTime);
 		const Vector3 targetDirection = context.combatComponent->GetTargetDirection();
@@ -173,6 +187,8 @@ namespace gm
 
 		SetRootMotionEnabled(context, IsDash());
 		PlayAnimation(context, GetSwordAnimationClipName(animationId), isLoop);
+		if (IsDash())
+			PlayRandomSound2D(HiFiRushSound::SwordDashes);
 	}
 
 	bool SwordMoveState::IsDash() const
@@ -198,21 +214,24 @@ namespace gm
 		}
 
 		FaceTargetImmediate(context);
+		_hitBox.SetWorldKnockbackDirection(context.moveComponent->GetForwardDirection());
 		SetRootMotionEnabled(context, true);
 
 		const bool useSlash = Math::RandomInt(0, 1) == 0;
-		const SwordAnimationId animationId = useSlash ? SwordAnimationId::AttackSlash : SwordAnimationId::AttackJumpSlash;
-		PlayAnimation(context, GetSwordAnimationClipName(animationId), false);
+		_animationId = useSlash ? SwordAnimationId::AttackSlash : SwordAnimationId::AttackJumpSlash;
+		PlayAnimation(context, GetSwordAnimationClipName(_animationId), false);
 
 		const std::shared_ptr<SkeletalAnimationClip> clip = context.animatorComponent->GetCurrentClip();
 		GM_ASSERT_RETURN(clip, "Sword Attack Animation Clip이 없습니다.");
+		GM_ASSERT_RETURN(clip->FindNotify(HiFiRushAnimationNotifyNames::ChargeStart), "Sword Attack Animation에 ChargeStart Notify가 없습니다.");
+		GM_ASSERT_RETURN(clip->FindNotify(HiFiRushAnimationNotifyNames::EffectStart), "Sword Attack Animation에 EffectStart Notify가 없습니다.");
 		const AnimationNotifyEvent* hitStartNotify = clip->FindNotify(HiFiRushAnimationNotifyNames::HitStart);
 		GM_ASSERT_RETURN(hitStartNotify, "Sword Attack Animation에 HitStart Notify가 없습니다.");
 		SkeletalAnimatorComponent* animator = context.animatorComponent;
 		animator->GetNotifyEvent().Subscribe(_notifyConnection,
-			[this, animator](const AnimationNotifyEvent& event)
+			[this, &context, animator](const AnimationNotifyEvent& event)
 		{
-			HandleAnimationNotify(*animator, event);
+			HandleAnimationNotify(context, *animator, event);
 		});
 
 		if (context.beatSystem != nullptr && context.beatSystem->HasPlaybackTime())
@@ -237,11 +256,25 @@ namespace gm
 		SetRootMotionEnabled(context, false);
 	}
 
-	void SwordAttackState::HandleAnimationNotify(SkeletalAnimatorComponent& animator, const AnimationNotifyEvent& event)
+	void SwordAttackState::HandleAnimationNotify(MonsterStateContext& context, SkeletalAnimatorComponent& animator, const AnimationNotifyEvent& event)
 	{
-		if (event.name == HiFiRushAnimationNotifyNames::HitStart)
+		if (event.name == HiFiRushAnimationNotifyNames::ChargeStart)
+		{
+			PlaySound2D(HiFiRushSound::SwordCharge);
+			SwordEffectComponent* effectComponent = context.stateMachine->GetOwner().GetComponent<SwordEffectComponent>();
+			GM_ASSERT_RETURN(effectComponent, "Sword Attack Effect를 재생하려면 SwordEffectComponent가 필요합니다.");
+			effectComponent->SpawnChargeEffect(_animationId);
+		}
+		else if (event.name == HiFiRushAnimationNotifyNames::EffectStart)
+		{
+			SwordEffectComponent* effectComponent = context.stateMachine->GetOwner().GetComponent<SwordEffectComponent>();
+			GM_ASSERT_RETURN(effectComponent, "Sword Attack Effect를 재생하려면 SwordEffectComponent가 필요합니다.");
+			effectComponent->SpawnSlashEffect(_animationId);
+		}
+		else if (event.name == HiFiRushAnimationNotifyNames::HitStart)
 		{
 			_hitBox.BeginAttack();
+			PlayRandomSound2D(HiFiRushSound::SwordSwings, 0.5f);
 			animator.SetPlayRate(1.f);
 		}
 		else if (event.name == HiFiRushAnimationNotifyNames::HitEnd)
@@ -263,6 +296,7 @@ namespace gm
 		}
 
 		PlayAnimation(context, GetSwordAnimationClipName(animationId), false);
+		PlayRandomSound2D(HiFiRushSound::SwordDamageVoices, 0.3f);
 	}
 
 	void SwordDamageState::Tick(MonsterStateContext& context, float)
@@ -284,6 +318,7 @@ namespace gm
 
 		SetRootMotionEnabled(context, true);
 		PlayAnimation(context, GetSwordAnimationClipName(SwordAnimationId::Die), false);
+		PlayRandomSound2D(HiFiRushSound::SwordDeathVoices);
 	}
 
 	void SwordDeadState::Tick(MonsterStateContext& context, float)

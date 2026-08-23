@@ -26,6 +26,7 @@ namespace gm
 	{
 	public:
 		ChiJumpLandingState();
+		virtual void Enter(ChiStateContext& context) override;
 		virtual void Tick(ChiStateContext& context, float deltaTime) override;
 	};
 

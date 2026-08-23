@@ -1,4 +1,5 @@
 #include "MonsterStateMachineComponent.h"
+#include "HiFiRushAudio.h"
 
 #include "CharacterMovementComponent.h"
 #include "GameObject.h"
@@ -104,8 +105,12 @@ namespace gm
 	void MonsterStateMachineComponent::OnDamaged(const HitEvent& event)
 	{
 		_context.lastHitReactionType = event.damage.hitReactionType;
-		if (event.damageResult.state == DamageState::Applied && _context.moveComponent)
-			_context.moveComponent->FaceDirectionImmediate(-event.GetWorldKnockbackDirection());
+		if (event.damageResult.state == DamageState::Applied)
+		{
+			if (_context.moveComponent)
+				_context.moveComponent->FaceDirectionImmediate(-event.GetWorldKnockbackDirection());
+			PlayRandomSound2D(HiFiRushSound::MonsterHitImpacts);
+		}
 
 		MonsterState* currentState = FindState(_currentStateId);
 		if (currentState)

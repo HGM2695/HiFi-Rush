@@ -1,5 +1,7 @@
 #include "QamilMoveState.h"
 
+#include "AudioStatics.h"
+#include "HiFiRushAudio.h"
 #include "MathUtil.h"
 #include "QamilStateMachineComponent.h"
 #include "SkeletalAnimationClip.h"
@@ -21,6 +23,7 @@ namespace gm
 		_phase = Phase::Start;
 		_isClockwise = SelectClockwiseDirection(context);
 		PlayBeatSyncedAnimation(context, _isClockwise ? QamilAnimationId::MoveLeftStart : QamilAnimationId::MoveRightStart, false);
+		PlaySound2D(HiFiRushSound::QamilMove);
 	}
 
 	void QamilMoveState::Tick(QamilStateContext& context, float)

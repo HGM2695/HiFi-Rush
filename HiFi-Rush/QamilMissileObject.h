@@ -7,6 +7,7 @@
 
 namespace gm
 {
+	class EffectSpawner;
 	class SkeletalAnimationClip;
 	class SkeletalAnimatorComponent;
 	class SkeletalMesh;
@@ -40,12 +41,18 @@ namespace gm
 		void UpdateWarningPosition(float deltaTime);
 		void BeginLaunch();
 		void UpdateLaunch(float currentBeat);
+		bool SpawnCreationEffect() const;
+		bool SpawnAttachedSmoke();
+		bool SpawnTrailEffect(const Vector3& position) const;
+		bool SpawnTrailEffects(const Vector3& startPosition, const Vector3& endPosition);
+		bool SpawnExplosionEffect() const;
 		void Explode();
 		void DestroyWarning();
 
 		WeakGameObjectPtr _target{};
 		WeakGameObjectPtr _warning{};
 		std::shared_ptr<Texture> _warningTexture{};
+		std::unique_ptr<EffectSpawner> _effectSpawner{};
 		SkeletalAnimatorComponent* _animatorComponent = nullptr;
 		Vector3 _initialPosition{};
 		Vector3 _preparationEndPosition{};
@@ -57,6 +64,7 @@ namespace gm
 		Quaternion _targetRotation{};
 		float _spawnBeat = 0.f;
 		float _launchStartBeat = 0.f;
+		float _trailDistanceSinceLastSpawn = 0.f;
 		bool _isLaunchStarted = false;
 	};
 }

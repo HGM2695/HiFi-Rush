@@ -17,6 +17,11 @@ namespace gm
 	struct PlayerDeathAnimationCompletedEvent final : EventType
 	{
 	};
+	struct ChiStateChangedEvent final : EventType
+	{
+		ChiStateId previousStateId = ChiStateId::None;
+		ChiStateId currentStateId = ChiStateId::None;
+	};
 
 	struct ChiStateContext;
 	class ChiState;
@@ -44,9 +49,12 @@ namespace gm
 		ChiStateId				GetCurrentStateId() const { return _currentStateId; }
 		void					SetInputEnabled(bool enabled);
 		bool					IsInputEnabled() const { return _inputEnabled; }
+		void					SetBeatHitEnabled(bool enabled);
+		bool					IsBeatHitEnabled() const { return _beatHitEnabled; }
 		void					CompleteDeathAnimation();
 
 		EventPublisher<ChiStateMachineComponent, RhythmJudgeResult>						OnRhythmActionStarted;
+		EventPublisher<ChiStateMachineComponent, ChiStateChangedEvent>					OnStateChanged;
 		EventPublisher<ChiStateMachineComponent, BeatHitStartedEvent>					OnBeatHitStarted;
 		EventPublisher<ChiStateMachineComponent, BeatHitResultEvent>					OnBeatHitResult;
 		EventPublisher<ChiStateMachineComponent, PlayerDeathAnimationCompletedEvent>	OnDeathAnimationCompleted;
@@ -98,5 +106,6 @@ namespace gm
 		ReverbComponent*				_reverbComponent = nullptr;
 		HitBoxComponent*				_weaponHitBox = nullptr;
 		bool							_inputEnabled = true;
+		bool							_beatHitEnabled = true;
 	};
 }

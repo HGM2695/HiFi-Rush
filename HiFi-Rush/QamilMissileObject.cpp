@@ -1,8 +1,13 @@
 #include "QamilMissileObject.h"
 
+#include "Application.h"
+#include "AudioStatics.h"
 #include "BeatMath.h"
 #include "BeatSystem.h"
+#include "EffectPresets.h"
+#include "EffectSpawner.h"
 #include "HiFiRushCollisionLayers.h"
+#include "HiFiRushAudio.h"
 #include "HiFiRushStatics.h"
 #include "MathUtil.h"
 #include "Scene.h"
@@ -27,13 +32,20 @@ namespace gm
 		constexpr float QamilMissileLaunchDelayBeats = 8.f;
 		constexpr float QamilMissileLaunchDurationBeats = 1.f;
 		constexpr float QamilMissilePreparationDistance = 5.f;
-		constexpr float QamilMissileWarningMoveSpeed = 2.3f;
+		constexpr float QamilMissileWarningMoveSpeed = 3.f;
 		constexpr float QamilMissileWarningRadius = 3.f;
 		constexpr float QamilArenaRadius = 14.8f;
 		constexpr float QamilMissilePulseScale = 0.5f;
 		constexpr float QamilMissileAnimationTicksPerBeat = 15.f;
 		constexpr int32 QamilMissileDamage = 30;
 		constexpr float QamilMissileHitBoxLifetime = 0.05f;
+		constexpr float QamilMissileTrailSpacing = 0.5f;
+		constexpr float QamilMissileCreationEffectHeight = 1.f;
+		constexpr float QamilMissileExplosionEffectHeight = 1.5f;
+		constexpr wchar_t QamilMissileCreationEffectId[] = L"Qamil.Missile.Creation";
+		constexpr wchar_t QamilMissileAttachedSmokeEffectId[] = L"Qamil.Missile.AttachedSmoke";
+		constexpr wchar_t QamilMissileTrailEffectId[] = L"Qamil.Missile.Trail";
+		constexpr wchar_t QamilMissileExplosionEffectId[] = L"Qamil.Missile.Explosion";
 
 		Quaternion CreateLookRotation(const Vector3& direction)
 		{
@@ -83,6 +95,7 @@ namespace gm
 
 	void QamilMissileObject::OnInitialize()
 	{
+		_effectSpawner = std::make_unique<EffectSpawner>(APPLICATION.GetResources(), HiFiRushStatics::GetEffectPresets());
 		const BeatSystem& beatSystem = HiFiRushStatics::GetBeatSystem();
 		GM_ASSERT_RETURN(beatSystem.HasPlaybackTime(), "Qamil Missile은 재생 중인 BeatSystem이 필요합니다.");
 		GM_ASSERT_RETURN(_animatorComponent && _animatorComponent->Play(QamilMissileAnimationName, AnimationPlayOption{ .loopOverride = true }), "Qamil Missile Animation 재생에 실패했습니다.");
@@ -102,6 +115,7 @@ namespace gm
 		GM_ASSERT_RETURN(spriteComponent, "Qamil Missile Warning SpriteComponent 생성에 실패했습니다.");
 		spriteComponent->SetTexture(_warningTexture);
 		_warning = warning->GetWeakPtr();
+		GM_ASSERT(SpawnCreationEffect(), "Qamil Missile 생성 Effect 생성에 실패했습니다.");
 	}
 
 	void QamilMissileObject::OnTick(float deltaTime)
@@ -172,18 +186,80 @@ namespace gm
 		_launchEndPosition = Vector3{ _warningPosition.x, _arenaCenter.y, _warningPosition.z };
 		GetTransform()->SetScale(Vector3{ 1.f, 1.f, 1.f });
 		GetTransform()->SetRotation(CreateLookRotation(_launchEndPosition - _launchStartPosition));
+		_trailDistanceSinceLastSpawn = 0.f;
+		GM_ASSERT(SpawnTrailEffect(_launchStartPosition), "Qamil Missile 첫 번째 추적 Effect 생성에 실패했습니다.");
+		GM_ASSERT(SpawnAttachedSmoke(), "Qamil Missile 부착 Smoke 생성에 실패했습니다.");
 	}
 
 	void QamilMissileObject::UpdateLaunch(float currentBeat)
 	{
 		const float ratio = std::clamp((currentBeat - _launchStartBeat) / QamilMissileLaunchDurationBeats, 0.f, 1.f);
-		GetTransform()->SetPosition(Vector3::Lerp(_launchStartPosition, _launchEndPosition, ratio));
+		const Vector3 currentPosition = GetTransform()->GetPosition();
+		const Vector3 nextPosition = Vector3::Lerp(_launchStartPosition, _launchEndPosition, ratio);
+		GM_ASSERT(SpawnTrailEffects(currentPosition, nextPosition), "Qamil Missile 추적 Effect 생성에 실패했습니다.");
+		GetTransform()->SetPosition(nextPosition);
 		if (ratio >= 1.f)
 			Explode();
 	}
 
+	bool QamilMissileObject::SpawnCreationEffect() const
+	{
+		Scene* scene = GetScene();
+		if (scene == nullptr || _effectSpawner == nullptr)
+			return false;
+		Vector3 position = _initialPosition;
+		position.y += QamilMissileCreationEffectHeight;
+		return _effectSpawner->SpawnAtWorld(*scene, QamilMissileCreationEffectId, Matrix::CreateTranslation(position));
+	}
+
+	bool QamilMissileObject::SpawnAttachedSmoke()
+	{
+		Scene* scene = GetScene();
+		return scene && _effectSpawner && _effectSpawner->SpawnAttachedToOwner(*scene, QamilMissileAttachedSmokeEffectId, *this);
+	}
+
+	bool QamilMissileObject::SpawnTrailEffect(const Vector3& position) const
+	{
+		Scene* scene = GetScene();
+		return scene && _effectSpawner && _effectSpawner->SpawnAtWorld(*scene, QamilMissileTrailEffectId, Matrix::CreateTranslation(position));
+	}
+
+	bool QamilMissileObject::SpawnTrailEffects(const Vector3& startPosition, const Vector3& endPosition)
+	{
+		Vector3 direction = endPosition - startPosition;
+		float remainingDistance = direction.Length();
+		if (remainingDistance <= 0.f)
+			return true;
+
+		direction /= remainingDistance;
+		Vector3 cursor = startPosition;
+		float distanceUntilSpawn = QamilMissileTrailSpacing - _trailDistanceSinceLastSpawn;
+		while (remainingDistance >= distanceUntilSpawn)
+		{
+			cursor += direction * distanceUntilSpawn;
+			if (SpawnTrailEffect(cursor) == false)
+				return false;
+			remainingDistance -= distanceUntilSpawn;
+			distanceUntilSpawn = QamilMissileTrailSpacing;
+			_trailDistanceSinceLastSpawn = 0.f;
+		}
+		_trailDistanceSinceLastSpawn += remainingDistance;
+		return true;
+	}
+
+	bool QamilMissileObject::SpawnExplosionEffect() const
+	{
+		Scene* scene = GetScene();
+		if (scene == nullptr || _effectSpawner == nullptr)
+			return false;
+		Vector3 position = _launchEndPosition;
+		position.y += QamilMissileExplosionEffectHeight;
+		return _effectSpawner->SpawnAtWorld(*scene, QamilMissileExplosionEffectId, Matrix::CreateTranslation(position));
+	}
+
 	void QamilMissileObject::Explode()
 	{
+		GM_ASSERT(SpawnExplosionEffect(), "Qamil Missile 폭발 Effect 생성에 실패했습니다.");
 		Scene* scene = GetScene();
 		if (scene)
 		{
@@ -198,6 +274,7 @@ namespace gm
 			desc.lifetime = QamilMissileHitBoxLifetime;
 			GM_ASSERT(scene->SpawnGameObject<TemporaryHitBoxObject>(desc), "Qamil Missile 폭발 HitBox 생성에 실패했습니다.");
 		}
+		PlaySound2D(HiFiRushSound::QamilMissileExplosion);
 		DestroyWarning();
 		Destroy();
 	}

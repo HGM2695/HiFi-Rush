@@ -1,11 +1,14 @@
 #include "ChiAttackState.h"
+#include "AudioStatics.h"
 #include "BeatSystem.h"
 #include "ChiAnimationSettings.h"
 #include "ChiAttackHitBoxSpawner.h"
 #include "ChiBeatHitBoxSpawner.h"
+#include "ChiEffectComponent.h"
 #include "ChiMoveComponent.h"
 #include "ChiStateMachineComponent.h"
 #include "HiFiRushAnimationNotifyNames.h"
+#include "HiFiRushAudio.h"
 #include "HitBoxComponent.h"
 #include "PlayerTargetingComponent.h"
 #include "Rigidbody3DComponent.h"
@@ -50,6 +53,7 @@ namespace gm
 	void ChiAttackState::Enter(ChiStateContext& context)
 	{
 		_temporaryHitBoxNotifyConnection.Disconnect();
+		_effectStartNotifyConnection.Disconnect();
 		_beatHitStartNotifyConnection.Disconnect();
 		_beatHitResultConnection.Disconnect();
 		_bufferedRhythmInput.reset();
@@ -114,6 +118,15 @@ namespace gm
 				});
 		}
 
+		if (clip->FindNotify(HiFiRushAnimationNotifyNames::EffectStart))
+		{
+			context.animatorComponent->GetNotifyEvent().Subscribe(_effectStartNotifyConnection,
+				[this, &context](const AnimationNotifyEvent& event)
+				{
+					HandleEffectStartNotify(context, event);
+				});
+		}
+
 		if (clip->FindNotify(HiFiRushAnimationNotifyNames::BeatHitStart))
 		{
 			context.animatorComponent->GetNotifyEvent().Subscribe(_beatHitStartNotifyConnection,
@@ -133,6 +146,7 @@ namespace gm
 	void ChiAttackState::Exit(ChiStateContext& context)
 	{
 		_temporaryHitBoxNotifyConnection.Disconnect();
+		_effectStartNotifyConnection.Disconnect();
 		_beatHitStartNotifyConnection.Disconnect();
 		_beatHitResultConnection.Disconnect();
 		context.animatorComponent->SetPlayRate(1.f);
@@ -144,6 +158,14 @@ namespace gm
 			return;
 
 		GM_ASSERT(ChiAttackHitBoxSpawner::SpawnForAnimation(context, GetAnimationClipId()), "Chi Attack HitBox GameObject 생성에 실패했습니다.");
+	}
+
+	void ChiAttackState::HandleEffectStartNotify(ChiStateContext& context, const AnimationNotifyEvent& event)
+	{
+		if (event.name != HiFiRushAnimationNotifyNames::EffectStart)
+			return;
+
+		context.effectComponent->SpawnAttackEffect(GetAnimationClipId());
 	}
 
 	void ChiAttackState::HandleBeatHitStartNotify(ChiStateContext& context, const AnimationNotifyEvent& event)
@@ -239,6 +261,7 @@ namespace gm
 			_weaponHitBox->EndAttack();
 			_weaponHitBox->SetDamage(_damage);
 			_weaponHitBox->SetHitReactionType(HitReactionType::WeakKnockback);
+			_weaponHitBox->SetWorldKnockbackDirection(context.moveComponent->GetForwardDirection());
 			_weaponHitBox->SetRehitInterval(_rehitInterval);
 		}
 
@@ -269,7 +292,13 @@ namespace gm
 	void ChiWeaponHitBoxAttackState::HandleAnimationNotify(const AnimationNotifyEvent& event)
 	{
 		if (event.name == HiFiRushAnimationNotifyNames::HitStart)
+		{
 			_weaponHitBox->BeginAttack();
+			if (GetAnimationClipId() == ChiAnimationClipId::AttackStrongToWeak2)
+				PlaySound2D(HiFiRushSound::ChiRightBranch);
+			else if (GetAnimationClipId() == ChiAnimationClipId::AttackWeakToStrong2)
+				PlaySound2D(HiFiRushSound::ChiLeftBranch);
+		}
 		else if (event.name == HiFiRushAnimationNotifyNames::HitEnd)
 			_weaponHitBox->EndAttack();
 	}
@@ -739,6 +768,8 @@ namespace gm
 	void ChiStump1AttackState::OnGroundContact(ChiStateContext& context)
 	{
 		GM_ASSERT(ChiAttackHitBoxSpawner::SpawnForAnimation(context, GetAnimationClipId()), "Chi Stump HitBox GameObject 생성에 실패했습니다.");
+		context.effectComponent->SpawnStumpEffect();
+		PlayRandomSound2D(HiFiRushSound::ChiStumps);
 		context.stateMachine->ChangeState(ChiStateId::AttackStump2);
 	}
 

@@ -15,7 +15,10 @@ namespace gm
 	inline constexpr wchar_t			QamilPhase3BodyTextureResourceKey[] = L"T_em1000_base_Red_noalpha_C";
 	inline constexpr wchar_t			QamilMissileModelFileName[] = L"Missile.bin";
 	inline constexpr QamilAnimationId	QamilDefaultAnimationId = QamilAnimationId::Idle;
-	inline constexpr std::array<uint32, 10> QamilPhase3BodySectionIndices{ 0, 1, 2, 5, 17, 19, 21, 23, 26, 27 };
+	inline constexpr uint32			QamilBarGraphSectionIndex = 8;
+	inline constexpr uint32			QamilCorePulseSectionIndex = 9;
+	inline constexpr std::array<uint32, 2> QamilPhaseEmissiveMaterialSlotIndices{ 17, 18 };
+	inline constexpr std::array<uint32, 10> QamilPhase3BodySectionIndices{ 0, 1, 2, 5, 15, 17, 19, 21, 24, 25 };
 
 	struct QamilMissileSocketBinding
 	{

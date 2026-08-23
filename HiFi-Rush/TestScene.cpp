@@ -2,15 +2,18 @@
 #include "BeatSkeletalAnimationSyncComponent.h"
 #include "MainHUDWidget.h"
 #include "ChiAnimationTypes.h"
+#include "ChiEffectComponent.h"
 #include "ChiStateMachineComponent.h"
 #include "ChiMoveComponent.h"
 #include "PlayerTargetingComponent.h"
+#include "PlayerResources.h"
 #include "Application.h"
 #include "Input.h"
 #include "Resources.h"
 #include "GameObject.h"
 #include "HiFiRushStatics.h"
 #include "HealthComponent.h"
+#include "ReverbComponent.h"
 #include "SpriteComponent.h"
 #include "Texture.h"
 #include "CameraComponent.h"
@@ -71,7 +74,7 @@ namespace gm
 	void TestScene::OnInitialize()
 	{
 		//InitializeSubObject();
-		InitializeStaticMeshTest();
+		GM_ASSERT_RETURN(InitializeMap(L"TutorialMap"), "Test Scene의 Tutorial 환경 구성에 실패했습니다.");
 		InitializePlayer();
 		GetCameraManager()->SetPixelSnapEnabled(false);
 
@@ -110,12 +113,23 @@ namespace gm
 		NavMeshControllerComponent* navMeshController = player->AddComponent<NavMeshControllerComponent>();
 		navMeshController->SetUseGroundCollision(true);
 		player->AddComponent<HealthComponent>(100);
+		player->AddComponent<ReverbComponent>(100.f);
 
 		SocketComponent* socketComponent = player->AddComponent<SocketComponent>();
 		Socket socket{};
 		socket.position = Vector3{ 0.f, 1.2f, 0.f };
 		socketComponent->AddSocket(L"Player.Camera", socket);
+		Socket weaponSocket{};
+		weaponSocket.boneName = L"r_attach_hand_00";
+		socketComponent->AddSocket(L"Player.Weapon", weaponSocket);
+		for (const ChiEffectSocketBinding& binding : ChiEffectSocketBindings)
+		{
+			Socket effectSocket{};
+			effectSocket.boneName = binding.boneName;
+			socketComponent->AddSocket(binding.socketName, effectSocket);
+		}
 
+		player->AddComponent<ChiEffectComponent>(APPLICATION.GetResources(), HiFiRushStatics::GetEffectPresets());
 		player->AddComponent<ChiStateMachineComponent>();
 
 		BeatSkeletalAnimationSyncDesc animationSyncDesc{};
@@ -203,7 +217,7 @@ namespace gm
 
 		auto cameraComponent = cameraObject->AddComponent<CameraComponent>();
 		const float aspectRatio = static_cast<float>(APPLICATION.GetWidth()) / static_cast<float>(APPLICATION.GetHeight());
-		cameraComponent->SetPerspective(Math::GM_PI / 3.f, aspectRatio, 0.1f, 5000.f);
+		cameraComponent->SetPerspective(Math::GM_PI / 3.f, aspectRatio, 0.1f, 500.f);
 		GetCameraManager()->RegisterCamera(L"PlayerCamera", cameraComponent);
 		return cameraComponent;
 	}

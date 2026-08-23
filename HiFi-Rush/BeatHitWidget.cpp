@@ -1,11 +1,13 @@
 #include "BeatHitWidget.h"
 
+#include "AudioStatics.h"
 #include "BeatMath.h"
 #include "BeatSystem.h"
 #include "BeatHitTypes.h"
 #include "CanvasPanel.h"
 #include "ChiStateMachineComponent.h"
 #include "Image.h"
+#include "HiFiRushAudio.h"
 
 #include <algorithm>
 
@@ -27,8 +29,6 @@ namespace gm
 		constexpr Color ReadyColor{ 95.f / 255.f, 191.f / 255.f, 71.f / 255.f, 1.f };
 		constexpr Color MissColor{ 228.5f / 255.f, 0.f, 0.f, 1.f };
 		constexpr Color SuccessColor{ 0.5f, 0.5f, 0.5f, 1.f };
-		constexpr Color ThornRedChannelColor{ 239.f / 255.f, 222.f / 255.f, 86.f / 255.f, 1.f };
-		constexpr Color ThornGreenBlueChannelColor{ 93.f / 255.f, 195.f / 255.f, 238.f / 255.f, 1.f };
 
 		constexpr float InsideGlowOpacity = 0.7f;
 		constexpr float OutsideGlowOpacity = 0.65f;
@@ -74,6 +74,7 @@ namespace gm
 			return;
 
 		BeginResult(PresentationState::Success);
+		PlaySound2D(HiFiRushSound::BeatHitSuccess, 0.3f);
 	}
 
 	void BeatHitWidget::ShowMiss()
@@ -116,7 +117,6 @@ namespace gm
 		_lightLine->SetGeometry(ScreenCenter, LightLineSize);
 		_thorn = root->AddNamedChild<Image>(L"BeatHitThorn", L"Thorn");
 		_thorn->SetGeometry(ScreenCenter, ThornSize);
-		_thorn->SetColorChannelMapping(ThornRedChannelColor, ThornGreenBlueChannelColor, ThornGreenBlueChannelColor);
 
 		return root;
 	}

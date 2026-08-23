@@ -1,6 +1,7 @@
 #include "ChiJumpState.h"
 #include "BeatSystem.h"
 #include "ChiAnimationSettings.h"
+#include "ChiEffectComponent.h"
 #include "ChiMoveComponent.h"
 #include "ChiStateMachineComponent.h"
 #include "Rigidbody3DComponent.h"
@@ -63,6 +64,7 @@ namespace gm
 		ChiState::Enter(context);
 		const Vector3 impulse = context.airborneImpulse.value_or(Vector3{ 0.f, context.moveComponent->GetJumpPhysicsSettings().jumpImpulse, 0.f });
 		ApplyAirborneImpulse(context, impulse);
+		context.effectComponent->SpawnJumpEffect();
 	}
 
 	void ChiJumpUpState::Tick(ChiStateContext& context, float deltaTime)
@@ -126,6 +128,12 @@ namespace gm
 	{
 	}
 
+	void ChiJumpLandingState::Enter(ChiStateContext& context)
+	{
+		ChiState::Enter(context);
+		context.effectComponent->SpawnLandingEffect();
+	}
+
 	void ChiJumpLandingState::Tick(ChiStateContext& context, float deltaTime)
 	{
 		if (context.jumpInput)
@@ -154,6 +162,7 @@ namespace gm
 	{
 		ChiState::Enter(context);
 		ApplyAirborneImpulse(context, Vector3{ 0.f, context.moveComponent->GetJumpPhysicsSettings().doubleJumpImpulse, 0.f });
+		context.effectComponent->SpawnDoubleJumpEffect();
 	}
 
 	void ChiJumpDoubleUpState::Tick(ChiStateContext& context, float deltaTime)

@@ -6,6 +6,7 @@
 namespace gm
 {
 	struct AnimationNotifyEvent;
+	enum class SwordAnimationId : uint32;
 	class HitBoxComponent;
 	class SkeletalAnimatorComponent;
 
@@ -51,6 +52,8 @@ namespace gm
 		float		_attackRangeMin = 0.f;
 		float		_attackRangeMax = 0.f;
 		MoveType	_moveType = MoveType::None;
+		int64		_lastFootstepBeatIndex = -1;
+		size_t		_footstepIndex = 0;
 	};
 
 	/// SwordAttackState //////////////////////////////////////////////////////////////////////////////
@@ -65,11 +68,12 @@ namespace gm
 		void			Exit(MonsterStateContext& context) override;
 
 	private:
-		void HandleAnimationNotify(SkeletalAnimatorComponent& animator, const AnimationNotifyEvent& event);
+		void HandleAnimationNotify(MonsterStateContext& context, SkeletalAnimatorComponent& animator, const AnimationNotifyEvent& event);
 
 	private:
 		HitBoxComponent&	_hitBox;
 		EventConnection		_notifyConnection{};
+		SwordAnimationId	_animationId{};
 	};
 
 	/// SwordDamageState //////////////////////////////////////////////////////////////////////////////

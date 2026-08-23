@@ -9,8 +9,10 @@ namespace gm
 {
 	class BeatSystem;
 	class ChiMoveComponent;
+	class ChiEffectComponent;
 	class ChiAnimationSettings;
 	class ChiStateMachineComponent;
+	class HealthComponent;
 	class PlayerTargetingComponent;
 	class ReverbComponent;
 	class RhythmJudge;
@@ -23,6 +25,8 @@ namespace gm
 		BeatSystem*							beatSystem = nullptr;
 		const ChiAnimationSettings*			animationSettings = nullptr;
 		ChiMoveComponent*					moveComponent = nullptr;
+		ChiEffectComponent*					effectComponent = nullptr;
+		HealthComponent*					healthComponent = nullptr;
 		PlayerTargetingComponent*			targetingComponent = nullptr;
 		ReverbComponent*					reverbComponent = nullptr;
 		Rigidbody3DComponent*				rigidbodyComponent = nullptr;

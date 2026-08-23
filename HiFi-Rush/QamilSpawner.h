@@ -13,7 +13,7 @@ namespace gm
 	struct QamilSpawnDesc
 	{
 		Matrix	world = Matrix::Identity;
-		int32	maxHealth = 100;
+		int32	maxHealth = 700;
 	};
 
 	class QamilSpawner

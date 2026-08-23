@@ -1,8 +1,10 @@
 #include "HitReactionComponent.h"
+#include "AudioStatics.h"
 #include "CombatTypes.h"
 #include "GameObject.h"
 #include "GameplayScene.h"
 #include "HurtBoxComponent.h"
+#include "HiFiRushAudio.h"
 #include "SkeletalAnimatorComponent.h"
 #include "TriggerSystem.h"
 
@@ -63,6 +65,8 @@ namespace gm
 	{
 		if (_state != State::WaitingForHit || event.damageResult.state != DamageState::Applied || _triggerSystem == nullptr)
 			return;
+		if (_completionTriggerId == L"Outside.Panels")
+			PlaySound2D(HiFiRushSound::PipeHit);
 
 		if (_animator == nullptr)
 		{

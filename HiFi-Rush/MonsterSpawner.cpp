@@ -9,6 +9,7 @@
 #include "GameObject.h"
 #include "GunnerStateMachineComponent.h"
 #include "GunnerAnimationTypes.h"
+#include "GunnerEffectComponent.h"
 #include "HealthComponent.h"
 #include "HiFiRushCollisionLayers.h"
 #include "HiFiRushStatics.h"
@@ -17,6 +18,7 @@
 #include "MathUtil.h"
 #include "MonsterCombatComponent.h"
 #include "MonsterCombatActivationComponent.h"
+#include "MonsterEffectComponent.h"
 #include "MonsterResourceInfo.h"
 #include "MonsterStateMachineComponent.h"
 #include "MonsterTypes.h"
@@ -35,6 +37,7 @@
 #include "StaticMeshComponent.h"
 #include "SwordStateMachineComponent.h"
 #include "SwordAnimationTypes.h"
+#include "SwordEffectComponent.h"
 #include "TransformComponent.h"
 
 #include <array>
@@ -244,12 +247,19 @@ namespace gm
 			weaponSocket.rotation = Quaternion::CreateFromAxisAngle(Vector3{ 0.f, 1.f, 0.f }, Math::GM_PI);
 			socketComponent->AddSocket(L"Sword.Weapon", weaponSocket);
 
+			GM_ASSERT_RETURN_VAL(monster.AddComponent<SwordEffectComponent>(_resources, HiFiRushStatics::GetEffectPresets()), false, "SwordEffectComponent 생성에 실패했습니다.");
 			stateMachine = monster.AddComponent<SwordStateMachineComponent>(data.attackRangeMin, data.attackRangeMax);
 			break;
 		}
 
 		case MonsterType::Gunner:
 		{
+			SocketComponent* socketComponent = monster.AddComponent<SocketComponent>();
+			GM_ASSERT_RETURN_VAL(socketComponent, false, "Gunner SocketComponent 생성에 실패했습니다.");
+			Socket laserSocket{};
+			laserSocket.boneName = L"gun";
+			socketComponent->AddSocket(L"Gunner.Laser", laserSocket);
+			GM_ASSERT_RETURN_VAL(monster.AddComponent<GunnerEffectComponent>(_resources, HiFiRushStatics::GetEffectPresets()), false, "GunnerEffectComponent 생성에 실패했습니다.");
 			stateMachine = monster.AddComponent<GunnerStateMachineComponent>(data.attackRangeMin, data.attackRangeMax, data.attackDamage);
 			break;
 		}
@@ -259,6 +269,7 @@ namespace gm
 		}
 
 		GM_ASSERT_RETURN_VAL(stateMachine, false, "MonsterStateMachineComponent 생성에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(monster.AddComponent<MonsterEffectComponent>(_resources, HiFiRushStatics::GetEffectPresets()), false, "MonsterEffectComponent 생성에 실패했습니다.");
 		navMeshController->SetUseGroundCollision(true);
 		return true;
 	}

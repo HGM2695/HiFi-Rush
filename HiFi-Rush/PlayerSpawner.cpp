@@ -7,6 +7,8 @@
 #include "CameraFollowComponent.h"
 #include "CameraManager.h"
 #include "ChiAnimationTypes.h"
+#include "ChiAudioComponent.h"
+#include "ChiEffectComponent.h"
 #include "ChiMoveComponent.h"
 #include "ChiStateMachineComponent.h"
 #include "FreeFlyMoveComponent.h"
@@ -99,6 +101,12 @@ namespace gm
 		weaponSocket.boneName = L"r_attach_hand_00";
 		weaponSocket.rotation = Quaternion::CreateFromYawPitchRoll(Math::GM_PI * 0.5f, Math::GM_PI, -Math::GM_PI * 0.5f);
 		socketComponent->AddSocket(L"Player.Weapon", weaponSocket);
+		for (const ChiEffectSocketBinding& binding : ChiEffectSocketBindings)
+		{
+			Socket effectSocket{};
+			effectSocket.boneName = binding.boneName;
+			socketComponent->AddSocket(binding.socketName, effectSocket);
+		}
 
 		GameObject* weapon = scene.SpawnGameObject<GameObject>();
 		GM_ASSERT_RETURN_VAL(weapon, nullptr, "Player Weapon GameObject 생성에 실패했습니다.");
@@ -119,8 +127,10 @@ namespace gm
 		weaponFollowComponent->SetTarget(*player, L"Player.Weapon");
 		weaponFollowComponent->SetDestroyWithTarget(true);
 
+		GM_ASSERT_RETURN_VAL(player->AddComponent<ChiEffectComponent>(_resources, HiFiRushStatics::GetEffectPresets()), nullptr, "Player ChiEffectComponent 생성에 실패했습니다.");
 		ChiStateMachineComponent* stateMachineComponent = player->AddComponent<ChiStateMachineComponent>(weaponHitBox);
 		GM_ASSERT_RETURN_VAL(stateMachineComponent, nullptr, "Player ChiStateMachineComponent 생성에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(player->AddComponent<ChiAudioComponent>(), nullptr, "Player ChiAudioComponent 생성에 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(player->AddComponent<RhythmRankComponent>(), nullptr, "Player RhythmRankComponent 생성에 실패했습니다.");
 
 		BeatSkeletalAnimationSyncDesc animationSyncDesc{};
@@ -139,7 +149,7 @@ namespace gm
 
 		CameraComponent* cameraComponent = cameraObject->AddComponent<CameraComponent>();
 		const float aspectRatio = static_cast<float>(APPLICATION.GetWidth()) / static_cast<float>(APPLICATION.GetHeight());
-		cameraComponent->SetPerspective(Math::GM_PI / 3.f, aspectRatio, 0.1f, 5000.f);
+		cameraComponent->SetPerspective(Math::GM_PI / 3.f, aspectRatio, 0.1f, 500.f);
 		scene.GetCameraManager()->RegisterCamera(PlayerCameraKey, cameraComponent);
 		GM_ASSERT_RETURN_VAL(player->AddComponent<PlayerTargetingComponent>(APPLICATION.GetPhysicsSystem().GetPhysicsSystem3D(), *cameraComponent), nullptr, "PlayerTargetingComponent 생성에 실패했습니다.");
 		moveComponent->SetMovementCamera(*cameraComponent);

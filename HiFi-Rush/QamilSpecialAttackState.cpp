@@ -1,8 +1,12 @@
 #include "QamilSpecialAttackState.h"
 
+#include "AudioStatics.h"
+#include "BeatSystem.h"
 #include "GameObject.h"
 #include "HiFiRushCollisionLayers.h"
+#include "HiFiRushAudio.h"
 #include "MathUtil.h"
+#include "QamilEffectComponent.h"
 #include "QamilStateMachineComponent.h"
 #include "Scene.h"
 #include "SkeletalAnimationClip.h"
@@ -33,6 +37,7 @@ namespace gm
 		constexpr uint32 QamilLaserReboundCycleCount = 4;
 		constexpr float QamilLaserReboundStartBeat = 12.f;
 		constexpr float QamilLaserCollisionReleaseBeat = 4.f;
+		constexpr float QamilLaserRestoreEffectIntervalBeats = 1.5f;
 		constexpr std::array QamilLaserAttackBeats{ 4.f, 4.f + 7.f / 15.f, 5.f, 5.f + 7.f / 15.f, 8.f, 8.f + 7.f / 15.f, 9.f, 9.f + 7.f / 15.f };
 		constexpr uint32 QamilChainAttackCount = 3;
 		constexpr uint32 QamilChainWaitCycleCount = 6;
@@ -90,6 +95,8 @@ namespace gm
 		_phase = Phase::Attack;
 		_nextLaserIndex = 0;
 		_reboundCycleCount = 0;
+		_restoreEffectElapsedBeats = 0.f;
+		_previousBeat = context.beatSystem->HasPlaybackTime() ? std::optional<float>{ context.beatSystem->GetCurrentBeat() } : std::nullopt;
 		_isReboundCollisionEnabled = false;
 		GM_ASSERT_RETURN(ResolveHandColliders(context), "Qamil Laser Hand Collider를 찾을 수 없습니다.");
 		GM_ASSERT_RETURN(PlayBeatSyncedAnimation(context, QamilAnimationId::Laser, false), "Qamil Laser Animation 재생에 실패했습니다.");
@@ -97,12 +104,15 @@ namespace gm
 
 	void QamilLaserState::Tick(QamilStateContext& context, float)
 	{
+		UpdateRestoreEffect(context);
 		if (_phase == Phase::Attack)
 		{
 			const float animationBeat = GetAnimationBeat(context);
 			while (_nextLaserIndex < QamilLaserAttackBeats.size() && animationBeat >= QamilLaserAttackBeats[_nextLaserIndex])
 			{
-				GM_ASSERT(SpawnLaserHitBox(context, _nextLaserIndex), "Qamil Laser HitBox 생성에 실패했습니다. index=%u", _nextLaserIndex);
+				GM_ASSERT(SpawnLaserAttack(context, _nextLaserIndex), "Qamil Laser 공격 생성에 실패했습니다. index=%u", _nextLaserIndex);
+				if (_nextLaserIndex == 0 || _nextLaserIndex == QamilLaserAttackBeats.size() / 2)
+					PlaySound2D(HiFiRushSound::QamilLaser);
 				++_nextLaserIndex;
 			}
 			if (_isReboundCollisionEnabled == false && animationBeat >= QamilLaserReboundStartBeat)
@@ -143,6 +153,7 @@ namespace gm
 	void QamilLaserState::Exit(QamilStateContext& context)
 	{
 		SetReboundCollision(false);
+		_previousBeat.reset();
 		context.animatorComponent->SetPlayRate(GetBasePlayRate(context));
 	}
 
@@ -158,7 +169,7 @@ namespace gm
 		return true;
 	}
 
-	bool QamilLaserState::SpawnLaserHitBox(QamilStateContext& context, uint32 laserIndex) const
+	bool QamilLaserState::SpawnLaserAttack(QamilStateContext& context, uint32 laserIndex) const
 	{
 		if (laserIndex >= QamilLaserAttackBeats.size() || context.stateMachine == nullptr || context.transformComponent == nullptr)
 			return false;
@@ -184,7 +195,36 @@ namespace gm
 		desc.damageInfo.hitReactionType = HitReactionType::StrongKnockback;
 		desc.damageInfo.worldKnockbackDirection = platformInwardDirection;
 		desc.lifetime = QamilSpecialAttackHitBoxLifetime;
-		return scene->SpawnGameObject<TemporaryHitBoxObject>(desc) != nullptr;
+		if (scene->SpawnGameObject<TemporaryHitBoxObject>(desc) == nullptr)
+			return false;
+		QamilEffectComponent* effectComponent = context.stateMachine->GetOwner().GetComponent<QamilEffectComponent>();
+		return effectComponent && effectComponent->SpawnLaserStrike(center, platformInwardDirection);
+	}
+
+	void QamilLaserState::UpdateRestoreEffect(QamilStateContext& context)
+	{
+		if (context.beatSystem->HasPlaybackTime() == false)
+		{
+			_previousBeat.reset();
+			return;
+		}
+
+		const float currentBeat = context.beatSystem->GetCurrentBeat();
+		const float beatDelta = _previousBeat.has_value() ? std::max(0.f, currentBeat - _previousBeat.value()) : 0.f;
+		_previousBeat = currentBeat;
+		const bool shouldSpawnRestoreEffect = (_phase == Phase::Attack && GetAnimationBeat(context) >= QamilLaserReboundStartBeat) || _phase == Phase::Rebound;
+		if (shouldSpawnRestoreEffect == false)
+			return;
+
+		_restoreEffectElapsedBeats += beatDelta;
+		while (_restoreEffectElapsedBeats >= QamilLaserRestoreEffectIntervalBeats)
+		{
+			_restoreEffectElapsedBeats -= QamilLaserRestoreEffectIntervalBeats;
+			const Vector3 leftHandCenter = static_cast<SphereCollider3DComponent*>(_leftHandCollider)->GetWorldShape().Center;
+			const Vector3 rightHandCenter = static_cast<SphereCollider3DComponent*>(_rightHandCollider)->GetWorldShape().Center;
+			QamilEffectComponent* effectComponent = context.stateMachine->GetOwner().GetComponent<QamilEffectComponent>();
+			GM_ASSERT(effectComponent && effectComponent->SpawnLaserRestoreSmoke(leftHandCenter, rightHandCenter), "Qamil Laser Restore Smoke 생성에 실패했습니다.");
+		}
 	}
 
 	void QamilLaserState::SetReboundCollision(bool isEnabled)
@@ -213,6 +253,7 @@ namespace gm
 		_targetAimOffset = {};
 		_attackAim.Initialize(context);
 		GM_ASSERT_RETURN(PlayBeatSyncedAnimation(context, QamilAnimationId::Wooth, false), "Qamil Chain Opening Animation 재생에 실패했습니다.");
+		PlaySound2D(HiFiRushSound::QamilChain);
 	}
 
 	void QamilChainState::Tick(QamilStateContext& context, float)
@@ -360,6 +401,9 @@ namespace gm
 		desc.lifetime = QamilSpecialAttackHitBoxLifetime;
 		if (scene->SpawnGameObject<TemporaryHitBoxObject>(desc) == nullptr)
 			return false;
+		QamilEffectComponent* effectComponent = owner.GetComponent<QamilEffectComponent>();
+		const bool hasSpawnedPunchImpact = effectComponent && effectComponent->SpawnPunchImpact(handShape.Center, handShape.Radius);
+		GM_ASSERT(hasSpawnedPunchImpact, "Qamil Chain Punch Impact 생성에 실패했습니다.");
 		_blockingHandCollider = handCollider;
 		_handCollisionDelayFrames = QamilHandCollisionDelayFrames;
 		return true;

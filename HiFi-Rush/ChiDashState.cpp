@@ -2,9 +2,12 @@
 #include "Application.h"
 #include "BeatSystem.h"
 #include "ChiAnimationSettings.h"
+#include "ChiEffectComponent.h"
 #include "ChiMoveComponent.h"
 #include "ChiStateMachineComponent.h"
 #include "Input.h"
+
+#include <array>
 
 namespace gm
 {
@@ -13,14 +16,16 @@ namespace gm
 		constexpr float AnimationTicksPerBeat = 15.f;
 		constexpr float DashChainInputStartBeat = 0.5f;
 		constexpr float DashNormalActionStartBeat = 0.6f;
+		constexpr float DashJumpStartBeat = 0.2f;
 		constexpr float DirectionalDashRunTransitionBeat = 1.f + 7.5f / AnimationTicksPerBeat;
-		constexpr float DoubleDashRunTransitionBeat = 1.5f;
+		constexpr float DoubleDashRunTransitionBeat = 1.f + 5.f / AnimationTicksPerBeat;
 		constexpr float TripleDashRunTransitionBeat = 1.f + 5.f / AnimationTicksPerBeat;
+		constexpr std::array<float, 3> DoubleDashCrescentBeats = { 1.f / AnimationTicksPerBeat, 3.f / AnimationTicksPerBeat, 5.f / AnimationTicksPerBeat };
 	}
 
 	/// Dash //////////////////////////////////////////////////////////////////////////////
-	ChiDashState::ChiDashState(ChiStateId stateId, ChiAnimationClipId animationClipId, ChiDashDirection direction, bool rotateToDashDirection, float runTransitionStartBeat, ChiStateId nextDashState)
-		: ChiState(stateId, animationClipId), _direction(direction), _nextDashState(nextDashState), _rotateToDashDirection(rotateToDashDirection), _runTransitionStartBeat(runTransitionStartBeat)
+	ChiDashState::ChiDashState(ChiStateId stateId, ChiAnimationClipId animationClipId, ChiDashDirection direction, bool rotateToDashDirection, float runTransitionStartBeat, ChiStateId nextDashState, float cameraDistanceOffset, float landingEffectBeat, float landingEffectForwardOffset)
+		: ChiState(stateId, animationClipId), _direction(direction), _nextDashState(nextDashState), _rotateToDashDirection(rotateToDashDirection), _runTransitionStartBeat(runTransitionStartBeat), _cameraDistanceOffset(cameraDistanceOffset), _landingEffectBeat(landingEffectBeat), _landingEffectForwardOffset(landingEffectForwardOffset)
 	{
 	}
 
@@ -28,18 +33,26 @@ namespace gm
 	{
 		ChiState::Enter(context);
 		_bufferedAttackInput.reset();
+		_hasSpawnedLandingEffect = false;
 
 		_cachedDirection = GetDashDirection(context);
 		if (_rotateToDashDirection)
 			context.moveComponent->FaceDirectionImmediate(_cachedDirection);
+		context.effectComponent->SpawnDashEffect(_cachedDirection, _cameraDistanceOffset);
 	}
 
 	void ChiDashState::Tick(ChiStateContext& context, float)
 	{
+		if (_hasSpawnedLandingEffect == false && _landingEffectBeat >= 0.f && GetStateElapsedBeat(context) >= _landingEffectBeat)
+		{
+			context.effectComponent->SpawnDashLandingEffect(_landingEffectForwardOffset);
+			_hasSpawnedLandingEffect = true;
+		}
+
 		if (TryChangeDashAttack(context))
 			return;
 
-		if (context.jumpInput)
+		if (context.jumpInput && GetStateElapsedBeat(context) > DashJumpStartBeat)
 		{
 			context.stateMachine->ChangeState(ChiStateId::JumpUp, context.jumpInput.value());
 			return;
@@ -72,6 +85,11 @@ namespace gm
 
 		if (IsAnimationCompleted(context))
 			ReturnToIdleOrRun(context);
+	}
+
+	void ChiDashState::Exit(ChiStateContext& context)
+	{
+		context.effectComponent->EndDashEffect();
 	}
 
 	bool ChiDashState::TryChangeDashAttack(ChiStateContext& context)
@@ -141,32 +159,49 @@ namespace gm
 	}
 
 	ChiDashFrontState::ChiDashFrontState()
-		: ChiDashState(ChiStateId::DashFront, ChiAnimationClipId::DashFront, ChiDashDirection::Front, false, DirectionalDashRunTransitionBeat, ChiStateId::DashDouble)
+		: ChiDashState(ChiStateId::DashFront, ChiAnimationClipId::DashFront, ChiDashDirection::Front, false, DirectionalDashRunTransitionBeat, ChiStateId::DashDouble, 0.5f)
 	{
 	}
 
 	ChiDashBackState::ChiDashBackState()
-		: ChiDashState(ChiStateId::DashBack, ChiAnimationClipId::DashBack, ChiDashDirection::Back, false, DirectionalDashRunTransitionBeat, ChiStateId::DashDouble)
+		: ChiDashState(ChiStateId::DashBack, ChiAnimationClipId::DashBack, ChiDashDirection::Back, false, DirectionalDashRunTransitionBeat, ChiStateId::DashDouble, 0.5f)
 	{
 	}
 
 	ChiDashLeftState::ChiDashLeftState()
-		: ChiDashState(ChiStateId::DashLeft, ChiAnimationClipId::DashLeft, ChiDashDirection::Left, false, DirectionalDashRunTransitionBeat, ChiStateId::DashDouble)
+		: ChiDashState(ChiStateId::DashLeft, ChiAnimationClipId::DashLeft, ChiDashDirection::Left, false, DirectionalDashRunTransitionBeat, ChiStateId::DashDouble, 0.5f)
 	{
 	}
 
 	ChiDashRightState::ChiDashRightState()
-		: ChiDashState(ChiStateId::DashRight, ChiAnimationClipId::DashRight, ChiDashDirection::Right, false, DirectionalDashRunTransitionBeat, ChiStateId::DashDouble)
+		: ChiDashState(ChiStateId::DashRight, ChiAnimationClipId::DashRight, ChiDashDirection::Right, false, DirectionalDashRunTransitionBeat, ChiStateId::DashDouble, 0.5f)
 	{
 	}
 
 	ChiDashDoubleState::ChiDashDoubleState()
-		: ChiDashState(ChiStateId::DashDouble, ChiAnimationClipId::DashDouble, ChiDashDirection::InputOrFront, true, DoubleDashRunTransitionBeat, ChiStateId::DashTriple)
+		: ChiDashState(ChiStateId::DashDouble, ChiAnimationClipId::DashDouble, ChiDashDirection::InputOrFront, true, DoubleDashRunTransitionBeat, ChiStateId::DashTriple, 1.f, DoubleDashRunTransitionBeat, 0.2f)
 	{
 	}
 
+	void ChiDashDoubleState::Enter(ChiStateContext& context)
+	{
+		ChiDashState::Enter(context);
+		_nextCrescentIndex = 0;
+	}
+
+	void ChiDashDoubleState::Tick(ChiStateContext& context, float deltaTime)
+	{
+		const float elapsedBeat = GetElapsedBeatAfterBlend(context);
+		while (_nextCrescentIndex < DoubleDashCrescentBeats.size() && elapsedBeat >= DoubleDashCrescentBeats[_nextCrescentIndex])
+		{
+			context.effectComponent->SpawnDoubleDashCrescent(_nextCrescentIndex);
+			++_nextCrescentIndex;
+		}
+		ChiDashState::Tick(context, deltaTime);
+	}
+
 	ChiDashTripleState::ChiDashTripleState()
-		: ChiDashState(ChiStateId::DashTriple, ChiAnimationClipId::DashTriple, ChiDashDirection::InputOrFront, true, TripleDashRunTransitionBeat)
+		: ChiDashState(ChiStateId::DashTriple, ChiAnimationClipId::DashTriple, ChiDashDirection::InputOrFront, true, TripleDashRunTransitionBeat, ChiStateId::None, 2.f, TripleDashRunTransitionBeat, 0.3f)
 	{
 	}
 

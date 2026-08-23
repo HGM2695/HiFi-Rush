@@ -6,6 +6,7 @@
 namespace gm
 {
 	struct AnimationNotifyEvent;
+	class GunnerEffectComponent;
 	class SkeletalAnimatorComponent;
 
 	// GunnerIdleState /////////////////////////////////////////////////////////////////////////
@@ -49,6 +50,8 @@ namespace gm
 		float		_attackRangeMin = 0.f;
 		float		_attackRangeMax = 0.f;
 		MoveType	_moveType = MoveType::None;
+		int64		_lastFootstepBeatIndex = -1;
+		size_t		_footstepIndex = 0;
 	};
 
 	// GunnerAttackState /////////////////////////////////////////////////////////////////////////
@@ -78,10 +81,13 @@ namespace gm
 
 		void BeginShoot(MonsterStateContext& context);
 		void BeginLanding(MonsterStateContext& context);
-		bool HasReachedAimLockTime(const MonsterStateContext& context) const;
 		void LockAim(MonsterStateContext& context);
 		void HandleAnimationNotify(MonsterStateContext& context, SkeletalAnimatorComponent& animator, const AnimationNotifyEvent& event);
 		void SpawnLaser(MonsterStateContext& context);
+		void UpdateLaserGuide(MonsterStateContext& context);
+		float GetAnimationBeat(const MonsterStateContext& context) const;
+		float GetLaserGuideHalfWidth(const MonsterStateContext& context) const;
+		GunnerEffectComponent* GetEffectComponent(const MonsterStateContext& context) const;
 
 		EventConnection		_notifyConnection{};
 		int32				_damage = 0;
@@ -91,6 +97,9 @@ namespace gm
 		float				_lockedTargetDistance = 0.f;
 		bool				_previousUseGravity = true;
 		bool				_isAimLocked = false;
+		bool				_hasSpawnedLaser = false;
+		bool				_hasStartedLaserGuide = false;
+		bool				_hasPlayedShootSound = false;
 		bool				_overrodeSkyMovement = false;
 	};
 

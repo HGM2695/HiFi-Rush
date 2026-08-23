@@ -3,6 +3,8 @@
 #include "QamilAttackAim.h"
 #include "QamilState.h"
 
+#include <optional>
+
 namespace gm
 {
 	class Collider3DComponent;
@@ -24,7 +26,8 @@ namespace gm
 		};
 
 		bool ResolveHandColliders(QamilStateContext& context);
-		bool SpawnLaserHitBox(QamilStateContext& context, uint32 laserIndex) const;
+		bool SpawnLaserAttack(QamilStateContext& context, uint32 laserIndex) const;
+		void UpdateRestoreEffect(QamilStateContext& context);
 		void SetReboundCollision(bool isEnabled);
 
 		Collider3DComponent* _leftHandCollider = nullptr;
@@ -34,6 +37,8 @@ namespace gm
 		Phase _phase = Phase::Attack;
 		uint32 _nextLaserIndex = 0;
 		uint32 _reboundCycleCount = 0;
+		float _restoreEffectElapsedBeats = 0.f;
+		std::optional<float> _previousBeat{};
 		bool _isReboundCollisionEnabled = false;
 	};
 

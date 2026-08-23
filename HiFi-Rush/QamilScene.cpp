@@ -8,6 +8,7 @@
 #include "Collider3DComponent.h"
 #include "GameObject.h"
 #include "GameplayAnnouncementWidget.h"
+#include "GMLog.h"
 #include "HealthComponent.h"
 #include "HiFiRushAudio.h"
 #include "HiFiRushStatics.h"
@@ -142,6 +143,19 @@ namespace gm
 
 	void QamilScene::OnTick(float)
 	{
+	#if GM_ENABLE_DEBUG_TOOLS
+		if (APPLICATION.GetInput().IsKeyDown(KeyCode::F8))
+		{
+			GameObject* qamil = _qamil.Get();
+			HealthComponent* healthComponent = qamil ? qamil->GetComponent<HealthComponent>() : nullptr;
+			if (healthComponent)
+			{
+				const int32 halfHealth = healthComponent->GetMaxHealth() / 2;
+				healthComponent->SetHealth((std::min)(healthComponent->GetHealth(), halfHealth));
+				GM_LOG("[Qamil Debug] Health: %d / %d", healthComponent->GetHealth(), healthComponent->GetMaxHealth());
+			}
+		}
+	#endif
 		UpdateDefeatPresentation();
 		UpdateEncounter();
 		TickSceneTransitionDebug();

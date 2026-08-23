@@ -4,6 +4,7 @@
 #include "ChiAttackState.h"
 #include "ChiDamageState.h"
 #include "ChiDashState.h"
+#include "ChiEffectComponent.h"
 #include "ChiIdleRunState.h"
 #include "ChiJumpState.h"
 #include "ChiSpecialState.h"
@@ -36,6 +37,8 @@ namespace gm
 
 		_moveComponent = GetOwner().GetComponent<ChiMoveComponent>();
 		GM_ASSERT_RETURN(_moveComponent, "ChiStateMachineComponent는 ChiMoveComponent가 필요합니다.");
+		ChiEffectComponent* effectComponent = GetOwner().GetComponent<ChiEffectComponent>();
+		GM_ASSERT_RETURN(effectComponent, "ChiStateMachineComponent는 ChiEffectComponent가 필요합니다.");
 
 		_targetingComponent = GetOwner().GetComponent<PlayerTargetingComponent>();
 		GM_ASSERT_RETURN(_targetingComponent, "ChiStateMachineComponent는 PlayerTargetingComponent가 필요합니다.");
@@ -56,6 +59,8 @@ namespace gm
 		_context.animationSettings = &HiFiRushStatics::GetChiAnimationSettings();
 		_context.rhythmJudge = &HiFiRushStatics::GetRhythmJudge();
 		_context.moveComponent = _moveComponent;
+		_context.effectComponent = effectComponent;
+		_context.healthComponent = _healthComponent;
 		_context.targetingComponent = _targetingComponent;
 		_context.reverbComponent = _reverbComponent;
 		_context.rigidbodyComponent = rigidbodyComponent;
@@ -139,6 +144,9 @@ namespace gm
 
 	bool ChiStateMachineComponent::BeginBeatHit(BeatHitInputType inputType, uint32 targetBeatOffset)
 	{
+		if (_beatHitEnabled == false)
+			return false;
+
 		GM_ASSERT_RETURN_VAL(targetBeatOffset > 0, false, "Beat Hit 목표 Beat Offset은 0보다 커야 합니다.");
 		GM_ASSERT_RETURN_VAL(_context.beatSystem->HasPlaybackTime(), false, "Beat 재생 중에만 Beat Hit을 시작할 수 있습니다.");
 
@@ -162,6 +170,13 @@ namespace gm
 	{
 		_inputEnabled = enabled;
 		if (_inputEnabled == false)
+			CancelBeatHit();
+	}
+
+	void ChiStateMachineComponent::SetBeatHitEnabled(bool enabled)
+	{
+		_beatHitEnabled = enabled;
+		if (_beatHitEnabled == false)
 			CancelBeatHit();
 	}
 
@@ -326,12 +341,17 @@ namespace gm
 		if (_activeBeatHit && _activeBeatHit->ownerStateId == _currentStateId)
 			CancelBeatHit();
 
+		const ChiStateId previousStateId = _currentStateId;
 		ChiState* currentState = FindState(_currentStateId);
 		if (currentState)
 			currentState->Exit(_context);
 
 		_currentStateId = nextStateId;
 		next->Enter(_context);
+		ChiStateChangedEvent stateChangedEvent{};
+		stateChangedEvent.previousStateId = previousStateId;
+		stateChangedEvent.currentStateId = _currentStateId;
+		OnStateChanged.Publish(stateChangedEvent);
 		ResetTransitionOptions();
 		return true;
 	}
