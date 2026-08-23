@@ -107,6 +107,83 @@ flowchart LR
     Render --> End[Scene EndFrame]
 ```
 
+## Technical Highlights
+
+### 1. 하나의 Audio Clock으로 전체 장면 동기화
+
+#### 문제
+
+요구사항은 모든 오브젝트와 애니메이션이 음악의 Beat에 맞춰 움직이는 것이었습니다. 각 오브젝트가 Delta Time을 개별 누적하면 생성·활성화 시점에 따라 기준 시간이 달라지고, 음악과 연출 사이에 누적 오차가 생길 수 있습니다.
+
+#### 해결
+
+FMOD BGM 채널의 실제 재생 시각을 단일 기준 시계로 사용했습니다. `BeatSystem`이 재생 시각, BPM과 곡별 Offset으로 현재 Beat·Beat Index·진행률을 계산하고, 각 시스템은 시간을 직접 누적하는 대신 같은 Beat를 조회합니다.
+
+```mermaid
+flowchart LR
+    Audio[FMOD Playback Time] --> Beat[BeatSystem]
+    Beat --> Judge[Rhythm Judge]
+    Beat --> Animation[Animation Sync]
+    Beat --> Components[Beat Components]
+    Beat --> Widgets[Rhythm UI]
+```
+
+- `RhythmJudge`가 가장 가까운 정박과 입력의 차이를 ms 단위로 계산
+- 기본 판정 범위: `Perfect ±45 ms`, `Good ±90 ms`
+- 공격 Impact가 목표 정박에 도달하도록 애니메이션 재생 속도 보정
+- 이동, 회전, 가시성, Texture Sequence와 UV 이동을 `Beat*Component`로 캡슐화
+
+#### 결과
+
+프레임 변동과 오브젝트 활성화 시점에 따른 누적 오차를 방지하고, 음악·전투 애니메이션·UI와 환경 연출을 하나의 Beat 기준으로 동기화했습니다. 새로운 연출도 엔진 수정 없이 전용 Component를 조합하여 확장할 수 있습니다.
+
+주요 코드: [`BeatSystem`](HiFi-Rush/BeatSystem.cpp) · [`RhythmInputJudge`](HiFi-Rush/RhythmInputJudge.cpp) · [`BeatMoveComponent`](HiFi-Rush/BeatMoveComponent.cpp) · [`BeatSkeletalAnimationSyncComponent`](HiFi-Rush/BeatSkeletalAnimationSyncComponent.cpp)
+
+### 2. Animation Notify와 Runtime 실행 책임 분리
+
+State가 Animation 시간을 매 Tick 검사하면서 HitBox·Effect 생성과 수명까지 직접 관리하면, 타이밍 데이터와 Runtime 구현이 한곳에 결합됩니다.
+
+```mermaid
+flowchart LR
+    Clip[Animation Clip<br/>Notify Name · Time]
+    Dispatcher[AnimationNotifyDispatcher<br/>시간 경계 통과 감지]
+    Event[AnimationNotifyEvent]
+    State[Current State / Component<br/>이벤트 의미 해석]
+    HitSpawner[HitBox Spawner]
+    EffectSpawner[Effect Spawner]
+    HitRuntime[TemporaryHitBoxObject<br/>충돌 · 피해 · 수명]
+    EffectRuntime[EffectRuntimeObject<br/>부착 · Track · Dissolve · 수명]
+
+    Clip --> Dispatcher --> Event --> State
+    State --> HitSpawner --> HitRuntime
+    State --> EffectSpawner --> EffectRuntime
+```
+
+| 계층 | 책임 |
+|---|---|
+| Animation Notify | **언제** 실행할지 이름과 시점만 전달 |
+| State / Component | 현재 상태에서 **무엇을** 요청할지 해석 |
+| Spawner | 설정을 검증하고 Runtime Object 생성 정보 구성 |
+| Runtime Object | 충돌, 부착, Track 진행과 수명 등 **어떻게** 실행할지 소유 |
+
+활성 State는 필요한 Notify만 구독하고 State 종료 시 `EventConnection`을 해제합니다. 이에 따라 Animation 타이밍은 Notify Data에서, 실행 방식은 Spawner와 Runtime Object에서 독립적으로 변경할 수 있습니다.
+
+주요 코드: [`AnimationNotify`](Engine/AnimationNotify.cpp) · [`SkeletalAnimatorComponent`](Engine/SkeletalAnimatorComponent.cpp) · [`ChiAttackState`](HiFi-Rush/ChiAttackState.cpp) · [`EffectSpawner`](HiFi-Rush/EffectSpawner.cpp) · [`EffectRuntimeObject`](HiFi-Rush/EffectRuntimeObject.cpp)
+
+### 3. GameObject와 렌더링 정책 분리
+
+각 GameObject가 직접 Draw 순서와 Pipeline State를 결정하지 않습니다. Render Component는 Render Item만 제출하고, Renderer가 Material의 `SurfaceMode`, `ShadingModel`과 Mesh Section을 기준으로 Queue를 구성합니다.
+
+- Opaque·Masked Section을 먼저 렌더링하고 Transparent는 Back-to-Front로 정렬
+- Camera Frustum과 Bounding Volume을 이용한 Static·Skeletal Mesh Culling
+- Mesh·Material·Pipeline State 기준 Static Mesh Batch 구성
+- 동일 Mesh와 Material을 Instance Buffer로 묶어 `DrawIndexedInstanced` 실행
+- Opaque·Masked Section만 Shadow Caster로 제출
+
+이 구조를 통해 GameObject는 장면에서의 역할에 집중하고, 정렬·배칭·인스턴싱과 Render Pass 정책은 Renderer에서 일관되게 처리합니다.
+
+주요 코드: [`Renderer`](Engine/Renderer.cpp) · [`StaticMeshRenderPass`](Engine/StaticMeshRenderPass.cpp) · [`SkeletalMeshRenderPass`](Engine/SkeletalMeshRenderPass.cpp)
+
 ## Rendering Pipeline
 
 Opaque·Masked는 G-Buffer에 기록하고 조명을 Deferred로 계산합니다. Transparent와 World Sprite는 조명 합성 이후 Forward로 렌더링하며, UI와 Text는 Tone Mapping과 FXAA 이후 BackBuffer에 출력합니다.
