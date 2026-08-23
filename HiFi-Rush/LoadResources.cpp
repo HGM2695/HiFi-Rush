@@ -4,6 +4,7 @@
 #include "PathUtil.h"
 #include "Paths.h"
 #include "Resources.h"
+#include "Renderer.h"
 #include "SoundWave.h"
 #include "Texture.h"
 #include "TitleResources.h"
@@ -14,18 +15,19 @@ namespace gm
 {
 	namespace
 	{
-		bool LoadTexture(Resources& resources, IGraphicsResourceFactory& resourceFactory, const std::wstring& relativePath)
+		bool LoadTexture(Resources& resources, IGraphicsResourceFactory& resourceFactory, const std::wstring& relativePath, TextureColorSpace colorSpace = TextureColorSpace::SRGB)
 		{
 			const std::wstring key = GetFileNameWithoutExtension(relativePath);
 			if (resources.Find<Texture>(key))
 				return true;
 
-			TextureDesc desc{};
+			TextureLoadDesc desc{};
 			desc.path = GetTexturePath(relativePath);
+			desc.colorSpace = colorSpace;
 
-			std::shared_ptr<Texture> texture = resourceFactory.CreateTexture(desc);
-			GM_ASSERT_RETURN_VAL(texture, false, "UI Texture 생성에 실패했습니다. key=%ls", key.c_str());
-			GM_ASSERT_RETURN_VAL(resources.Add(key, texture), false, "UI Texture 등록에 실패했습니다. key=%ls", key.c_str());
+			std::shared_ptr<Texture> texture = resourceFactory.LoadTexture(desc);
+			GM_ASSERT_RETURN_VAL(texture, false, "Texture 생성에 실패했습니다. key=%ls", key.c_str());
+			GM_ASSERT_RETURN_VAL(resources.Add(key, texture), false, "Texture 등록에 실패했습니다. key=%ls", key.c_str());
 			return true;
 		}
 
@@ -61,6 +63,11 @@ namespace gm
 			if (LoadTexture(resources, resourceFactory, relativePath) == false)
 				return false;
 		}
+
+		constexpr wchar_t SpotLightCookieTexturePath[] = L"Mesh/Light/T_SpotCookie_Star.png";
+		if (LoadTexture(resources, resourceFactory, SpotLightCookieTexturePath, TextureColorSpace::Linear) == false)
+			return false;
+		APPLICATION.GetRenderer().SetSpotLightCookieTexture(resources.Find<Texture>(GetFileNameWithoutExtension(SpotLightCookieTexturePath)));
 
 		if (LoadSoundWave(resources, TitleResource::BGMKey, TitleResource::BGMFileName) == false)
 			return false;

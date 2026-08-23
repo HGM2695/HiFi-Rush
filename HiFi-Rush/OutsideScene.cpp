@@ -29,6 +29,7 @@ namespace gm
 		constexpr wchar_t SecondWaveTriggerId[] = L"Outside.SecondWave";
 		constexpr wchar_t FightDoorTriggerId[] = L"Outside.FirstFightDoor";
 		constexpr wchar_t ShuffleDialogTriggerId[] = L"Outside.ShuffleDialog";
+		constexpr wchar_t PanelTriggerId[] = L"Outside.Panels";
 		constexpr float TriggerAnimationBeatOffset = 2.f;
 	}
 
@@ -51,16 +52,19 @@ namespace gm
 			{
 				HandleDialogFinished(event);
 			});
+		GetTriggerSystem().OnTrigger.Subscribe(_triggerConnection, [this](const TriggerEvent& event) { HandleTrigger(event); });
 		GM_ASSERT_RETURN(PlayDialogSequence(HiFiRushDialogSequenceIds::SaverEncounter), "Outside Encounter Dialog 재생에 실패했습니다.");
 	}
 
 	void OutsideScene::OnExit()
 	{
 		_dialogFinishedConnection.Disconnect();
+		_triggerConnection.Disconnect();
 		DisconnectWaveDeathAnimationEvents();
 		_firstWaveMonsters.clear();
 		_secondWaveMonsters.clear();
 		_triggerSoundBeat.reset();
+		_nextPanelSoundIndex = static_cast<uint32>(_panelSoundBeats.size());
 		_encounterPhase = EncounterPhase::Intro;
 		APPLICATION.GetInput().SetCursorLocked(false);
 	}
@@ -208,5 +212,20 @@ namespace gm
 			_triggerSoundBeat.reset();
 		}
 
+		while (_nextPanelSoundIndex < _panelSoundBeats.size() && currentBeat >= _panelSoundBeats[_nextPanelSoundIndex])
+		{
+			PlaySound2D(HiFiRushSound::OutsideWallTrigger);
+			++_nextPanelSoundIndex;
+		}
+
+	}
+
+	void OutsideScene::HandleTrigger(const TriggerEvent& event)
+	{
+		if (event.type != TriggerType::Activate || event.triggerId != PanelTriggerId)
+			return;
+		for (size_t index = 0; index < _panelSoundBeats.size(); ++index)
+			_panelSoundBeats[index] = event.startBeat + static_cast<float>(index + 1);
+		_nextPanelSoundIndex = 0;
 	}
 }

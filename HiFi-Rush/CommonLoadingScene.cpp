@@ -7,8 +7,10 @@
 #include "CameraComponent.h"
 #include "CameraManager.h"
 #include "ChiAnimationTypes.h"
+#include "EffectPresets.h"
 #include "GameObject.h"
 #include "HiFiRushAudio.h"
+#include "HiFiRushStatics.h"
 #include "IGraphicsResourceFactory.h"
 #include "ITextRenderer.h"
 #include "LoadingScreenWidget.h"
@@ -25,6 +27,7 @@
 #include "SceneManager.h"
 #include "SkeletalAnimationClip.h"
 #include "SkeletalMesh.h"
+#include "SkySphereResources.h"
 #include "StaticMesh.h"
 #include "SoundWave.h"
 #include "Texture.h"
@@ -34,9 +37,35 @@
 #include <array>
 #include <chrono>
 #include <filesystem>
+#include <unordered_map>
 
 namespace gm
 {
+	namespace
+	{
+		const std::unordered_map<std::wstring, std::wstring>& GetMeshTexturePaths()
+		{
+			static const std::unordered_map<std::wstring, std::wstring> texturePaths = []
+				{
+					std::unordered_map<std::wstring, std::wstring> paths;
+					const std::filesystem::path rootPath = GetTexturePath(L"Mesh");
+					for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator(rootPath))
+					{
+						if (entry.is_regular_file() == false)
+							continue;
+
+						const std::wstring textureKey = GetFileNameWithoutExtension(entry.path().wstring());
+						if (textureKey.empty() == false)
+							paths.emplace(textureKey, entry.path().wstring());
+					}
+
+					return paths;
+				}();
+
+			return texturePaths;
+		}
+	}
+
 	void CommonLoadingScene::OnInitialize()
 	{
 		GameObject* cameraObject = SpawnGameObject<GameObject>();
@@ -117,6 +146,9 @@ namespace gm
 		if (sceneName == L"QamilScene")
 			return LoadQamilSceneResources(resources, resourceFactory);
 
+		if (sceneName == L"TestScene")
+			return LoadTestSceneResources(resources, resourceFactory);
+
 		SceneLoadData result{};
 		result.errorMessage = L"지원하지 않는 Scene 로딩 요청입니다.";
 		return result;
@@ -135,7 +167,10 @@ namespace gm
 		if (LoadTutorialUIResources(result, resources, resourceFactory) == false)
 			return result;
 
-		if (LoadMeshTextures(result, resources, resourceFactory) == false)
+		if (LoadGameplaySoundResources(result, resources) == false)
+			return result;
+
+		if (LoadEffectResources(result, resources, resourceFactory) == false)
 			return result;
 
 		if (LoadMapResources(result, resources, resourceFactory, L"TutorialMap.bin") == false)
@@ -147,9 +182,26 @@ namespace gm
 		if (LoadNavigationMesh(result, resources, L"tutorial", L"tutorial.bin") == false)
 			return result;
 
-		if (LoadRhythmBGM(result, resources, HiFiRushBGM::Tutorial) == false)
+		result.succeeded = true;
+		return result;
+	}
+
+	CommonLoadingScene::SceneLoadData CommonLoadingScene::LoadTestSceneResources(Resources& resources, IGraphicsResourceFactory& resourceFactory)
+	{
+		SceneLoadData result{};
+		if (LoadGameplaySoundResources(result, resources) == false)
 			return result;
-		if (LoadRhythmBGM(result, resources, HiFiRushBGM::TutorialRoadUp) == false)
+
+		if (LoadEffectResources(result, resources, resourceFactory) == false)
+			return result;
+
+		if (LoadMapResources(result, resources, resourceFactory, L"TutorialMap.bin") == false)
+			return result;
+
+		if (LoadChiResources(result, resources, resourceFactory) == false)
+			return result;
+
+		if (LoadNavigationMesh(result, resources, L"tutorial", L"tutorial.bin") == false)
 			return result;
 
 		result.succeeded = true;
@@ -205,6 +257,9 @@ namespace gm
 			L"UI/RhytmMeter/S_Thunder.dds",
 			L"UI/Fight/T_VFX_tk_word_FIGHT.dds",
 			L"UI/Yeah/Font_Yeah.dds",
+			L"UI/Hibiki/BackGround.dds",
+			L"UI/Hibiki/Chi.dds",
+			L"UI/Hibiki/Font_Hibiki.dds",
 			L"UI/Combo/Humburker.dds",
 			L"UI/Combo/GrandSlam.dds",
 			L"UI/Combo/BreakDown.dds",
@@ -231,10 +286,11 @@ namespace gm
 			if (resources.Find<Texture>(textureKey))
 				continue;
 
-			TextureDesc desc{};
+			TextureLoadDesc desc{};
 			desc.path = GetTexturePath(texturePath);
+			desc.colorSpace = TextureColorSpace::SRGB;
 
-			std::shared_ptr<Texture> texture = resourceFactory.CreateTexture(desc);
+			std::shared_ptr<Texture> texture = resourceFactory.LoadTexture(desc);
 			if (texture == nullptr)
 			{
 				outLoadData.errorMessage = L"Gameplay UI Texture 생성에 실패했습니다. key=" + textureKey;
@@ -280,9 +336,10 @@ namespace gm
 			if (resources.Find<Texture>(textureKey))
 				continue;
 
-			TextureDesc desc{};
+			TextureLoadDesc desc{};
 			desc.path = GetTexturePath(texturePath);
-			std::shared_ptr<Texture> texture = resourceFactory.CreateTexture(desc);
+			desc.colorSpace = TextureColorSpace::SRGB;
+			std::shared_ptr<Texture> texture = resourceFactory.LoadTexture(desc);
 			if (texture == nullptr)
 			{
 				outLoadData.errorMessage = L"Tutorial UI Texture 생성에 실패했습니다. key=" + textureKey;
@@ -361,9 +418,10 @@ namespace gm
 			if (resources.Find<Texture>(textureKey))
 				continue;
 
-			TextureDesc desc{};
+			TextureLoadDesc desc{};
 			desc.path = GetTexturePath(texturePath);
-			std::shared_ptr<Texture> texture = resourceFactory.CreateTexture(desc);
+			desc.colorSpace = TextureColorSpace::SRGB;
+			std::shared_ptr<Texture> texture = resourceFactory.LoadTexture(desc);
 			if (texture == nullptr)
 			{
 				outLoadData.errorMessage = L"Qamil UI Texture 생성에 실패했습니다. key=" + textureKey;
@@ -401,9 +459,10 @@ namespace gm
 			if (resources.Find<Texture>(textureKey))
 				continue;
 
-			TextureDesc desc{};
+			TextureLoadDesc desc{};
 			desc.path = GetTexturePath(texturePath);
-			std::shared_ptr<Texture> texture = resourceFactory.CreateTexture(desc);
+			desc.colorSpace = TextureColorSpace::SRGB;
+			std::shared_ptr<Texture> texture = resourceFactory.LoadTexture(desc);
 			if (texture == nullptr)
 			{
 				outLoadData.errorMessage = L"Dialog Texture 생성에 실패했습니다. key=" + textureKey;
@@ -462,39 +521,68 @@ namespace gm
 		return true;
 	}
 
-	bool CommonLoadingScene::LoadMeshTextures(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory)
+	bool CommonLoadingScene::LoadModelTextures(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory, const ModelData& modelData)
 	{
-		const std::filesystem::path meshTexturePath = GetTexturePath(L"Mesh");
-		for (const std::filesystem::directory_entry& entry : std::filesystem::recursive_directory_iterator(meshTexturePath))
+		for (const MeshMaterialSlot& materialSlot : modelData.materialSlots)
 		{
-			if (entry.is_regular_file() == false)
-				continue;
-
-			const std::wstring textureKey = GetFileNameWithoutExtension(entry.path().wstring());
-			if (textureKey.empty())
-				continue;
-
-			if (resources.Find<Texture>(textureKey))
-				continue;
-
-			TextureDesc desc{};
-			desc.path = entry.path().wstring();
-
-			std::shared_ptr<Texture> texture = resourceFactory.CreateTexture(desc);
-			if (texture == nullptr)
+			for (uint32 textureSlotIndex = 0; textureSlotIndex < TextureSlotCount; ++textureSlotIndex)
 			{
-				outLoadData.errorMessage = L"환경 Texture 생성에 실패했습니다. key=" + textureKey;
-				return false;
-			}
+				const std::wstring& textureKey = materialSlot.textureKeys[textureSlotIndex];
+				if (textureKey.empty())
+					continue;
 
-			outLoadData.resources.push_back({ textureKey, std::move(texture) });
+				const TextureSlot textureSlot = ToTextureSlot(textureSlotIndex);
+				if (LoadMeshTexture(outLoadData, resources, resourceFactory, textureKey, GetDefaultTextureColorSpace(textureSlot)) == false)
+					return false;
+			}
 		}
 
 		return true;
 	}
 
+	bool CommonLoadingScene::LoadMeshTexture(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory, const std::wstring& textureKey, TextureColorSpace colorSpace)
+	{
+		if (textureKey.empty())
+			return true;
+
+		const std::shared_ptr<Texture> registeredTexture = resources.Find<Texture>(textureKey);
+		if (registeredTexture)
+			return true;
+
+		for (const ResourceLoadData& loadData : outLoadData.resources)
+		{
+			if (loadData.key != textureKey || loadData.resource->GetType() != Texture::Type)
+				continue;
+
+			return true;
+		}
+
+		const auto texturePathIt = GetMeshTexturePaths().find(textureKey);
+		if (texturePathIt == GetMeshTexturePaths().end())
+		{
+			outLoadData.errorMessage = L"Model이 참조하는 Texture 파일을 찾을 수 없습니다. key=" + textureKey;
+			return false;
+		}
+
+		TextureLoadDesc desc{};
+		desc.path = texturePathIt->second;
+		desc.colorSpace = colorSpace;
+		std::shared_ptr<Texture> texture = resourceFactory.LoadTexture(desc);
+		if (texture == nullptr)
+		{
+			outLoadData.errorMessage = L"Model Texture 생성에 실패했습니다. key=" + textureKey;
+			return false;
+		}
+
+		outLoadData.resources.push_back({ textureKey, std::move(texture) });
+		return true;
+	}
+
 	bool CommonLoadingScene::LoadMapResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory, const std::wstring& mapFileName)
 	{
+		if (LoadSkySphereResources(outLoadData, resources, resourceFactory) == false)
+			return false;
+
 		const std::wstring mapKey = GetFileNameWithoutExtension(mapFileName);
 		std::shared_ptr<MapResource> mapResource = resources.Find<MapResource>(mapKey);
 		if (mapResource == nullptr)
@@ -520,13 +608,39 @@ namespace gm
 		modelIndices.reserve(mapResource->GetData().objects.size());
 		for (const EnvironmentObjectData& object : mapResource->GetData().objects)
 		{
-			if (object.renderType != EnvironmentRenderType::None)
+			if (object.hasRenderMesh)
 				modelIndices.push_back(object.modelIndex);
 			for (const EnvironmentComponentData& component : object.components)
 			{
 				const BeatStaticMeshCycleComponentData* meshCycle = std::get_if<BeatStaticMeshCycleComponentData>(&component);
 				if (meshCycle)
 					modelIndices.insert(modelIndices.end(), meshCycle->modelIndices.begin(), meshCycle->modelIndices.end());
+
+				const BeatTextureSequenceComponentData* textureSequence = std::get_if<BeatTextureSequenceComponentData>(&component);
+				if (textureSequence)
+				{
+					for (const std::wstring& textureKey : textureSequence->initialTextureKeys)
+					{
+						if (LoadMeshTexture(outLoadData, resources, resourceFactory, textureKey, GetDefaultTextureColorSpace(textureSequence->textureSlot)) == false)
+							return false;
+					}
+
+					for (const std::wstring& textureKey : textureSequence->triggeredTextureKeys)
+					{
+						if (LoadMeshTexture(outLoadData, resources, resourceFactory, textureKey, GetDefaultTextureColorSpace(textureSequence->textureSlot)) == false)
+							return false;
+					}
+				}
+
+				const TriggeredMaterialOverrideComponentData* materialOverride = std::get_if<TriggeredMaterialOverrideComponentData>(&component);
+				if (materialOverride)
+				{
+					for (const MaterialTextureOverrideData& overrideData : materialOverride->overrides)
+					{
+						if (LoadMeshTexture(outLoadData, resources, resourceFactory, overrideData.textureKey, GetDefaultTextureColorSpace(overrideData.textureSlot)) == false)
+							return false;
+					}
+				}
 			}
 		}
 
@@ -542,6 +656,8 @@ namespace gm
 
 			const std::wstring modelPath = GetModelPath(L"Binary/Environment/" + modelKey + L".bin");
 			ModelData modelData = loader.Load(modelPath);
+			if (LoadModelTextures(outLoadData, resources, resourceFactory, modelData) == false)
+				return false;
 
 			const bool hasValidMeshData =
 				modelData.type == ModelType::Static
@@ -632,6 +748,8 @@ namespace gm
 
 		BinaryModelLoader loader;
 		ModelData modelData = loader.Load(GetModelPath(L"Binary/Characters/Chi.bin"));
+		if (LoadModelTextures(outLoadData, resources, resourceFactory, modelData) == false)
+			return false;
 
 		if (resources.Find<SkeletalMesh>(ChiSkeletalMeshResourceKey) == nullptr)
 		{
@@ -676,6 +794,9 @@ namespace gm
 		if (resources.Find<StaticMesh>(ChiGuitarResourceKey) == nullptr)
 		{
 			ModelData guitarModelData = loader.Load(GetModelPath(L"Binary/Weapon/Guitar.bin"));
+			if (LoadModelTextures(outLoadData, resources, resourceFactory, guitarModelData) == false)
+				return false;
+
 			if (guitarModelData.type != ModelType::Static || guitarModelData.vertices.empty() || guitarModelData.indices.empty())
 			{
 				outLoadData.errorMessage = L"Chi Guitar 모델 데이터가 유효하지 않습니다.";
@@ -692,6 +813,33 @@ namespace gm
 			outLoadData.resources.push_back({ ChiGuitarResourceKey, std::move(guitarMesh) });
 		}
 
+		return true;
+	}
+
+	bool CommonLoadingScene::LoadSkySphereResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory)
+	{
+		if (resources.Find<StaticMesh>(SkySphereResource::ModelKey) && resources.Find<Texture>(SkySphereResource::BaseColorTextureKey))
+			return true;
+
+		BinaryModelLoader loader;
+		ModelData modelData = loader.Load(GetModelPath(SkySphereResource::ModelFileName));
+		if (LoadModelTextures(outLoadData, resources, resourceFactory, modelData) == false)
+			return false;
+
+		if (modelData.type != ModelType::Static || modelData.vertices.empty() || modelData.indices.empty())
+		{
+			outLoadData.errorMessage = L"Sky Sphere Model 데이터가 유효하지 않습니다.";
+			return false;
+		}
+
+		std::shared_ptr<StaticMesh> skySphere = StaticMesh::Create(modelData, resourceFactory);
+		if (skySphere == nullptr)
+		{
+			outLoadData.errorMessage = L"Sky Sphere StaticMesh 생성에 실패했습니다.";
+			return false;
+		}
+
+		outLoadData.resources.push_back({ SkySphereResource::ModelKey, std::move(skySphere) });
 		return true;
 	}
 
@@ -712,6 +860,9 @@ namespace gm
 		BinaryModelLoader loader;
 		const std::wstring modelPath = GetModelPath(L"Binary/Monsters/" + std::wstring(resourceInfo->modelFileName));
 		ModelData modelData = loader.Load(modelPath);
+		if (LoadModelTextures(outLoadData, resources, resourceFactory, modelData) == false)
+			return false;
+
 		if (modelData.type != ModelType::Skeletal || modelData.skinnedVertices.empty() || modelData.indices.empty() || modelData.animations.empty())
 		{
 			outLoadData.errorMessage = L"Monster 모델 데이터가 유효하지 않습니다. key=" + std::wstring(resourceInfo->commonResourceKey);
@@ -763,6 +914,8 @@ namespace gm
 		if (resourceInfo->weaponResourceKey != nullptr && resources.Find<StaticMesh>(resourceInfo->weaponResourceKey) == nullptr)
 		{
 			ModelData weaponModelData = loader.Load(GetModelPath(L"Binary/Weapon/" + std::wstring(resourceInfo->weaponModelFileName)));
+			if (LoadModelTextures(outLoadData, resources, resourceFactory, weaponModelData) == false)
+				return false;
 			if (weaponModelData.type != ModelType::Static || weaponModelData.vertices.empty() || weaponModelData.indices.empty())
 			{
 				outLoadData.errorMessage = L"Monster Weapon 모델 데이터가 유효하지 않습니다. key=" + std::wstring(resourceInfo->weaponResourceKey);
@@ -784,7 +937,7 @@ namespace gm
 
 	bool CommonLoadingScene::LoadQamilResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory)
 	{
-		bool hasAllResources = resources.Find<SkeletalMesh>(QamilSkeletalMeshResourceKey) != nullptr && resources.Find<SkeletalMesh>(QamilMissileSkeletalMeshResourceKey) != nullptr && resources.Find<SkeletalAnimationClip>(QamilMissileAnimationResourceKey) != nullptr;
+		bool hasAllResources = resources.Find<SkeletalMesh>(QamilSkeletalMeshResourceKey) != nullptr && resources.Find<SkeletalMesh>(QamilMissileSkeletalMeshResourceKey) != nullptr && resources.Find<SkeletalAnimationClip>(QamilMissileAnimationResourceKey) != nullptr && resources.Find<Texture>(QamilMissileWarningTextureResourceKey) != nullptr && resources.Find<Texture>(QamilPhase3BodyTextureResourceKey) != nullptr;
 		for (uint32 animationIndex = 0; animationIndex < QamilAnimationIdCount; ++animationIndex)
 			hasAllResources &= resources.Find<SkeletalAnimationClip>(GetQamilAnimationClipKey(static_cast<QamilAnimationId>(animationIndex))) != nullptr;
 		if (hasAllResources)
@@ -793,6 +946,15 @@ namespace gm
 		BinaryModelLoader loader;
 		const std::wstring modelPath = GetModelPath(L"Binary/Monsters/" + std::wstring(QamilModelFileName));
 		ModelData modelData = loader.Load(modelPath);
+		if (LoadModelTextures(outLoadData, resources, resourceFactory, modelData) == false)
+			return false;
+
+		if (LoadMeshTexture(outLoadData, resources, resourceFactory, QamilMissileWarningTextureResourceKey, TextureColorSpace::SRGB) == false)
+			return false;
+
+		if (LoadMeshTexture(outLoadData, resources, resourceFactory, QamilPhase3BodyTextureResourceKey, TextureColorSpace::SRGB) == false)
+			return false;
+
 		if (modelData.type != ModelType::Skeletal || modelData.skinnedVertices.empty() || modelData.indices.empty())
 		{
 			outLoadData.errorMessage = L"Qamil 모델 데이터가 유효하지 않습니다.";
@@ -835,6 +997,8 @@ namespace gm
 		}
 
 		ModelData missileModelData = loader.Load(GetModelPath(L"Binary/Monsters/" + std::wstring(QamilMissileModelFileName)));
+		if (LoadModelTextures(outLoadData, resources, resourceFactory, missileModelData) == false)
+			return false;
 		if (missileModelData.type != ModelType::Skeletal || missileModelData.skinnedVertices.empty() || missileModelData.indices.empty() || missileModelData.animations.size() != 1)
 		{
 			outLoadData.errorMessage = L"Qamil Missile 모델 데이터가 유효하지 않습니다.";
@@ -908,9 +1072,69 @@ namespace gm
 		return true;
 	}
 
-	bool CommonLoadingScene::LoadRhythmBGM(SceneLoadData& outLoadData, Resources& resources, const RhythmBGMDesc& desc)
+	bool CommonLoadingScene::LoadGameplaySoundResources(SceneLoadData& outLoadData, Resources& resources)
 	{
-		return LoadSoundWave(outLoadData, resources, desc.commonResourceKey, desc.fileName);
+		for (const SoundResourceDesc& desc : GetGameplaySoundResources())
+		{
+			if (LoadSoundWave(outLoadData, resources, desc.resourceKey, desc.fileName) == false)
+				return false;
+		}
+		for (const RhythmBGMDesc* desc : GetRhythmBGMs())
+		{
+			if (LoadSoundWave(outLoadData, resources, desc->commonResourceKey, desc->fileName) == false)
+				return false;
+		}
+		return true;
+	}
+
+	bool CommonLoadingScene::LoadEffectResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory)
+	{
+		for (const EffectPresetData& preset : HiFiRushStatics::GetEffectPresets().GetAll())
+		{
+			for (const EffectTrackData& track : preset.tracks)
+			{
+				if (track.visualType == EffectVisualType::Sprite && LoadMeshTexture(outLoadData, resources, resourceFactory, track.resourceKey, TextureColorSpace::Linear) == false)
+					return false;
+				if (track.visualType == EffectVisualType::StaticMesh && LoadEffectStaticMesh(outLoadData, resources, resourceFactory, track.resourceKey) == false)
+					return false;
+				if (LoadMeshTexture(outLoadData, resources, resourceFactory, track.baseColorTextureKey, TextureColorSpace::Linear) == false)
+					return false;
+				if (LoadMeshTexture(outLoadData, resources, resourceFactory, track.dissolveTextureKey, TextureColorSpace::Linear) == false)
+					return false;
+			}
+		}
+		return true;
+	}
+
+	bool CommonLoadingScene::LoadEffectStaticMesh(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory, const std::wstring& modelKey)
+	{
+		if (resources.Find<StaticMesh>(modelKey))
+			return true;
+		for (const ResourceLoadData& loadData : outLoadData.resources)
+		{
+			if (loadData.key == modelKey && loadData.resource->GetType() == StaticMesh::Type)
+				return true;
+		}
+
+		BinaryModelLoader loader;
+		ModelData modelData = loader.Load(GetModelPath(L"Binary/Effect/" + modelKey + L".bin"));
+		if (modelData.type != ModelType::Static || modelData.vertices.empty() || modelData.indices.empty())
+		{
+			outLoadData.errorMessage = L"Effect StaticMesh 데이터가 유효하지 않습니다. key=" + modelKey;
+			return false;
+		}
+		if (LoadModelTextures(outLoadData, resources, resourceFactory, modelData) == false)
+			return false;
+
+		std::shared_ptr<StaticMesh> staticMesh = StaticMesh::Create(modelData, resourceFactory);
+		if (staticMesh == nullptr)
+		{
+			outLoadData.errorMessage = L"Effect StaticMesh 생성에 실패했습니다. key=" + modelKey;
+			return false;
+		}
+
+		outLoadData.resources.push_back({ modelKey, std::move(staticMesh) });
+		return true;
 	}
 
 	CommonLoadingScene::SceneLoadData CommonLoadingScene::LoadOutsideSceneResources(Resources& resources, IGraphicsResourceFactory& resourceFactory)
@@ -923,7 +1147,10 @@ namespace gm
 		if (LoadDialogResources(result, resources, resourceFactory) == false)
 			return result;
 
-		if (LoadMeshTextures(result, resources, resourceFactory) == false)
+		if (LoadGameplaySoundResources(result, resources) == false)
+			return result;
+
+		if (LoadEffectResources(result, resources, resourceFactory) == false)
 			return result;
 
 		if (LoadMapResources(result, resources, resourceFactory, L"OutsideMap.bin") == false)
@@ -933,12 +1160,6 @@ namespace gm
 			return result;
 
 		if (LoadNavigationMesh(result, resources, L"jump_outside", L"jump_outside.bin") == false)
-			return result;
-
-		if (LoadRhythmBGM(result, resources, HiFiRushBGM::Outside) == false)
-			return result;
-
-		if (LoadSoundWave(result, resources, HiFiRushSound::OutsideTriggerOpen, HiFiRushSound::OutsideTriggerOpenFileName) == false)
 			return result;
 
 		result.succeeded = true;
@@ -958,7 +1179,10 @@ namespace gm
 		if (LoadQamilUIResources(result, resources, resourceFactory) == false)
 			return result;
 
-		if (LoadMeshTextures(result, resources, resourceFactory) == false)
+		if (LoadGameplaySoundResources(result, resources) == false)
+			return result;
+
+		if (LoadEffectResources(result, resources, resourceFactory) == false)
 			return result;
 
 		if (LoadMapResources(result, resources, resourceFactory, L"QamilMap.bin") == false)
@@ -971,9 +1195,6 @@ namespace gm
 			return result;
 
 		if (LoadNavigationMesh(result, resources, L"qamil", L"qamil.bin") == false)
-			return result;
-
-		if (LoadRhythmBGM(result, resources, HiFiRushBGM::Qamil) == false)
 			return result;
 
 		result.succeeded = true;

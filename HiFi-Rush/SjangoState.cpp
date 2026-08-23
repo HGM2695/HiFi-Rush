@@ -1,6 +1,7 @@
 #include "SjangoState.h"
 
 #include "CombatTypes.h"
+#include "HiFiRushAudio.h"
 #include "MonsterStateMachineComponent.h"
 #include "SjangoAnimationTypes.h"
 
@@ -11,6 +12,9 @@ namespace gm
 		const DamageState damageState = event.damageResult.state;
 		if (damageState != DamageState::Applied && damageState != DamageState::Blocked)
 			return;
+
+		if (damageState == DamageState::Blocked)
+			PlayRandomSound2D(HiFiRushSound::MonsterHitImpacts);
 
 		context.stateMachine->ChangeState(MonsterStateId::Damage, true);
 	}

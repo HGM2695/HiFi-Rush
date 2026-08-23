@@ -23,7 +23,6 @@ namespace gm
 		constexpr float TutorialDurationBeats = 14.f;
 		constexpr float ResultDisplayDurationBeats = 0.75f;
 		constexpr float TimelinePixelsPerBeat = 88.75f;
-		constexpr float CuePlaybackLeadBeats = 0.5f;
 
 		struct TutorialCue
 		{
@@ -508,7 +507,7 @@ namespace gm
 			cueCount = static_cast<uint32>(StrongTutorialCues.size());
 		}
 
-		while (_nextCueIndex < cueCount && elapsedBeat + CuePlaybackLeadBeats >= cues[_nextCueIndex].beat)
+		while (_nextCueIndex < cueCount && elapsedBeat >= cues[_nextCueIndex].beat)
 		{
 			const TutorialCue& cue = cues[_nextCueIndex];
 			PlayCue(cue.resourceKey);

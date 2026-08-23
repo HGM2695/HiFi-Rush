@@ -30,10 +30,11 @@ namespace gm
 		_frames.reserve(TitleResource::FrameCount);
 		for (uint32 frameIndex = 0; frameIndex < TitleResource::FrameCount; ++frameIndex)
 		{
-			TextureDesc desc{};
+			TextureLoadDesc desc{};
 			desc.path = GetTexturePath(TitleResource::GetFrameTexturePath(frameIndex));
+			desc.colorSpace = TextureColorSpace::SRGB;
 
-			std::shared_ptr<Texture> frame = resourceFactory.CreateTexture(desc);
+			std::shared_ptr<Texture> frame = resourceFactory.LoadTexture(desc);
 			GM_ASSERT_RETURN(frame, "Title Texture 생성에 실패했습니다. frame=%u", frameIndex);
 			_frames.push_back(std::move(frame));
 		}

@@ -12,7 +12,8 @@ namespace gm
 	class Resource;
 	class Resources;
 	enum class MonsterType : uint32;
-	struct RhythmBGMDesc;
+	enum class TextureColorSpace;
+	struct ModelData;
 
 	class CommonLoadingScene : public Scene
 	{
@@ -48,20 +49,25 @@ namespace gm
 
 		static SceneLoadData	LoadPendingSceneResources(const std::wstring& sceneName, Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static SceneLoadData	LoadTutorialSceneResources(Resources& resources, IGraphicsResourceFactory& resourceFactory);
+		static SceneLoadData	LoadTestSceneResources(Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static SceneLoadData	LoadOutsideSceneResources(Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static SceneLoadData	LoadQamilSceneResources(Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static bool				LoadGameplayUIResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static bool				LoadTutorialUIResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static bool				LoadQamilUIResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static bool				LoadDialogResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory);
-		static bool				LoadMeshTextures(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory);
+		static bool				LoadGameplaySoundResources(SceneLoadData& outLoadData, Resources& resources);
+		static bool				LoadEffectResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory);
+		static bool				LoadEffectStaticMesh(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory, const std::wstring& modelKey);
+		static bool				LoadModelTextures(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory, const ModelData& modelData);
+		static bool				LoadMeshTexture(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory, const std::wstring& textureKey, TextureColorSpace colorSpace);
 		static bool				LoadMapResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory, const std::wstring& mapFileName);
+		static bool				LoadSkySphereResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static bool				LoadChiResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static bool				LoadMonsterResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory, MonsterType monsterType);
 		static bool				LoadQamilResources(SceneLoadData& outLoadData, Resources& resources, IGraphicsResourceFactory& resourceFactory);
 		static bool				LoadNavigationMesh(SceneLoadData& outLoadData, Resources& resources, const std::wstring& key, const std::wstring& fileName);
 		static bool				LoadSoundWave(SceneLoadData& outLoadData, Resources& resources, const std::wstring& key, const std::wstring& fileName);
-		static bool				LoadRhythmBGM(SceneLoadData& outLoadData, Resources& resources, const RhythmBGMDesc& desc);
 
 		bool					RegisterLoadedResources();
 		void					RequestTargetSceneTransition();

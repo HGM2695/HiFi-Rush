@@ -2,6 +2,7 @@
 #include "AttackGuideWidget.h"
 #include "RhythmTutorialWidget.h"
 #include "Application.h"
+#include "AudioComponent.h"
 #include "BeatSystem.h"
 #include "ChiStateMachineComponent.h"
 #include "DialogComponent.h"
@@ -77,11 +78,22 @@ namespace gm
 		GM_ASSERT_RETURN(InitializeMap(L"TutorialMap"), "Tutorial Map 구성에 실패했습니다.");
 
 		PlayerSpawnDesc playerDesc{};
-		playerDesc.position = Vector3{ 6.5f, 1.4f, 0.f };
+		playerDesc.position = Vector3{ 6.5f, 1.3f, 0.f };
 		playerDesc.rotationY = Math::GM_PI * 0.5f;
-		playerDesc.cameraDistance = 4.f;
+		playerDesc.cameraDistance = 4.5f;
 		playerDesc.cameraYaw = Math::GM_PI * 0.5f;
 		GM_ASSERT_RETURN(InitializePlayer(playerDesc), "Tutorial Player 생성에 실패했습니다.");
+		GameObject* player = GetPlayer().Get();
+		GM_ASSERT_RETURN(player, "Tutorial Player가 유효하지 않습니다.");
+		ChiStateMachineComponent* stateMachine = player->GetComponent<ChiStateMachineComponent>();
+		GM_ASSERT_RETURN(stateMachine, "Tutorial Player의 ChiStateMachineComponent가 없습니다.");
+		stateMachine->SetBeatHitEnabled(false);
+
+		GameObject* crowdAudioObject = SpawnGameObject<GameObject>();
+		AudioComponent* crowdAudio = crowdAudioObject->AddComponent<AudioComponent>(HiFiRushSound::TutorialCrowd);
+		crowdAudio->SetLooping(true);
+		crowdAudio->SetAutoPlay(true);
+		crowdAudio->SetVolume(0.7f);
 
 		GetCameraManager()->SetPixelSnapEnabled(false);
 	}
@@ -91,6 +103,10 @@ namespace gm
 		PlayScheduledDialog();
 		PlayScheduledRoadUpBGM();
 		TickSceneTransitionDebug();
+#if GM_ENABLE_DEBUG_TOOLS
+		if (APPLICATION.GetInput().IsKeyDown(KeyCode::T))
+			CompleteTutorial();
+#endif
 	}
 
 	void TutorialScene::InitializeTutorialFlow()
@@ -157,14 +173,7 @@ namespace gm
 			_attackGuideWidget->Show(RhythmTutorialType::Strong);
 		}
 		else if (event.sequenceId == HiFiRushDialogSequenceIds::StrongAttackRhythm)
-		{
-			_tutorialPhase = TutorialPhase::Completed;
-			const BeatSystem& beatSystem = HiFiRushStatics::GetBeatSystem();
-			_roadUpBGMStartBeat = static_cast<float>(beatSystem.GetCurrentBeatIndex() + 1);
-			_isRoadUpBGMQueued = true;
-			GM_ASSERT_RETURN(GetTriggerSystem().Activate(RoadUpTriggerId), "Tutorial 바닥 상승 Trigger 실행에 실패했습니다.");
-			_playerControlComponent->ReleaseControls(this);
-		}
+			CompleteTutorial();
 	}
 
 	void TutorialScene::HandleDialogBranchRequested(const DialogBranchRequestedEvent& event)
@@ -219,6 +228,23 @@ namespace gm
 		_playerControlComponent->BlockControls(this, PlayerControl::All);
 		const wchar_t* branchKey = event.grade == RhythmJudgeGrade::OffBeat ? HiFiRushDialogBranchKeys::Retry : HiFiRushDialogBranchKeys::Perfect;
 		GM_ASSERT_RETURN(SelectDialogBranch(branchKey), "Attack Rhythm Tutorial 결과 Dialog 선택에 실패했습니다. branch=%ls", branchKey);
+	}
+
+	void TutorialScene::CompleteTutorial()
+	{
+		if (_tutorialPhase == TutorialPhase::Completed)
+			return;
+
+		_tutorialPhase = TutorialPhase::Completed;
+		_pendingDialogSequenceId = nullptr;
+		_attackGuideWidget->Hide();
+		_rhythmTutorialWidget->Hide();
+		GetDialogComponent().Stop();
+		const BeatSystem& beatSystem = HiFiRushStatics::GetBeatSystem();
+		_roadUpBGMStartBeat = static_cast<float>(beatSystem.GetCurrentBeatIndex() + 1);
+		_isRoadUpBGMQueued = true;
+		GM_ASSERT_RETURN(GetTriggerSystem().Activate(RoadUpTriggerId), "Tutorial 바닥 상승 Trigger 실행에 실패했습니다.");
+		_playerControlComponent->ReleaseControls(this);
 	}
 
 	void TutorialScene::ScheduleDialog(const wchar_t* sequenceId)

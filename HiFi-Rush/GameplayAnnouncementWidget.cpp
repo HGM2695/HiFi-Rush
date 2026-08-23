@@ -1,8 +1,10 @@
 #include "GameplayAnnouncementWidget.h"
 
+#include "AudioStatics.h"
 #include "BeatSystem.h"
 #include "CanvasPanel.h"
 #include "Image.h"
+#include "HiFiRushAudio.h"
 #include "MathUtil.h"
 
 #include <algorithm>
@@ -60,6 +62,8 @@ namespace gm
 		_announcementImage->SetOpacity(info.opacity);
 		_announcementImage->SetVisible(true);
 		ApplyAnimation(0.f);
+		if (type == GameplayAnnouncementType::Fight)
+			PlaySound2D(HiFiRushSound::FightAnnouncement);
 	}
 
 	void GameplayAnnouncementWidget::Stop()
