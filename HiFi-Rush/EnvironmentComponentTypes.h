@@ -2,6 +2,7 @@
 
 #include "CollisionTypes.h"
 #include "GraphicsTypes.h"
+#include "LightTypes.h"
 #include "MathTypes.h"
 #include "Types.h"
 
@@ -199,6 +200,66 @@ namespace gm
 		int32			damage = 50;
 	};
 
+	struct DirectionalLightComponentData
+	{
+		Color	color = Colors::White;
+		float	intensity = 1.f;
+		bool	castsShadow = false;
+	};
+
+	struct PointLightComponentData
+	{
+		Color	color = Colors::White;
+		float	intensity = 1.f;
+		float	range = 10.f;
+	};
+
+	struct SpotLightComponentData
+	{
+		Color	color = Colors::White;
+		float	intensity = 1.f;
+		float	range = 10.f;
+		float	innerConeAngleDegrees = 20.f;
+		float	outerConeAngleDegrees = 30.f;
+		SpotConeFalloff coneFalloff = SpotConeFalloff::Smooth;
+		bool	useCookie = false;
+	};
+
+	struct ContinuousRotationComponentData
+	{
+		Vector3	axis{ 0.f, 1.f, 0.f };
+		float	angularSpeedDegrees = 0.f;
+	};
+
+	struct TriggeredLightColorComponentData
+	{
+		TriggerBindingData	triggerBindingData{};
+		Color				color = Colors::White;
+	};
+
+	struct BeatTextureUVScrollComponentData
+	{
+		uint32	materialSlot = 0;
+		Vector2	offsetPerBeat{};
+	};
+
+	struct BeatTextureUVStepComponentData
+	{
+		uint32	materialSlot = 0;
+		Vector2	firstOffset{};
+		Vector2	secondOffset{};
+		float	stepDurationBeats = 1.f;
+	};
+
+	struct BeatMaterialBrightnessPulseComponentData
+	{
+		uint32	materialSlot = 0;
+		uint32	activeBeatMask = 1;
+		uint32	patternLengthBeats = 1;
+		float	minimumBrightness = 1.f;
+		float	maximumBrightness = 1.f;
+	};
+
 	enum class EnvironmentComponentType : uint32
 	{
 		BeatMove,
@@ -224,6 +285,14 @@ namespace gm
 		BeatTriggeredRotationShake,
 		BeatTextureSequence,
 		TriggeredMaterialOverride,
+		DirectionalLight,
+		PointLight,
+		SpotLight,
+		ContinuousRotation,
+		TriggeredLightColor,
+		BeatTextureUVScroll,
+		BeatTextureUVStep,
+		BeatMaterialBrightnessPulse,
 		Count,
 	};
 
@@ -250,7 +319,15 @@ namespace gm
 		FallRespawnTriggerComponentData,
 		BeatTriggeredRotationShakeComponentData,
 		BeatTextureSequenceComponentData,
-		TriggeredMaterialOverrideComponentData>;
+		TriggeredMaterialOverrideComponentData,
+		DirectionalLightComponentData,
+		PointLightComponentData,
+		SpotLightComponentData,
+		ContinuousRotationComponentData,
+		TriggeredLightColorComponentData,
+		BeatTextureUVScrollComponentData,
+		BeatTextureUVStepComponentData,
+		BeatMaterialBrightnessPulseComponentData>;
 
 	static_assert(std::variant_size_v<EnvironmentComponentData> == static_cast<size_t>(EnvironmentComponentType::Count));
 }

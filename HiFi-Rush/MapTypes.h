@@ -1,26 +1,29 @@
 #pragma once
 
 #include "EnvironmentComponentTypes.h"
+#include "FogTypes.h"
+#include "LightTypes.h"
+#include "MaterialTypes.h"
 #include "MathTypes.h"
 #include "MonsterTypes.h"
+#include "ToneMappingTypes.h"
 #include "Types.h"
 
 #include <vector>
 
 namespace gm
 {
-	enum class EnvironmentRenderType : uint32
+	struct MaterialColorOverrideData
 	{
-		None,
-		Opaque = 2,
-		InOrderBlend = 4,
-		AfterEdge = 5,
+		uint32				materialSlot = 0;
+		MaterialColorData	colorData{};
 	};
 
 	struct EnvironmentObjectData
 	{
 		std::vector<EnvironmentComponentData>	components{};
-		EnvironmentRenderType					renderType = EnvironmentRenderType::None;
+		std::vector<MaterialColorOverrideData>	materialColorOverrides{};
+		bool								hasRenderMesh = false;
 		uint32									modelIndex = 0;
 		Matrix									world = Matrix::Identity;
 	};
@@ -29,5 +32,8 @@ namespace gm
 	{
 		std::vector<EnvironmentObjectData>	objects;
 		std::vector<MonsterSpawnData>		monsterSpawnDatas;
+		SceneAmbientSettings				ambientSettings{};
+		DepthFogSettings					depthFogSettings{};
+		ToneMappingSettings				toneMappingSettings{};
 	};
 }

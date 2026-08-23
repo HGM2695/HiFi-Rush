@@ -11,6 +11,9 @@
 #include "RhythmBarWidget.h"
 #include "RhythmMeterWidget.h"
 #include "RhythmRankComponent.h"
+#include "SkySphereResources.h"
+#include "StaticMesh.h"
+#include "Texture.h"
 #include "EnvironmentSpawner.h"
 #include "GameObject.h"
 #include "GMAssert.h"
@@ -24,6 +27,7 @@
 #include "PlayerSpawner.h"
 #include "PlayerStatusWidget.h"
 #include "Resources.h"
+#include "Renderer.h"
 #include "ReverbComponent.h"
 #include "ScreenWipeWidget.h"
 #include "Rigidbody3DComponent.h"
@@ -32,6 +36,7 @@
 #include "TriggerSystem.h"
 #include "UIManager.h"
 #include "NavMeshControllerComponent.h"
+#include "HibikiWidget.h"
 
 #include <cmath>
 #include <memory>
@@ -136,8 +141,17 @@ namespace gm
 		GM_ASSERT_RETURN_VAL(mapResource, false, "MapResource가 로드되지 않았습니다. key=%ls", mapResourceKey.c_str());
 
 		const MapData& mapData = mapResource->GetData();
+		SetAmbientSettings(mapData.ambientSettings);
+		SetDepthFogSettings(mapData.depthFogSettings);
+		SetToneMappingSettings(mapData.toneMappingSettings);
 
-		EnvironmentSpawner environmentSpawner(APPLICATION.GetResources());
+		Resources& resources = APPLICATION.GetResources();
+		const std::shared_ptr<StaticMesh> skySphere = resources.Find<StaticMesh>(SkySphereResource::ModelKey);
+		const std::shared_ptr<Texture> skyTexture = resources.Find<Texture>(SkySphereResource::BaseColorTextureKey);
+		GM_ASSERT_RETURN_VAL(skySphere && skyTexture, false, "Sky Sphere Resource가 로드되지 않았습니다.");
+		APPLICATION.GetRenderer().SetSkySphere(skySphere, skyTexture);
+
+		EnvironmentSpawner environmentSpawner(resources);
 		GM_ASSERT_RETURN_VAL(environmentSpawner.Spawn(*this, mapData.objects), false, "환경 구성에 실패했습니다. key=%ls", mapResourceKey.c_str());
 
 		MonsterSpawner monsterSpawner(APPLICATION.GetResources());
@@ -190,6 +204,7 @@ namespace gm
 		uiManager.AddUserWidget<ComboResultWidget>(*stateMachine);
 		uiManager.AddUserWidget<BeatHitWidget>(HiFiRushStatics::GetBeatSystem(), *stateMachine);
 		_announcementWidget = uiManager.AddUserWidget<GameplayAnnouncementWidget>(HiFiRushStatics::GetBeatSystem());
+		uiManager.AddUserWidget<HibikiWidget>(HiFiRushStatics::GetBeatSystem(), *stateMachine);
 		uiManager.AddUserWidget<DialogWidget>(HiFiRushStatics::GetBeatSystem(), *_dialogComponent);
 		_screenWipeWidget = uiManager.AddUserWidget<ScreenWipeWidget>();
 
@@ -295,6 +310,7 @@ namespace gm
 
 	void GameplayScene::OnUnload()
 	{
+		APPLICATION.GetRenderer().ClearSkySphere();
 		_playerDeathConnection.Disconnect();
 		_playerDeathAnimationCompletedConnection.Disconnect();
 		_disabledPlayerColliders.clear();

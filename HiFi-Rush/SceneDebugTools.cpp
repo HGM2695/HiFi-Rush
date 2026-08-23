@@ -32,6 +32,10 @@ namespace gm
 	void TickSceneTransitionDebug()
 	{
 		const Input& input = APPLICATION.GetInput();
+		const bool hasModifier = input.IsKeyRepeat(KeyCode::LeftCtrl) || input.IsKeyRepeat(KeyCode::RightCtrl) || input.IsKeyRepeat(KeyCode::LeftShift) || input.IsKeyRepeat(KeyCode::RightShift) || input.IsKeyRepeat(KeyCode::LeftAlt) || input.IsKeyRepeat(KeyCode::RightAlt);
+		if (hasModifier)
+			return;
+
 		if (input.IsKeyDown(KeyCode::F1))
 		{
 			APPLICATION.GetSceneManager().RequestSceneChange(
@@ -53,6 +57,13 @@ namespace gm
 				L"CommonLoadingScene"
 			);
 		}
+		else if (input.IsKeyDown(KeyCode::F4))
+		{
+			APPLICATION.GetSceneManager().RequestSceneChange(
+				L"TestScene",
+				L"CommonLoadingScene"
+			);
+		}
 	}
 
 	void CreateEnvironmentOverviewCamera(Scene& scene, const Vector3& cameraPosition, const Vector3& targetPosition)
@@ -63,7 +74,7 @@ namespace gm
 
 		CameraComponent* camera = cameraObject->AddComponent<CameraComponent>();
 		const float aspectRatio = static_cast<float>(APPLICATION.GetWidth()) / static_cast<float>(APPLICATION.GetHeight());
-		camera->SetPerspective(Math::GM_PI / 3.f, aspectRatio, 0.1f, 5000.f);
+		camera->SetPerspective(Math::GM_PI / 3.f, aspectRatio, 0.1f, 500.f);
 		scene.GetCameraManager()->RegisterCamera(EnvironmentOverviewCameraKey, camera);
 #else
 		(void)scene;

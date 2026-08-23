@@ -39,6 +39,14 @@ namespace gm
 		bool CreateComponent(GameObject& gameObject, const RespawnPointTriggerComponentData& data) const;
 		bool CreateComponent(GameObject& gameObject, const MovementBaseComponentData& data) const;
 		bool CreateComponent(GameObject& gameObject, const FallRespawnTriggerComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const DirectionalLightComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const PointLightComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const SpotLightComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const ContinuousRotationComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const TriggeredLightColorComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const BeatTextureUVScrollComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const BeatTextureUVStepComponentData& data) const;
+		bool CreateComponent(GameObject& gameObject, const BeatMaterialBrightnessPulseComponentData& data) const;
 
 	private:
 		Resources&			_resources;

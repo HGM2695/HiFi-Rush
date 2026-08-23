@@ -1,11 +1,14 @@
 #include "EnvironmentComponentFactory.h"
 #include "BeatAudioLevelMoveComponent.h"
+#include "BeatMaterialBrightnessPulseComponent.h"
 #include "BeatMoveComponent.h"
 #include "BeatOrbitComponent.h"
 #include "BeatPositionSequenceComponent.h"
 #include "BeatSkeletalAnimationSyncComponent.h"
 #include "BeatStaticMeshCycleComponent.h"
 #include "BeatTextureSequenceComponent.h"
+#include "BeatTextureUVScrollComponent.h"
+#include "BeatTextureUVStepComponent.h"
 #include "BeatTransformComponent.h"
 #include "BeatTriggeredRotationComponent.h"
 #include "BeatTriggeredRotationShakeComponent.h"
@@ -14,6 +17,8 @@
 #include "BoxCollider3DComponent.h"
 #include "Collider3DComponent.h"
 #include "CollisionTriggerComponent.h"
+#include "ContinuousRotationComponent.h"
+#include "DirectionalLightComponent.h"
 #include "FallRespawnTriggerComponent.h"
 #include "GameObject.h"
 #include "GMAssert.h"
@@ -21,14 +26,18 @@
 #include "HitReactionComponent.h"
 #include "HurtBoxComponent.h"
 #include "MovementBaseComponent.h"
+#include "MathUtil.h"
+#include "PointLightComponent.h"
 #include "Resources.h"
 #include "RespawnPointTriggerComponent.h"
 #include "SceneTransitionTriggerComponent.h"
 #include "SkeletalAnimatorComponent.h"
 #include "SphereCollider3DComponent.h"
+#include "SpotLightComponent.h"
 #include "StaticMesh.h"
 #include "StaticMeshComponent.h"
 #include "TransformComponent.h"
+#include "TriggeredLightColorComponent.h"
 #include "TriggeredMaterialOverrideComponent.h"
 
 #include <algorithm>
@@ -187,6 +196,85 @@ namespace gm
 		GM_ASSERT_RETURN_VAL(data.damage > 0, false, "Fall Respawn Trigger의 Damage는 0보다 커야 합니다.");
 
 		return gameObject.AddComponent<FallRespawnTriggerComponent>(data.colliderId, data.damage) != nullptr;
+	}
+
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const DirectionalLightComponentData& data) const
+	{
+		DirectionalLightComponent* light = gameObject.AddComponent<DirectionalLightComponent>();
+		GM_ASSERT_RETURN_VAL(light, false, "DirectionalLightComponent 생성에 실패했습니다.");
+		light->SetColor(data.color);
+		light->SetIntensity(data.intensity);
+		light->SetCastsShadow(data.castsShadow);
+		return true;
+	}
+
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const PointLightComponentData& data) const
+	{
+		PointLightComponent* light = gameObject.AddComponent<PointLightComponent>();
+		GM_ASSERT_RETURN_VAL(light, false, "PointLightComponent 생성에 실패했습니다.");
+		light->SetColor(data.color);
+		light->SetIntensity(data.intensity);
+		light->SetRange(data.range);
+		return true;
+	}
+
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const SpotLightComponentData& data) const
+	{
+		SpotLightComponent* light = gameObject.AddComponent<SpotLightComponent>();
+		GM_ASSERT_RETURN_VAL(light, false, "SpotLightComponent 생성에 실패했습니다.");
+		light->SetColor(data.color);
+		light->SetIntensity(data.intensity);
+		light->SetRange(data.range);
+		light->SetConeRadians(Math::DegreesToRadians(data.innerConeAngleDegrees), Math::DegreesToRadians(data.outerConeAngleDegrees));
+		light->SetConeFalloff(data.coneFalloff);
+		light->SetCookieEnabled(data.useCookie);
+		return true;
+	}
+
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const ContinuousRotationComponentData& data) const
+	{
+		ContinuousRotationDesc desc{};
+		desc.axis = data.axis;
+		desc.angularSpeedDegrees = data.angularSpeedDegrees;
+		return gameObject.AddComponent<ContinuousRotationComponent>(desc) != nullptr;
+	}
+
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const TriggeredLightColorComponentData& data) const
+	{
+		TriggeredLightColorDesc desc{};
+		desc.triggerId = data.triggerBindingData.triggerId;
+		desc.beatOffset = data.triggerBindingData.beatOffset;
+		desc.color = data.color;
+		return gameObject.AddComponent<TriggeredLightColorComponent>(_beatSystem, std::move(desc)) != nullptr;
+	}
+
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatTextureUVScrollComponentData& data) const
+	{
+		BeatTextureUVScrollDesc desc{};
+		desc.materialSlot = data.materialSlot;
+		desc.offsetPerBeat = data.offsetPerBeat;
+		return gameObject.AddComponent<BeatTextureUVScrollComponent>(_beatSystem, desc) != nullptr;
+	}
+
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatTextureUVStepComponentData& data) const
+	{
+		BeatTextureUVStepDesc desc{};
+		desc.materialSlot = data.materialSlot;
+		desc.firstOffset = data.firstOffset;
+		desc.secondOffset = data.secondOffset;
+		desc.stepDurationBeats = data.stepDurationBeats;
+		return gameObject.AddComponent<BeatTextureUVStepComponent>(_beatSystem, desc) != nullptr;
+	}
+
+	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatMaterialBrightnessPulseComponentData& data) const
+	{
+		BeatMaterialBrightnessPulseDesc desc{};
+		desc.materialSlot = data.materialSlot;
+		desc.activeBeatMask = data.activeBeatMask;
+		desc.patternLengthBeats = data.patternLengthBeats;
+		desc.minimumBrightness = data.minimumBrightness;
+		desc.maximumBrightness = data.maximumBrightness;
+		return gameObject.AddComponent<BeatMaterialBrightnessPulseComponent>(_beatSystem, desc) != nullptr;
 	}
 
 	bool EnvironmentComponentFactory::CreateComponent(GameObject& gameObject, const BeatMoveComponentData& data) const

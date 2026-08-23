@@ -12,13 +12,9 @@ namespace gm
 {
 	bool BinaryMapLoader::ReadEnvironmentObject(std::istream& inputStream, EnvironmentObjectData& outObject)
 	{
-		uint32 renderType = 0;
-		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, renderType), false, "환경 오브젝트의 렌더 타입을 읽는 데 실패했습니다.");
-		GM_ASSERT_RETURN_VAL(
-			renderType == static_cast<uint32>(EnvironmentRenderType::None) || renderType == static_cast<uint32>(EnvironmentRenderType::Opaque) || renderType == static_cast<uint32>(EnvironmentRenderType::InOrderBlend) || renderType == static_cast<uint32>(EnvironmentRenderType::AfterEdge),
-			false, "지원하지 않는 환경 오브젝트 렌더 타입입니다. type=%u", renderType);
-
-		outObject.renderType = static_cast<EnvironmentRenderType>(renderType);
+		uint32 renderFlag = 0;
+		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, renderFlag), false, "환경 오브젝트의 렌더 여부를 읽는 데 실패했습니다.");
+		outObject.hasRenderMesh = renderFlag != 0;
 		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outObject.modelIndex), false, "환경 오브젝트의 모델 인덱스를 읽는 데 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outObject.world), false, "환경 오브젝트의 월드 행렬을 읽는 데 실패했습니다.");
 		uint32 componentCount = 0;
@@ -26,6 +22,20 @@ namespace gm
 		outObject.components.reserve(componentCount);
 		for (uint32 componentIndex = 0; componentIndex < componentCount; ++componentIndex)
 			GM_ASSERT_RETURN_VAL(ReadEnvironmentComponent(inputStream, outObject), false, "환경 오브젝트의 Component를 읽는 데 실패했습니다. index=%u", componentIndex);
+
+		uint32 materialColorOverrideCount = 0;
+		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, materialColorOverrideCount), false, "환경 오브젝트의 Material Color Override 개수를 읽는 데 실패했습니다.");
+		outObject.materialColorOverrides.resize(materialColorOverrideCount);
+		for (MaterialColorOverrideData& overrideData : outObject.materialColorOverrides)
+		{
+			uint32 colorMode = 0;
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, overrideData.materialSlot) && ReadBinary(inputStream, colorMode), false, "Material Color Override Slot과 Mode를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(colorMode < static_cast<uint32>(MaterialColorMode::Count), false, "Material Color Override Mode가 유효하지 않습니다. mode=%u", colorMode);
+			overrideData.colorData.mode = static_cast<MaterialColorMode>(colorMode);
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, overrideData.colorData.blendColor) && ReadBinary(inputStream, overrideData.colorData.opacityLowColor) && ReadBinary(inputStream, overrideData.colorData.opacityHighColor), false, "Material Color Override 색상 데이터를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, overrideData.colorData.blendRatio), false, "Material Color Override Blend Ratio를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(overrideData.colorData.blendRatio >= 0.f && overrideData.colorData.blendRatio <= 1.f, false, "Material Color Override Blend Ratio가 유효하지 않습니다.");
+		}
 
 		return true;
 	}
@@ -299,6 +309,80 @@ namespace gm
 			return true;
 		}
 
+		case EnvironmentComponentType::DirectionalLight:
+		{
+			DirectionalLightComponentData data{};
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.color) && ReadBinary(inputStream, data.intensity) && ReadBinary(inputStream, data.castsShadow), false, "DirectionalLight Component를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(data.intensity >= 0.f, false, "DirectionalLight Intensity가 유효하지 않습니다.");
+			outObject.components.emplace_back(data);
+			return true;
+		}
+
+		case EnvironmentComponentType::PointLight:
+		{
+			PointLightComponentData data{};
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.color) && ReadBinary(inputStream, data.intensity) && ReadBinary(inputStream, data.range), false, "PointLight Component를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(data.intensity >= 0.f && data.range > 0.f, false, "PointLight 설정이 유효하지 않습니다.");
+			outObject.components.emplace_back(data);
+			return true;
+		}
+
+		case EnvironmentComponentType::SpotLight:
+		{
+			SpotLightComponentData data{};
+			uint32 coneFalloff = 0;
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.color) && ReadBinary(inputStream, data.intensity) && ReadBinary(inputStream, data.range) && ReadBinary(inputStream, data.innerConeAngleDegrees) && ReadBinary(inputStream, data.outerConeAngleDegrees) && ReadBinary(inputStream, coneFalloff) && ReadBinary(inputStream, data.useCookie), false, "SpotLight Component를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(data.intensity >= 0.f && data.range > 0.f && data.innerConeAngleDegrees >= 0.f && data.innerConeAngleDegrees < data.outerConeAngleDegrees && data.outerConeAngleDegrees <= 90.f && coneFalloff < static_cast<uint32>(SpotConeFalloff::Count), false, "SpotLight 설정이 유효하지 않습니다.");
+			data.coneFalloff = static_cast<SpotConeFalloff>(coneFalloff);
+			outObject.components.emplace_back(data);
+			return true;
+		}
+
+		case EnvironmentComponentType::ContinuousRotation:
+		{
+			ContinuousRotationComponentData data{};
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.axis) && ReadBinary(inputStream, data.angularSpeedDegrees), false, "ContinuousRotation Component를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(data.axis.LengthSquared() > 0.000001f, false, "ContinuousRotation Axis가 유효하지 않습니다.");
+			outObject.components.emplace_back(data);
+			return true;
+		}
+
+		case EnvironmentComponentType::TriggeredLightColor:
+		{
+			TriggeredLightColorComponentData data{};
+			GM_ASSERT_RETURN_VAL(ReadTriggerBinding(inputStream, data.triggerBindingData), false, "TriggeredLightColor 트리거 바인딩을 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.color), false, "TriggeredLightColor Color를 읽는 데 실패했습니다.");
+			outObject.components.emplace_back(data);
+			return true;
+		}
+
+		case EnvironmentComponentType::BeatTextureUVScroll:
+		{
+			BeatTextureUVScrollComponentData data{};
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.materialSlot) && ReadBinary(inputStream, data.offsetPerBeat), false, "BeatTextureUVScroll Component를 읽는 데 실패했습니다.");
+			outObject.components.emplace_back(data);
+			return true;
+		}
+
+		case EnvironmentComponentType::BeatTextureUVStep:
+		{
+			BeatTextureUVStepComponentData data{};
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.materialSlot) && ReadBinary(inputStream, data.firstOffset) && ReadBinary(inputStream, data.secondOffset) && ReadBinary(inputStream, data.stepDurationBeats), false, "BeatTextureUVStep Component를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(data.stepDurationBeats > 0.f, false, "BeatTextureUVStep Duration이 유효하지 않습니다.");
+			outObject.components.emplace_back(data);
+			return true;
+		}
+
+		case EnvironmentComponentType::BeatMaterialBrightnessPulse:
+		{
+			BeatMaterialBrightnessPulseComponentData data{};
+			GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, data.materialSlot) && ReadBinary(inputStream, data.activeBeatMask) && ReadBinary(inputStream, data.patternLengthBeats) && ReadBinary(inputStream, data.minimumBrightness) && ReadBinary(inputStream, data.maximumBrightness), false, "BeatMaterialBrightnessPulse Component를 읽는 데 실패했습니다.");
+			GM_ASSERT_RETURN_VAL(data.activeBeatMask != 0 && data.patternLengthBeats > 0 && data.patternLengthBeats <= 32, false, "BeatMaterialBrightnessPulse Beat Pattern이 유효하지 않습니다.");
+			GM_ASSERT_RETURN_VAL(data.minimumBrightness >= 0.f && data.maximumBrightness >= data.minimumBrightness, false, "BeatMaterialBrightnessPulse Brightness 범위가 유효하지 않습니다.");
+			outObject.components.emplace_back(data);
+			return true;
+		}
+
 		default:
 			return false;
 		}
@@ -326,6 +410,31 @@ namespace gm
 		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSpawnData.attackDamage), false, "Monster Attack Damage를 읽는 데 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSpawnData.attackRangeMin), false, "Monster Attack Range Min을 읽는 데 실패했습니다.");
 		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSpawnData.attackRangeMax), false, "Monster Attack Range Max를 읽는 데 실패했습니다.");
+		return true;
+	}
+
+	bool BinaryMapLoader::ReadSceneAmbientSettings(std::istream& inputStream, SceneAmbientSettings& outSettings)
+	{
+		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSettings.ambientColor) && ReadBinary(inputStream, outSettings.ambientIntensity), false, "Scene Ambient 설정을 읽는 데 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(outSettings.ambientIntensity >= 0.f, false, "Scene Ambient Intensity가 유효하지 않습니다.");
+		return true;
+	}
+
+	bool BinaryMapLoader::ReadDepthFogSettings(std::istream& inputStream, DepthFogSettings& outSettings)
+	{
+		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSettings.enabled), false, "Depth Fog 활성화 설정을 읽는 데 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSettings.fogColor), false, "Depth Fog Color를 읽는 데 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSettings.startDistance), false, "Depth Fog Start Distance를 읽는 데 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSettings.endDistance), false, "Depth Fog End Distance를 읽는 데 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSettings.density), false, "Depth Fog Density를 읽는 데 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(outSettings.startDistance >= 0.f && outSettings.endDistance > outSettings.startDistance && outSettings.density >= 0.f, false, "Depth Fog 설정이 유효하지 않습니다.");
+		return true;
+	}
+
+	bool BinaryMapLoader::ReadToneMappingSettings(std::istream& inputStream, ToneMappingSettings& outSettings)
+	{
+		GM_ASSERT_RETURN_VAL(ReadBinary(inputStream, outSettings.exposure), false, "Tone Mapping Exposure를 읽는 데 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(std::isfinite(outSettings.exposure), false, "Tone Mapping Exposure가 유효하지 않습니다.");
 		return true;
 	}
 
@@ -366,6 +475,15 @@ namespace gm
 				GM_ASSERT_RETURN_VAL(ReadMonsterSpawn(inputStream, spawnData), false, "Monster Spawn 데이터를 읽는 데 실패했습니다. index=%u", spawnIndex);
 			}
 		}
+
+		if (inputStream.peek() != std::char_traits<char>::eof())
+			GM_ASSERT_RETURN_VAL(ReadSceneAmbientSettings(inputStream, loadedData.ambientSettings), false, "Scene Ambient 설정을 읽는 데 실패했습니다.");
+
+		if (inputStream.peek() != std::char_traits<char>::eof())
+			GM_ASSERT_RETURN_VAL(ReadDepthFogSettings(inputStream, loadedData.depthFogSettings), false, "Depth Fog 설정을 읽는 데 실패했습니다.");
+
+		if (inputStream.peek() != std::char_traits<char>::eof())
+			GM_ASSERT_RETURN_VAL(ReadToneMappingSettings(inputStream, loadedData.toneMappingSettings), false, "Tone Mapping 설정을 읽는 데 실패했습니다.");
 
 		GM_ASSERT_RETURN_VAL(inputStream.peek() == std::char_traits<char>::eof(), false, "맵 바이너리 끝에 해석되지 않은 데이터가 남아 있습니다. path=%ls", filePath.c_str());
 		outMapData = std::move(loadedData);
