@@ -22,6 +22,7 @@ namespace gm
 		void								SetSourceRect(const Rect& rect);
 		void								SetSourceRect(const SpriteFrame& frame);
 		void								DisableSourceRect();
+		void								SetFacingMode(SpriteFacingMode facingMode) { _presenter.SetFacingMode(facingMode); }
 
 		SpritePresenter&					GetPresenter() { return _presenter; }
 		const SpritePresenter&				GetPresenter() const { return _presenter; }

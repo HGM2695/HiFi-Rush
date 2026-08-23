@@ -19,6 +19,11 @@ namespace gm
 		return GetGameInstance().GetChiAnimationSettings();
 	}
 
+	const EffectPresets& HiFiRushStatics::GetEffectPresets()
+	{
+		return GetGameInstance().GetEffectPresets();
+	}
+
 	const RhythmJudge& HiFiRushStatics::GetRhythmJudge()
 	{
 		return GetGameInstance().GetRhythmJudge();
@@ -30,6 +35,11 @@ namespace gm
 	}
 
 #if GM_ENABLE_DEBUG_TOOLS
+	EffectPresets& HiFiRushStatics::GetMutableEffectPresets()
+	{
+		return GetGameInstance().GetMutableEffectPresets();
+	}
+
 	DebugEventPublisher& HiFiRushStatics::GetDebugEventPublisher()
 	{
 		return GetGameInstance().GetDebugEventPublisher();

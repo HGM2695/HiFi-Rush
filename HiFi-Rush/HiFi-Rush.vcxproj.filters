@@ -22,6 +22,9 @@
     <Filter Include="Spawner">
       <UniqueIdentifier>{331ad489-26e6-4cd8-bec7-034cf3d59c69}</UniqueIdentifier>
     </Filter>
+	<Filter Include="Effect">
+	  <UniqueIdentifier>{08bf11b4-bc98-456d-90e6-97011bed9ae5}</UniqueIdentifier>
+	</Filter>
     <Filter Include="Factory">
       <UniqueIdentifier>{f1e0608d-6375-4627-a132-a06aa7a035fc}</UniqueIdentifier>
     </Filter>
@@ -193,6 +196,39 @@
     <ClInclude Include="EnvironmentSpawner.h">
       <Filter>Spawner</Filter>
     </ClInclude>
+	<ClInclude Include="EffectPresetData.h">
+	  <Filter>Effect</Filter>
+	</ClInclude>
+	<ClInclude Include="EffectPresets.h">
+	  <Filter>Effect</Filter>
+	</ClInclude>
+	<ClInclude Include="EffectRuntimeObject.h">
+	  <Filter>Effect</Filter>
+	</ClInclude>
+	<ClInclude Include="EffectSpawner.h">
+	  <Filter>Effect</Filter>
+	</ClInclude>
+	<ClInclude Include="EffectInstance.h">
+	  <Filter>Effect</Filter>
+	</ClInclude>
+	<ClInclude Include="MonsterEffectComponent.h">
+	  <Filter>Component\Combat</Filter>
+	</ClInclude>
+	<ClInclude Include="GunnerEffectComponent.h">
+	  <Filter>Component\Monster\Gunner</Filter>
+	</ClInclude>
+	<ClInclude Include="SwordEffectComponent.h">
+	  <Filter>Component\Monster\Sword</Filter>
+	</ClInclude>
+	<ClInclude Include="ChiEffectComponent.h">
+	  <Filter>Component\Player</Filter>
+	</ClInclude>
+	<ClInclude Include="ChiAfterImageObject.h">
+	  <Filter>Effect</Filter>
+	</ClInclude>
+	<ClInclude Include="EnvironmentModelDebugLabelComponent.h">
+	  <Filter>Debug</Filter>
+	</ClInclude>
     <ClInclude Include="MonsterSpawner.h">
       <Filter>Spawner</Filter>
     </ClInclude>
@@ -229,6 +265,15 @@
     <ClInclude Include="BeatTextureSequenceComponent.h">
       <Filter>Component\Beat</Filter>
     </ClInclude>
+    <ClInclude Include="BeatTextureUVScrollComponent.h">
+      <Filter>Component\Beat</Filter>
+    </ClInclude>
+    <ClInclude Include="BeatTextureUVStepComponent.h">
+      <Filter>Component\Beat</Filter>
+    </ClInclude>
+	<ClInclude Include="BeatMaterialBrightnessPulseComponent.h">
+	  <Filter>Component\Beat</Filter>
+	</ClInclude>
     <ClInclude Include="BeatPositionSequenceComponent.h">
       <Filter>Component\Beat</Filter>
     </ClInclude>
@@ -248,6 +293,12 @@
       <Filter>Component\Beat</Filter>
     </ClInclude>
     <ClInclude Include="TriggeredMaterialOverrideComponent.h">
+      <Filter>Component\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="ContinuousRotationComponent.h">
+      <Filter>Component\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="TriggeredLightColorComponent.h">
       <Filter>Component\Environment</Filter>
     </ClInclude>
     <ClInclude Include="CombatTypes.h">
@@ -308,6 +359,9 @@
 	  <Filter>Component\Player</Filter>
 	</ClInclude>
     <ClInclude Include="ChiMoveComponent.h">
+      <Filter>Component\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="ChiAudioComponent.h">
       <Filter>Component\Player</Filter>
     </ClInclude>
     <ClInclude Include="ChiStateMachineComponent.h">
@@ -439,6 +493,9 @@
 	<ClInclude Include="TitleResources.h">
 	  <Filter>Resource</Filter>
 	</ClInclude>
+	<ClInclude Include="SkySphereResources.h">
+	  <Filter>Resource</Filter>
+	</ClInclude>
 	<ClInclude Include="TitleWidget.h">
 	  <Filter>Widget</Filter>
 	</ClInclude>
@@ -449,6 +506,9 @@
 	  <Filter>Widget</Filter>
 	</ClInclude>
 	<ClInclude Include="GameplayAnnouncementWidget.h">
+	  <Filter>Widget</Filter>
+	</ClInclude>
+	<ClInclude Include="HibikiWidget.h">
 	  <Filter>Widget</Filter>
 	</ClInclude>
 	<ClInclude Include="ScreenWipeWidget.h">
@@ -480,6 +540,12 @@
 	</ClInclude>
 	<ClInclude Include="QamilHealthWidget.h">
 	  <Filter>Widget</Filter>
+	</ClInclude>
+	<ClInclude Include="QamilBodyMaterialAnimationComponent.h">
+	  <Filter>Component\Monster\Qamil</Filter>
+	</ClInclude>
+	<ClInclude Include="QamilEffectComponent.h">
+	  <Filter>Component\Monster\Qamil</Filter>
 	</ClInclude>
 	<ClInclude Include="QamilPhaseTriggerComponent.h">
 	  <Filter>Component\Monster\Qamil</Filter>
@@ -576,6 +642,36 @@
     <ClCompile Include="EnvironmentSpawner.cpp">
       <Filter>Spawner</Filter>
     </ClCompile>
+	<ClCompile Include="EffectRuntimeObject.cpp">
+	  <Filter>Effect</Filter>
+	</ClCompile>
+	<ClCompile Include="EffectPresets.cpp">
+	  <Filter>Effect</Filter>
+	</ClCompile>
+	<ClCompile Include="EffectSpawner.cpp">
+	  <Filter>Effect</Filter>
+	</ClCompile>
+	<ClCompile Include="EffectInstance.cpp">
+	  <Filter>Effect</Filter>
+	</ClCompile>
+	<ClCompile Include="MonsterEffectComponent.cpp">
+	  <Filter>Component\Combat</Filter>
+	</ClCompile>
+	<ClCompile Include="GunnerEffectComponent.cpp">
+	  <Filter>Component\Monster\Gunner</Filter>
+	</ClCompile>
+	<ClCompile Include="SwordEffectComponent.cpp">
+	  <Filter>Component\Monster\Sword</Filter>
+	</ClCompile>
+	<ClCompile Include="ChiEffectComponent.cpp">
+	  <Filter>Component\Player</Filter>
+	</ClCompile>
+	<ClCompile Include="ChiAfterImageObject.cpp">
+	  <Filter>Effect</Filter>
+	</ClCompile>
+	<ClCompile Include="EnvironmentModelDebugLabelComponent.cpp">
+	  <Filter>Debug</Filter>
+	</ClCompile>
     <ClCompile Include="MonsterSpawner.cpp">
       <Filter>Spawner</Filter>
     </ClCompile>
@@ -609,6 +705,15 @@
     <ClCompile Include="BeatTextureSequenceComponent.cpp">
       <Filter>Component\Beat</Filter>
     </ClCompile>
+    <ClCompile Include="BeatTextureUVScrollComponent.cpp">
+      <Filter>Component\Beat</Filter>
+    </ClCompile>
+    <ClCompile Include="BeatTextureUVStepComponent.cpp">
+      <Filter>Component\Beat</Filter>
+    </ClCompile>
+	<ClCompile Include="BeatMaterialBrightnessPulseComponent.cpp">
+	  <Filter>Component\Beat</Filter>
+	</ClCompile>
     <ClCompile Include="BeatPositionSequenceComponent.cpp">
       <Filter>Component\Beat</Filter>
     </ClCompile>
@@ -628,6 +733,12 @@
       <Filter>Component\Beat</Filter>
     </ClCompile>
     <ClCompile Include="TriggeredMaterialOverrideComponent.cpp">
+      <Filter>Component\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="ContinuousRotationComponent.cpp">
+      <Filter>Component\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="TriggeredLightColorComponent.cpp">
       <Filter>Component\Environment</Filter>
     </ClCompile>
     <ClCompile Include="HealthComponent.cpp">
@@ -676,6 +787,9 @@
 	  <Filter>Component\Player</Filter>
 	</ClCompile>
     <ClCompile Include="ChiMoveComponent.cpp">
+      <Filter>Component\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="ChiAudioComponent.cpp">
       <Filter>Component\Player</Filter>
     </ClCompile>
 	<ClCompile Include="ChiAnimationSettings.cpp">
@@ -771,6 +885,12 @@
 	<ClCompile Include="QamilStateMachineComponent.cpp">
 	  <Filter>Component\Monster\Qamil</Filter>
 	</ClCompile>
+	<ClCompile Include="QamilBodyMaterialAnimationComponent.cpp">
+	  <Filter>Component\Monster\Qamil</Filter>
+	</ClCompile>
+	<ClCompile Include="QamilEffectComponent.cpp">
+	  <Filter>Component\Monster\Qamil</Filter>
+	</ClCompile>
 	<ClCompile Include="QamilPhaseTriggerComponent.cpp">
 	  <Filter>Component\Monster\Qamil</Filter>
 	</ClCompile>
@@ -787,6 +907,9 @@
 	  <Filter>Widget</Filter>
 	</ClCompile>
 	<ClCompile Include="GameplayAnnouncementWidget.cpp">
+	  <Filter>Widget</Filter>
+	</ClCompile>
+	<ClCompile Include="HibikiWidget.cpp">
 	  <Filter>Widget</Filter>
 	</ClCompile>
 	<ClCompile Include="ScreenWipeWidget.cpp">

@@ -21,10 +21,13 @@ namespace gm
 
 		bool Initialize();
 		void Submit(const SpriteRenderItem& item);
-		void Render(const CameraViewInfo& viewInfo);
+		void Prepare(const CameraViewInfo& viewInfo);
+		void AppendTransparentRenderEntries(std::vector<TransparentRenderEntry>& entries) const;
+		void Render(uint32 itemIndex);
 		void Clear();
 
 	private:
+		void BindCameraConstant();
 		void BindMaterialConstantData(const Material& material);
 
 	private:
@@ -36,6 +39,6 @@ namespace gm
 
 		std::vector<SpriteRenderItem>		_items;
 		ConstantBufferPool					_constantBufferPool;
-
+		ConstantBuffer*					_cameraBuffer = nullptr;
 	};
 }

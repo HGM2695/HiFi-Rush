@@ -80,6 +80,33 @@
     <ClInclude Include="CameraViewInfo.h">
       <Filter>Engine Component</Filter>
     </ClInclude>
+	<ClInclude Include="LightTypes.h">
+	  <Filter>Engine Component\Light</Filter>
+	</ClInclude>
+	<ClInclude Include="LightRenderData.h">
+	  <Filter>Engine Component\Light</Filter>
+	</ClInclude>
+	<ClInclude Include="ShadowTypes.h">
+	  <Filter>Graphics</Filter>
+	</ClInclude>
+	<ClInclude Include="CascadedShadowMap.h">
+	  <Filter>Graphics</Filter>
+	</ClInclude>
+	<ClInclude Include="SkinningRenderData.h">
+	  <Filter>Graphics</Filter>
+	</ClInclude>
+    <ClInclude Include="LightComponent.h">
+      <Filter>Engine Component\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLightComponent.h">
+      <Filter>Engine Component\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLightComponent.h">
+      <Filter>Engine Component\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="SpotLightComponent.h">
+      <Filter>Engine Component\Light</Filter>
+    </ClInclude>
     <ClInclude Include="SocketComponent.h">
       <Filter>Engine Component</Filter>
     </ClInclude>
@@ -272,6 +299,48 @@
     <ClInclude Include="Material.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="MaterialTypes.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GBufferTypes.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GBuffer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+	<ClInclude Include="DeferredCompositionPass.h">
+	  <Filter>Graphics\Renderpass</Filter>
+	</ClInclude>
+	<ClInclude Include="SSAORenderPass.h">
+	  <Filter>Graphics\Renderpass</Filter>
+	</ClInclude>
+	<ClInclude Include="ScreenSpaceOutlinePass.h">
+	  <Filter>Graphics\Renderpass</Filter>
+	</ClInclude>
+	<ClInclude Include="DepthFogPass.h">
+	  <Filter>Graphics\Renderpass</Filter>
+	</ClInclude>
+	<ClInclude Include="BloomRenderPass.h">
+	  <Filter>Graphics\Renderpass</Filter>
+	</ClInclude>
+	<ClInclude Include="ToneMappingPass.h">
+	  <Filter>Graphics\Renderpass</Filter>
+	</ClInclude>
+	<ClInclude Include="FXAARenderPass.h">
+	  <Filter>Graphics\Renderpass</Filter>
+	</ClInclude>
+	<ClInclude Include="ToneMappingTypes.h">
+	  <Filter>Util\Types</Filter>
+	</ClInclude>
+	<ClInclude Include="FogTypes.h">
+	  <Filter>Util\Types</Filter>
+	</ClInclude>
+	<ClInclude Include="RenderTargetDebugPass.h">
+	  <Filter>Graphics\Renderpass</Filter>
+	</ClInclude>
+	<ClInclude Include="SkySphereRenderPass.h">
+	  <Filter>Graphics\Renderpass</Filter>
+	</ClInclude>
     <ClInclude Include="TickManager.h">
       <Filter>Base</Filter>
     </ClInclude>
@@ -323,6 +392,9 @@
     <ClInclude Include="AnimatedSpriteComponent.h">
       <Filter>Engine Component</Filter>
     </ClInclude>
+	<ClInclude Include="EffectSpriteComponent.h">
+	  <Filter>Engine Component</Filter>
+	</ClInclude>
     <ClInclude Include="SpriteComponent.h">
       <Filter>Engine Component</Filter>
     </ClInclude>
@@ -356,6 +428,12 @@
     <ClInclude Include="Renderer.h">
       <Filter>SubSystem</Filter>
     </ClInclude>
+    <ClInclude Include="FullscreenRenderPass.h">
+      <Filter>Graphics\Renderpass</Filter>
+    </ClInclude>
+    <ClInclude Include="PingPongRenderTarget.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="RenderTypes.h">
       <Filter>Util\Types</Filter>
     </ClInclude>
@@ -365,6 +443,9 @@
     <ClInclude Include="SkeletalMeshRenderPass.h">
       <Filter>Graphics\Renderpass</Filter>
     </ClInclude>
+	<ClInclude Include="ShadowCasterPass.h">
+	  <Filter>Graphics\Renderpass</Filter>
+	</ClInclude>
     <ClInclude Include="BinaryNavigationMeshLoader.h">
       <Filter>Loader</Filter>
     </ClInclude>
@@ -399,6 +480,32 @@
     <ClInclude Include="SphereCollider3DComponent.h">
       <Filter>Engine Component\Physics\3D</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\GBufferCommon.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+	<None Include="Shaders\GBufferMaterialData.hlsli">
+	  <Filter>Shaders</Filter>
+	</None>
+	<None Include="Shaders\DeferredCommon.hlsli">
+	  <Filter>Shaders</Filter>
+	</None>
+	<None Include="Shaders\FogCommon.hlsli">
+	  <Filter>Shaders</Filter>
+	</None>
+	<None Include="Shaders\LightRenderData.hlsli">
+	  <Filter>Shaders</Filter>
+	</None>
+	<None Include="Shaders\CascadedShadowRenderData.hlsli">
+	  <Filter>Shaders</Filter>
+	</None>
+	<None Include="Shaders\ShadowCasterCommon.hlsli">
+	  <Filter>Shaders</Filter>
+	</None>
+	<None Include="Shaders\EffectCommon.hlsli">
+	  <Filter>Shaders</Filter>
+	</None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -473,6 +580,15 @@
     </ClCompile>
     <ClCompile Include="CameraManager.cpp">
       <Filter>Engine Component</Filter>
+    </ClCompile>
+	<ClCompile Include="LightComponent.cpp">
+	  <Filter>Engine Component\Light</Filter>
+	</ClCompile>
+	<ClCompile Include="PointLightComponent.cpp">
+      <Filter>Engine Component\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="SpotLightComponent.cpp">
+      <Filter>Engine Component\Light</Filter>
     </ClCompile>
     <ClCompile Include="SocketComponent.cpp">
       <Filter>Engine Component</Filter>
@@ -642,6 +758,9 @@
     <ClCompile Include="AnimatedSpriteComponent.cpp">
       <Filter>Engine Component</Filter>
     </ClCompile>
+	<ClCompile Include="EffectSpriteComponent.cpp">
+	  <Filter>Engine Component</Filter>
+	</ClCompile>
     <ClCompile Include="SpriteComponent.cpp">
       <Filter>Engine Component</Filter>
     </ClCompile>
@@ -660,8 +779,53 @@
     <ClCompile Include="UIRenderPass.cpp">
       <Filter>Graphics\Renderpass</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>SubSystem</Filter>
+	<ClCompile Include="Renderer.cpp">
+	  <Filter>SubSystem</Filter>
+	</ClCompile>
+	<ClCompile Include="CascadedShadowMap.cpp">
+	  <Filter>Graphics</Filter>
+	</ClCompile>
+	<ClCompile Include="SkinningRenderData.cpp">
+	  <Filter>Graphics</Filter>
+	</ClCompile>
+	<ClCompile Include="DirectionalLightComponent.cpp">
+	  <Filter>Engine Component\Light</Filter>
+	</ClCompile>
+    <ClCompile Include="GBuffer.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+	<ClCompile Include="DeferredCompositionPass.cpp">
+	  <Filter>Graphics\Renderpass</Filter>
+	</ClCompile>
+	<ClCompile Include="SSAORenderPass.cpp">
+	  <Filter>Graphics\Renderpass</Filter>
+	</ClCompile>
+	<ClCompile Include="ScreenSpaceOutlinePass.cpp">
+	  <Filter>Graphics\Renderpass</Filter>
+	</ClCompile>
+	<ClCompile Include="DepthFogPass.cpp">
+	  <Filter>Graphics\Renderpass</Filter>
+	</ClCompile>
+	<ClCompile Include="BloomRenderPass.cpp">
+	  <Filter>Graphics\Renderpass</Filter>
+	</ClCompile>
+	<ClCompile Include="ToneMappingPass.cpp">
+	  <Filter>Graphics\Renderpass</Filter>
+	</ClCompile>
+	<ClCompile Include="FXAARenderPass.cpp">
+	  <Filter>Graphics\Renderpass</Filter>
+	</ClCompile>
+	<ClCompile Include="RenderTargetDebugPass.cpp">
+	  <Filter>Graphics\Renderpass</Filter>
+	</ClCompile>
+	<ClCompile Include="SkySphereRenderPass.cpp">
+	  <Filter>Graphics\Renderpass</Filter>
+	</ClCompile>
+    <ClCompile Include="FullscreenRenderPass.cpp">
+      <Filter>Graphics\Renderpass</Filter>
+    </ClCompile>
+    <ClCompile Include="PingPongRenderTarget.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="StaticMeshRenderPass.cpp">
       <Filter>Graphics\Renderpass</Filter>
@@ -669,6 +833,9 @@
     <ClCompile Include="SkeletalMeshRenderPass.cpp">
       <Filter>Graphics\Renderpass</Filter>
     </ClCompile>
+	<ClCompile Include="ShadowCasterPass.cpp">
+	  <Filter>Graphics\Renderpass</Filter>
+	</ClCompile>
     <ClCompile Include="BoxCollider2DComponent.cpp">
       <Filter>Engine Component\Physics\2D</Filter>
     </ClCompile>
@@ -785,6 +952,9 @@
     <Filter Include="Engine Component\Physics\2D">
       <UniqueIdentifier>{f06d9a03-9592-4652-a408-b83563944ca4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Component\Light">
+      <UniqueIdentifier>{19c8b44d-f3d4-4e6f-91f8-c291ab09dc2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\FullScreenTexturePS.hlsl">
@@ -793,12 +963,63 @@
     <FxCompile Include="Shaders\SpriteTexturePS.hlsl">
       <Filter>Shaders\PS</Filter>
     </FxCompile>
+	<FxCompile Include="Shaders\EffectSpritePS.hlsl">
+	  <Filter>Shaders\PS</Filter>
+	</FxCompile>
+	<FxCompile Include="Shaders\EffectMeshPS.hlsl">
+	  <Filter>Shaders\PS</Filter>
+	</FxCompile>
     <FxCompile Include="Shaders\SolidColorPS.hlsl">
       <Filter>Shaders\PS</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\StaticMeshPS.hlsl">
+    <FxCompile Include="Shaders\MeshForwardPS.hlsl">
       <Filter>Shaders\PS</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\UVBarGraphPS.hlsl">
+      <Filter>Shaders\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\MeshGBufferPS.hlsl">
+      <Filter>Shaders\PS</Filter>
+    </FxCompile>
+	<FxCompile Include="Shaders\SkySpherePS.hlsl">
+	  <Filter>Shaders\PS</Filter>
+	</FxCompile>
+	<FxCompile Include="Shaders\DeferredCompositionPS.hlsl">
+	  <Filter>Shaders\PS</Filter>
+	</FxCompile>
+	<FxCompile Include="Shaders\ScreenSpaceOutlinePS.hlsl">
+	  <Filter>Shaders\PS</Filter>
+	</FxCompile>
+	<FxCompile Include="Shaders\DepthFogPS.hlsl">
+	  <Filter>Shaders\PS</Filter>
+	</FxCompile>
+	<FxCompile Include="Shaders\BloomDownsamplePS.hlsl">
+	  <Filter>Shaders\PS</Filter>
+	</FxCompile>
+	<FxCompile Include="Shaders\BloomUpsamplePS.hlsl">
+	  <Filter>Shaders\PS</Filter>
+	</FxCompile>
+	<FxCompile Include="Shaders\BloomCompositePS.hlsl">
+	  <Filter>Shaders\PS</Filter>
+	</FxCompile>
+	<FxCompile Include="Shaders\ToneMappingPS.hlsl">
+	  <Filter>Shaders\PS</Filter>
+	</FxCompile>
+	<FxCompile Include="Shaders\FXAAPS.hlsl">
+	  <Filter>Shaders\PS</Filter>
+	</FxCompile>
+	<FxCompile Include="Shaders\SSAOPS.hlsl">
+	  <Filter>Shaders\PS</Filter>
+	</FxCompile>
+	<FxCompile Include="Shaders\SSAODownsampleBlurPS.hlsl">
+	  <Filter>Shaders\PS</Filter>
+	</FxCompile>
+	<FxCompile Include="Shaders\SSAOUpsampleBlurPS.hlsl">
+	  <Filter>Shaders\PS</Filter>
+	</FxCompile>
+	<FxCompile Include="Shaders\RenderTargetDebugPS.hlsl">
+	  <Filter>Shaders\PS</Filter>
+	</FxCompile>
     <FxCompile Include="Shaders\FullScreenTextureVS.hlsl">
       <Filter>Shaders\VS</Filter>
     </FxCompile>
@@ -808,11 +1029,26 @@
     <FxCompile Include="Shaders\StaticMeshVS.hlsl">
       <Filter>Shaders\VS</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\SkySphereVS.hlsl">
+      <Filter>Shaders\VS</Filter>
+    </FxCompile>
     <FxCompile Include="Shaders\StaticMeshInstancedVS.hlsl">
       <Filter>Shaders\VS</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\SkeletalMeshVS.hlsl">
-      <Filter>Shaders\VS</Filter>
-    </FxCompile>
+	<FxCompile Include="Shaders\SkeletalMeshVS.hlsl">
+	  <Filter>Shaders\VS</Filter>
+	</FxCompile>
+	<FxCompile Include="Shaders\StaticShadowVS.hlsl">
+	  <Filter>Shaders\VS</Filter>
+	</FxCompile>
+	<FxCompile Include="Shaders\StaticInstancedShadowVS.hlsl">
+	  <Filter>Shaders\VS</Filter>
+	</FxCompile>
+	<FxCompile Include="Shaders\SkeletalShadowVS.hlsl">
+	  <Filter>Shaders\VS</Filter>
+	</FxCompile>
+	<FxCompile Include="Shaders\MaskedShadowPS.hlsl">
+	  <Filter>Shaders\PS</Filter>
+	</FxCompile>
   </ItemGroup>
 </Project>

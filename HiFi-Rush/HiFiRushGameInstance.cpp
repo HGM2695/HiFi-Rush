@@ -36,6 +36,8 @@ namespace gm
 
 		if (_chiAnimationSettings.Load(GetResourcePath(ChiAnimationSettingsFilePath)) == false)
 			return false;
+		if (_effectPresets.Load(GetResourcePath(EffectPresetsFilePath)) == false)
+			return false;
 
 		if (LoadResources() == false)
 			return false;

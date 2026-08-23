@@ -21,11 +21,13 @@ namespace gm
 		void						SetSourceRect(const Rect& rect);
 		void						SetSourceRect(const SpriteFrame& frame);
 		void						DisableSourceRect();
+		void						SetFacingMode(SpriteFacingMode facingMode) { _presenter.SetFacingMode(facingMode); }
+		void						SetOpacity(float opacity) { _presenter.SetOpacity(opacity); }
 
+	protected:
 		SpritePresenter&			GetPresenter() { return _presenter; }
 		const SpritePresenter&		GetPresenter() const { return _presenter; }
 
-	protected:
 		virtual void				OnInitialize() override;
 		virtual void				OnRender() override;
 

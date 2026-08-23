@@ -16,6 +16,8 @@ namespace gm
 		{
 			return std::make_unique<Material>(
 				Material::MaterialBuilder(APPLICATION.GetResources())
+					.SetShadingModel(ShadingModel::Unlit)
+					.SetSurfaceMode(SurfaceMode::Transparent)
 					.SetCullMode(CullMode::None)
 					.SetDepthEnable(false)
 					.SetDepthWriteEnable(false)
@@ -116,7 +118,7 @@ namespace gm
 			return;
 
 		ColorConstantPS constant{};
-		constant.color = _backgroundColor;
+		constant.color = ConvertSRGBToLinear(_backgroundColor);
 		_backgroundMaterial->SetConstantData(ShaderStage::Pixel, 0, constant);
 	}
 
@@ -126,7 +128,7 @@ namespace gm
 			return;
 
 		ColorConstantPS constant{};
-		constant.color = _outlineColor;
+		constant.color = ConvertSRGBToLinear(_outlineColor);
 		_outlineMaterial->SetConstantData(ShaderStage::Pixel, 0, constant);
 	}
 }

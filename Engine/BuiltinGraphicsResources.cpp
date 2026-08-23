@@ -26,11 +26,35 @@ namespace gm
 		LoadVertexShader(StaticMeshVS, L"../Engine/Shaders/StaticMeshVS.hlsl", VertexMesh::GetLayout(), resources, factory);
 		LoadVertexShader(StaticMeshInstancedVS, L"../Engine/Shaders/StaticMeshInstancedVS.hlsl", VertexMeshInstanced::GetLayout(), resources, factory);
 		LoadVertexShader(SkeletalMeshVS, L"../Engine/Shaders/SkeletalMeshVS.hlsl", VertexAnimationMesh::GetLayout(), resources, factory);
+		LoadVertexShader(StaticShadowVS, L"../Engine/Shaders/StaticShadowVS.hlsl", VertexMesh::GetLayout(), resources, factory);
+		LoadVertexShader(StaticInstancedShadowVS, L"../Engine/Shaders/StaticInstancedShadowVS.hlsl", VertexMeshInstanced::GetLayout(), resources, factory);
+		LoadVertexShader(SkeletalShadowVS, L"../Engine/Shaders/SkeletalShadowVS.hlsl", VertexAnimationMesh::GetLayout(), resources, factory);
+		LoadVertexShader(SkySphereVS, L"../Engine/Shaders/SkySphereVS.hlsl", VertexMesh::GetLayout(), resources, factory);
 
 		LoadPixelShader(FullScreenTexturePS, L"../Engine/Shaders/FullScreenTexturePS.hlsl", resources, factory);
 		LoadPixelShader(SpriteTexturePS, L"../Engine/Shaders/SpriteTexturePS.hlsl", resources, factory);
+		LoadPixelShader(EffectSpritePS, L"../Engine/Shaders/EffectSpritePS.hlsl", resources, factory);
+		LoadPixelShader(EffectMeshPS, L"../Engine/Shaders/EffectMeshPS.hlsl", resources, factory);
 		LoadPixelShader(SolidColorPS, L"../Engine/Shaders/SolidColorPS.hlsl", resources, factory);
-		LoadPixelShader(StaticMeshPS, L"../Engine/Shaders/StaticMeshPS.hlsl", resources, factory);
+		LoadPixelShader(MeshForwardPS, L"../Engine/Shaders/MeshForwardPS.hlsl", resources, factory);
+		LoadPixelShader(UVBarGraphPS, L"../Engine/Shaders/UVBarGraphPS.hlsl", resources, factory);
+		LoadPixelShader(MeshGBufferPS, L"../Engine/Shaders/MeshGBufferPS.hlsl", resources, factory);
+		LoadPixelShader(DeferredCompositionPS, L"../Engine/Shaders/DeferredCompositionPS.hlsl", resources, factory);
+		LoadPixelShader(ScreenSpaceOutlinePS, L"../Engine/Shaders/ScreenSpaceOutlinePS.hlsl", resources, factory);
+		LoadPixelShader(DepthFogPS, L"../Engine/Shaders/DepthFogPS.hlsl", resources, factory);
+		LoadPixelShader(BloomDownsamplePS, L"../Engine/Shaders/BloomDownsamplePS.hlsl", resources, factory);
+		LoadPixelShader(BloomUpsamplePS, L"../Engine/Shaders/BloomUpsamplePS.hlsl", resources, factory);
+		LoadPixelShader(BloomCompositePS, L"../Engine/Shaders/BloomCompositePS.hlsl", resources, factory);
+		LoadPixelShader(ToneMappingPS, L"../Engine/Shaders/ToneMappingPS.hlsl", resources, factory);
+		LoadPixelShader(FXAAPS, L"../Engine/Shaders/FXAAPS.hlsl", resources, factory);
+		LoadPixelShader(SSAOPS, L"../Engine/Shaders/SSAOPS.hlsl", resources, factory);
+		LoadPixelShader(SSAODownsampleBlurPS, L"../Engine/Shaders/SSAODownsampleBlurPS.hlsl", resources, factory);
+		LoadPixelShader(SSAOUpsampleBlurPS, L"../Engine/Shaders/SSAOUpsampleBlurPS.hlsl", resources, factory);
+		LoadPixelShader(MaskedShadowPS, L"../Engine/Shaders/MaskedShadowPS.hlsl", resources, factory);
+		LoadPixelShader(SkySpherePS, L"../Engine/Shaders/SkySpherePS.hlsl", resources, factory);
+#if GM_ENABLE_DEBUG_TOOLS
+		LoadPixelShader(RenderTargetDebugPS, L"../Engine/Shaders/RenderTargetDebugPS.hlsl", resources, factory);
+#endif
 
 		return true;
 	}
