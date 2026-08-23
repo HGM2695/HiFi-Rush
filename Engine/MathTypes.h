@@ -4,6 +4,7 @@
 #include <DirectXCollision.h>
 #include <directxtk/SimpleMath.h>
 
+#include <algorithm>
 #include <cmath>
 
 namespace gm
@@ -38,6 +39,16 @@ namespace gm
     {
         constexpr float invColor = 1.f / 255.f;
         return Color{ r * invColor, g * invColor, b * invColor, a * invColor };
+    }
+
+    inline float ConvertSRGBToLinear(float value)
+    {
+        return value <= 0.04045f ? value / 12.92f : std::pow((value + 0.055f) / 1.055f, 2.4f);
+    }
+
+    inline Color ConvertSRGBToLinear(const Color& color)
+    {
+        return Color{ ConvertSRGBToLinear(color.x), ConvertSRGBToLinear(color.y), ConvertSRGBToLinear(color.z), color.w };
     }
 
     namespace Colors

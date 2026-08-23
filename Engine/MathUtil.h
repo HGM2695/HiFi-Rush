@@ -13,6 +13,11 @@ namespace gm::Math
 		return degrees * (GM_PI / 180.f);
 	}
 
+	inline constexpr float RadiansToDegrees(float radians)
+	{
+		return radians * (180.f / GM_PI);
+	}
+
 	inline float CalcExponentialSmoothingRatio(float interpolationSpeed, float deltaTime)
 	{
 		return 1.f - std::exp(-interpolationSpeed * deltaTime);
@@ -96,6 +101,14 @@ namespace gm::Math
 	}
 
 	inline bool IntersectsRay(const BoundingOrientedBox& box, const Vector3& origin, const Vector3& direction, float& outDistance)
+	{
+		return box.Intersects(
+			DirectX::XMLoadFloat3(&origin),
+			DirectX::XMLoadFloat3(&direction),
+			outDistance);
+	}
+
+	inline bool IntersectsRay(const BoundingBox& box, const Vector3& origin, const Vector3& direction, float& outDistance)
 	{
 		return box.Intersects(
 			DirectX::XMLoadFloat3(&origin),

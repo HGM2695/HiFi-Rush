@@ -11,5 +11,7 @@ namespace gm
 		Quaternion	rotation{};
 		Matrix		view = Math::IdentityMatrix();
 		Matrix		projection = Math::IdentityMatrix();
+		float		nearPlane = 0.1f;
+		float		farPlane = 1000.f;
 	};
 }

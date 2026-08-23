@@ -20,6 +20,8 @@ namespace gm
 		viewInfo.rotation = _ownerTransform->GetRotation();
 		viewInfo.view = Math::CreateInverseTransformMatrix(viewInfo.position, viewInfo.rotation);
 		viewInfo.projection = CreateProjectionMatrix();
+		viewInfo.nearPlane = _nearZ;
+		viewInfo.farPlane = _farZ;
 
 		return viewInfo;
 	}

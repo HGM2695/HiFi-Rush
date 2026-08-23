@@ -25,8 +25,8 @@ namespace gm
 		Vector3					GetRightDirection() const;
 		Vector3					GetUpDirection() const;
 
-		void					SetOrthographic(float width, float height, float nearZ = 0.f, float farZ = 1000.f);
-		void					SetPerspective(float fovYRadians, float aspectRatio, float nearZ = 0.1f, float farZ = 1000.f);
+		void					SetOrthographic(float width, float height, float nearZ = 0.f, float farZ = 500.f);
+		void					SetPerspective(float fovYRadians, float aspectRatio, float nearZ = 0.1f, float farZ = 500.f);
 
 		CameraProjectionMode	GetProjectionMode() const { return _projectionMode; }
 		float					GetFovYRadians() const { return _fovYRadians; }
@@ -49,6 +49,6 @@ namespace gm
 		float					_fovYRadians = 1.04719755f;
 		float					_aspectRatio = 16.f / 9.f;
 		float					_nearZ = 0.1f;
-		float					_farZ = 1000.f;
+		float					_farZ = 500.f;
 	};
 }
