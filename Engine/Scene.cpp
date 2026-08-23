@@ -5,7 +5,6 @@
 #include "AudioSystem.h"
 #include "TimeSystem.h"
 #include "TickManager.h"
-#include <algorithm>
 
 namespace gm
 {
@@ -52,6 +51,9 @@ namespace gm
 		_pendingInitializeGameObjects.clear();
 		_tickManager = std::make_unique<TickManager>();
 		_cameraManager = std::make_unique<CameraManager>();
+		_ambientSettings = {};
+		_depthFogSettings = {};
+		_toneMappingSettings = {};
 		_isInitialized = false;
 	}
 
@@ -99,19 +101,19 @@ namespace gm
 
 	void Scene::InitializePendingGameObjects()
 	{
-		if (_pendingInitializeGameObjects.empty())
-			return;
-
-		for (GameObject* gameObject : _pendingInitializeGameObjects)
+		while (_pendingInitializeGameObjects.empty() == false)
 		{
-			if (gameObject->IsPendingDestroy())
-				continue;
+			std::vector<GameObject*> pendingGameObjects;
+			pendingGameObjects.swap(_pendingInitializeGameObjects);
+			for (GameObject* gameObject : pendingGameObjects)
+			{
+				if (gameObject->IsPendingDestroy())
+					continue;
 
-			gameObject->Initialize();
-			_tickManager->RegisterGameObject(*gameObject);
+				gameObject->Initialize();
+				RegisterGameObjectComponents(*gameObject);
+			}
 		}
-
-		_pendingInitializeGameObjects.clear();
 	}
 
 	void Scene::RemovePendingDestroyGameObjects()
@@ -122,11 +124,21 @@ namespace gm
 			if (slot.gameObject == nullptr || slot.gameObject->IsPendingDestroy() == false)
 				continue;
 
-			_tickManager->UnregisterGameObject(*slot.gameObject);
+			UnregisterGameObjectComponents(*slot.gameObject);
 			slot.gameObject.reset();
 			++slot.generation;
 			_freeGameObjectSlotIndices.push_back(i);
 		}
+	}
+
+	void Scene::RegisterGameObjectComponents(GameObject& gameObject)
+	{
+		gameObject.ForEachComponent([this](Component& component) { NotifyComponentAdded(component); });
+	}
+
+	void Scene::UnregisterGameObjectComponents(GameObject& gameObject)
+	{
+		gameObject.ForEachComponent([this](Component& component) { _tickManager->Unregister(component); });
 	}
 
 	void Scene::NotifyComponentAdded(Component& component)

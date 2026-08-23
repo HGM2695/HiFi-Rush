@@ -127,29 +127,32 @@ namespace gm
 	bool Application::initializeRenderer()
 	{
 		_renderer = std::make_unique<Renderer>(*_resources, *_graphicsCommandContext, *_graphicsResourceFactory);
-		GM_ASSERT_RETURN_VAL(_renderer->Initialize(), false, "Renderer 초기화에 실패했습니다.");
+		GM_ASSERT_RETURN_VAL(_renderer->Initialize(GetWidth(), GetHeight()), false, "Renderer 초기화에 실패했습니다.");
 
 		return true;
 	}
 
 	void Application::Run()
 	{
-		MSG msg;
-
-		while (true)
+		MSG msg{};
+		bool shouldQuit = false;
+		while (shouldQuit == false)
 		{
-			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+			while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 			{
 				if (msg.message == WM_QUIT)
+				{
+					shouldQuit = true;
 					break;
+				}
 
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
 			}
-			else
-			{
-				Loop();
-			}
+
+			if (shouldQuit)
+				break;
+			Loop();
 		}
 
 		_gameInstance->Shutdown();
@@ -194,8 +197,6 @@ namespace gm
 
 	void Application::Render()
 	{
-		_graphicsDevice->BeginFrame(_backbufferColor);
-
 		_sceneManager->Render();
 		Scene* activeScene = _sceneManager->GetActiveScene();
 		GM_ASSERT_RETURN(activeScene, "활성 Scene이 없습니다.");
@@ -209,7 +210,7 @@ namespace gm
 		_renderer->DebugDraw(*_debugRenderer);
 #endif
 
-		_renderer->Render(viewInfo, GetWidth(), GetHeight());
+		_renderer->Render(activeScene->GetAmbientSettings(), activeScene->GetDepthFogSettings(), activeScene->GetToneMappingSettings(), viewInfo, GetWidth(), GetHeight(), _backbufferColor);
 #if GM_ENABLE_DEBUG_TOOLS
 		_debugRenderer->Render(viewInfo);
 #endif

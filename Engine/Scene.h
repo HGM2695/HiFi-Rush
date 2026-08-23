@@ -2,8 +2,11 @@
 
 #include "EngineCore.h"
 #include "Entity.h"
+#include "FogTypes.h"
 #include "GameObjectHandle.h"
+#include "LightTypes.h"
 #include "TickGroup.h"
+#include "ToneMappingTypes.h"
 #include <type_traits>
 #include <utility>
 #include <vector>
@@ -92,6 +95,12 @@ namespace gm
 
 		CameraManager*			GetCameraManager() { return _cameraManager.get(); }
 		const CameraManager*	GetCameraManager() const { return _cameraManager.get(); }
+		void					SetAmbientSettings(const SceneAmbientSettings& settings) { _ambientSettings = settings; }
+		const SceneAmbientSettings& GetAmbientSettings() const { return _ambientSettings; }
+		void					SetDepthFogSettings(const DepthFogSettings& settings) { _depthFogSettings = settings; }
+		const DepthFogSettings& GetDepthFogSettings() const { return _depthFogSettings; }
+		void					SetToneMappingSettings(const ToneMappingSettings& settings) { _toneMappingSettings = settings; }
+		const ToneMappingSettings& GetToneMappingSettings() const { return _toneMappingSettings; }
 
 	protected:
 		virtual void	OnInitialize() {}
@@ -135,6 +144,8 @@ namespace gm
 
 		void				InitializePendingGameObjects();
 		void				RemovePendingDestroyGameObjects();
+		void				RegisterGameObjectComponents(GameObject& gameObject);
+		void				UnregisterGameObjectComponents(GameObject& gameObject);
 		void				NotifyComponentAdded(Component& component);
 		uint32				AddGameObjectToSlot(std::unique_ptr<GameObject> gameObject);
 		GameObject*			FindGameObject(GameObjectHandle handle);
@@ -147,6 +158,9 @@ namespace gm
 		std::vector<GameObject*>					_pendingInitializeGameObjects{};
 		std::unique_ptr<CameraManager>				_cameraManager = nullptr;
 		std::unique_ptr<TickManager>				_tickManager = nullptr;
+		SceneAmbientSettings						_ambientSettings{};
+		DepthFogSettings						_depthFogSettings{};
+		ToneMappingSettings					_toneMappingSettings{};
 		bool										_isUnloadOnExit = true;
 		bool										_isInitialized = false;
 	};
