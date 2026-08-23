@@ -27,7 +27,6 @@
 | 플랫폼 | Windows x64 |
 | 개발 환경 | Visual Studio 2022, MSVC v143, Windows 10 SDK |
 | 주요 라이브러리 | FMOD, DirectXTK |
-| 기본 실행 환경 | 1600 × 900, VSync |
 
 ### 목표
 
