@@ -1,19 +1,13 @@
+게임플레이 영상 링크 
+
 # Hi-Fi RUSH — C++ / DirectX 11
 
 > C++20과 DirectX 11 기반으로 게임 엔진과 리듬 액션 클라이언트를 직접 설계·구현한 개인 프로젝트입니다.  
 > 음원의 실제 재생 시각을 공통 기준으로 사용하여 전투, 애니메이션, UI와 환경 오브젝트를 하나의 Beat에 동기화했습니다.
 
-<!--
-포트폴리오 제출 전 아래 링크를 실제 URL로 교체한 뒤 주석을 해제하세요.
-
 <p align="center">
-  <a href="PLAY_VIDEO_URL"><b>플레이 영상</b></a>
-  ·
-  <a href="EXECUTABLE_URL"><b>실행 파일</b></a>
-  ·
-  <a href="PORTFOLIO_URL"><b>기술 포트폴리오</b></a>
+  <a href="https://www.youtube.com/watch?v=OX_QslIlpx0"><b>▶ 게임 플레이 영상 보기</b></a>
 </p>
--->
 
 ## Project Overview
 
