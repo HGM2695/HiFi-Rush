@@ -9,6 +9,11 @@
   <a href="https://www.youtube.com/watch?v=OX_QslIlpx0"><b>▶ 게임 플레이 영상 보기</b></a>
 </p>
 
+## Build & Run
+
+> [!IMPORTANT]
+> 이 저장소는 직접 작성한 Engine·Game Client Source Code와 Shader를 검토하기 위한 저장소입니다. 원작 게임의 Model, Animation, Texture와 Sound Resource 및 Third-Party Binary는 저작권과 배포 조건에 따라 포함하지 않습니다. 따라서 Clean Clone만으로 즉시 실행되는 Self-contained 저장소는 아닙니다.
+
 ## Project Overview
 
 | 항목 | 내용 |
@@ -309,11 +314,6 @@ HiFi-Rush/
 ├─ Docs/                      # 포트폴리오와 기술 문서
 └─ HiFi-Rush.sln
 ```
-
-## Build & Run
-
-> [!IMPORTANT]
-> 이 저장소는 직접 작성한 Engine·Game Client Source Code와 Shader를 검토하기 위한 저장소입니다. 원작 게임의 Model, Animation, Texture와 Sound Resource 및 Third-Party Binary는 저작권과 배포 조건에 따라 포함하지 않습니다. 따라서 Clean Clone만으로 즉시 실행되는 Self-contained 저장소는 아닙니다.
 
 ### Requirements
 
