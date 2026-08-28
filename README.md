@@ -12,7 +12,7 @@
 ## Build & Run
 
 > [!IMPORTANT]
-> 이 저장소는 직접 작성한 Engine·Game Client Source Code와 Shader를 검토하기 위한 저장소입니다. 원작 게임의 Model, Animation, Texture와 Sound Resource 및 Third-Party Binary는 저작권과 배포 조건에 따라 포함하지 않습니다. 따라서 Clean Clone만으로 즉시 실행되는 Self-contained 저장소는 아닙니다.
+> 이 저장소는 직접 작성한 Engine·Game Client Source Code와 Shader를 보여드리기 위해 공개했습니다. 원작 게임의 Model, Animation, Texture와 Sound 등은 저작권에 따라 포함하지 않았습니다. 필요한 서드파티 개발 환경을 구성하면 프로젝트를 빌드할 수 있지만, 리소스가 없으므로 저장소만으로는 정상적인 플레이가 불가능합니다.
 
 ## Project Overview
 
