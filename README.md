@@ -60,7 +60,7 @@ Idle은 4박, Run은 2박처럼 애니메이션마다 반복 주기를 지정했
 - **구독·객체 수명:** 구독 연결 객체가 소멸할 때 연결을 해제합니다. 삭제 요청된 게임 오브젝트는 `PendingDestroy`로 표시하고 프레임 종료 시 등록 해제와 실제 삭제를 수행합니다.
 - **데이터에 따른 구성:** 환경 오브젝트의 컴포넌트, 반복 주기, 애니메이션 설정과 이펙트 프리셋을 데이터로 구성합니다. Trigger와 Animation Notify를 통해 정해진 시점의 동작을 연결합니다.
 
-공통 기능은 `Engine`, 게임 고유의 규칙과 콘텐츠는 `HiFi-Rush`에 두었습니다. 이후 엔진을 SDK 형태로 구성해 **[TCP 멀티플레이 데모](https://github.com/HGM2695/NetworkDemo)**에도 재사용했습니다.
+공통 기능은 `Engine`, 게임 고유의 규칙과 콘텐츠는 `HiFi-Rush`에 두었습니다. 이후 엔진을 SDK 형태로 구성해 [TCP 멀티플레이 데모](https://github.com/HGM2695/NetworkDemo)에도 재사용했습니다.
 
 [오브젝트·컴포넌트](Engine/GameObject.h) · [이벤트 구독](Engine/Event.h) · [프레임 종료 시 삭제](Engine/Scene.cpp) · [피격 사운드 구독 사례](HiFi-Rush/ChiAudioComponent.cpp) · [환경 컴포넌트 구성](HiFi-Rush/EnvironmentComponentFactory.cpp)
 
