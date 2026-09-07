@@ -1,374 +1,124 @@
-게임플레이 영상 링크 
+# HiFi-Rush 모작
 
-# Hi-Fi RUSH — C++ / DirectX 11
+음악의 박자에 맞춰 캐릭터와 환경이 움직이고, 공격의 타격 순간도 정박에 맞추는 리듬 액션 게임입니다. 개인 프로젝트로 **DirectX 11 기반 자체 엔진과 게임 클라이언트**를 설계·구현했습니다.
 
-> C++20과 DirectX 11 기반으로 게임 엔진과 리듬 액션 클라이언트를 직접 설계·구현한 개인 프로젝트입니다.  
-> 음원의 실제 재생 시각을 공통 기준으로 사용하여 전투, 애니메이션, UI와 환경 오브젝트를 하나의 Beat에 동기화했습니다.
+[![HiFi-Rush 모작 시연 영상](https://img.youtube.com/vi/L86G_UKz5gA/hqdefault.jpg)](https://www.youtube.com/watch?v=L86G_UKz5gA)
 
-<p align="center">
-  <a href="https://www.youtube.com/watch?v=OX_QslIlpx0"><b>▶ 게임 플레이 영상 보기</b></a>
-</p>
-
-## Build & Run
-
-> [!IMPORTANT]
-> 이 저장소는 직접 작성한 Engine·Game Client Source Code와 Shader를 보여드리기 위해 공개했습니다. 원작 게임의 Model, Animation, Texture와 Sound 등은 저작권에 따라 포함하지 않았습니다. 필요한 서드파티 개발 환경을 구성하면 프로젝트를 빌드할 수 있지만, 리소스가 없으므로 저장소만으로는 정상적인 플레이가 불가능합니다.
-
-## Project Overview
+**[▶ 플레이·구현 시연 영상](https://www.youtube.com/watch?v=L86G_UKz5gA)** · [엔진 코드](Engine) · [게임 코드](HiFi-Rush)
 
 | 항목 | 내용 |
-|---|---|
+| --- | --- |
 | 개발 형태 | 개인 프로젝트 |
-| 개발 기간 | 2026.02 ~ 2026.08 |
-| 담당 범위 | 엔진, 렌더링 파이프라인과 게임 클라이언트 전반 |
-| 언어 | C++20, HLSL |
-| 그래픽스 | DirectX 11 |
-| 플랫폼 | Windows x64 |
-| 개발 환경 | Visual Studio 2022, MSVC v143, Windows 10 SDK |
-| 주요 라이브러리 | FMOD, DirectXTK |
+| 주요 기술 | C++20, DirectX 11, HLSL, Git |
+| 활용 라이브러리 | DirectXTK, FMOD |
+| 구현 범위 | 엔진, 렌더링, 리듬·전투 시스템, 몬스터 AI, UI, 리소스 로딩 |
 
-### 목표
+## 주요 구현
 
-- 클라이언트가 DirectX 11 구체 타입을 직접 다루지 않고 추상화된 그래픽스 인터페이스를 사용하도록 구성
-- 음악의 Beat에 맞춰 전투, 애니메이션, UI와 환경 오브젝트가 함께 움직이는 게임플레이 구현
-- GameObject가 그리는 방법을 알지 않고 Render Item만 제출하는 렌더링 구조 설계
-- 애니메이션 시점, 상태의 의미 해석과 Runtime 객체의 실행 책임을 분리하여 콘텐츠 확장성 확보
+| 해결할 요구 | 구현 방식 |
+| --- | --- |
+| 캐릭터와 환경이 음악의 박자를 공유 | BGM 재생 위치에서 공통 박자를 계산하고 동작별 반복 주기에 맞춰 재생 위치 결정 |
+| 입력 시점이 달라도 정박에 타격 | 타격까지 남은 동작과 재생 속도 상한을 함께 고려해 목표 박자·속도 선택 |
+| 여러 오브젝트에 같은 기능 적용 | 기능별 컴포넌트 조합, 이벤트 구독, 데이터로 지정한 애니메이션·이펙트 설정 |
+| 장면 표현과 렌더링 작업 조절 | Deferred Lighting, 그림자·후처리, 프러스텀 컬링, 정적 메시 배칭·인스턴싱 |
 
-## Key Features
+## 1. 음악 박자를 공유하되, 동작에 맞춰 제어 방식 분리
 
-| 영역 | 핵심 구현 |
-|---|---|
-| Engine Runtime | Application, Scene, GameObject·Component 수명 주기와 Tick Group |
-| Rhythm System | Audio 재생 시각 기반 Beat 계산, ms 단위 입력 판정과 애니메이션 속도 동기화 |
-| Character & Combat | 상태 머신, Combo, Branch, Cancel, Input Buffer, Auto Targeting과 Beat Hit |
-| Rendering | G-Buffer 기반 Deferred Rendering, Toon Lighting, CSM·PCF Shadow |
-| Post Process | SSAO, Screen Space Outline, Depth Fog, HDR Bloom, Tone Mapping과 FXAA |
-| Content Runtime | Animation Notify, Event Publisher, Trigger와 Effect Preset 기반 실행 구조 |
-| Optimization | Frustum Culling, Static Mesh Batching·Instancing, Section 기반 Render Queue |
-| Debugging | Render Target, Collision·NavMesh 시각화와 실시간 렌더 설정 조절 |
-
-## Architecture
-
-엔진은 `Platform / Core`, `Gameplay Runtime`, `Graphics` 영역으로 책임을 분리했습니다. 현재 렌더링 백엔드는 DirectX 11이며, 게임 클라이언트는 `IGraphicsDevice`, `IGraphicsCommandContext`, `IGraphicsResourceFactory`를 통해 이를 사용합니다.
-
-```mermaid
-flowchart TB
-    App[Application]
-
-    App --> Core[Platform / Core]
-    App --> Runtime[Gameplay Runtime]
-    App --> Graphics[Graphics]
-
-    Core --> Window[Window]
-    Core --> Input[Input]
-    Core --> Time[Time System]
-    Core --> Audio[Audio System]
-
-    Runtime --> Resources[Resources]
-    Runtime --> Scene[Scene Manager]
-    Runtime --> Physics[Physics System]
-    Runtime --> UI[UI Manager]
-    Runtime --> Game[Game Instance]
-
-    Graphics --> Device[IGraphicsDevice]
-    Graphics --> Context[IGraphicsCommandContext]
-    Graphics --> Factory[IGraphicsResourceFactory]
-    Graphics --> Renderer[Renderer]
-```
-
-### 주요 클래스의 책임
-
-- **Application**: 엔진 시스템 소유, Win32 Message Loop와 Frame Loop 실행
-- **GameInstance**: 게임 리소스, Scene과 `BeatSystem` 등 게임 전역 시스템 구성
-- **Scene**: GameObject 생성·제거 예약, Tick과 Render Data 수집 관리
-- **GameObject / Component**: 객체의 정체성과 이동·렌더링·충돌·게임 규칙을 조합 가능한 기능으로 분리
-- **Renderer**: 제출된 Render Item 분류·정렬, Render Pass 실행과 최종 화면 합성
-
-주요 코드: [`Application`](Engine/Application.cpp) · [`Scene`](Engine/Scene.cpp) · [`GameObject`](Engine/GameObject.cpp) · [`Renderer`](Engine/Renderer.cpp) · [`HiFiRushGameInstance`](HiFi-Rush/HiFiRushGameInstance.cpp)
-
-## Frame Lifecycle
-
-한 프레임 안에서 게임 로직, 애니메이션, 이동, 물리, 부착 관계와 카메라가 명시된 순서로 실행됩니다. GameObject의 생성과 제거는 Frame 경계에서 반영하여 순회 중 컨테이너 변경을 방지합니다.
+반복 동작은 음악의 현재 박자에 맞춰야 하고, 공격은 입력에 반응해 시작한 뒤 타격까지 이어져야 합니다. **공통 시간은 음악을 기준으로 두고, 반복 동작의 재생 위치와 공격의 재생 속도를 각각 제어**했습니다.
 
 ```mermaid
 flowchart LR
-    Message[Win32 Message] --> System[Input · Time · Audio · UI]
-    System --> Begin[Scene BeginFrame]
-    Begin --> Logic[Game Logic]
-    Logic --> Animation[Animation]
-    Animation --> Movement[Movement]
-    Movement --> Physics[Physics]
-    Physics --> Post[Post Physics]
-    Post --> Attachment[Attachment]
-    Attachment --> Camera[Camera]
-    Camera --> Submit[Render Data Submit]
-    Submit --> Render[Render Pass]
-    Render --> End[Scene EndFrame]
+    BGM["BGM 재생 위치 + BPM"] --> Beat["BeatSystem · 현재 박자"]
+    Beat --> Loop["동기화 컴포넌트<br/>반복 주기 내 진행률 계산"]
+    Loop --> Time["애니메이션 재생 시각"]
+    Beat --> Attack["공격 상태<br/>목표 정박과 재생 속도 계산"]
+    Time --> Animator["애니메이터"]
+    Attack --> Animator
 ```
 
-## Technical Highlights
+### 반복 동작: 현재 박자를 애니메이션 재생 위치로 변환
 
-### 1. 하나의 Audio Clock으로 전체 장면 동기화
+Idle은 4박, Run은 2박처럼 애니메이션마다 반복 주기를 지정했습니다. 현재 박자의 주기 내 진행률에 클립 길이를 곱해 재생 시각으로 변환합니다. 캐릭터와 환경에 같은 동기화 컴포넌트를 적용하고, 반복 주기와 위상은 설정으로 구분합니다.
 
-#### 문제
+음악에 따른 계산은 게임의 동기화 컴포넌트가 맡습니다. 엔진의 애니메이터는 전달받은 시각의 포즈를 적용하며, 외부 시각이 주어지지 않으면 일반적인 deltaTime 기반 재생을 사용합니다.
 
-요구사항은 모든 오브젝트와 애니메이션이 음악의 Beat에 맞춰 움직이는 것이었습니다. 각 오브젝트가 Delta Time을 개별 누적하면 생성·활성화 시점에 따라 기준 시간이 달라지고, 음악과 연출 사이에 누적 오차가 생길 수 있습니다.
+[박자 계산](HiFi-Rush/BeatSystem.cpp) · [주기·위상 계산](HiFi-Rush/BeatMath.h) · [동기화 컴포넌트](HiFi-Rush/BeatSkeletalAnimationSyncComponent.cpp) · [애니메이터](Engine/SkeletalAnimatorComponent.cpp)
 
-#### 해결
+### 공격: 허용 속도로 도달할 수 있는 정박 선택
 
-FMOD BGM 채널의 실제 재생 시각을 단일 기준 시계로 사용했습니다. `BeatSystem`이 재생 시각, BPM과 곡별 Offset으로 현재 Beat·Beat Index·진행률을 계산하고, 각 시스템은 시간을 직접 누적하는 대신 같은 Beat를 조회합니다.
+바로 다음 정박에 무조건 맞추면 남은 시간이 짧을수록 공격 동작이 지나치게 빨라집니다. 블렌드 시작 위치부터 타격 마커까지 남은 동작을 기준으로 필요한 재생 속도를 계산하고, 속도 상한을 넘으면 뒤의 정박을 선택합니다.
 
-```mermaid
-flowchart LR
-    Audio[FMOD Playback Time] --> Beat[BeatSystem]
-    Beat --> Judge[Rhythm Judge]
-    Beat --> Animation[Animation Sync]
-    Beat --> Components[Beat Components]
-    Beat --> Widgets[Rhythm UI]
-```
+타격 시점은 애니메이션 Notify와 연결하고, 타격 이후에는 기본 재생 속도로 복원합니다. **입력의 리듬 판정과 실제 타격 시점 제어를 구분**해 처리했습니다.
 
-- `RhythmJudge`가 가장 가까운 정박과 입력의 차이를 ms 단위로 계산
-- 기본 판정 범위: `Perfect ±45 ms`, `Good ±90 ms`
-- 공격 Impact가 목표 정박에 도달하도록 애니메이션 재생 속도 보정
-- 이동, 회전, 가시성, Texture Sequence와 UV 이동을 `Beat*Component`로 캡슐화
+[목표 박자·속도 계산과 타격 처리](HiFi-Rush/ChiAttackState.cpp) · [리듬 입력 판정](HiFi-Rush/RhythmInputJudge.cpp)
 
-#### 결과
+## 2. 기능을 컴포넌트로 조합하고 이벤트로 연결
 
-프레임 변동과 오브젝트 활성화 시점에 따른 누적 오차를 방지하고, 음악·전투 애니메이션·UI와 환경 연출을 하나의 Beat 기준으로 동기화했습니다. 새로운 연출도 엔진 수정 없이 전용 Component를 조합하여 확장할 수 있습니다.
+게임 오브젝트에 필요한 컴포넌트를 추가하는 방식으로 이동, 체력, 피격, 사운드 등의 역할을 나눴습니다. 템플릿 기반 추가·탐색 함수를 사용하고, 오브젝트가 `std::unique_ptr`로 컴포넌트를 소유합니다.
 
-주요 코드: [`BeatSystem`](HiFi-Rush/BeatSystem.cpp) · [`RhythmInputJudge`](HiFi-Rush/RhythmInputJudge.cpp) · [`BeatMoveComponent`](HiFi-Rush/BeatMoveComponent.cpp) · [`BeatSkeletalAnimationSyncComponent`](HiFi-Rush/BeatSkeletalAnimationSyncComponent.cpp)
+- **이벤트 구독:** 람다와 `std::function`으로 반응 코드를 등록합니다. 예를 들어 체력 컴포넌트는 피격 이벤트를 발행하고, 오디오 컴포넌트가 구독해 효과음을 재생합니다.
+- **구독·객체 수명:** 구독 연결 객체가 소멸할 때 연결을 해제합니다. 삭제 요청된 게임 오브젝트는 `PendingDestroy`로 표시하고 프레임 종료 시 등록 해제와 실제 삭제를 수행합니다.
+- **데이터에 따른 구성:** 환경 오브젝트의 컴포넌트, 반복 주기, 애니메이션 설정과 이펙트 프리셋을 데이터로 구성합니다. Trigger와 Animation Notify를 통해 정해진 시점의 동작을 연결합니다.
 
-### 2. Animation Notify와 Runtime 실행 책임 분리
+공통 기능은 `Engine`, 게임 고유의 규칙과 콘텐츠는 `HiFi-Rush`에 두었습니다. 이후 엔진을 SDK 형태로 구성해 **[TCP 멀티플레이 데모](https://github.com/HGM2695/NetworkDemo)**에도 재사용했습니다.
 
-State가 Animation 시간을 매 Tick 검사하면서 HitBox·Effect 생성과 수명까지 직접 관리하면, 타이밍 데이터와 Runtime 구현이 한곳에 결합됩니다.
+[오브젝트·컴포넌트](Engine/GameObject.h) · [이벤트 구독](Engine/Event.h) · [프레임 종료 시 삭제](Engine/Scene.cpp) · [피격 사운드 구독 사례](HiFi-Rush/ChiAudioComponent.cpp) · [환경 컴포넌트 구성](HiFi-Rush/EnvironmentComponentFactory.cpp)
 
-```mermaid
-flowchart LR
-    Clip[Animation Clip<br/>Notify Name · Time]
-    Dispatcher[AnimationNotifyDispatcher<br/>시간 경계 통과 감지]
-    Event[AnimationNotifyEvent]
-    State[Current State / Component<br/>이벤트 의미 해석]
-    HitSpawner[HitBox Spawner]
-    EffectSpawner[Effect Spawner]
-    HitRuntime[TemporaryHitBoxObject<br/>충돌 · 피해 · 수명]
-    EffectRuntime[EffectRuntimeObject<br/>부착 · Track · Dissolve · 수명]
+## 3. 렌더링 중간 결과를 조합해 최종 화면 구성
 
-    Clip --> Dispatcher --> Event --> State
-    State --> HitSpawner --> HitRuntime
-    State --> EffectSpawner --> EffectRuntime
-```
+G-Buffer에 기록한 색상·법선·재질 등의 정보와 Scene Depth를 활용해 조명을 계산하고, 그림자와 화면 공간 효과를 적용했습니다.
 
-| 계층 | 책임 |
-|---|---|
-| Animation Notify | **언제** 실행할지 이름과 시점만 전달 |
-| State / Component | 현재 상태에서 **무엇을** 요청할지 해석 |
-| Spawner | 설정을 검증하고 Runtime Object 생성 정보 구성 |
-| Runtime Object | 충돌, 부착, Track 진행과 수명 등 **어떻게** 실행할지 소유 |
+| 구분 | 구현 내용 |
+| --- | --- |
+| 기본 렌더링 | 불투명·마스킹 메시의 G-Buffer 생성, Deferred Lighting, 투명 오브젝트의 별도 렌더 경로 |
+| 그림자 | 카메라 시야를 거리별로 나누는 CSM, PCF 필터링 |
+| 화면 공간 효과 | SSAO, Screen Space Outline, Depth Fog |
+| 후처리 | HDR Bloom, Tone Mapping, FXAA |
+| 렌더링 작업 감소 | 프러스텀 밖 메시 제외, 불투명·마스킹 정적 메시의 메시·재질 상태·인덱스 구간별 배칭, 지원 셰이더를 사용하는 배치의 인스턴싱, 캐스케이드별 그림자 생성 대상 선별 |
 
-활성 State는 필요한 Notify만 구독하고 State 종료 시 `EventConnection`을 해제합니다. 이에 따라 Animation 타이밍은 Notify Data에서, 실행 방식은 Spawner와 Runtime Object에서 독립적으로 변경할 수 있습니다.
+HDR Scene Color A/B는 후처리의 입력과 출력을 번갈아 맡습니다. 한 패스가 이전 결과를 읽어 다른 텍스처에 기록하면, 다음 패스에서 두 역할을 교환하는 방식으로 화면을 이어서 처리합니다.
 
-주요 코드: [`AnimationNotify`](Engine/AnimationNotify.cpp) · [`SkeletalAnimatorComponent`](Engine/SkeletalAnimatorComponent.cpp) · [`ChiAttackState`](HiFi-Rush/ChiAttackState.cpp) · [`EffectSpawner`](HiFi-Rush/EffectSpawner.cpp) · [`EffectRuntimeObject`](HiFi-Rush/EffectRuntimeObject.cpp)
+디버그 화면에서 G-Buffer, SSAO, 외곽선, Bloom 등 중간 결과를 선택해 볼 수 있으며, 컬링과 인스턴싱을 전환하고 렌더링 대상 수·드로우 콜 수를 확인할 수 있도록 했습니다.
 
-### 3. GameObject와 렌더링 정책 분리
+[렌더링 순서](Engine/Renderer.cpp) · [정적 메시 배칭·인스턴싱](Engine/StaticMeshRenderPass.cpp) · [CSM](Engine/CascadedShadowMap.cpp) · [그림자 생성 대상 선별](Engine/ShadowCasterPass.cpp) · [셰이더](Engine/Shaders)
 
-각 GameObject가 직접 Draw 순서와 Pipeline State를 결정하지 않습니다. Render Component는 Render Item만 제출하고, Renderer가 Material의 `SurfaceMode`, `ShadingModel`과 Mesh Section을 기준으로 Queue를 구성합니다.
+## 게임플레이와 리소스 로딩
 
-- Opaque·Masked Section을 먼저 렌더링하고 Transparent는 Back-to-Front로 정렬
-- Camera Frustum과 Bounding Volume을 이용한 Static·Skeletal Mesh Culling
-- Mesh·Material·Pipeline State 기준 Static Mesh Batch 구성
-- 동일 Mesh와 Material을 Instance Buffer로 묶어 `DrawIndexedInstanced` 실행
-- Opaque·Masked Section만 Shadow Caster로 제출
+| 영역 | 구현 내용 |
+| --- | --- |
+| 플레이어 | 상태 머신, 이동·점프·대시, 약·강 공격과 콤보, 리듬 판정, Beat Hit Attack, 피격 |
+| 몬스터 | Sword·Gunner의 상태와 공격, Qamil 보스의 페이즈·공격 패턴 |
+| 장면 | 타이틀, 튜토리얼, 외부 필드, 보스 전투, 로딩 화면 |
+| 로딩 | `std::async`로 장면 리소스를 로드하고 완료 여부를 확인한 뒤 메인 스레드에서 등록·장면 전환 |
 
-이 구조를 통해 GameObject는 장면에서의 역할에 집중하고, 정렬·배칭·인스턴싱과 Render Pass 정책은 Renderer에서 일관되게 처리합니다.
+[플레이어 상태 머신](HiFi-Rush/ChiStateMachineComponent.cpp) · [Sword](HiFi-Rush/SwordStateMachineComponent.cpp) · [Gunner](HiFi-Rush/GunnerStateMachineComponent.cpp) · [Qamil](HiFi-Rush/QamilStateMachineComponent.cpp) · [비동기 로딩](HiFi-Rush/CommonLoadingScene.cpp)
 
-주요 코드: [`Renderer`](Engine/Renderer.cpp) · [`StaticMeshRenderPass`](Engine/StaticMeshRenderPass.cpp) · [`SkeletalMeshRenderPass`](Engine/SkeletalMeshRenderPass.cpp)
-
-## Rendering Pipeline
-
-Opaque·Masked는 G-Buffer에 기록하고 조명을 Deferred로 계산합니다. Transparent와 World Sprite는 조명 합성 이후 Forward로 렌더링하며, UI와 Text는 Tone Mapping과 FXAA 이후 BackBuffer에 출력합니다.
-
-```mermaid
-flowchart LR
-    Submit[Render Item Submit]
-    Cull[Culling · Batching]
-    Shadow[CSM Shadow]
-    GBuffer[G-Buffer]
-    SSAO[SSAO]
-    Deferred[Deferred Lighting]
-    Outline[Screen Space Outline]
-    Fog[Opaque Depth Fog]
-    Forward[Transparent Forward<br/>Forward Fog]
-    Bloom[HDR Bloom]
-    Tone[Tone Mapping]
-    FXAA[FXAA]
-    UI[UI · Text]
-
-    Submit --> Cull --> Shadow --> GBuffer --> SSAO --> Deferred
-    Deferred --> Outline --> Fog --> Forward --> Bloom --> Tone --> FXAA --> UI
-```
-
-### G-Buffer 계약
-
-| Target | 저장 데이터 |
-|---|---|
-| Base Color | Material 기본 색상 |
-| World Normal | World Space Normal |
-| Material Data | AO, Shading Model과 Outline Flag |
-| Emissive | HDR Emissive Color |
-| Scene Depth | World Position 복원과 후처리 입력 |
-
-### 구현 기능
-
-- Directional, Point와 Spot Light
-- 양자화된 Lambert 기반 Toon Lighting과 Normal Mapping
-- Cascaded Shadow Maps와 PCF Shadow
-- SSAO와 Bilateral Blur
-- Depth·Normal 기반 Screen Space Outline
-- Depth Fog, HDR Bloom, Tone Mapping·Exposure와 FXAA
-- Render Target, Cascade와 Shadow Map 디버그 시각화
-
-## Gameplay Systems
-
-### Player Combat
-
-- 약·강공격 Combo와 Branch Attack
-- Cancel 시작 시점과 Input Buffer
-- Perfect, Good과 OffBeat 판정
-- Jump·Double Jump, Dash와 공중 연계
-- Auto Targeting과 공격 시작 방향 보정
-- Beat Hit 추가타와 Reverb 기반 Hibiki Attack
-- 공격별 HitBox 형태, Hit Reaction과 Knockback
-
-### Monster & Boss
-
-- Sword와 Gunner의 상태 머신 및 공격 패턴
-- 지상·공중 피격, Launch, Fall과 Death Presentation
-- Qamil Boss의 Phase 운영과 플랫폼 이동
-- Punch, Stump, Sweep, Missile, Chain과 Laser Attack
-- Phase 전환에 따른 환경 Texture·Material·조명 변화
-- 선행 전투, Boss Preview와 전투 종료 연출
-
-### Content Runtime
-
-- Trigger ID와 Beat Offset 기반 Event 구조
-- Line·Branch 기반 Dialog Sequence와 Rhythm Tutorial
-- 클립별 Animation 이동·중력·Blend·Impact·Cancel 설정
-- Effect Preset, Track과 Runtime Object
-- Scene별 BGM과 Song Offset
-- Health, Reverb, Rhythm Meter, Combo와 Beat Hit UI
-
-## Debugging & Validation
-
-기능을 구현하는 데 그치지 않고 문제를 재현하고 값을 검증할 수 있는 Debug Tool을 함께 구성했습니다.
-
-- Base Color, Normal, Material Data, Emissive와 Scene Depth 시각화
-- SSAO, Outline, Bloom Contribution과 Shadow Map Debug View
-- Cascade 영역 색상 표시
-- Collider, HitBox, Navigation Mesh와 Light 범위 시각화
-- Rhythm Input의 Beat와 ms 오차 로그
-- Ambient, Fog, Bloom, SSAO, Outline과 Shadow 설정 실시간 조절
-- Static Mesh 제출·컬링·Batch·Instance 통계 확인
-
-## Playable Scenes
-
-| Scene | 내용 |
-|---|---|
-| Title | Title Animation과 BGM |
-| Tutorial | Dialog, 약·강공격 학습과 Rhythm Tutorial |
-| Outside | Trigger 기반 환경 연출과 Monster Wave |
-| Qamil | 선행 전투, Boss Phase와 공격 패턴 |
-| Test | Model, Lighting과 Rendering 기능 검증 |
-
-## Controls
+## 조작
 
 | 입력 | 동작 |
-|---|---|
-| `WASD` | 이동 |
-| `Mouse` | 카메라 회전 |
-| `Left Mouse Button` | 약공격 |
-| `Right Mouse Button` | 강공격 |
-| `Space` | Jump / Double Jump |
-| `Left Shift` | Dash |
-| `Tab` | Gameplay UI 표시 전환 |
-| `Esc` | Mouse Capture 전환 |
+| --- | --- |
+| W / A / S / D | 이동 |
+| 마우스 이동 | 카메라 회전 |
+| 마우스 왼쪽 / 오른쪽 버튼 | 약 공격 / 강 공격 |
+| Space | 점프 |
+| 왼쪽 Shift | 대시 |
+| Tab | 게임플레이 UI 표시 전환 |
+| Esc | 게임플레이 중 커서 잠금 전환 |
 
-## Repository Structure
+## 개발 환경과 실행 조건
 
-```text
-HiFi-Rush/
-├─ Engine/                    # 자체 게임 런타임과 D3D11 렌더링 백엔드
-│  ├─ Application · Scene    # 생명 주기, Frame Loop와 Scene 관리
-│  ├─ GameObject · Component # 컴포넌트 기반 객체 구조
-│  ├─ Graphics · RenderPass  # 그래픽스 추상화, Deferred와 Post Process
-│  ├─ Animation              # Skeletal Animation, Root Motion과 Notify
-│  ├─ Physics · Navigation   # Collider, Rigidbody, Movement와 NavMesh
-│  └─ UI · Audio             # Widget Runtime, DirectWrite와 FMOD
-│
-├─ HiFi-Rush/                 # 게임 클라이언트
-│  ├─ Beat · Rhythm           # Beat 계산과 입력 판정
-│  ├─ Chi                     # Player State, Combat와 Effect
-│  ├─ Monster · Qamil         # 일반 적 AI와 Boss
-│  ├─ Scene · Trigger         # Tutorial, Outside, Qamil과 환경 연출
-│  └─ Widget · Dialog         # Gameplay UI와 대화·튜토리얼
-│
-├─ Docs/                      # 포트폴리오와 기술 문서
-└─ HiFi-Rush.sln
-```
+- Windows, Visual Studio 2022의 C++ 데스크톱 개발 환경, MSVC v143, Windows SDK 10.0
+- C++20 / x64, DirectXTK 헤더·라이브러리·DLL, FMOD 헤더·라이브러리·DLL
+- 솔루션: [`HiFi-Rush.sln`](HiFi-Rush.sln). `Engine` 정적 라이브러리와 `HiFi-Rush` 실행 프로젝트로 구성됩니다.
 
-### Requirements
+**게임 리소스와 `ThirdParty`는 Git 관리 대상에서 제외되어 있습니다.** 공개 저장소만 복제한 상태에서는 게임 실행에 필요한 자료가 모두 갖춰지지 않습니다. 구현 결과는 위 시연 영상에서 확인할 수 있습니다.
 
-- Windows 10/11 x64
-- Visual Studio 2022
-- MSVC v143 Toolset와 Windows 10 SDK
-- DirectX 11 지원 GPU
-- DirectXTK 개발 파일
-- FMOD 개발 파일
-- 별도로 준비한 Game Resource Package
+필요한 자료를 갖춘 개발 환경에서는 다음과 같이 실행합니다.
 
-### Local Layout
+1. DirectXTK의 헤더·라이브러리 경로와 `ThirdParty/FMOD` 의존성을 준비합니다.
+2. `HiFi-Rush.sln`을 열고 `Release | x64`로 빌드한 뒤 `HiFi-Rush`를 시작 프로젝트로 지정합니다.
+3. 디버깅 작업 디렉터리를 `$(ProjectDir)`로 지정합니다. 게임은 `Resources/`, 셰이더는 `../Engine/Shaders/`를 기준으로 읽습니다. FMOD DLL은 프로젝트의 빌드 후 작업에서 실행 파일 폴더로 복사됩니다. DirectXTK DLL도 해당 빌드 구성에 맞춰 실행 파일 폴더에 배치합니다.
 
-```text
-HiFi-Rush/
-├─ Engine/
-├─ HiFi-Rush/
-│  └─ Resources/             # Git에서 제외된 Game Resource
-├─ ThirdParty/
-│  └─ FMOD/                  # Git에서 제외된 Header, LIB와 DLL
-└─ HiFi-Rush.sln
-```
+## 에셋 출처
 
-### Build
-
-1. `HiFi-Rush.sln`을 Visual Studio 2022로 엽니다.
-2. DirectXTK Header와 `DirectXTK.lib`가 MSVC에서 검색되도록 개발 환경을 구성합니다.
-3. Platform을 `x64`로 설정합니다.
-4. `Debug`, `DevRelease` 또는 `Release` Configuration으로 Solution을 Build합니다.
-5. 시작 프로젝트를 `HiFi-Rush`로 지정합니다.
-6. Runtime Resource 상대 경로를 위해 Working Directory를 `$(ProjectDir)`로 설정하고 실행합니다.
-
-| Configuration | 용도 |
-|---|---|
-| Debug | 디버깅과 Memory Leak 검사 |
-| DevRelease | 최적화된 실행 환경에서 Debug Tool 사용 |
-| Release | 배포용 실행 |
-
-## Contribution
-
-본 프로젝트는 개인 프로젝트이며 다음 영역을 직접 설계하고 구현했습니다.
-
-- C++20 기반 Game Runtime과 D3D11 Rendering Backend
-- Graphics Interface와 Resource·Command 추상화
-- Deferred Rendering, Lighting, Shadow와 Post Process
-- Scene, GameObject·Component, Animation, Physics, UI와 Audio 연동
-- Beat 동기화와 Rhythm Input 판정
-- Player, Monster와 Boss Gameplay
-- Effect, Trigger, Dialog와 Gameplay UI
-- Debug Visualization과 Runtime Parameter Tool
-
-Model, Animation, Texture와 Sound 등 원작 Resource 제작은 담당 범위에 포함되지 않습니다.
-
-## Disclaimer
-
-이 프로젝트는 학습 및 포트폴리오 목적으로 제작한 비상업적 팬 프로젝트입니다.  
-`Hi-Fi RUSH`와 관련된 상표 및 원본 Resource의 권리는 각 권리자에게 있습니다.  
-저장소는 직접 작성한 Engine 및 Game Client Source Code를 중심으로 공개합니다.
+Hi-Fi RUSH의 캐릭터·배경·음악 등을 활용한 개인 학습용 모작입니다. 원작 에셋의 권리는 각 권리자에게 있습니다.
