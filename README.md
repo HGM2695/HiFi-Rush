@@ -64,6 +64,24 @@ Idle은 4박, Run은 2박처럼 애니메이션마다 반복 주기를 지정했
 
 [오브젝트·컴포넌트](Engine/GameObject.h) · [이벤트 구독](Engine/Event.h) · [프레임 종료 시 삭제](Engine/Scene.cpp) · [피격 사운드 구독 사례](HiFi-Rush/ChiAudioComponent.cpp) · [환경 컴포넌트 구성](HiFi-Rush/EnvironmentComponentFactory.cpp)
 
+### 주요 설계 패턴
+
+| 해결하려는 문제 | 적용한 설계 |
+| --- | --- |
+| 게임 오브젝트가 기능 추가에 따라 비대해지는 문제 | **Component**를 조합하여 이동, 체력, 충돌, 사운드 등의 책임 분리 |
+| 플레이어와 몬스터의 복잡한 행동 분기 | **State** 객체로 행동과 전이 로직을 분리 |
+| 피격, 충돌, 애니메이션 이벤트에 여러 시스템이 반응하는 구조 | **Observer**로 사건의 발행자와 반응하는 객체의 직접 의존 제거 |
+| 설정 항목이 많은 Material의 복잡한 생성 과정 | **Builder**로 셰이더, 텍스처와 렌더 상태를 단계적으로 구성 |
+| 계층적인 UI 구성과 공통 생명주기 처리 | **Composite**로 Widget 트리를 구성하고, **Template Method·Factory Method**로 초기화 순서와 UI별 생성을 분리 |
+| 렌더링 코드가 DirectX 11 구현에 직접 결합되는 문제 | **Abstract Factory·Adapter**로 그래픽 자원 생성과 명령 실행을 엔진 인터페이스 뒤로 분리 |
+
+[상태 머신](HiFi-Rush/ChiStateMachineComponent.cpp) ·
+[이벤트 시스템](Engine/Event.h) ·
+[Material Builder](Engine/Material.h) ·
+[Widget 트리](Engine/Widget.h) ·
+[그래픽 리소스 Factory](Engine/IGraphicsResourceFactory.h) ·
+[D3D11 명령 변환](Engine/D3D11GraphicsCommandContext.cpp)
+
 ## 3. 렌더링 중간 결과를 조합해 최종 화면 구성
 
 G-Buffer에 기록한 색상·법선·재질 등의 정보와 Scene Depth를 활용해 조명을 계산하고, 그림자와 화면 공간 효과를 적용했습니다.
